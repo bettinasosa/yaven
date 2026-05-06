@@ -152,18 +152,18 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-32 pb-20 min-h-[calc(100vh-88px)]">
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-40 pb-40 min-h-[calc(100vh-88px)]">
           <h1 className="text-5xl sm:text-7xl md:text-8xl leading-[0.95] tracking-[-2.46px] max-w-7xl text-zinc-900 font-instrument-serif animate-fade-rise">
             Focus in a Distracted World
           </h1>
-          <p className="text-base sm:text-lg max-w-2xl mt-8 leading-relaxed text-zinc-600 font-inter animate-fade-rise-delay">
+          <p className="text-base sm:text-lg max-w-xl mt-10 leading-relaxed text-zinc-700 font-inter animate-fade-rise-delay">
             We&apos;re designing tools for deep thinkers, bold creators, and
             quiet rebels. Amid the chaos, we build digital spaces for sharp
             focus and inspired work.
           </p>
           <WaitlistButton
             label="Join the Waitlist"
-            className="liquid-glass rounded-full px-14 py-5 text-base text-zinc-900 mt-12 hover:scale-[1.03] transition-transform cursor-pointer animate-fade-rise-delay-2"
+            className="mt-14 rounded-full bg-zinc-900 text-white px-12 py-4 text-sm font-inter hover:bg-zinc-700 hover:scale-[1.03] transition-all cursor-pointer animate-fade-rise-delay-2 shadow-lg"
           />
         </div>
       </section>
