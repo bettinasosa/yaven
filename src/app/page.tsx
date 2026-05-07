@@ -578,20 +578,16 @@ function ProfessionalSections() {
           <div className="space-y-32">
             {/* Step 1 — text left, visual right */}
             <FadeIn delay={0.05}>
-              <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
-                <div className="flex gap-8 flex-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">
-                    1
-                  </span>
-                  <div className="space-y-3">
-                    <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                      Tell Yaven what you're working toward.
-                    </h3>
-                    <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
-                      Your goals, your tools, how your week runs. The more it
-                      understands your world, the more it can do in it.
-                    </p>
-                  </div>
+              <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
+                <div className="flex-1 space-y-1 lg:pt-2">
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">01</span>
+                  <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                    Tell Yaven what you're working toward.
+                  </h3>
+                  <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                    Your goals, your tools, how your week runs. The more it
+                    understands your world, the more it can do in it.
+                  </p>
                 </div>
                 <div className="flex-1">
                   <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
@@ -647,21 +643,17 @@ function ProfessionalSections() {
 
             {/* Step 2 — text right, visual left */}
             <FadeIn delay={0.05}>
-              <div className="flex flex-col gap-16 lg:flex-row-reverse lg:items-start">
-                <div className="flex gap-8 flex-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">
-                    2
-                  </span>
-                  <div className="space-y-3">
-                    <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                      It builds the playbook.
-                    </h3>
-                    <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
-                      Yaven maps your workflows, orchestrates the right agents,
-                      and starts automating the repeatable — without you
-                      configuring a thing.
-                    </p>
-                  </div>
+              <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-start">
+                <div className="flex-1 space-y-1 lg:pt-2">
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">02</span>
+                  <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                    It builds the playbook.
+                  </h3>
+                  <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                    Yaven maps your workflows, orchestrates the right agents,
+                    and starts automating the repeatable — without you
+                    configuring a thing.
+                  </p>
                 </div>
                 <div className="flex-1">
                   <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
@@ -715,21 +707,17 @@ function ProfessionalSections() {
 
             {/* Step 3 — text left, visual right */}
             <FadeIn delay={0.05}>
-              <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
-                <div className="flex gap-8 flex-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">
-                    3
-                  </span>
-                  <div className="space-y-3">
-                    <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                      It runs. You decide.
-                    </h3>
-                    <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
-                      Agents handle the complex. Automations handle the routine.
-                      You come back to the calls only you can make — then it
-                      moves on.
-                    </p>
-                  </div>
+              <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
+                <div className="flex-1 space-y-1 lg:pt-2">
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">03</span>
+                  <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                    It runs. You decide.
+                  </h3>
+                  <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                    Agents handle the complex. Automations handle the routine.
+                    You come back to the calls only you can make — then it
+                    moves on.
+                  </p>
                 </div>
                 <div className="flex-1 space-y-2">
                   {[
@@ -800,7 +788,7 @@ function ProfessionalSections() {
                 <div
                   className={`flex flex-col gap-16 lg:flex-row lg:items-start ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
                 >
-                  <div className="flex-1 space-y-5 lg:pt-4">
+                  <div className="flex-1 space-y-1 lg:pt-4">
                     <p className="text-xs tracking-[0.2em] uppercase text-zinc-400">
                       {f.number}
                     </p>
@@ -808,7 +796,7 @@ function ProfessionalSections() {
                       {f.heading}
                     </h3>
                     {f.body && (
-                      <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
+                      <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
                         {f.body}
                       </p>
                     )}
@@ -888,7 +876,7 @@ function DeveloperSections() {
                 <div
                   className={`flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
                 >
-                  <div className="flex-1 space-y-5 lg:pt-4">
+                  <div className="flex-1 space-y-1 lg:pt-4">
                     <p className="text-xs tracking-[0.2em] uppercase text-zinc-600">
                       {f.number}
                     </p>
