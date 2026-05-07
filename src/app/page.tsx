@@ -322,25 +322,25 @@ const proFeatures = [
     visual: (
       <div className="space-y-3">
         <GoalCard
-          title="Q4 board presentation"
-          tag="Strategy"
+          title="Newsletter — May edition"
+          tag="Content"
           status="active"
           tasks={[
-            { label: "Competitor landscape mapped", state: "done" },
-            { label: "Market sizing complete", state: "done" },
-            { label: "Writing executive summary...", state: "active" }
+            { label: "Topic research done", state: "done" },
+            { label: "Outline approved", state: "done" },
+            { label: "Writing intro section...", state: "active" }
           ]}
         />
         <GoalCard
-          title="Supplier contract renewal"
-          tag="Operations"
+          title="New hire onboarding — Sarah"
+          tag="HR"
           status="review"
           tasks={[
-            { label: "Terms reviewed", state: "done" },
-            { label: "Alternatives compared", state: "done" },
-            { label: "Negotiation brief ready", state: "done" }
+            { label: "IT setup confirmed", state: "done" },
+            { label: "Welcome doc drafted", state: "done" },
+            { label: "Intro meetings scheduled", state: "done" }
           ]}
-          footer="Summary doc ready for your review"
+          footer="Welcome pack ready for your review"
         />
       </div>
     )
@@ -354,11 +354,11 @@ const proFeatures = [
         <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
           <div className="px-5 py-3 border-b border-zinc-100">
             <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">Research goal</p>
-            <p className="text-zinc-800 font-medium">Q4 competitor analysis</p>
+            <p className="text-zinc-800 font-medium">Customer interview synthesis</p>
           </div>
           <div className="px-5 py-3 space-y-1.5">
-            <p className="text-xs text-emerald-600">✓ 12 competitor pages scraped</p>
-            <p className="text-xs text-emerald-600">✓ Pricing comparison table built</p>
+            <p className="text-xs text-emerald-600">✓ 8 interview transcripts processed</p>
+            <p className="text-xs text-emerald-600">✓ Pain points and themes mapped</p>
             <p className="text-xs text-zinc-400">→ Context passed to next goal</p>
           </div>
         </div>
@@ -368,11 +368,11 @@ const proFeatures = [
         <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
           <div className="px-5 py-3 border-b border-zinc-100">
             <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">Writing goal</p>
-            <p className="text-zinc-800 font-medium">Board presentation deck</p>
+            <p className="text-zinc-800 font-medium">Product spec — v2 feature set</p>
           </div>
           <div className="px-5 py-3 space-y-1.5">
-            <p className="text-xs text-zinc-500">Using competitor data from research goal</p>
-            <p className="text-xs text-emerald-600">● Drafting slide 3 — market positioning...</p>
+            <p className="text-xs text-zinc-500">Using interview insights from research goal</p>
+            <p className="text-xs text-emerald-600">● Drafting section 2 — user pain points...</p>
           </div>
         </div>
       </div>
@@ -388,15 +388,15 @@ const proFeatures = [
           <p className="text-[10px] tracking-[0.15em] uppercase text-amber-500 mb-1.5">
             Decision needed
           </p>
-          <p className="text-zinc-800 font-medium">New client follow-up</p>
+          <p className="text-zinc-800 font-medium">Partnership outreach — APAC</p>
         </div>
         <div className="px-5 py-4 space-y-3">
           <p className="text-zinc-500 text-sm leading-relaxed">
-            Draft is ready. Yaven is waiting for your sign-off before sending.
+            3 outreach emails drafted. Waiting for your approval before sending.
           </p>
           <div className="bg-zinc-50 rounded-xl px-4 py-3 text-zinc-500 text-xs leading-relaxed border border-zinc-100 italic">
-            &ldquo;Hi, great to meet you on Thursday. I&apos;ve attached the
-            onboarding overview we discussed...&rdquo;
+            &ldquo;Hi Mei, I came across your work on regional distribution and
+            thought there might be a strong fit...&rdquo;
           </div>
         </div>
         <div className="px-5 py-4 border-t border-zinc-100 flex gap-3">
@@ -404,7 +404,7 @@ const proFeatures = [
             Approve &amp; send
           </button>
           <button className="flex-1 rounded-lg border border-zinc-200 text-zinc-600 text-xs py-2.5">
-            Edit draft
+            Edit drafts
           </button>
         </div>
       </div>
@@ -418,21 +418,13 @@ const proFeatures = [
       <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
         <div className="px-5 py-4 border-b border-zinc-100">
           <p className="text-zinc-800 font-medium">Active on this goal</p>
-          <p className="text-xs text-zinc-400 mt-0.5">Research goal</p>
+          <p className="text-xs text-zinc-400 mt-0.5">Newsletter — May edition</p>
         </div>
         <div className="px-5 py-5 space-y-4">
           {[
-            { name: "Claude", task: "Writing the FAQ brief", color: "#d97706" },
-            {
-              name: "GPT-4",
-              task: "Competitor pricing analysis",
-              color: "#10b981"
-            },
-            {
-              name: "Gemini",
-              task: "Cross-referencing sources",
-              color: "#3b82f6"
-            }
+            { name: "Claude", task: "Drafting the newsletter intro", color: "#d97706" },
+            { name: "GPT-4", task: "Fact-checking statistics", color: "#10b981" },
+            { name: "Gemini", task: "Formatting for web publish", color: "#3b82f6" }
           ].map(m => (
             <div key={m.name} className="flex items-center gap-3">
               <span
