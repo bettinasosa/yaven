@@ -934,8 +934,8 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t from-white to-transparent z-2 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full px-8 pt-8 flex items-center justify-between">
-          <span className="text-4xl tracking-tight text-[#1a2744] font-instrument-serif">
-            Yaven<sup className="text-xs">®</sup>
+          <span className="text-4xl tracking-tight text-[#F2F2E5] font-instrument-serif">
+            yaven
           </span>
           <ViewToggle view={view} onChange={setView} />
         </div>
@@ -946,7 +946,7 @@ export default function Home() {
               Focus in a Distracted World
             </h1>
 
-            <p className="text-medium sm:text-lg max-w-lg mt-10 leading-relaxed text-black animate-fade-rise-delay">
+            <p className="text-base max-w-lg mt-8 leading-relaxed text-black animate-fade-rise-delay">
               Tell Yaven what you want to accomplish. It works through it — so
               you come back to results, not{" "}
               <strong className="text-shimmer font-bold italic">chaos</strong>.
@@ -954,10 +954,10 @@ export default function Home() {
 
             <WaitlistButton
               label="Join the Waitlist"
-              className="mt-10 rounded-full bg-shimmer text-zinc-900 px-10 py-3.5 text-sm font-medium hover:brightness-110 hover:scale-[1.03] transition-all cursor-pointer animate-fade-rise-delay-2 shadow-lg"
+              className="mt-8 rounded-full bg-[#F2F2E5] text-zinc-900 px-10 py-3.5 text-base font-medium hover:scale-[1.03] transition-all cursor-pointer animate-fade-rise-delay-2 btn-hero-shadow"
             />
 
-            <p className="mt-6 text-sm font-medium text-black animate-fade-rise-delay-2">
+            <p className="mt-8 text-base text-black animate-fade-rise-delay-2">
               явен (yaven) — Bulgarian for{" "}
               <span className="italic">open, plain to see, obvious.</span>
             </p>
@@ -990,7 +990,7 @@ export default function Home() {
           </p>
           <WaitlistButton
             label="Join the Waitlist"
-            className="inline-block rounded-full bg-shimmer text-zinc-900 px-14 py-5 text-base font-medium hover:brightness-110 hover:scale-[1.03] transition-all cursor-pointer shadow-lg"
+            className="inline-block rounded-full bg-[#F2F2E5] text-zinc-900 px-14 py-5 text-base font-medium hover:scale-[1.03] transition-all cursor-pointer btn-hero-shadow"
           />
         </FadeIn>
       </section>
