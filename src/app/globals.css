@@ -171,14 +171,14 @@
   .bg-shimmer {
     background: linear-gradient(
       90deg,
-      #ffffff 20%,
-      #b1fbff 45%,
-      #ffffff 55%,
-      #b1fbff 80%,
-      #ffffff 100%
+      #d6feff 0%,
+      #b1fbff 30%,
+      #85f7ff 50%,
+      #b1fbff 70%,
+      #d6feff 100%
     );
     background-size: 200% auto;
-    animation: shimmer-text 3s linear infinite;
+    animation: shimmer-text 12s linear infinite;
   }
 
   /* ── Shimmer text ─────────────────────────────────────── */
@@ -195,6 +195,22 @@
       #ffffff 55%,
       #b1fbff 80%,
       #ffffff 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer-text 3s linear infinite;
+  }
+
+  .text-shimmer-dark {
+    background: linear-gradient(
+      90deg,
+      #71717a 20%,
+      #d4d4d8 45%,
+      #71717a 55%,
+      #d4d4d8 80%,
+      #71717a 100%
     );
     background-size: 200% auto;
     -webkit-background-clip: text;

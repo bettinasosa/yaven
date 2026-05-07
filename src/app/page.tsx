@@ -342,15 +342,6 @@ const proFeatures = [
           ]}
           footer="Summary doc ready for your review"
         />
-        <GoalCard
-          title="Team offsite — June"
-          tag="Planning"
-          status="done"
-          tasks={[
-            { label: "Venue booked", state: "done" },
-            { label: "Agenda drafted", state: "done" }
-          ]}
-        />
       </div>
     )
   },
@@ -359,17 +350,32 @@ const proFeatures = [
     heading: "Context that carries.",
     body: "Your agents share what they know. Research feeds into writing. A client brief informs the outreach. Nothing gets lost between sessions.",
     visual: (
-      <GoalCard
-        title="Kitchen renovation brief"
-        tag="Personal"
-        status="active"
-        tasks={[
-          { label: "Contractor quotes collected", state: "done" },
-          { label: "Review scores compiled", state: "done" },
-          { label: "Using research to write brief...", state: "active" },
-          { label: "Send shortlist to partner", state: "pending" }
-        ]}
-      />
+      <div className="space-y-2">
+        <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
+          <div className="px-5 py-3 border-b border-zinc-100">
+            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">Research goal</p>
+            <p className="text-zinc-800 font-medium">Q4 competitor analysis</p>
+          </div>
+          <div className="px-5 py-3 space-y-1.5">
+            <p className="text-xs text-emerald-600">✓ 12 competitor pages scraped</p>
+            <p className="text-xs text-emerald-600">✓ Pricing comparison table built</p>
+            <p className="text-xs text-zinc-400">→ Context passed to next goal</p>
+          </div>
+        </div>
+        <div className="flex justify-center py-1">
+          <div className="w-px h-5 bg-zinc-200" />
+        </div>
+        <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
+          <div className="px-5 py-3 border-b border-zinc-100">
+            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">Writing goal</p>
+            <p className="text-zinc-800 font-medium">Board presentation deck</p>
+          </div>
+          <div className="px-5 py-3 space-y-1.5">
+            <p className="text-xs text-zinc-500">Using competitor data from research goal</p>
+            <p className="text-xs text-emerald-600">● Drafting slide 3 — market positioning...</p>
+          </div>
+        </div>
+      </div>
     )
   },
   {
@@ -537,46 +543,129 @@ function ProfessionalSections() {
 
       {/* How it works */}
       <section className="bg-zinc-50 px-6 py-32 border-t border-zinc-200">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <FadeIn>
             <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-20">
               How it works.
             </h2>
           </FadeIn>
-          <div className="space-y-16">
-            {[
-              {
-                n: "1",
-                h: "Tell Yaven your goal.",
-                b: "A project. A task. A decision you need to make. Plain language, no configuration."
-              },
-              {
-                n: "2",
-                h: "Yaven gets to work.",
-                b: "The right agents pick it up. They work in the background across whatever tools and models fit the job."
-              },
-              {
-                n: "3",
-                h: "Come back to a brief.",
-                b: "What's done, what needs you, what's next. You step in when it matters. You ignore the rest."
-              }
-            ].map(step => (
-              <FadeIn key={step.n} delay={0.05}>
-                <div className="flex gap-10">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">
-                    {step.n}
-                  </span>
-                  <div className="space-y-2">
+          <div className="space-y-32">
+
+            {/* Step 1 — text left, visual right */}
+            <FadeIn delay={0.05}>
+              <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
+                <div className="flex gap-8 flex-1 lg:pt-2">
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">1</span>
+                  <div className="space-y-3">
                     <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                      {step.h}
+                      Tell Yaven your goal.
                     </h3>
-                    <p className="text-base leading-relaxed text-zinc-600">
-                      {step.b}
+                    <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
+                      A project. A task. A decision you need to make. Plain language, no configuration.
                     </p>
                   </div>
                 </div>
-              </FadeIn>
-            ))}
+                <div className="flex-1">
+                  <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
+                    <div className="px-5 py-3 border-b border-zinc-100 flex items-center gap-2">
+                      <span className="text-xs text-zinc-400">New goal</span>
+                    </div>
+                    <div className="px-5 py-4">
+                      <p className="text-zinc-800 text-sm mb-3">
+                        Research and shortlist vendors for our Q4 board presentation. Pull analyst reports, compare pricing, and draft a one-pager I can review.
+                      </p>
+                      <div className="h-px bg-zinc-100 mb-3" />
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-1.5">
+                          {["/logos/googleads.png", "/logos/notion.png", "/logos/gmail.png"].map((l, i) => (
+                            <img key={i} src={l} alt="" className="w-5 h-5 rounded object-contain opacity-40" />
+                          ))}
+                        </div>
+                        <button className="rounded-lg bg-zinc-900 text-white text-xs px-4 py-1.5 font-medium">
+                          Start →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* Step 2 — text right, visual left */}
+            <FadeIn delay={0.05}>
+              <div className="flex flex-col gap-16 lg:flex-row-reverse lg:items-start">
+                <div className="flex gap-8 flex-1 lg:pt-2">
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">2</span>
+                  <div className="space-y-3">
+                    <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                      Yaven gets to work.
+                    </h3>
+                    <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
+                      The right agents pick it up. They work in the background across whatever tools and models fit the job.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <GoalCard
+                    title="Q4 Board Presentation"
+                    tag="Research"
+                    status="active"
+                    tasks={[
+                      { label: "Analyst reports pulled from Google", state: "done" },
+                      { label: "Vendor pricing compared", state: "done" },
+                      { label: "Drafting one-pager summary...", state: "active" },
+                      { label: "Send shortlist for review", state: "pending" },
+                    ]}
+                  />
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* Step 3 — text left, visual right */}
+            <FadeIn delay={0.05}>
+              <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
+                <div className="flex gap-8 flex-1 lg:pt-2">
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">3</span>
+                  <div className="space-y-3">
+                    <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                      Come back to a brief.
+                    </h3>
+                    <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
+                      What's done, what needs you, what's next. You step in when it matters. You ignore the rest.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
+                    <div className="px-5 py-4 border-b border-zinc-100">
+                      <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-1">Summary ready</p>
+                      <p className="text-zinc-800 font-medium">Supplier Contract Renewal</p>
+                    </div>
+                    <div className="px-5 py-4 space-y-3">
+                      {[
+                        { label: "Current contract expires", value: "31 Jan 2026" },
+                        { label: "3 suppliers shortlisted", value: "Compared" },
+                        { label: "Recommended", value: "Vendor B — 18% saving" },
+                      ].map(row => (
+                        <div key={row.label} className="flex items-center justify-between">
+                          <span className="text-zinc-500 text-xs">{row.label}</span>
+                          <span className="text-zinc-800 text-xs font-medium">{row.value}</span>
+                        </div>
+                      ))}
+                      <div className="h-px bg-zinc-100" />
+                      <div className="bg-amber-50 rounded-xl px-4 py-3 text-amber-700 text-xs leading-relaxed border border-amber-100">
+                        Decision needed: approve recommended vendor to proceed.
+                      </div>
+                    </div>
+                    <div className="px-5 py-4 border-t border-zinc-100 flex gap-3">
+                      <button className="flex-1 rounded-lg bg-zinc-900 text-white text-xs py-2.5 font-medium">Approve vendor</button>
+                      <button className="flex-1 rounded-lg border border-zinc-200 text-zinc-600 text-xs py-2.5">See full report</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
           </div>
         </div>
       </section>
@@ -626,7 +715,7 @@ function DeveloperSections() {
       <section className="bg-white px-6 py-32">
         <FadeIn className="max-w-3xl mx-auto">
           <div className="flex items-center gap-3 mb-10">
-            <AgentIcon size={28} color="#f97316" />
+            <span className="text-shimmer-dark font-instrument-serif text-2xl leading-none">Y</span>
             <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
               The problem
             </span>
@@ -661,8 +750,8 @@ function DeveloperSections() {
               remembers what each one is doing, knows when they&apos;re done,
               and moves context where it needs to go.
             </p>
-            <p style={{ color: CYAN }} className="font-medium">
-              We&apos;re building that layer.
+            <p className="font-medium">
+              <strong className="text-shimmer-dark font-bold italic">We&apos;re building that layer.</strong>
             </p>
           </div>
         </FadeIn>
@@ -767,7 +856,7 @@ export default function Home() {
       <section className="bg-white px-6 py-32 text-center border-t border-zinc-200">
         <FadeIn className="max-w-2xl mx-auto space-y-8">
           <div className="flex justify-center">
-            <AgentIcon size={44} color={CYAN} />
+            <span className="text-shimmer-dark font-instrument-serif text-8xl leading-none">Y</span>
           </div>
           <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] text-zinc-900 font-instrument-serif">
             {view === "professional"
@@ -779,7 +868,7 @@ export default function Home() {
           </p>
           <WaitlistButton
             label="Join the Waitlist"
-            className="inline-block rounded-full bg-[#b1fbff] text-zinc-900 px-14 py-5 text-base font-medium hover:brightness-110 hover:scale-[1.03] transition-all cursor-pointer shadow-lg"
+            className="inline-block rounded-full bg-shimmer text-zinc-900 px-14 py-5 text-base font-medium hover:brightness-110 hover:scale-[1.03] transition-all cursor-pointer shadow-lg"
           />
         </FadeIn>
       </section>
