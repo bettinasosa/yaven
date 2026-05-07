@@ -946,7 +946,7 @@ export default function Home() {
               Focus in a Distracted World
             </h1>
 
-            <p className="text-base sm:text-lg max-w-lg mt-10 leading-relaxed text-black animate-fade-rise-delay">
+            <p className="text-medium sm:text-lg max-w-lg mt-10 leading-relaxed text-black animate-fade-rise-delay">
               Tell Yaven what you want to accomplish. It works through it — so
               you come back to results, not{" "}
               <strong className="text-shimmer font-bold italic">chaos</strong>.
