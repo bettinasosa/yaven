@@ -200,7 +200,7 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shimmer-text 3s linear infinite;
+    animation: shimmer-text 8s linear infinite;
   }
 
   .text-shimmer-dark {
@@ -216,7 +216,7 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shimmer-text 3s linear infinite;
+    animation: shimmer-text 8s linear infinite;
   }
 
   /* ── Hero button shadow ──────────────────────────────── */

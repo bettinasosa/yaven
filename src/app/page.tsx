@@ -828,20 +828,18 @@ function ProfessionalSections() {
 function DeveloperSections() {
   return (
     <>
-      <section className="bg-white px-6 py-32">
+      <section className="bg-[#0b0d12] px-6 py-16 sm:py-32">
         <FadeIn className="max-w-3xl mx-auto">
           <div className="flex items-center gap-3 mb-10">
-            <span className="text-shimmer-dark font-instrument-serif text-2xl leading-none">
-              Y
-            </span>
-            <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
+            <span className="text-shimmer font-instrument-serif text-2xl leading-none">я</span>
+            <span className="text-xs tracking-[0.2em] uppercase text-zinc-500">
               The problem
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-10">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-white font-instrument-serif mb-10">
             Six tabs. Zero memory. All in your head.
           </h2>
-          <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-600">
+          <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-400">
             <p>
               You&apos;re running multiple agent sessions on different threads.
               One refactoring auth, one writing tests, one researching a fix.
@@ -857,19 +855,19 @@ function DeveloperSections() {
         </FadeIn>
       </section>
 
-      <section className="bg-white px-6 pb-32">
-        <FadeIn className="max-w-3xl mx-auto border-t border-zinc-200 pt-20">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-10">
+      <section className="bg-[#0b0d12] px-6 pb-16 sm:pb-32">
+        <FadeIn className="max-w-3xl mx-auto border-t border-white/10 pt-20">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-white font-instrument-serif mb-10">
             Your agents shouldn&apos;t live in tabs.
           </h2>
-          <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-600">
+          <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-400">
             <p>
               You don&apos;t need fewer agents. You need a layer above them that
               remembers what each one is doing, knows when they&apos;re done,
               and moves context where it needs to go.
             </p>
             <p className="font-medium">
-              <strong className="text-shimmer-dark font-bold italic">
+              <strong className="text-shimmer font-bold italic">
                 We&apos;re building that layer.
               </strong>
             </p>
@@ -877,28 +875,28 @@ function DeveloperSections() {
         </FadeIn>
       </section>
 
-      <section className="bg-zinc-50 px-6 py-32 border-t border-zinc-200">
+      <section className="bg-[#0f1117] px-4 sm:px-6 py-16 sm:py-32 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <FadeIn>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-20">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-white font-instrument-serif mb-10 sm:mb-20">
               What Yaven does
             </h2>
           </FadeIn>
-          <div className="space-y-32">
+          <div className="space-y-16 sm:space-y-32">
             {devFeatures.map((f, i) => (
               <FadeIn key={f.number} delay={0.05}>
                 <div
-                  className={`flex flex-col gap-16 lg:flex-row lg:items-start ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
+                  className={`flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
                 >
                   <div className="flex-1 space-y-5 lg:pt-4">
-                    <p className="text-xs tracking-[0.2em] uppercase text-zinc-400">
+                    <p className="text-xs tracking-[0.2em] uppercase text-zinc-600">
                       {f.number}
                     </p>
-                    <h3 className="text-xl sm:text-2xl leading-[1.1] tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                    <h3 className="text-xl sm:text-2xl leading-[1.1] tracking-[-0.4px] text-white font-instrument-serif">
                       {f.heading}
                     </h3>
                     {f.body && (
-                      <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
+                      <p className="text-base leading-relaxed text-zinc-400 max-w-sm">
                         {f.body}
                       </p>
                     )}
@@ -931,7 +929,7 @@ export default function Home() {
           <source src="/hero-bg.mp4" type="video/mp4" />
         </video>
 
-        <div className="absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t from-white to-transparent z-2 pointer-events-none" />
+        <div className={`absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t ${view === "developer" ? "from-[#0b0d12]" : "from-white"} to-transparent z-2 pointer-events-none`} />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full px-8 pt-8 flex items-center justify-between">
           <span className="text-4xl tracking-tight text-[#F2F2E5] font-instrument-serif">
@@ -957,9 +955,12 @@ export default function Home() {
               className="mt-8 rounded-full bg-[#F2F2E5] text-zinc-900 px-10 py-3.5 text-base font-medium hover:scale-[1.03] transition-all cursor-pointer animate-fade-rise-delay-2 btn-hero-shadow"
             />
 
-            <p className="mt-8 text-base text-black animate-fade-rise-delay-2">
-              явен (yaven) — Bulgarian for{" "}
-              <span className="italic">open, plain to see, obvious.</span>
+            <p className="mt-8 text-xs text-black/70 animate-fade-rise-delay-2">
+              <span className="font-bold">явен (yaven)</span>{" "}
+              <span className="italic">
+                {" "}
+                — Bulgarian for open, plain to see, obvious.
+              </span>
             </p>
           </div>
         </div>
@@ -973,24 +974,22 @@ export default function Home() {
       )}
 
       {/* ── Footer CTA ─────────────────────────────────────── */}
-      <section className="bg-white px-6 py-32 text-center border-t border-zinc-200">
+      <section className={`px-4 sm:px-6 py-16 sm:py-32 text-center ${view === "developer" ? "bg-[#0b0d12] border-t border-white/5" : "bg-white border-t border-zinc-200"}`}>
         <FadeIn className="max-w-2xl mx-auto space-y-8">
           <div className="flex justify-center">
-            <span className="text-shimmer-dark font-instrument-serif text-8xl leading-none">
-              Y
-            </span>
+            <span className={`${view === "developer" ? "text-shimmer" : "text-shimmer-dark"} font-instrument-serif text-8xl leading-none`}>я</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] text-zinc-900 font-instrument-serif">
+          <h2 className={`text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] font-instrument-serif ${view === "developer" ? "text-white" : "text-zinc-900"}`}>
             {view === "professional"
               ? "Stop juggling. Start doing."
               : "Stop babysitting. Start building."}
           </h2>
-          <p className="text-base text-zinc-600 leading-relaxed">
+          <p className={`text-base leading-relaxed ${view === "developer" ? "text-zinc-400" : "text-zinc-600"}`}>
             Early access is limited. Get in before the queue fills up.
           </p>
           <WaitlistButton
             label="Join the Waitlist"
-            className="inline-block rounded-full bg-[#F2F2E5] text-zinc-900 px-14 py-5 text-base font-medium hover:scale-[1.03] transition-all cursor-pointer btn-hero-shadow"
+            className="inline-block rounded-full bg-[#F2F2E5] text-zinc-900 px-8 sm:px-14 py-4 sm:py-5 text-base font-medium hover:scale-[1.03] transition-all cursor-pointer btn-hero-shadow"
           />
         </FadeIn>
       </section>
