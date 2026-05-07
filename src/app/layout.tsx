@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Public_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -30,7 +31,10 @@ export default function RootLayout({
       lang="en"
       className={`${instrumentSerif.variable} ${publicSans.variable} h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col bg-white">{children}</body>
+      <body className="min-h-full flex flex-col bg-white">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

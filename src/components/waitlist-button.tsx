@@ -24,11 +24,27 @@ export function WaitlistButton({
   const [email, setEmail] = useState("");
   const [workType, setWorkType] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email) return;
-    setSubmitted(true);
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, workType }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleClose() {
@@ -37,6 +53,7 @@ export function WaitlistButton({
       setSubmitted(false);
       setEmail("");
       setWorkType("");
+      setError("");
     }, 300);
   }
 
@@ -121,11 +138,15 @@ export function WaitlistButton({
                       </span>
                     </div>
                   </div>
+                  {error && (
+                    <p className="text-xs text-red-500 font-inter">{error}</p>
+                  )}
                   <button
                     type="submit"
-                    className="w-full rounded-full bg-zinc-900 text-white text-sm font-inter py-3.5 hover:bg-zinc-700 transition-colors cursor-pointer mt-2"
+                    disabled={loading}
+                    className="w-full rounded-full bg-zinc-900 text-white text-sm font-inter py-3.5 hover:bg-zinc-700 transition-colors cursor-pointer mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Get early access
+                    {loading ? "Saving…" : "Get early access"}
                   </button>
                 </form>
               </>
