@@ -353,13 +353,23 @@ const proFeatures = [
       <div className="space-y-2">
         <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
           <div className="px-5 py-3 border-b border-zinc-100">
-            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">Research goal</p>
-            <p className="text-zinc-800 font-medium">Customer interview synthesis</p>
+            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
+              Research goal
+            </p>
+            <p className="text-zinc-800 font-medium">
+              Customer interview synthesis
+            </p>
           </div>
           <div className="px-5 py-3 space-y-1.5">
-            <p className="text-xs text-emerald-600">✓ 8 interview transcripts processed</p>
-            <p className="text-xs text-emerald-600">✓ Pain points and themes mapped</p>
-            <p className="text-xs text-zinc-400">→ Context passed to next goal</p>
+            <p className="text-xs text-emerald-600">
+              ✓ 8 interview transcripts processed
+            </p>
+            <p className="text-xs text-emerald-600">
+              ✓ Pain points and themes mapped
+            </p>
+            <p className="text-xs text-zinc-400">
+              → Context passed to next goal
+            </p>
           </div>
         </div>
         <div className="flex justify-center py-1">
@@ -367,12 +377,20 @@ const proFeatures = [
         </div>
         <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
           <div className="px-5 py-3 border-b border-zinc-100">
-            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">Writing goal</p>
-            <p className="text-zinc-800 font-medium">Product spec — v2 feature set</p>
+            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
+              Writing goal
+            </p>
+            <p className="text-zinc-800 font-medium">
+              Product spec — v2 feature set
+            </p>
           </div>
           <div className="px-5 py-3 space-y-1.5">
-            <p className="text-xs text-zinc-500">Using interview insights from research goal</p>
-            <p className="text-xs text-emerald-600">● Drafting section 2 — user pain points...</p>
+            <p className="text-xs text-zinc-500">
+              Using interview insights from research goal
+            </p>
+            <p className="text-xs text-emerald-600">
+              ● Drafting section 2 — user pain points...
+            </p>
           </div>
         </div>
       </div>
@@ -388,7 +406,9 @@ const proFeatures = [
           <p className="text-[10px] tracking-[0.15em] uppercase text-amber-500 mb-1.5">
             Decision needed
           </p>
-          <p className="text-zinc-800 font-medium">Partnership outreach — APAC</p>
+          <p className="text-zinc-800 font-medium">
+            Partnership outreach — APAC
+          </p>
         </div>
         <div className="px-5 py-4 space-y-3">
           <p className="text-zinc-500 text-sm leading-relaxed">
@@ -418,13 +438,27 @@ const proFeatures = [
       <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
         <div className="px-5 py-4 border-b border-zinc-100">
           <p className="text-zinc-800 font-medium">Active on this goal</p>
-          <p className="text-xs text-zinc-400 mt-0.5">Newsletter — May edition</p>
+          <p className="text-xs text-zinc-400 mt-0.5">
+            Newsletter — May edition
+          </p>
         </div>
         <div className="px-5 py-5 space-y-4">
           {[
-            { name: "Claude", task: "Drafting the newsletter intro", color: "#d97706" },
-            { name: "GPT-4", task: "Fact-checking statistics", color: "#10b981" },
-            { name: "Gemini", task: "Formatting for web publish", color: "#3b82f6" }
+            {
+              name: "Claude",
+              task: "Drafting the newsletter intro",
+              color: "#d97706"
+            },
+            {
+              name: "GPT-4",
+              task: "Fact-checking statistics",
+              color: "#10b981"
+            },
+            {
+              name: "Gemini",
+              task: "Formatting for web publish",
+              color: "#3b82f6"
+            }
           ].map(m => (
             <div key={m.name} className="flex items-center gap-3">
               <span
@@ -461,8 +495,8 @@ function ProfessionalSections() {
           </h2>
           <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-600">
             <p>
-              Not a chatbot. Not another tab. Yaven is where your goals — work
-              projects, research, outreach, decisions, planning — live and get
+              Not a chatbot. Not another tab. Yaven is where your goals, work
+              projects, research, outreach, decisions, planning, live and get
               completed. You set the direction. Your agents handle the work.
             </p>
           </div>
@@ -542,41 +576,65 @@ function ProfessionalSections() {
             </h2>
           </FadeIn>
           <div className="space-y-32">
-
             {/* Step 1 — text left, visual right */}
             <FadeIn delay={0.05}>
               <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
                 <div className="flex gap-8 flex-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">1</span>
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">
+                    1
+                  </span>
                   <div className="space-y-3">
                     <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                       Tell Yaven what you're working toward.
                     </h3>
                     <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
-                      Your goals, your tools, how your week runs. The more it understands your world, the more it can do in it.
+                      Your goals, your tools, how your week runs. The more it
+                      understands your world, the more it can do in it.
                     </p>
                   </div>
                 </div>
                 <div className="flex-1">
                   <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
                     <div className="px-5 py-3 border-b border-zinc-100">
-                      <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400">Getting to know your work</p>
+                      <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400">
+                        Getting to know your work
+                      </p>
                     </div>
                     <div className="px-5 py-4 space-y-4">
                       <div>
-                        <p className="text-xs text-zinc-400 mb-2">Tools you use daily</p>
+                        <p className="text-xs text-zinc-400 mb-2">
+                          Tools you use daily
+                        </p>
                         <div className="flex gap-2 flex-wrap">
-                          {["/logos/notion.png", "/logos/gmail.png", "/logos/hubspot.png", "/logos/monday.png", "/logos/linkedin.png"].map((l, i) => (
-                            <img key={i} src={l} alt="" className="w-6 h-6 rounded object-contain opacity-40" />
+                          {[
+                            "/logos/notion.png",
+                            "/logos/gmail.png",
+                            "/logos/hubspot.png",
+                            "/logos/monday.png",
+                            "/logos/linkedin.png"
+                          ].map((l, i) => (
+                            <img
+                              key={i}
+                              src={l}
+                              alt=""
+                              className="w-6 h-6 rounded object-contain opacity-40"
+                            />
                           ))}
                         </div>
                       </div>
                       <div>
-                        <p className="text-xs text-zinc-400 mb-1">What you're focused on</p>
-                        <p className="text-xs text-zinc-700 leading-relaxed">Growing partnerships in APAC, managing a team of 6, weekly investor updates</p>
+                        <p className="text-xs text-zinc-400 mb-1">
+                          What you're focused on
+                        </p>
+                        <p className="text-xs text-zinc-700 leading-relaxed">
+                          Growing partnerships in APAC, managing a team of 6,
+                          weekly investor updates
+                        </p>
                       </div>
                       <div className="bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
-                        <p className="text-xs text-zinc-500 mb-2">Yaven is mapping your recurring workflows...</p>
+                        <p className="text-xs text-zinc-500 mb-2">
+                          Yaven is mapping your recurring workflows...
+                        </p>
                         <div className="h-1.5 bg-zinc-200 rounded-full overflow-hidden">
                           <div className="h-full bg-zinc-800 rounded-full w-[65%]" />
                         </div>
@@ -591,38 +649,64 @@ function ProfessionalSections() {
             <FadeIn delay={0.05}>
               <div className="flex flex-col gap-16 lg:flex-row-reverse lg:items-start">
                 <div className="flex gap-8 flex-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">2</span>
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">
+                    2
+                  </span>
                   <div className="space-y-3">
                     <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                       It builds the playbook.
                     </h3>
                     <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
-                      Yaven maps your workflows, orchestrates the right agents, and starts automating the repeatable — without you configuring a thing.
+                      Yaven maps your workflows, orchestrates the right agents,
+                      and starts automating the repeatable — without you
+                      configuring a thing.
                     </p>
                   </div>
                 </div>
                 <div className="flex-1">
                   <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
                     <div className="px-5 py-3 border-b border-zinc-100">
-                      <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">Playbook created</p>
-                      <p className="text-zinc-800 font-medium">APAC partnership outreach</p>
+                      <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
+                        Playbook created
+                      </p>
+                      <p className="text-zinc-800 font-medium">
+                        APAC partnership outreach
+                      </p>
                     </div>
                     <div className="px-5 py-4 space-y-3">
                       {[
-                        { agent: "Research agent", task: "Scans LinkedIn + news for warm leads", state: "auto" },
-                        { agent: "Outreach agent", task: "Drafts and sends personalised emails", state: "auto" },
-                        { agent: "CRM agent", task: "Logs replies and updates HubSpot", state: "auto" },
+                        {
+                          agent: "Research agent",
+                          task: "Scans LinkedIn + news for warm leads",
+                          state: "auto"
+                        },
+                        {
+                          agent: "Outreach agent",
+                          task: "Drafts and sends personalised emails",
+                          state: "auto"
+                        },
+                        {
+                          agent: "CRM agent",
+                          task: "Logs replies and updates HubSpot",
+                          state: "auto"
+                        }
                       ].map(row => (
                         <div key={row.agent} className="flex items-start gap-3">
-                          <span className="mt-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">AUTO</span>
+                          <span className="mt-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
+                            AUTO
+                          </span>
                           <div>
-                            <p className="text-xs font-medium text-zinc-700">{row.agent}</p>
+                            <p className="text-xs font-medium text-zinc-700">
+                              {row.agent}
+                            </p>
                             <p className="text-xs text-zinc-400">{row.task}</p>
                           </div>
                         </div>
                       ))}
                       <div className="h-px bg-zinc-100" />
-                      <p className="text-xs text-zinc-400">↻ Runs every Monday morning · no setup required</p>
+                      <p className="text-xs text-zinc-400">
+                        ↻ Runs every Monday morning · no setup required
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -633,41 +717,71 @@ function ProfessionalSections() {
             <FadeIn delay={0.05}>
               <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
                 <div className="flex gap-8 flex-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">3</span>
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400 pt-1.5 w-4 shrink-0">
+                    3
+                  </span>
                   <div className="space-y-3">
                     <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                       It runs. You decide.
                     </h3>
                     <p className="text-base leading-relaxed text-zinc-600 max-w-sm">
-                      Agents handle the complex. Automations handle the routine. You come back to the calls only you can make — then it moves on.
+                      Agents handle the complex. Automations handle the routine.
+                      You come back to the calls only you can make — then it
+                      moves on.
                     </p>
                   </div>
                 </div>
                 <div className="flex-1 space-y-2">
                   {[
-                    { label: "Investor update email", note: "Sent automatically · every Friday", auto: true },
-                    { label: "LinkedIn post — product launch", note: "Drafted and scheduled · no action needed", auto: true },
-                    { label: "New hire welcome pack", note: "Sent automatically · triggered on Workday", auto: true },
+                    {
+                      label: "Investor update email",
+                      note: "Sent automatically · every Friday",
+                      auto: true
+                    },
+                    {
+                      label: "LinkedIn post — product launch",
+                      note: "Drafted and scheduled · no action needed",
+                      auto: true
+                    },
+                    {
+                      label: "New hire welcome pack",
+                      note: "Sent automatically · triggered on Workday",
+                      auto: true
+                    }
                   ].map(item => (
-                    <div key={item.label} className="rounded-xl bg-white border border-zinc-200 px-4 py-3 flex items-center justify-between gap-3 shadow-sm">
+                    <div
+                      key={item.label}
+                      className="rounded-xl bg-white border border-zinc-200 px-4 py-3 flex items-center justify-between gap-3 shadow-sm"
+                    >
                       <div>
-                        <p className="text-xs font-medium text-zinc-700">{item.label}</p>
-                        <p className="text-[11px] text-zinc-400 mt-0.5">{item.note}</p>
+                        <p className="text-xs font-medium text-zinc-700">
+                          {item.label}
+                        </p>
+                        <p className="text-[11px] text-zinc-400 mt-0.5">
+                          {item.note}
+                        </p>
                       </div>
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">AUTO</span>
+                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
+                        AUTO
+                      </span>
                     </div>
                   ))}
                   <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs font-medium text-amber-800">Partnership proposal — Mei Chen</p>
-                      <p className="text-[11px] text-amber-600 mt-0.5">Ready to send · needs your sign-off</p>
+                      <p className="text-xs font-medium text-amber-800">
+                        Partnership proposal — Mei Chen
+                      </p>
+                      <p className="text-[11px] text-amber-600 mt-0.5">
+                        Ready to send · needs your sign-off
+                      </p>
                     </div>
-                    <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-amber-800 text-white shrink-0">Approve</button>
+                    <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-amber-800 text-white shrink-0">
+                      Approve
+                    </button>
                   </div>
                 </div>
               </div>
             </FadeIn>
-
           </div>
         </div>
       </section>
@@ -717,7 +831,9 @@ function DeveloperSections() {
       <section className="bg-white px-6 py-32">
         <FadeIn className="max-w-3xl mx-auto">
           <div className="flex items-center gap-3 mb-10">
-            <span className="text-shimmer-dark font-instrument-serif text-2xl leading-none">Y</span>
+            <span className="text-shimmer-dark font-instrument-serif text-2xl leading-none">
+              Y
+            </span>
             <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
               The problem
             </span>
@@ -753,7 +869,9 @@ function DeveloperSections() {
               and moves context where it needs to go.
             </p>
             <p className="font-medium">
-              <strong className="text-shimmer-dark font-bold italic">We&apos;re building that layer.</strong>
+              <strong className="text-shimmer-dark font-bold italic">
+                We&apos;re building that layer.
+              </strong>
             </p>
           </div>
         </FadeIn>
@@ -858,7 +976,9 @@ export default function Home() {
       <section className="bg-white px-6 py-32 text-center border-t border-zinc-200">
         <FadeIn className="max-w-2xl mx-auto space-y-8">
           <div className="flex justify-center">
-            <span className="text-shimmer-dark font-instrument-serif text-8xl leading-none">Y</span>
+            <span className="text-shimmer-dark font-instrument-serif text-8xl leading-none">
+              Y
+            </span>
           </div>
           <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] text-zinc-900 font-instrument-serif">
             {view === "professional"
