@@ -1,93 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
+import { ChevronDown } from "lucide-react"
 import { WaitlistButton } from "@/components/waitlist-button"
 import { FadeIn } from "@/components/fade-in"
-
-const CYAN = "#b1fbff"
-
-/* ── Agent bot icon ──────────────────────────────────────── */
-function AgentIcon({
-  color = CYAN,
-  size = 20
-}: {
-  color?: string
-  size?: number
-}) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <path d="M16 2 L29 9.5 L29 22.5 L16 30 L3 22.5 L3 9.5 Z" fill={color} />
-      <circle cx="12" cy="14" r="2.2" fill="#0b0d12" />
-      <circle cx="20" cy="14" r="2.2" fill="#0b0d12" />
-      <path
-        d="M11 20 Q16 23.5 21 20"
-        stroke="#0b0d12"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        fill="none"
-      />
-    </svg>
-  )
-}
-
-/* ── Agent session tab mockup ────────────────────────────── */
-function AgentTab({
-  title,
-  status,
-  lines,
-  agentColor = CYAN
-}: {
-  title: string
-  status: "running" | "blocked" | "done"
-  lines: string[]
-  agentColor?: string
-}) {
-  const dot =
-    status === "running"
-      ? "bg-emerald-400"
-      : status === "blocked"
-        ? "bg-amber-400"
-        : "bg-zinc-600"
-  const label =
-    status === "running" ? "Running" : status === "blocked" ? "Blocked" : "Done"
-  const labelColor =
-    status === "running"
-      ? "text-emerald-400"
-      : status === "blocked"
-        ? "text-amber-400"
-        : "text-zinc-500"
-
-  return (
-    <div className="rounded-xl overflow-hidden border border-white/8 text-left font-mono text-xs shadow-2xl">
-      <div className="flex items-center gap-2 bg-[#161819] px-4 py-2.5">
-        <AgentIcon color={agentColor} size={15} />
-        <span className="text-zinc-300 text-xs truncate">{title}</span>
-        <div className="ml-auto flex items-center gap-1.5 shrink-0">
-          <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
-          <span className={`text-[10px] ${labelColor}`}>{label}</span>
-        </div>
-      </div>
-      <div className="bg-[#0d0d0d] px-4 py-3 space-y-1.5">
-        {lines.map((line, i) => (
-          <p
-            key={i}
-            className={
-              line.startsWith("●")
-                ? "text-emerald-400"
-                : line.startsWith("!")
-                  ? "text-amber-400"
-                  : line.startsWith(">")
-                    ? "text-zinc-600"
-                    : "text-zinc-400"
-            }
-          >
-            {line}
-          </p>
-        ))}
-      </div>
-    </div>
-  )
-}
+import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 
 /* ── Goal card mockup (professional) ────────────────────── */
 function GoalCard({
@@ -173,145 +91,6 @@ function GoalCard({
     </div>
   )
 }
-
-/* ── View toggle ─────────────────────────────────────────── */
-function ViewToggle({
-  view,
-  onChange
-}: {
-  view: "professional" | "developer"
-  onChange: (v: "professional" | "developer") => void
-}) {
-  return (
-    <div className="flex items-center gap-1 bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/15">
-      {(["professional", "developer"] as const).map(v => (
-        <button
-          key={v}
-          onClick={() => onChange(v)}
-          className={`px-4 py-1.5 rounded-full text-sm transition-all ${
-            view === v
-              ? "bg-white text-zinc-900 font-medium"
-              : "text-white/60 hover:text-white/90"
-          }`}
-        >
-          {v === "professional" ? "Professional" : "Developer"}
-        </button>
-      ))}
-    </div>
-  )
-}
-
-/* ── Developer features data ─────────────────────────────── */
-const devFeatures = [
-  {
-    number: "01",
-    heading: "Every session, one view.",
-    body: "See every agent session you've got running in one place. What it's working on, where it's blocked, what's finished. No more tab-hunting.",
-    visual: (
-      <div className="space-y-3">
-        <AgentTab
-          title="auth-refactor"
-          status="blocked"
-          agentColor="#f97316"
-          lines={[
-            "● Rewriting JWT middleware",
-            "! Waiting: cookie strategy decision",
-            "> Last active 2 min ago"
-          ]}
-        />
-        <AgentTab
-          title="q4-research"
-          status="running"
-          agentColor="#8b5cf6"
-          lines={[
-            "● Scanning competitor pricing pages",
-            "● Summarising into report draft",
-            "> Last active 4 min ago"
-          ]}
-        />
-        <AgentTab
-          title="api-integration"
-          status="done"
-          agentColor={CYAN}
-          lines={[
-            "● Rate limiting implemented",
-            "● Bearer auth wired up",
-            "> Completed 11 min ago"
-          ]}
-        />
-      </div>
-    )
-  },
-  {
-    number: "02",
-    heading: "Pick up where you left off.",
-    body: "Drop into any thread and the overseer briefs you on what happened since you stepped away. Back in 10 seconds, not 10 minutes.",
-    visual: (
-      <AgentTab
-        title="auth-refactor — briefing"
-        status="running"
-        agentColor="#f97316"
-        lines={[
-          "> Session ran 43 min",
-          "● JWT middleware rewritten",
-          "● Refresh token rotation done",
-          "! Open: cookie vs localStorage?",
-          "! Open: persist tokens cross-session?",
-          "> Awaiting your decision to continue"
-        ]}
-      />
-    )
-  },
-  {
-    number: "03",
-    heading: "Port context between sessions.",
-    body: "Move context from one agent to another in one click. No re-explaining, no copy-pasting prompts.",
-    visual: (
-      <div className="space-y-3">
-        <AgentTab
-          title="api-integration → auth-refactor"
-          status="done"
-          agentColor={CYAN}
-          lines={[
-            "> Context transfer initiated",
-            "● Rate limit: 100 req/min",
-            "● Auth scheme: Bearer token",
-            "● Transferred to auth-refactor ✓"
-          ]}
-        />
-        <AgentTab
-          title="auth-refactor"
-          status="running"
-          agentColor="#f97316"
-          lines={[
-            "● Context received from api-integration",
-            "● Applying rate-limit constraints...",
-            "> Continuing without re-briefing"
-          ]}
-        />
-      </div>
-    )
-  },
-  {
-    number: "04",
-    heading: "Easily customise agent system prompts.",
-    body: "",
-    visual: (
-      <AgentTab
-        title="system-prompt editor"
-        status="running"
-        agentColor="#10b981"
-        lines={[
-          "> Editing: auth-refactor agent",
-          "● You are a senior backend engineer...",
-          "● Prefer httpOnly cookies over localStorage",
-          "● Always ask before modifying schema",
-          "> Saved & applied to session ✓"
-        ]}
-      />
-    )
-  }
-]
 
 /* ── Professional features data ─────────────────────────── */
 const proFeatures = [
@@ -483,46 +262,120 @@ const proFeatures = [
   }
 ]
 
+/* ── Social proof data ───────────────────────────────────── */
+const testimonials = [
+  {
+    quote:
+      "I know I'm leaving hours on the table every week. I just need someone to show me where the gaps are.",
+    role: "Head of Business Development, music fintech"
+  },
+  {
+    quote:
+      "The data exists — it's all in our project tracker. We just don't have anyone pulling on it forensically.",
+    role: "Managing Director, asset management"
+  },
+  {
+    quote:
+      "I track my work in one tool and actually do the work in another. There's no real connection between them.",
+    role: "Product Manager, global manufacturing"
+  },
+  {
+    quote:
+      "I've built five custom AI workflows for myself. But my team can't do that — and the gap is only growing.",
+    role: "Head of Sales, SaaS"
+  },
+  {
+    quote:
+      "The tools that exist are either too technical for normal people or too simple to be genuinely useful.",
+    role: "CEO, research & insights"
+  }
+]
+
+function TestimonialCard({ quote, role }: { quote: string; role: string }) {
+  return (
+    <div className="w-[18rem] shrink-0 rounded-2xl bg-white border border-zinc-200 shadow-sm p-6 flex flex-col gap-5 min-h-56 sm:w-[21rem]">
+      <p className="text-zinc-700 text-sm leading-relaxed italic flex-1">
+        &ldquo;{quote}&rdquo;
+      </p>
+      <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400">
+        {role}
+      </p>
+    </div>
+  )
+}
+
+/* ── FAQ data ─────────────────────────────────────────────── */
+const faqs = [
+  {
+    q: "Do I need to know how to code?",
+    a: "No. Yaven is built for people who work in complex systems — not people who build them. If you can describe a workflow, Yaven can help run it."
+  },
+  {
+    q: "How is this different from just using ChatGPT?",
+    a: "ChatGPT answers questions in a conversation. Yaven manages ongoing work. It remembers context between sessions, connects to the tools you already use, and keeps things moving without constant input from you."
+  },
+  {
+    q: "What tools does Yaven connect to?",
+    a: "We're building integrations with the tools people actually use: Notion, Gmail, HubSpot, Slack, Monday.com, LinkedIn, Airtable, and more. Tell us what you need when you join the waitlist."
+  },
+  {
+    q: "When will I get access?",
+    a: "We're onboarding our first users now. Join the waitlist and we'll reach out directly — no queue number, just a conversation."
+  },
+  {
+    q: "Is my data private?",
+    a: "Yes. Your workflows, goals, and data are yours. We don't use your content to train models or share it with third parties."
+  }
+]
+
 /* ── Professional content ────────────────────────────────── */
 function ProfessionalSections() {
+  const [openFaqIndex, setOpenFaqIndex] = useState(0)
+
   return (
     <>
-      {/* Intro */}
-      <section className="bg-white px-6 py-32">
+      {/* ── Intro: master of many domains ──────────────────── */}
+      <section className="bg-white px-6 py-16 sm:py-32">
         <FadeIn className="max-w-3xl mx-auto">
           <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-10">
-            You have things to get done. Yaven handles them.
+            You are a master of many domains.
           </h2>
           <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-600">
             <p>
-              Not a chatbot. Not another tab. Yaven is where your goals, work
-              projects, research, outreach, decisions, planning, live and get
-              completed. You set the direction. Your agents handle the work.
+              You move between emails, Slack, meetings, spreadsheets, CRMs —
+              each with its own language and priorities. Keeping on top of all
+              of it is exactly what makes you effective. But it shouldn&apos;t
+              have to sit entirely in your head.
+            </p>
+            <p>
+              Not a chatbot. Not another tab. Yaven is where your goals,
+              projects, research, outreach, and decisions live and get
+              completed. You set the direction. Your agents handle the work. And
+              you don&apos;t need to be an engineer to use it.
             </p>
           </div>
         </FadeIn>
       </section>
 
-      {/* Use cases */}
-      <section className="bg-white px-6 pb-32">
-        <FadeIn className="max-w-6xl mx-auto border-t border-zinc-200 pt-20">
-          <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
+      {/* ── Use cases ──────────────────────────────────────── */}
+      <section className="bg-white px-6 pb-16 sm:pb-32">
+        <FadeIn className="max-w-6xl mx-auto border-t border-zinc-200 pt-10 sm:pt-20">
+          <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
             <div className="flex-1 space-y-8 lg:pt-4">
               <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif">
                 Built for the way you actually work.
               </h2>
               <div className="space-y-8 text-base sm:text-lg leading-relaxed text-zinc-600">
                 <p>
-                  Someone is running AEO research for three clients, briefing a
-                  newsletter, and tracking a pipeline across two companies. They
-                  tell Yaven what needs to happen. They come back to progress,
-                  not questions.
+                  You&apos;re running SEO research for three clients, briefing a
+                  newsletter, and tracking a pipeline across two companies. You
+                  describe the workflow to Yaven. You come back to progress —
+                  and the questions that only you can answer.
                 </p>
                 <p>
-                  Another is onboarding a new portfolio manager at an asset
-                  management firm. Yaven handles the CRM updates, the briefing
-                  documents, and the follow-up emails while they focus on the
-                  relationship.
+                  Maybe you&apos;re onboarding a new hire at your firm. Yaven
+                  handles the CRM updates, the briefing documents, and the
+                  follow-up emails while you focus on the relationship.
                 </p>
                 <p>
                   You want to research a kitchen renovation, compare
@@ -533,25 +386,25 @@ function ProfessionalSections() {
             </div>
             <div className="flex-1 space-y-3">
               <GoalCard
-                title="AEO Research — 3 clients"
+                title="SEO research — 3 clients"
                 tag="Research"
                 status="active"
                 tasks={[
                   { label: "Competitor analysis complete", state: "done" },
-                  { label: "Top questions mapped", state: "done" },
-                  { label: "Writing FAQ briefs...", state: "active" }
+                  { label: "Top keywords mapped", state: "done" },
+                  { label: "Writing content briefs...", state: "active" }
                 ]}
               />
               <GoalCard
-                title="Portfolio manager onboarding"
-                tag="Client work"
+                title="New hire onboarding — Alex"
+                tag="Operations"
                 status="review"
                 tasks={[
                   { label: "CRM updated", state: "done" },
                   { label: "Briefing document drafted", state: "done" },
-                  { label: "Follow-up email ready", state: "done" }
+                  { label: "Intro meetings scheduled", state: "done" }
                 ]}
-                footer="Draft email waiting for your approval"
+                footer="Welcome pack ready for your review"
               />
               <GoalCard
                 title="Kitchen renovation research"
@@ -567,26 +420,29 @@ function ProfessionalSections() {
         </FadeIn>
       </section>
 
-      {/* How it works */}
-      <section className="bg-zinc-50 px-6 py-32 border-t border-zinc-200">
+      {/* ── How it works ───────────────────────────────────── */}
+      <section className="bg-zinc-50 px-6 py-16 sm:py-32 border-t border-zinc-200">
         <div className="max-w-6xl mx-auto">
           <FadeIn>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-20">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-10 sm:mb-20">
               How it works.
             </h2>
           </FadeIn>
-          <div className="space-y-32">
-            {/* Step 1 — text left, visual right */}
+          <div className="space-y-16 sm:space-y-32">
+            {/* Step 1 */}
             <FadeIn delay={0.05}>
-              <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
+              <div className="flex flex-col gap-10 sm:gap-10 sm:gap-16 lg:flex-row lg:items-start">
                 <div className="flex-1 space-y-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">01</span>
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
+                    01
+                  </span>
                   <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                    Tell Yaven what you're working toward.
+                    Tell Yaven what you&apos;re working toward.
                   </h3>
                   <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
-                    Your goals, your tools, how your week runs. The more it
-                    understands your world, the more it can do in it.
+                    Your day-to-day, your goals, your tools, how your week runs.
+                    The more it understands your world, the more it can do in
+                    it.
                   </p>
                 </div>
                 <div className="flex-1">
@@ -607,12 +463,15 @@ function ProfessionalSections() {
                             "/logos/gmail.png",
                             "/logos/hubspot.png",
                             "/logos/monday.png",
-                            "/logos/linkedin.png"
+                            "/logos/linkedin.png",
+                            "/logos/asana.png"
                           ].map((l, i) => (
-                            <img
+                            <Image
                               key={i}
                               src={l}
                               alt=""
+                              width={24}
+                              height={24}
                               className="w-6 h-6 rounded object-contain opacity-40"
                             />
                           ))}
@@ -620,11 +479,11 @@ function ProfessionalSections() {
                       </div>
                       <div>
                         <p className="text-xs text-zinc-400 mb-1">
-                          What you're focused on
+                          What you&apos;re focused on
                         </p>
                         <p className="text-xs text-zinc-700 leading-relaxed">
-                          Growing partnerships in APAC, managing a team of 6,
-                          weekly investor updates
+                          Weekly investor updates · Q2 content calendar for four
+                          clients · onboarding two new hires
                         </p>
                       </div>
                       <div className="bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
@@ -641,11 +500,13 @@ function ProfessionalSections() {
               </div>
             </FadeIn>
 
-            {/* Step 2 — text right, visual left */}
+            {/* Step 2 */}
             <FadeIn delay={0.05}>
               <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-start">
                 <div className="flex-1 space-y-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">02</span>
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
+                    02
+                  </span>
                   <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                     It builds the playbook.
                   </h3>
@@ -662,25 +523,22 @@ function ProfessionalSections() {
                         Playbook created
                       </p>
                       <p className="text-zinc-800 font-medium">
-                        APAC partnership outreach
+                        Weekly investor update
                       </p>
                     </div>
                     <div className="px-5 py-4 space-y-3">
                       {[
                         {
                           agent: "Research agent",
-                          task: "Scans LinkedIn + news for warm leads",
-                          state: "auto"
+                          task: "Pulls portfolio performance data"
+                        },
+                        {
+                          agent: "Writing agent",
+                          task: "Drafts the update in your tone and format"
                         },
                         {
                           agent: "Outreach agent",
-                          task: "Drafts and sends personalised emails",
-                          state: "auto"
-                        },
-                        {
-                          agent: "CRM agent",
-                          task: "Logs replies and updates HubSpot",
-                          state: "auto"
+                          task: "Sends to your distribution list"
                         }
                       ].map(row => (
                         <div key={row.agent} className="flex items-start gap-3">
@@ -697,7 +555,7 @@ function ProfessionalSections() {
                       ))}
                       <div className="h-px bg-zinc-100" />
                       <p className="text-xs text-zinc-400">
-                        ↻ Runs every Monday morning · no setup required
+                        ↻ Runs every Friday morning · no setup required
                       </p>
                     </div>
                   </div>
@@ -705,36 +563,35 @@ function ProfessionalSections() {
               </div>
             </FadeIn>
 
-            {/* Step 3 — text left, visual right */}
+            {/* Step 3 */}
             <FadeIn delay={0.05}>
-              <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
+              <div className="flex flex-col gap-10 sm:gap-10 sm:gap-16 lg:flex-row lg:items-start">
                 <div className="flex-1 space-y-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">03</span>
+                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
+                    03
+                  </span>
                   <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                     It runs. You decide.
                   </h3>
                   <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
                     Agents handle the complex. Automations handle the routine.
-                    You come back to the calls only you can make — then it
-                    moves on.
+                    You come back to the calls only you can make — then it moves
+                    on.
                   </p>
                 </div>
                 <div className="flex-1 space-y-2">
                   {[
                     {
                       label: "Investor update email",
-                      note: "Sent automatically · every Friday",
-                      auto: true
+                      note: "Sent automatically · every Friday"
                     },
                     {
-                      label: "LinkedIn post — product launch",
-                      note: "Drafted and scheduled · no action needed",
-                      auto: true
+                      label: "Monthly client report — 4 accounts",
+                      note: "Compiled and sent · no action needed"
                     },
                     {
                       label: "New hire welcome pack",
-                      note: "Sent automatically · triggered on Workday",
-                      auto: true
+                      note: "Sent automatically · on contract signing"
                     }
                   ].map(item => (
                     <div
@@ -757,10 +614,10 @@ function ProfessionalSections() {
                   <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-medium text-amber-800">
-                        Partnership proposal — Mei Chen
+                        Q3 proposal — Northfield Partners
                       </p>
                       <p className="text-[11px] text-amber-600 mt-0.5">
-                        Ready to send · needs your sign-off
+                        Draft ready · needs your sign-off before sending
                       </p>
                     </div>
                     <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-amber-800 text-white shrink-0">
@@ -774,19 +631,19 @@ function ProfessionalSections() {
         </div>
       </section>
 
-      {/* What Yaven gives you */}
-      <section className="bg-white px-6 py-32 border-t border-zinc-200">
+      {/* ── What Yaven gives you ────────────────────────────── */}
+      <section className="bg-white px-6 py-16 sm:py-32 border-t border-zinc-200">
         <div className="max-w-6xl mx-auto">
           <FadeIn>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-20">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-10 sm:mb-20">
               What Yaven gives you.
             </h2>
           </FadeIn>
-          <div className="space-y-32">
+          <div className="space-y-16 sm:space-y-32">
             {proFeatures.map((f, i) => (
               <FadeIn key={f.number} delay={0.05}>
                 <div
-                  className={`flex flex-col gap-16 lg:flex-row lg:items-start ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
+                  className={`flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
                 >
                   <div className="flex-1 space-y-1 lg:pt-4">
                     <p className="text-xs tracking-[0.2em] uppercase text-zinc-400">
@@ -808,91 +665,82 @@ function ProfessionalSections() {
           </div>
         </div>
       </section>
-    </>
-  )
-}
 
-/* ── Developer content ───────────────────────────────────── */
-function DeveloperSections() {
-  return (
-    <>
-      <section className="bg-[#0b0d12] px-6 py-16 sm:py-32">
-        <FadeIn className="max-w-3xl mx-auto">
-          <div className="flex items-center gap-3 mb-10">
-            <span className="text-shimmer font-instrument-serif text-2xl leading-none">я</span>
-            <span className="text-xs tracking-[0.2em] uppercase text-zinc-500">
-              The problem
-            </span>
-          </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-white font-instrument-serif mb-10">
-            Six tabs. Zero memory. All in your head.
-          </h2>
-          <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-400">
-            <p>
-              You&apos;re running multiple agent sessions on different threads.
-              One refactoring auth, one writing tests, one researching a fix.
-              You step away for a meeting. You come back and have to ask each
-              session &ldquo;where were we?&rdquo;
-            </p>
-            <p>
-              Agents have memory inside each session. They don&apos;t transfer
-              this to each other. You become the human glue holding the workflow
-              together.
-            </p>
-          </div>
-        </FadeIn>
-      </section>
-
-      <section className="bg-[#0b0d12] px-6 pb-16 sm:pb-32">
-        <FadeIn className="max-w-3xl mx-auto border-t border-white/10 pt-20">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-white font-instrument-serif mb-10">
-            Your agents shouldn&apos;t live in tabs.
-          </h2>
-          <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-400">
-            <p>
-              You don&apos;t need fewer agents. You need a layer above them that
-              remembers what each one is doing, knows when they&apos;re done,
-              and moves context where it needs to go.
-            </p>
-            <p className="font-medium">
-              <strong className="text-shimmer font-bold italic">
-                We&apos;re building that layer.
-              </strong>
-            </p>
-          </div>
-        </FadeIn>
-      </section>
-
-      <section className="bg-[#0f1117] px-4 sm:px-6 py-16 sm:py-32 border-t border-white/5">
+      {/* ── Social proof ───────────────────────────────────── */}
+      <section className="bg-zinc-50 px-6 py-16 sm:py-32 border-t border-zinc-200">
         <div className="max-w-6xl mx-auto">
           <FadeIn>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-white font-instrument-serif mb-10 sm:mb-20">
-              What Yaven does
+            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-4">
+              Built with people like you.
+            </h2>
+            <p className="text-base sm:text-lg text-zinc-500 mb-8 sm:mb-16 max-w-xl">
+              Before we wrote a line of code, we sat down with the people
+              who&apos;d use it. Here&apos;s what we heard.
+            </p>
+          </FadeIn>
+          <FadeIn>
+            <div className="testimonial-marquee -mx-6 px-6">
+              <div className="testimonial-marquee-track flex w-max gap-4">
+                {[...testimonials, ...testimonials].map((t, i) => (
+                  <TestimonialCard
+                    key={`${t.role}-${i}`}
+                    quote={t.quote}
+                    role={t.role}
+                  />
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── FAQ ────────────────────────────────────────────── */}
+      <section className="bg-white px-6 py-16 sm:py-32 border-t border-zinc-200">
+        <div className="max-w-3xl mx-auto">
+          <FadeIn>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-8 sm:mb-16">
+              Frequently asked questions.
             </h2>
           </FadeIn>
-          <div className="space-y-16 sm:space-y-32">
-            {devFeatures.map((f, i) => (
-              <FadeIn key={f.number} delay={0.05}>
-                <div
-                  className={`flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
-                >
-                  <div className="flex-1 space-y-1 lg:pt-4">
-                    <p className="text-xs tracking-[0.2em] uppercase text-zinc-600">
-                      {f.number}
-                    </p>
-                    <h3 className="text-xl sm:text-2xl leading-[1.1] tracking-[-0.4px] text-white font-instrument-serif">
-                      {f.heading}
-                    </h3>
-                    {f.body && (
-                      <p className="text-base leading-relaxed text-zinc-400 max-w-sm">
-                        {f.body}
+          <div>
+            {faqs.map((faq, i) => (
+              <FadeIn key={i} delay={0.04}>
+                <div className="border-t border-zinc-200 py-8">
+                  <button
+                    type="button"
+                    aria-expanded={openFaqIndex === i}
+                    aria-controls={`faq-answer-${i}`}
+                    className="flex w-full items-center justify-between gap-4 text-left"
+                    onClick={() => setOpenFaqIndex(openFaqIndex === i ? -1 : i)}
+                  >
+                    <span className="text-lg font-medium text-zinc-900">
+                      {faq.q}
+                    </span>
+                    <ChevronDown
+                      aria-hidden="true"
+                      className={`size-5 shrink-0 text-zinc-400 transition-transform duration-300 ${
+                        openFaqIndex === i ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  <div
+                    id={`faq-answer-${i}`}
+                    className={`grid transition-all duration-300 ease-out ${
+                      openFaqIndex === i
+                        ? "grid-rows-[1fr] pt-3 opacity-100"
+                        : "grid-rows-[0fr] opacity-0"
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="text-base leading-relaxed text-zinc-600">
+                        {faq.a}
                       </p>
-                    )}
+                    </div>
                   </div>
-                  <div className="flex-1">{f.visual}</div>
                 </div>
               </FadeIn>
             ))}
+            <div className="border-t border-zinc-200" />
           </div>
         </div>
       </section>
@@ -901,13 +749,20 @@ function DeveloperSections() {
 }
 
 export default function Home() {
-  const [view, setView] = useState<"professional" | "developer">("professional")
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.35
+    }
+  }, [])
 
   return (
     <>
       {/* ── Hero ───────────────────────────────────────────── */}
       <section className="relative min-h-screen overflow-hidden bg-[#0b0d12]">
         <video
+          ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover z-0"
           autoPlay
           loop
@@ -917,31 +772,27 @@ export default function Home() {
           <source src="/hero-bg.mp4" type="video/mp4" />
         </video>
 
-        <div className={`absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t ${view === "developer" ? "from-[#0b0d12]" : "from-white"} to-transparent z-2 pointer-events-none`} />
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t from-white to-transparent z-2 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full px-8 pt-8 flex items-center justify-between">
           <span className="text-4xl tracking-tight text-[#F2F2E5] font-instrument-serif">
             yaven
           </span>
-          <ViewToggle view={view} onChange={setView} />
         </div>
 
-        <div className="relative z-10 flex flex-col justify-center px-8 pt-10 pb-40 min-h-[calc(100vh-72px)] max-w-7xl mx-auto w-full">
-          <div className="max-w-none">
-            <h1 className="text-[5.5vw] leading-[0.95] tracking-[-2.46px] text-[#1a2744] font-instrument-serif animate-fade-rise whitespace-nowrap">
-              Focus in a Distracted World
+        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-center px-6 pb-16 pt-24 sm:px-8 lg:pb-20 lg:pt-36">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl leading-[0.98] tracking-normal text-[#1a2744] font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl">
+              Focus in a distracted world
             </h1>
 
-            <p className="text-base max-w-lg mt-8 leading-relaxed text-black animate-fade-rise-delay">
-              Tell Yaven what you want to accomplish. It works through it — so
-              you come back to results, not{" "}
-              <strong className="text-shimmer font-bold italic">chaos</strong>.
+            <p className="text-base font-semibold max-w-lg mt-8 leading-relaxed text-black animate-fade-rise-delay">
+              Tell us how you work, we'll show you what could run on its own
             </p>
 
-            <WaitlistButton
-              label="Join the Waitlist"
-              className="mt-8 rounded-full bg-[#F2F2E5] text-zinc-900 px-10 py-3.5 text-base font-medium hover:scale-[1.03] transition-all cursor-pointer animate-fade-rise-delay-2 btn-hero-shadow"
-            />
+            <div className="mt-8 max-w-[440px] animate-fade-rise-delay-2">
+              <BlueprintPanel />
+            </div>
 
             <p className="mt-8 text-xs text-black/70 animate-fade-rise-delay-2">
               <span className="font-bold">явен (yaven)</span>{" "}
@@ -955,24 +806,24 @@ export default function Home() {
       </section>
 
       {/* ── Content ────────────────────────────────────────── */}
-      {view === "professional" ? (
-        <ProfessionalSections />
-      ) : (
-        <DeveloperSections />
-      )}
+      <ProfessionalSections />
 
       {/* ── Footer CTA ─────────────────────────────────────── */}
-      <section className={`px-4 sm:px-6 py-16 sm:py-32 text-center ${view === "developer" ? "bg-[#0b0d12] border-t border-white/5" : "bg-white border-t border-zinc-200"}`}>
+      <section className="px-4 sm:px-6 py-16 sm:py-32 text-center bg-white border-t border-zinc-200">
         <FadeIn className="max-w-2xl mx-auto space-y-8">
           <div className="flex justify-center">
-            <span className={`${view === "developer" ? "text-shimmer" : "text-shimmer-dark"} font-instrument-serif text-8xl leading-none`}>я</span>
+            <Image
+              src="/logo.png"
+              alt="Yaven"
+              width={96}
+              height={96}
+              className="size-20 rounded-2xl object-cover sm:size-24"
+            />
           </div>
-          <h2 className={`text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] font-instrument-serif ${view === "developer" ? "text-white" : "text-zinc-900"}`}>
-            {view === "professional"
-              ? "Stop juggling. Start doing."
-              : "Stop babysitting. Start building."}
+          <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] font-instrument-serif text-zinc-900">
+            Stop juggling. Start doing.
           </h2>
-          <p className={`text-base leading-relaxed ${view === "developer" ? "text-zinc-400" : "text-zinc-600"}`}>
+          <p className="text-base leading-relaxed text-zinc-600">
             Early access is limited. Get in before the queue fills up.
           </p>
           <WaitlistButton
