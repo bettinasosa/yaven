@@ -323,8 +323,7 @@ export function BlueprintPanel() {
               body: JSON.stringify({
                 email,
                 role: answers.role,
-                topOpportunity: blueprint.topOpportunities[0]?.taskName ?? desiredAutomation,
-                source: "automation_preview_waitlist"
+                typicalDay: answers.typicalDay,
               })
             })
             if (!response.ok) throw new Error("Failed")

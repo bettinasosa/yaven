@@ -51,8 +51,7 @@ export function WaitlistForm({
           email,
           name,
           role: answers.role,
-          topOpportunity: blueprint.topOpportunities[0]?.taskName ?? desiredAutomation,
-          source: "automation_preview_waitlist"
+          typicalDay: answers.typicalDay,
         })
       })
 
