@@ -50,34 +50,8 @@ export function WaitlistForm({
         body: JSON.stringify({
           email,
           name,
-          blueprintId,
-          desiredAutomation,
-          // All answers
           role: answers.role,
-          responsibilitySummary: answers.responsibilitySummary,
-          typicalDay: answers.typicalDay,
-          repeatedTasks: answers.repeatedTasks.join(", "),
-          painfulTasks: answers.painfulTasks.join(", "),
-          toolsUsed: answers.toolsUsed.join(", "),
-          copyPasteFlows: answers.copyPasteFlows.join(", "),
-          recurringDecisions: answers.recurringDecisions.join(", "),
-          regularOutputs: answers.regularOutputs.join(", "),
-          desiredFirstAutomation: answers.desiredFirstAutomation,
-          // Blueprint output
-          topOpportunity: blueprint.topOpportunities[0]?.taskName,
-          topOpportunities: blueprint.topOpportunities.map(o => o.taskName).join(", "),
-          quickWins: blueprint.quickWins.map(o => o.taskName).join(", "),
-          blueprintHeadline: blueprint.blueprintHeadline,
-          userSummary: blueprint.userSummary,
-          agentTeamSummary: blueprint.agentTeam?.summary,
-          agentTeamHours: blueprint.agentTeam?.hoursPerWeek,
-          agentNames: blueprint.agentTeam?.agents.map(a => a.name).join(", "),
-          workflowMapTitle: blueprint.workflowSchematic?.title,
-          workflowMapSummary: blueprint.workflowSchematic?.summary,
-          workflowMapSteps: blueprint.workflowSchematic?.steps
-            .map(step => `${step.label}: ${step.detail}`)
-            .join("\n"),
-          promptTemplate: blueprint.suggestedPromptTemplate.prompt,
+          topOpportunity: blueprint.topOpportunities[0]?.taskName ?? desiredAutomation,
           source: "automation_preview_waitlist"
         })
       })
