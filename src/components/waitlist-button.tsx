@@ -5,10 +5,20 @@ import { BubbleButton } from "@/components/bubble-button";
 
 const WORK_TYPES = [
   "Founder",
+  "Freelancer",
+  "Consultant",
+  "Creator",
+  "Operator",
+  "Sales / BD",
+  "Marketing",
   "Product",
   "Engineering",
-  "Design",
-  "Hobby / Personal",
+  "Recruiting",
+  "Customer Success",
+  "Finance / Ops",
+  "Executive Assistant",
+  "Research",
+  "Student",
   "Other",
 ];
 
@@ -76,7 +86,7 @@ export function WaitlistButton({
 
       {open && (
         <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           onClick={handleClose}
         >
           <div
@@ -91,14 +101,30 @@ export function WaitlistButton({
             </button>
 
             {submitted ? (
-              <div className="text-center py-12 px-8 sm:px-10 space-y-3">
-                <p className="text-3xl font-instrument-serif text-zinc-900">
-                  You&apos;re on the list.
-                </p>
-                <p className="text-zinc-500 font-inter text-sm leading-relaxed">
-                  We&apos;ll reach out when early access opens.
-                  <br />
-                  Until then — keep building.
+              <div className="py-12 px-8 sm:px-10 space-y-6">
+                <div className="space-y-2">
+                  <p className="text-3xl font-instrument-serif text-zinc-900">
+                    You&apos;re on the list.
+                  </p>
+                  <p className="text-zinc-500 text-sm leading-relaxed">
+                    We&apos;ll be in touch as soon as early access opens — you&apos;ll be among the first to get in.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    { icon: "→", text: "A personal onboarding call to map your workflows" },
+                    { icon: "→", text: "Full access to your agent workspace from day one" },
+                    { icon: "→", text: "Direct line to the team while we build together" },
+                  ].map(({ icon, text }) => (
+                    <div key={text} className="flex items-start gap-3">
+                      <span className="text-[#607da7] text-sm font-bold shrink-0 mt-0.5">{icon}</span>
+                      <p className="text-sm text-zinc-600 leading-snug">{text}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  In the meantime, if you have questions or want to share what you&apos;re building, reach us at{" "}
+                  <a href="mailto:hello@yaven.ai" className="underline hover:text-zinc-600 transition-colors">hello@yaven.ai</a>.
                 </p>
               </div>
             ) : (
@@ -108,13 +134,13 @@ export function WaitlistButton({
                   <p className="text-2xl sm:text-3xl font-instrument-serif text-zinc-900 mb-2">
                     Join the waitlist
                   </p>
-                  <p className="text-sm text-zinc-500 font-inter mb-8 leading-relaxed">
-                    We&apos;ll reach out when early access opens.
+                  <p className="text-sm text-zinc-500 leading-relaxed mb-6">
+                    We&apos;re opening access in small batches — tell us a bit about yourself and we&apos;ll reach out when your spot is ready.
                   </p>
 
                   <div className="space-y-4">
                     <div>
-                      <label className="text-xs tracking-[0.15em] uppercase text-zinc-400 font-inter block mb-2">
+                      <label className="text-sm text-zinc-500 block mb-2">
                         Email
                       </label>
                       <input
@@ -127,7 +153,7 @@ export function WaitlistButton({
                       />
                     </div>
                     <div>
-                      <label className="text-xs tracking-[0.15em] uppercase text-zinc-400 font-inter block mb-2">
+                      <label className="text-sm text-zinc-500 block mb-2">
                         What do you do?
                       </label>
                       <div className="relative">
@@ -160,8 +186,11 @@ export function WaitlistButton({
                 <div className="px-8 sm:px-10 pb-8 sm:pb-10 pt-4 bg-white rounded-b-3xl">
                   <button
                     type="submit"
-                    disabled={loading || !email}
-                    className="w-full rounded-full bg-zinc-900 text-white text-base font-inter py-3.5 hover:bg-zinc-700 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                    disabled={loading || !email || !workType}
+                    className="w-full rounded-full text-white text-base font-bold py-3.5 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ background: "#384175" }}
+                    onMouseEnter={e => { if (!loading && email && workType) (e.currentTarget as HTMLButtonElement).style.background = "#607da7" }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "#384175" }}
                   >
                     {loading ? "Saving…" : "Get early access"}
                   </button>

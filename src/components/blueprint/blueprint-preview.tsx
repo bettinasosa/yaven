@@ -44,32 +44,27 @@ export function BlueprintPreview({
   }
 
   return (
-    <div className="flex flex-col gap-7 pb-28">
+    <div className="flex flex-col gap-8 pb-28">
       {/* Header */}
       <div className="space-y-2">
         <h3 className="text-4xl leading-tight text-zinc-900 font-instrument-serif">
           {role} — here&apos;s your week, optimised.
         </h3>
         <p className="text-sm leading-relaxed text-zinc-500">
-          Based on your stack and what you flagged, here&apos;s what we&apos;d
-          take off your plate first. These aren&apos;t hypotheticals.
+          {blueprint.userSummary}
         </p>
       </div>
 
-      {/* Automation items */}
-      <div className="space-y-4">
+      {/* Automation opportunities */}
+      <div className="space-y-5">
         {opportunities.map(opportunity => (
           <div key={opportunity.id} className="flex gap-3">
-            <span className="mt-0.5 shrink-0 text-sm font-semibold text-[#83A5D4]">
-              →
-            </span>
-            <p className="text-sm leading-relaxed text-zinc-700">
-              <span className="font-semibold text-zinc-900">
-                {opportunity.taskName}
-              </span>
-              {" — "}
-              {opportunity.whyAutomatable}
-            </p>
+            <span className="mt-0.5 shrink-0 text-sm font-semibold text-[#607da7]">→</span>
+            <div className="space-y-0.5">
+              <p className="text-sm font-semibold text-zinc-900">{opportunity.taskName}</p>
+              <p className="text-sm leading-relaxed text-zinc-500">{opportunity.whyAutomatable}</p>
+              <p className="text-xs leading-relaxed text-zinc-400 italic">{opportunity.firstVersion}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -89,7 +84,6 @@ export function BlueprintPreview({
 
       {/* Sticky CTA */}
       <div className="sticky bottom-0 bg-gradient-to-t from-[#FDFDF9] via-[#FDFDF9]/95 to-transparent pt-8 pb-1">
-        {/* Desktop: inline email form */}
         <form
           onSubmit={handleInlineSubmit}
           className="relative hidden sm:flex items-center gap-2"
@@ -125,7 +119,6 @@ export function BlueprintPreview({
           )}
         </form>
 
-        {/* Mobile: CTA button → email phase */}
         <button
           type="button"
           onClick={onUnlock}
