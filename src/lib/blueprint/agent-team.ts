@@ -108,46 +108,69 @@ export function buildAgentTeamPrompt(
   answers: BlueprintInput,
   opportunity?: AutomationOpportunity | null
 ) {
-  const { role, drain } = getAgentTeamContext(answers, opportunity)
-  const repeatedTasks = answers.repeatedTasks.join(", ") || "Not specified"
+  const { role } = getAgentTeamContext(answers, opportunity)
   const tools = answers.toolsUsed.join(", ") || "Not specified"
-  const outputs = answers.regularOutputs.join(", ") || "Not specified"
-  const decisions = answers.recurringDecisions.join(", ") || "Not specified"
+  const painfulTasks = answers.painfulTasks.join(", ") || "Not specified"
+  const agentNames = AGENT_NAME_POOL.join(", ")
 
-  return `You are designing an AI agent team for a real person who wants to know what could be automated for them.
-
-Their role: "${role.replace(/"/g, "'")}"
-Their biggest weekly time drain: "${drain.replace(/"/g, "'")}"
-Their typical week: "${answers.typicalDay.replace(/"/g, "'") || "Not specified"}"
-Repeated tasks they mentioned: "${repeatedTasks.replace(/"/g, "'")}"
-Tools they use: "${tools.replace(/"/g, "'")}"
-Outputs they create: "${outputs.replace(/"/g, "'")}"
-Recurring decisions: "${decisions.replace(/"/g, "'")}"
-
-Design exactly 4 agents that would work for them. Constraints:
-- Each agent must be specific to their actual answers — no generic AI assistant fluff
-- Names must be unique human first names. Use names like ${AGENT_NAME_POOL.join(", ")} or similar — never repeat a name and never include the word "AI", "Bot", or "Agent" in the name
-- Roles are 2-4 word job titles ("Inbox Triager", "Pipeline Cleaner", "Research Scout") — not generic ("Assistant", "Helper")
-- The "handles" sentence references their specific situation, tools, outputs, or repeated tasks; uses concrete verbs; and avoids hedging ("could", "may", "helps with")
-- Schedules should vary across the team — mix of always-on, periodic, daily, weekly. Not all "every 30 min"
-- The hours estimate should be realistic for their answers — between 4 and 20 hrs/week
-- The summary names what the user gets back, not what the agents do
-- Do not copy the example roles or example names unless they genuinely fit the user's answer
-
-Output ONLY valid JSON, no preamble, no code fences, no explanation. Use this exact structure:
-
-{
-  "hoursPerWeek": <integer between 4 and 20>,
-  "summary": "<one short sentence about what this frees the user up to focus on>",
-  "agents": [
-    {
-      "name": "<distinctive first name>",
-      "role": "<2-4 word job title>",
-      "handles": "<one concrete sentence about what they do, referencing the user's specific drain>",
-      "schedule": "<short cadence — Every 30 min / Daily 9am / On demand / Weekly Mon>"
-    }
-  ]
-}`
+  return (
+    "You are designing an AI automation plan for a real person who wants to know exactly what could be automated for them.\n\n" +
+    `Their role: "${role.replace(/"/g, "'")}"\n` +
+    `Tools they use every day: "${tools.replace(/"/g, "'")}"\n` +
+    `Tasks that eat their time (everything they flagged, including any custom ones they typed): "${painfulTasks.replace(/"/g, "'")}"\n\n` +
+    "You must return TWO things:\n\n" +
+    "PART 1 - Automation opportunities\n" +
+    "Generate 3-4 specific automations for this person based on their actual tasks and tools.\n\n" +
+    "Rules for opportunities:\n" +
+    "- taskName: 2-5 words, concrete noun phrase. Examples: CRM auto-logging, Follow-up drafting, Prospect enrichment, Pipeline alerts, Weekly report assembly, Candidate outreach. No verbs. No generic names like Task Automation.\n" +
+    "- description: 1-2 SHORT sentences. Must:\n" +
+    "  * Name the specific tool (e.g. pushed to HubSpot, Apollo to Clay to Salesforce, synced to Notion)\n" +
+    "  * Say what the person no longer has to do. End with a punchy closing like: No copy-paste. / Review and send, don't write from scratch. / No manual data entry. / No weekly review needed. / Zero cleanup. / Nothing to remember.\n" +
+    "  * Be written in present tense, active voice\n" +
+    "  * Sound like it is already built and working, not hypothetical\n\n" +
+    "Good examples for Sales / BD with HubSpot and Apollo:\n" +
+    "  taskName: CRM auto-logging\n" +
+    "  description: Call notes summarised and pushed to HubSpot after every meeting. No copy-paste.\n\n" +
+    "  taskName: Follow-up drafting\n" +
+    "  description: Context-aware follow-ups written from your call transcript. Review and send, don't write from scratch.\n\n" +
+    "  taskName: Prospect enrichment\n" +
+    "  description: Apollo to Clay to HubSpot, automatic. No manual data entry.\n\n" +
+    "  taskName: Pipeline alerts\n" +
+    "  description: Stale deals flagged with suggested next actions. No weekly review needed.\n\n" +
+    "Bad (too vague): AI handles email tasks automatically.\n" +
+    "Bad (no tool named): Notes are summarised and sent somewhere.\n" +
+    "Bad (hypothetical): This could help you save time on reports.\n\n" +
+    "Use the person's ACTUAL tools from their answers, not generic placeholders.\n\n" +
+    "PART 2 - Agent team\n" +
+    "Design exactly 4 agents that would deliver the automations above.\n\n" +
+    "Rules for agents:\n" +
+    "- Each agent must be specific to their actual answers, no generic AI assistant fluff\n" +
+    `- Names must be unique human first names. Use names like ${agentNames} or similar. Never repeat a name and never include the word AI, Bot, or Agent in the name\n` +
+    "- Roles are 2-4 word job titles (Inbox Triager, Pipeline Cleaner, Research Scout), not generic (Assistant, Helper)\n" +
+    "- The handles sentence references their specific situation, tools, outputs, or repeated tasks; uses concrete verbs; and avoids hedging (could, may, helps with)\n" +
+    "- Schedules should vary across the team: mix of always-on, periodic, daily, weekly. Not all every 30 min\n" +
+    "- The hours estimate should be realistic for their answers, between 4 and 20 hrs/week\n" +
+    "- The summary names what the user gets back, not what the agents do\n\n" +
+    "Output ONLY valid JSON, no preamble, no code fences, no explanation. Use this exact structure:\n\n" +
+    '{\n' +
+    '  "hoursPerWeek": <integer between 4 and 20>,\n' +
+    '  "summary": "<one short sentence about what this frees the user up to focus on>",\n' +
+    '  "opportunities": [\n' +
+    '    {\n' +
+    '      "taskName": "<2-5 word noun phrase>",\n' +
+    '      "description": "<1-2 sentences, tool-specific, ends with punchy closing>"\n' +
+    '    }\n' +
+    '  ],\n' +
+    '  "agents": [\n' +
+    '    {\n' +
+    '      "name": "<distinctive first name>",\n' +
+    '      "role": "<2-4 word job title>",\n' +
+    '      "handles": "<one concrete sentence about what they do, referencing the user\'s specific drain>",\n' +
+    '      "schedule": "<short cadence: Every 30 min / Daily 9am / On demand / Weekly Mon>"\n' +
+    '    }\n' +
+    '  ]\n' +
+    '}'
+  )
 }
 
 function getFallbackHandles(

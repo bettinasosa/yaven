@@ -105,7 +105,7 @@ export const workflowSchematicJsonSchema = workflowSchematicSchema
 export const agentTeamJsonSchema = {
   type: "object",
   additionalProperties: false,
-  required: ["hoursPerWeek", "summary", "agents"],
+  required: ["hoursPerWeek", "summary", "agents", "opportunities"],
   properties: {
     hoursPerWeek: {
       type: "integer",
@@ -126,6 +126,20 @@ export const agentTeamJsonSchema = {
           role: { type: "string" },
           handles: { type: "string" },
           schedule: { type: "string" }
+        }
+      }
+    },
+    opportunities: {
+      type: "array",
+      minItems: 3,
+      maxItems: 4,
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["taskName", "description"],
+        properties: {
+          taskName: { type: "string" },
+          description: { type: "string" }
         }
       }
     }

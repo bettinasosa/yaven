@@ -98,10 +98,48 @@ async function requestAgentTeam(
   }
 }
 
-function parseAgentTeam(value: string) {
+type FireworksOpportunity = {
+  taskName?: string
+  description?: string
+}
+
+type FireworksResponse = AgentTeam & {
+  opportunities?: FireworksOpportunity[]
+}
+
+function parseFireworksResponse(value: string): FireworksResponse | null {
   const parsed = parseJsonObject(value)
   if (!parsed) return null
-  return parsed as AgentTeam
+  return parsed as FireworksResponse
+}
+
+function applyAiOpportunities(
+  baseBlueprint: ReturnType<typeof generateLocalBlueprint>,
+  aiOpportunities: FireworksOpportunity[]
+) {
+  const valid = aiOpportunities.filter(
+    o => o.taskName?.trim() && o.description?.trim()
+  )
+  if (valid.length === 0) return baseBlueprint
+
+  const patched = baseBlueprint.topOpportunities.map((opp, i) => {
+    const ai = valid[i]
+    if (!ai) return opp
+    return {
+      ...opp,
+      taskName: ai.taskName!.trim(),
+      whyAutomatable: ai.description!.trim()
+    }
+  })
+
+  return {
+    ...baseBlueprint,
+    topOpportunities: patched,
+    quickWins: baseBlueprint.quickWins.map(opp => {
+      const match = patched.find(p => p.id === opp.id)
+      return match ?? opp
+    })
+  }
 }
 
 export async function generateFireworksBlueprint(answers: BlueprintInput) {
@@ -109,21 +147,24 @@ export async function generateFireworksBlueprint(answers: BlueprintInput) {
   if (!apiKey) return null
 
   const baseBlueprint = generateLocalBlueprint(answers)
-  const parsedAgentTeam = parseAgentTeam(
+  const parsed = parseFireworksResponse(
     await requestAgentTeam(apiKey, answers, baseBlueprint)
   )
   const opportunity = getBestOpportunity(baseBlueprint)
-  const agentTeam = parsedAgentTeam
-    ? normalizeAgentTeam(parsedAgentTeam, answers, opportunity)
+  const agentTeam = parsed
+    ? normalizeAgentTeam(parsed, answers, opportunity)
     : null
 
-  if (agentTeam) {
-    return {
-      ...baseBlueprint,
-      agentTeam,
-      workflowSchematic: buildAgentTeamSchematic(agentTeam)
-    }
-  }
+  if (!agentTeam) throw new Error("Fireworks returned invalid agent team JSON")
 
-  throw new Error("Fireworks returned invalid agent team JSON")
+  const patchedBlueprint =
+    parsed?.opportunities && parsed.opportunities.length > 0
+      ? applyAiOpportunities(baseBlueprint, parsed.opportunities)
+      : baseBlueprint
+
+  return {
+    ...patchedBlueprint,
+    agentTeam,
+    workflowSchematic: buildAgentTeamSchematic(agentTeam)
+  }
 }

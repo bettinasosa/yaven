@@ -80,9 +80,10 @@ export function BlueprintPreview({
           Existing tools that promise to fix this are unintuitive, hard to
           setup, and leave you wondering where to start.
         </p>
-        <p className="text-sm leading-relaxed text-zinc-700">
-          Yaven knows your role, knows your stack, and runs the handoffs. You
-          just do the parts only you can do.
+        <p className="text-sm font-semibold leading-relaxed text-zinc-800">
+          <span className="text-shimmer-dark italic">Yaven</span>{" "}
+          knows your role, knows your stack, and runs the handoffs. You just do
+          the parts only you can do.
         </p>
       </div>
 
