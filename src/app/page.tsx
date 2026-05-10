@@ -529,11 +529,11 @@ function ProfessionalSections() {
               There&apos;s a gap opening up in every industry. On one side:
               people who&apos;ve figured out how to make AI do the repetitive
               half of their job. On the other: everyone still doing it
-              themselves. The difference isn&apos;t intelligence — it&apos;s
+              themselves. The difference isn&apos;t intelligence. It&apos;s
               knowing what to hand off.
             </p>
             <p>
-              Yaven is that starting point. Tell it how your week runs — it maps
+              Yaven is that starting point. Tell it how your week runs. It maps
               what should be automated, builds the workflow, and runs it. You
               stay focused on the work only you can do. No code. No
               configuration. Just your work, moving faster.
@@ -578,7 +578,13 @@ function ProfessionalSections() {
                   new hire starting Monday. You come back to drafted replies, a
                   prepared brief, and the right tasks already{" "}
                   <span className="inline-flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#EEF3FA] align-middle -rotate-3">
-                    <Image src="/logos/monday.png" alt="Monday" width={15} height={15} className="object-contain" />
+                    <Image
+                      src="/logos/monday.png"
+                      alt="Monday"
+                      width={15}
+                      height={15}
+                      className="object-contain"
+                    />
                   </span>{" "}
                   moving. It tracks everything, sends what needs sending, and
                   flags what needs you.
@@ -668,9 +674,9 @@ function ProfessionalSections() {
                 </h3>
                 <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
                   Your day-to-day, your goals, your tools, how your week runs.
-                  The more it understands your world, the more it can do in
-                  it. You don&apos;t need to know what to automate. Yaven
-                  figures that out from what you tell it.
+                  The more it understands your world, the more it can do in it.
+                  You don&apos;t need to know what to automate. Yaven figures
+                  that out from what you tell it.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1 relative z-10">
@@ -737,9 +743,8 @@ function ProfessionalSections() {
                   It builds the playbook.
                 </h3>
                 <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
-                  Yaven maps your workflows, orchestrates the right agents,
-                  and starts automating the repeatable. No configuration
-                  required.
+                  Yaven maps your workflows, orchestrates the right agents, and
+                  starts automating the repeatable. No configuration required.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1">
@@ -798,9 +803,8 @@ function ProfessionalSections() {
                   It runs. You decide.
                 </h3>
                 <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
-                  Agents handle the complex. Automations handle the routine.
-                  You come back to the calls only you can make, then it moves
-                  on.
+                  Agents handle the complex. Automations handle the routine. You
+                  come back to the calls only you can make, then it moves on.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1 space-y-2">
@@ -1129,7 +1133,11 @@ export default function Home() {
                 aria-label="X"
                 className="flex items-center justify-center size-9 rounded-full border border-white/15 text-white/50 hover:text-white hover:border-white/30 transition-colors"
               >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="size-3.5">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="size-3.5"
+                >
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
