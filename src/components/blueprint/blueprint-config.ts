@@ -13,6 +13,9 @@ export type QuestionConfig = {
   mode: "single" | "multi" | "textarea"
   primaryKey: keyof BlueprintInput
   secondaryKey?: keyof BlueprintInput
+  secondaryLabel?: string
+  secondaryPlaceholder?: string
+  voiceInput?: boolean
 }
 
 export const emptyBlueprintInput: BlueprintInput = {
