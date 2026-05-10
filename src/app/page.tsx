@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react"
 import { WaitlistButton } from "@/components/waitlist-button"
 import { FadeIn } from "@/components/fade-in"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
-import { HeroVideo } from "@/components/hero-video"
+import { HeroRefractionVideo } from "@/components/hero-refraction-video"
 
 /* ── Goal card mockup (professional) ────────────────────── */
 function GoalCard({
@@ -1015,11 +1015,7 @@ export default function Home() {
     <>
       {/* ── Hero ───────────────────────────────────────────── */}
       <section className="relative min-h-screen overflow-hidden bg-[#0b0d12]">
-        <HeroVideo
-          src="/hero-bg.mp4"
-          playbackRate={0.75}
-          className="absolute inset-0 w-full h-full object-cover z-0"
-        />
+        <HeroRefractionVideo src="/hero-bg.mp4" playbackRate={0.6} />
 
         <div className="absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t from-white to-transparent z-2 pointer-events-none" />
 
@@ -1035,7 +1031,7 @@ export default function Home() {
               Focus in a distracted world
             </h1>
 
-            <p className="text-base font-medium max-w-lg mt-8 leading-relaxed text-black animate-fade-rise-delay">
+            <p className="text-base font-medium max-w-lg mt-8 leading-relaxed text-[#1a2744]/70 animate-fade-rise-delay">
               Tell us how you work, we&apos;ll show you what&apos;s wasting your
               time, and leave you to do the bits only you can.
             </p>
@@ -1044,7 +1040,7 @@ export default function Home() {
               <BlueprintPanel />
             </div>
 
-            <p className="mt-8 text-xs text-black/70 animate-fade-rise-delay-2">
+            <p className="mt-8 text-xs text-[#1a2744]/50 animate-fade-rise-delay-2">
               <span className="font-bold">явен (yaven)</span>{" "}
               <span className="italic">
                 {" "}
@@ -1096,7 +1092,8 @@ export default function Home() {
             yaven
           </span>
           <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] font-instrument-serif text-zinc-900">
-            Your industry is moving. Get ahead of it.
+            Your industry is moving.
+            <span>Get ahead of it.</span>
           </h2>
           <p className="text-base leading-relaxed text-zinc-600">
             Early access is limited. Get in before the queue fills up.

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
+import { PageLoader } from "@/components/page-loader";
 import "./globals.css";
 
 const instrumentSerif = Fraunces({
@@ -39,6 +40,7 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${satoshi.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-white">
+        <PageLoader />
         {children}
         <Analytics />
       </body>

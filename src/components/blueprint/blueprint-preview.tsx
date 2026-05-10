@@ -86,9 +86,9 @@ export function BlueprintPreview({
       <div className="sticky bottom-0 bg-gradient-to-t from-[#FDFDF9] via-[#FDFDF9]/95 to-transparent pt-8 pb-1">
         <form
           onSubmit={handleInlineSubmit}
-          className="relative hidden sm:flex items-center gap-2"
+          className="relative hidden sm:flex flex-col gap-2"
         >
-          <div className="flex flex-1 items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-1 shadow-sm focus-within:border-[#83A5D4]">
+          <div className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-1 shadow-sm focus-within:border-[#83A5D4]">
             <input
               ref={inputRef}
               type="email"
@@ -102,7 +102,7 @@ export function BlueprintPreview({
           <button
             type="submit"
             disabled={loading}
-            className="animate-slow-bounce inline-flex shrink-0 items-center gap-2 rounded-full bg-zinc-900 px-7 py-3.5 text-sm font-semibold text-white shadow-md hover:animate-none hover:bg-zinc-700 disabled:opacity-60"
+            className="animate-slow-bounce inline-flex w-full items-center justify-center gap-2 rounded-full bg-zinc-900 px-7 py-3.5 text-sm font-semibold text-white shadow-md hover:animate-none hover:bg-zinc-700 disabled:opacity-60"
           >
             {loading ? (
               <Loader2 className="size-4 animate-spin" />
