@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { useEffect, useState } from "react"
+import { BubbleButton } from "@/components/bubble-button"
 
 type StateProps = {
   onClick: () => void
@@ -21,14 +22,9 @@ const loadingPuns = [
 export function IdleBlueprintState({ onClick }: StateProps) {
   return (
     <div className="space-y-4">
-      <button
-        type="button"
-        onClick={onClick}
-        className="btn-hero-shadow inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#FDFDF9] px-8 py-4 text-sm font-semibold text-zinc-900 transition-all hover:scale-[1.03]"
-      >
-        Show me
-        <ArrowRight className="size-4" />
-      </button>
+      <BubbleButton onClick={onClick}>
+        Show me <ArrowRight className="size-4" />
+      </BubbleButton>
     </div>
   )
 }
@@ -60,7 +56,7 @@ export function IntroBlueprintState({ onClick }: StateProps) {
         <button
           type="button"
           onClick={onClick}
-          className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-10 py-3.5 text-sm font-semibold text-white shadow-sm animate-slow-bounce hover:animate-none hover:scale-[1.02] transition-transform"
+          className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-10 py-3.5 text-base font-semibold text-white shadow-sm animate-slow-bounce hover:animate-none hover:scale-[1.02] transition-transform"
         >
           Start
           <ArrowRight className="size-4" />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BubbleButton } from "@/components/bubble-button";
 
 const WORK_TYPES = [
   "Founder",
@@ -14,11 +15,13 @@ const WORK_TYPES = [
 interface WaitlistButtonProps {
   label?: string;
   className?: string;
+  glass?: boolean;
 }
 
 export function WaitlistButton({
   label = "Join the Waitlist",
   className,
+  glass,
 }: WaitlistButtonProps) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -63,9 +66,13 @@ export function WaitlistButton({
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className={className}>
-        {label}
-      </button>
+      {glass ? (
+        <BubbleButton onClick={() => setOpen(true)}>{label}</BubbleButton>
+      ) : (
+        <button onClick={() => setOpen(true)} className={className}>
+          {label}
+        </button>
+      )}
 
       {open && (
         <div
@@ -154,7 +161,7 @@ export function WaitlistButton({
                   <button
                     type="submit"
                     disabled={loading || !email}
-                    className="w-full rounded-full bg-zinc-900 text-white text-sm font-inter py-3.5 hover:bg-zinc-700 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full rounded-full bg-zinc-900 text-white text-base font-inter py-3.5 hover:bg-zinc-700 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {loading ? "Saving…" : "Get early access"}
                   </button>

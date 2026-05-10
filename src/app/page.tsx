@@ -1,11 +1,12 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { WaitlistButton } from "@/components/waitlist-button"
 import { FadeIn } from "@/components/fade-in"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
+import { HeroVideo } from "@/components/hero-video"
 
 /* ── Goal card mockup (professional) ────────────────────── */
 function GoalCard({
@@ -37,7 +38,7 @@ function GoalCard({
         : { dot: "bg-zinc-300", text: "text-zinc-400", label: "Done" }
 
   return (
-    <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
+    <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
       <div className="px-5 py-4 border-b border-zinc-100 flex items-start justify-between gap-4">
         <div>
           {tag && (
@@ -270,31 +271,78 @@ const proFeatures = [
           <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
             Your automation audit
           </p>
-          <p className="text-zinc-800 font-medium">3 quick wins found this week</p>
+          <p className="text-zinc-800 font-medium">
+            3 quick wins found this week
+          </p>
         </div>
         <div className="px-5 py-4 space-y-3.5">
           {[
             {
               task: "Weekly pipeline report",
               save: "~2 hrs",
-              note: "Auto-compiled from HubSpot every Friday"
+              note: (
+                <>
+                  Auto-compiled from{" "}
+                  <span className="inline-flex items-center justify-center w-[16px] h-[16px] rounded-md bg-[#EEF3FA] align-middle mx-1 rotate-3">
+                    <Image
+                      src="/logos/hubspot.png"
+                      alt="HubSpot"
+                      width={10}
+                      height={10}
+                      className="object-contain"
+                    />
+                  </span>{" "}
+                  every Friday
+                </>
+              )
             },
             {
               task: "Follow-up emails after calls",
               save: "~1.5 hrs",
-              note: "Drafted from your call transcript, ready to send"
+              note: (
+                <>
+                  <span className="inline-flex items-center justify-center w-[16px] h-[16px] rounded-md bg-[#EEF3FA] align-middle mr-1 -rotate-2">
+                    <Image
+                      src="/logos/gmail.png"
+                      alt="Gmail"
+                      width={10}
+                      height={10}
+                      className="object-contain"
+                    />
+                  </span>
+                  Drafted from your call transcript, ready to send
+                </>
+              )
             },
             {
               task: "Logging call notes to CRM",
               save: "~1 hr",
-              note: "Pushed to Salesforce automatically after each meeting"
+              note: (
+                <>
+                  Pushed to{" "}
+                  <span className="inline-flex items-center justify-center w-[16px] h-[16px] rounded-md bg-[#EEF3FA] align-middle mx-1 rotate-6">
+                    <Image
+                      src="/logos/salesforce.png"
+                      alt="Salesforce"
+                      width={10}
+                      height={10}
+                      className="object-contain"
+                    />
+                  </span>{" "}
+                  after each meeting
+                </>
+              )
             }
           ].map(item => (
             <div key={item.task} className="flex items-start gap-3">
-              <span className="mt-0.5 shrink-0 text-[10px] font-semibold text-[#83A5D4]">→</span>
+              <span className="mt-0.5 shrink-0 text-[10px] font-semibold text-[#83A5D4]">
+                →
+              </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-xs font-medium text-zinc-800">{item.task}</p>
+                  <p className="text-xs font-medium text-zinc-800">
+                    {item.task}
+                  </p>
                   <span className="shrink-0 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
                     {item.save}
                   </span>
@@ -391,7 +439,7 @@ const testimonials = [
 
 function TestimonialCard({ quote, role }: { quote: string; role: string }) {
   return (
-    <div className="w-[18rem] shrink-0 rounded-2xl bg-white border border-zinc-200 shadow-sm p-6 flex flex-col gap-5 min-h-56 sm:w-[21rem]">
+    <div className="w-[18rem] shrink-0 rounded-2xl bg-white border border-zinc-200 shadow-sm p-6 flex flex-col gap-5 min-h-56 sm:w-[21rem] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
       <p className="text-zinc-700 text-sm leading-relaxed italic flex-1">
         &ldquo;{quote}&rdquo;
       </p>
@@ -414,7 +462,37 @@ const faqs = [
   },
   {
     q: "What tools does Yaven connect to?",
-    a: "We're building integrations with the tools people actually use: Notion, Gmail, HubSpot, Slack, Monday.com, LinkedIn, Airtable, and more. Tell us what you need when you join the waitlist."
+    a: (
+      <>
+        We&apos;re building integrations with the tools people actually use:{" "}
+        {[
+          { src: "/logos/notion.png", label: "Notion", rotate: "rotate-3" },
+          { src: "/logos/gmail.png", label: "Gmail", rotate: "-rotate-2" },
+          { src: "/logos/hubspot.png", label: "HubSpot", rotate: "rotate-6" },
+          {
+            src: "/logos/monday.png",
+            label: "Monday.com",
+            rotate: "-rotate-3"
+          },
+          { src: "/logos/linkedin.png", label: "LinkedIn", rotate: "rotate-2" }
+        ].map(({ src, label, rotate }) => (
+          <span
+            key={label}
+            className={`inline-flex items-center justify-center w-[22px] h-[22px] rounded-lg bg-[#EEF3FA] align-middle mx-1 ${rotate}`}
+          >
+            <Image
+              src={src}
+              alt={label}
+              width={14}
+              height={14}
+              className="object-contain"
+            />
+          </span>
+        ))}
+        , Slack, Airtable, and more. Tell us what you need when you join the
+        waitlist.
+      </>
+    )
   },
   {
     q: "When will I get access?",
@@ -433,7 +511,7 @@ function ProfessionalSections() {
   return (
     <>
       {/* ── Intro: master of many domains ──────────────────── */}
-      <section className="relative overflow-hidden bg-white px-6 py-16 sm:py-32">
+      <section className="relative overflow-hidden bg-white px-6 pt-20 sm:pt-36 pb-28 sm:pb-52">
         <Image
           src="/cloud.png"
           alt=""
@@ -442,36 +520,31 @@ function ProfessionalSections() {
           className="pointer-events-none select-none absolute -right-32 top-1/2 -translate-y-1/2 w-[420px] opacity-40 sm:w-[520px]"
           aria-hidden="true"
         />
-        <FadeIn className="max-w-3xl mx-auto">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-10">
+        <FadeIn className="max-w-6xl mx-auto">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-12">
             You are a master of many domains.
           </h2>
-          <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-600">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 text-base leading-relaxed text-zinc-500">
             <p>
-              There&apos;s a gap opening up in every industry, every team, every
-              role. On one side: people who&apos;ve figured out how to make AI
-              do the repetitive half of their job. On the other: everyone still
-              doing it themselves. The difference isn&apos;t intelligence or
-              technical skill. It&apos;s knowing what to hand off, and having
-              the right setup to do it.
+              There&apos;s a gap opening up in every industry. On one side:
+              people who&apos;ve figured out how to make AI do the repetitive
+              half of their job. On the other: everyone still doing it
+              themselves. The difference isn&apos;t intelligence — it&apos;s
+              knowing what to hand off.
             </p>
             <p>
-              That&apos;s exactly what most people are missing. Not the
-              willingness, but the starting point. Yaven is that starting point.
-              Tell it how your week runs. It maps what should be automated,
-              builds the workflow, and runs it. You stay focused on the work
-              only you can do. Not a chatbot. Not another tab. Yaven is where
-              your goals, projects, research, outreach, and decisions live and
-              get completed. You set the direction. Your agents handle the work.
-              And you don&apos;t need to be an engineer to use it.
+              Yaven is that starting point. Tell it how your week runs — it maps
+              what should be automated, builds the workflow, and runs it. You
+              stay focused on the work only you can do. No code. No
+              configuration. Just your work, moving faster.
             </p>
           </div>
         </FadeIn>
       </section>
 
       {/* ── Use cases ──────────────────────────────────────── */}
-      <section className="bg-white px-6 pb-16 sm:pb-32">
-        <FadeIn className="max-w-6xl mx-auto border-t border-zinc-200 pt-10 sm:pt-20">
+      <section className="bg-white px-6 pb-20 sm:pb-40">
+        <FadeIn className="max-w-6xl mx-auto">
           <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
             <div className="flex-1 space-y-8 lg:pt-4">
               <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif">
@@ -480,26 +553,40 @@ function ProfessionalSections() {
               <div className="space-y-8 text-base sm:text-lg leading-relaxed text-zinc-600">
                 <p>
                   Most people know they should be using AI more. They just
-                  don&apos;t know where to start. Yaven does.
+                  don&apos;t know where to start.{" "}
+                  <span className="text-shimmer-dark font-bold italic">
+                    yaven
+                  </span>{" "}
+                  does.
                 </p>
                 <p>
-                  You have four things you&apos;re supposed to be moving forward
-                  this week, a meeting you haven&apos;t prepped for, and a
-                  thread of emails you&apos;ve been meaning to get back to. Tell
-                  Yaven what&apos;s on your plate. You come back to drafted
-                  replies, a meeting brief, and your week laid out in order of
-                  priority. Maybe someone new is joining your team. There are
-                  documents to share, introductions to arrange, and a dozen
-                  small tasks that will slip if no one owns them. Tell Yaven
-                  once. It tracks everything, sends what needs sending, and
+                  Tell Yaven what&apos;s on your plate. The{" "}
+                  <span className="inline-flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#EEF3FA] align-middle -rotate-3">
+                    <Image
+                      src="/logos/gmail.png"
+                      alt="emails"
+                      width={15}
+                      height={15}
+                      className="object-contain"
+                    />
+                  </span>{" "}
+                  emails you haven&apos;t replied to, the meeting you
+                  haven&apos;t prepped for, the{" "}
+                  <span className="inline-flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#EEF3FA] align-middle rotate-2 text-sm">
+                    👤
+                  </span>{" "}
+                  new hire starting Monday. You come back to drafted replies, a
+                  prepared brief, and the right tasks already{" "}
+                  <span className="inline-flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#EEF3FA] align-middle -rotate-3">
+                    <Image src="/logos/monday.png" alt="Monday" width={15} height={15} className="object-contain" />
+                  </span>{" "}
+                  moving. It tracks everything, sends what needs sending, and
                   flags what needs you.
                 </p>
                 <p>
-                  You want to move to a new area but don&apos;t know where to
-                  start. Tell Yaven what matters to you: schools, commute,
-                  budget, neighbourhoods. It does the research, emails the
-                  estate agents, and surfaces the important stuff to you while
-                  you get on with your day.
+                  Moving to a new area? Tell Yaven what matters: schools,
+                  commute, budget. It researches, emails the estate agents, and
+                  surfaces the important stuff while you get on with your day.
                 </p>
               </div>
             </div>
@@ -540,7 +627,13 @@ function ProfessionalSections() {
       </section>
 
       {/* ── How it works ───────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-[#EEF3FA] px-6 py-16 sm:py-32 border-t border-zinc-200">
+      <section
+        className="relative overflow-hidden px-6 py-20 sm:py-40"
+        style={{
+          background:
+            "linear-gradient(to bottom, white 0%, #EEF3FA 12%, #EEF3FA 88%, white 100%)"
+        }}
+      >
         <Image
           src="/cloud.png"
           alt=""
@@ -557,210 +650,220 @@ function ProfessionalSections() {
           </FadeIn>
           <div className="space-y-16 sm:space-y-32">
             {/* Step 1 */}
-            <FadeIn delay={0.05}>
-              <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
-                <div className="flex-1 space-y-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
-                    01
-                  </span>
-                  <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                    Tell Yaven what you&apos;re working toward.
-                  </h3>
-                  <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
-                    Your day-to-day, your goals, your tools, how your week runs.
-                    The more it understands your world, the more it can do in
-                    it. You don&apos;t need to know what to automate. Yaven
-                    figures that out from what you tell it.
-                  </p>
-                </div>
-                <div className="flex-1">
-                  <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-                    <div className="px-5 py-3 border-b border-zinc-100">
-                      <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400">
-                        Getting to know your work
+            <div className="relative flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
+              <Image
+                src="/cloud.png"
+                alt=""
+                width={440}
+                height={236}
+                className="pointer-events-none select-none absolute -right-20 -top-12 w-[260px] opacity-35 sm:w-[380px] hidden sm:block -z-10"
+                aria-hidden="true"
+              />
+              <FadeIn className="flex-1 space-y-1 lg:pt-2">
+                <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
+                  01
+                </span>
+                <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                  Tell Yaven what you&apos;re working toward.
+                </h3>
+                <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                  Your day-to-day, your goals, your tools, how your week runs.
+                  The more it understands your world, the more it can do in
+                  it. You don&apos;t need to know what to automate. Yaven
+                  figures that out from what you tell it.
+                </p>
+              </FadeIn>
+              <FadeIn delay={0.2} className="flex-1 relative z-10">
+                <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
+                  <div className="px-5 py-3 border-b border-zinc-100">
+                    <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400">
+                      Getting to know your work
+                    </p>
+                  </div>
+                  <div className="px-5 py-4 space-y-4">
+                    <div>
+                      <p className="text-xs text-zinc-400 mb-2">
+                        Tools you use daily
+                      </p>
+                      <div className="flex gap-2 flex-wrap">
+                        {[
+                          "/logos/notion.png",
+                          "/logos/gmail.png",
+                          "/logos/hubspot.png",
+                          "/logos/monday.png",
+                          "/logos/linkedin.png",
+                          "/logos/asana.png"
+                        ].map((l, i) => (
+                          <Image
+                            key={i}
+                            src={l}
+                            alt=""
+                            width={24}
+                            height={24}
+                            className="w-6 h-6 rounded object-contain opacity-40"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-zinc-400 mb-1">
+                        What you&apos;re focused on
+                      </p>
+                      <p className="text-xs text-zinc-700 leading-relaxed">
+                        Weekly investor updates · Q2 content calendar for four
+                        clients · onboarding two new hires
                       </p>
                     </div>
-                    <div className="px-5 py-4 space-y-4">
-                      <div>
-                        <p className="text-xs text-zinc-400 mb-2">
-                          Tools you use daily
-                        </p>
-                        <div className="flex gap-2 flex-wrap">
-                          {[
-                            "/logos/notion.png",
-                            "/logos/gmail.png",
-                            "/logos/hubspot.png",
-                            "/logos/monday.png",
-                            "/logos/linkedin.png",
-                            "/logos/asana.png"
-                          ].map((l, i) => (
-                            <Image
-                              key={i}
-                              src={l}
-                              alt=""
-                              width={24}
-                              height={24}
-                              className="w-6 h-6 rounded object-contain opacity-40"
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-xs text-zinc-400 mb-1">
-                          What you&apos;re focused on
-                        </p>
-                        <p className="text-xs text-zinc-700 leading-relaxed">
-                          Weekly investor updates · Q2 content calendar for four
-                          clients · onboarding two new hires
-                        </p>
-                      </div>
-                      <div className="bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
-                        <p className="text-xs text-zinc-500 mb-2">
-                          Yaven is mapping your recurring workflows...
-                        </p>
-                        <div className="h-1.5 bg-zinc-200 rounded-full overflow-hidden">
-                          <div className="h-full bg-zinc-800 rounded-full w-[65%]" />
-                        </div>
+                    <div className="bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
+                      <p className="text-xs text-zinc-500 mb-2">
+                        Yaven is mapping your recurring workflows...
+                      </p>
+                      <div className="h-1.5 bg-zinc-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-zinc-800 rounded-full w-[65%]" />
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </FadeIn>
+              </FadeIn>
+            </div>
 
             {/* Step 2 */}
-            <FadeIn delay={0.05}>
-              <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-start">
-                <div className="flex-1 space-y-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
-                    02
-                  </span>
-                  <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                    It builds the playbook.
-                  </h3>
-                  <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
-                    Yaven maps your workflows, orchestrates the right agents,
-                    and starts automating the repeatable. No configuration
-                    required.
-                  </p>
-                </div>
-                <div className="flex-1">
-                  <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-                    <div className="px-5 py-3 border-b border-zinc-100">
-                      <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
-                        Playbook created
-                      </p>
-                      <p className="text-zinc-800 font-medium">
-                        Weekly investor update
-                      </p>
-                    </div>
-                    <div className="px-5 py-4 space-y-3">
-                      {[
-                        {
-                          agent: "Research agent",
-                          task: "Pulls portfolio performance data"
-                        },
-                        {
-                          agent: "Writing agent",
-                          task: "Drafts the update in your tone and format"
-                        },
-                        {
-                          agent: "Outreach agent",
-                          task: "Sends to your distribution list"
-                        }
-                      ].map(row => (
-                        <div key={row.agent} className="flex items-start gap-3">
-                          <span className="mt-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
-                            AUTO
-                          </span>
-                          <div>
-                            <p className="text-xs font-medium text-zinc-700">
-                              {row.agent}
-                            </p>
-                            <p className="text-xs text-zinc-400">{row.task}</p>
-                          </div>
+            <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-start">
+              <FadeIn className="flex-1 space-y-1 lg:pt-2">
+                <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
+                  02
+                </span>
+                <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                  It builds the playbook.
+                </h3>
+                <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                  Yaven maps your workflows, orchestrates the right agents,
+                  and starts automating the repeatable. No configuration
+                  required.
+                </p>
+              </FadeIn>
+              <FadeIn delay={0.2} className="flex-1">
+                <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
+                  <div className="px-5 py-3 border-b border-zinc-100">
+                    <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
+                      Playbook created
+                    </p>
+                    <p className="text-zinc-800 font-medium">
+                      Weekly investor update
+                    </p>
+                  </div>
+                  <div className="px-5 py-4 space-y-3">
+                    {[
+                      {
+                        agent: "Research agent",
+                        task: "Pulls portfolio performance data"
+                      },
+                      {
+                        agent: "Writing agent",
+                        task: "Drafts the update in your tone and format"
+                      },
+                      {
+                        agent: "Outreach agent",
+                        task: "Sends to your distribution list"
+                      }
+                    ].map(row => (
+                      <div key={row.agent} className="flex items-start gap-3">
+                        <span className="mt-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
+                          AUTO
+                        </span>
+                        <div>
+                          <p className="text-xs font-medium text-zinc-700">
+                            {row.agent}
+                          </p>
+                          <p className="text-xs text-zinc-400">{row.task}</p>
                         </div>
-                      ))}
-                      <div className="h-px bg-zinc-100" />
-                      <p className="text-xs text-zinc-400">
-                        ↻ Runs every Friday morning · no setup required
-                      </p>
-                    </div>
+                      </div>
+                    ))}
+                    <div className="h-px bg-zinc-100" />
+                    <p className="text-xs text-zinc-400">
+                      ↻ Runs every Friday morning · no setup required
+                    </p>
                   </div>
                 </div>
-              </div>
-            </FadeIn>
+              </FadeIn>
+            </div>
 
             {/* Step 3 */}
-            <FadeIn delay={0.05}>
-              <div className="flex flex-col gap-10 sm:gap-10 sm:gap-16 lg:flex-row lg:items-start">
-                <div className="flex-1 space-y-1 lg:pt-2">
-                  <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
-                    03
-                  </span>
-                  <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                    It runs. You decide.
-                  </h3>
-                  <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
-                    Agents handle the complex. Automations handle the routine.
-                    You come back to the calls only you can make, then it moves
-                    on.
-                  </p>
-                </div>
-                <div className="flex-1 space-y-2">
-                  {[
-                    {
-                      label: "Investor update email",
-                      note: "Sent automatically · every Friday"
-                    },
-                    {
-                      label: "Monthly client report — 4 accounts",
-                      note: "Compiled and sent · no action needed"
-                    },
-                    {
-                      label: "New hire welcome pack",
-                      note: "Sent automatically · on contract signing"
-                    }
-                  ].map(item => (
-                    <div
-                      key={item.label}
-                      className="rounded-xl bg-white border border-zinc-200 px-4 py-3 flex items-center justify-between gap-3 shadow-sm"
-                    >
-                      <div>
-                        <p className="text-xs font-medium text-zinc-700">
-                          {item.label}
-                        </p>
-                        <p className="text-[11px] text-zinc-400 mt-0.5">
-                          {item.note}
-                        </p>
-                      </div>
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
-                        AUTO
-                      </span>
-                    </div>
-                  ))}
-                  <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3">
+            <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
+              <FadeIn className="flex-1 space-y-1 lg:pt-2">
+                <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
+                  03
+                </span>
+                <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
+                  It runs. You decide.
+                </h3>
+                <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                  Agents handle the complex. Automations handle the routine.
+                  You come back to the calls only you can make, then it moves
+                  on.
+                </p>
+              </FadeIn>
+              <FadeIn delay={0.2} className="flex-1 space-y-2">
+                {[
+                  {
+                    label: "Investor update email",
+                    note: "Sent automatically · every Friday"
+                  },
+                  {
+                    label: "Monthly client report — 4 accounts",
+                    note: "Compiled and sent · no action needed"
+                  },
+                  {
+                    label: "New hire welcome pack",
+                    note: "Sent automatically · on contract signing"
+                  }
+                ].map(item => (
+                  <div
+                    key={item.label}
+                    className="rounded-xl bg-white border border-zinc-200 px-4 py-3 flex items-center justify-between gap-3 shadow-sm"
+                  >
                     <div>
-                      <p className="text-xs font-medium text-amber-800">
-                        Q3 proposal — Northfield Partners
+                      <p className="text-xs font-medium text-zinc-700">
+                        {item.label}
                       </p>
-                      <p className="text-[11px] text-amber-600 mt-0.5">
-                        Draft ready · needs your sign-off before sending
+                      <p className="text-[11px] text-zinc-400 mt-0.5">
+                        {item.note}
                       </p>
                     </div>
-                    <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-amber-800 text-white shrink-0">
-                      Approve
-                    </button>
+                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
+                      AUTO
+                    </span>
                   </div>
+                ))}
+                <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-medium text-amber-800">
+                      Q3 proposal — Northfield Partners
+                    </p>
+                    <p className="text-[11px] text-amber-600 mt-0.5">
+                      Draft ready · needs your sign-off before sending
+                    </p>
+                  </div>
+                  <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-amber-800 text-white shrink-0">
+                    Approve
+                  </button>
                 </div>
-              </div>
-            </FadeIn>
+              </FadeIn>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── What Yaven gives you ────────────────────────────── */}
-      <section className="bg-white px-6 py-16 sm:py-32 border-t border-zinc-200">
+      <section className="relative overflow-hidden bg-white px-6 py-20 sm:py-40">
+        <Image
+          src="/cloud.png"
+          alt=""
+          width={460}
+          height={250}
+          className="pointer-events-none select-none absolute -left-24 bottom-32 w-[320px] opacity-25 sm:w-[460px]"
+          aria-hidden="true"
+        />
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-10 sm:mb-20">
@@ -795,7 +898,21 @@ function ProfessionalSections() {
       </section>
 
       {/* ── Social proof ───────────────────────────────────── */}
-      <section className="bg-[#EEF3FA] px-6 py-16 sm:py-32 border-t border-zinc-200">
+      <section
+        className="relative overflow-hidden px-6 py-20 sm:py-40"
+        style={{
+          background:
+            "linear-gradient(to bottom, white 0%, #EEF3FA 12%, #EEF3FA 88%, white 100%)"
+        }}
+      >
+        <Image
+          src="/cloud.png"
+          alt=""
+          width={480}
+          height={260}
+          className="pointer-events-none select-none absolute -right-28 top-16 w-[340px] opacity-30 sm:w-[480px]"
+          aria-hidden="true"
+        />
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-4">
@@ -809,22 +926,26 @@ function ProfessionalSections() {
           <FadeIn>
             <div className="testimonial-marquee -mx-6 px-6 space-y-4">
               <div className="testimonial-marquee-track flex w-max gap-4">
-                {[...testimonials.slice(0, 7), ...testimonials.slice(0, 7)].map((t, i) => (
-                  <TestimonialCard
-                    key={`row1-${t.role}-${i}`}
-                    quote={t.quote}
-                    role={t.role}
-                  />
-                ))}
+                {[...testimonials.slice(0, 7), ...testimonials.slice(0, 7)].map(
+                  (t, i) => (
+                    <TestimonialCard
+                      key={`row1-${t.role}-${i}`}
+                      quote={t.quote}
+                      role={t.role}
+                    />
+                  )
+                )}
               </div>
               <div className="testimonial-marquee-track-reverse flex w-max gap-4">
-                {[...testimonials.slice(7), ...testimonials.slice(7)].map((t, i) => (
-                  <TestimonialCard
-                    key={`row2-${t.role}-${i}`}
-                    quote={t.quote}
-                    role={t.role}
-                  />
-                ))}
+                {[...testimonials.slice(7), ...testimonials.slice(7)].map(
+                  (t, i) => (
+                    <TestimonialCard
+                      key={`row2-${t.role}-${i}`}
+                      quote={t.quote}
+                      role={t.role}
+                    />
+                  )
+                )}
               </div>
             </div>
           </FadeIn>
@@ -832,7 +953,7 @@ function ProfessionalSections() {
       </section>
 
       {/* ── FAQ ────────────────────────────────────────────── */}
-      <section className="bg-white px-6 py-16 sm:py-32 border-t border-zinc-200">
+      <section className="bg-white px-6 py-20 sm:py-40">
         <div className="max-w-3xl mx-auto">
           <FadeIn>
             <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-8 sm:mb-16">
@@ -886,28 +1007,15 @@ function ProfessionalSections() {
 }
 
 export default function Home() {
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.35
-    }
-  }, [])
-
   return (
     <>
       {/* ── Hero ───────────────────────────────────────────── */}
       <section className="relative min-h-screen overflow-hidden bg-[#0b0d12]">
-        <video
-          ref={videoRef}
+        <HeroVideo
+          src="/hero-bg.mp4"
+          playbackRate={0.75}
           className="absolute inset-0 w-full h-full object-cover z-0"
-          autoPlay
-          loop
-          muted
-          playsInline
-        >
-          <source src="/hero-bg.mp4" type="video/mp4" />
-        </video>
+        />
 
         <div className="absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t from-white to-transparent z-2 pointer-events-none" />
 
@@ -923,7 +1031,7 @@ export default function Home() {
               Focus in a distracted world
             </h1>
 
-            <p className="text-base font-semibold max-w-lg mt-8 leading-relaxed text-black animate-fade-rise-delay">
+            <p className="text-base font-medium max-w-lg mt-8 leading-relaxed text-black animate-fade-rise-delay">
               Tell us how you work, we&apos;ll show you what&apos;s wasting your
               time, and leave you to do the bits only you can.
             </p>
@@ -947,7 +1055,13 @@ export default function Home() {
       <ProfessionalSections />
 
       {/* ── Footer CTA ─────────────────────────────────────── */}
-      <section className="relative overflow-hidden px-4 sm:px-6 py-16 sm:py-32 text-center bg-white border-t border-zinc-200">
+      <section
+        className="relative overflow-hidden px-4 sm:px-6 py-20 sm:py-40 text-center"
+        style={{
+          background:
+            "linear-gradient(to bottom, white 0%, #EEF3FA 20%, #EEF3FA 80%, white 100%)"
+        }}
+      >
         <Image
           src="/cloud.png"
           alt=""
@@ -983,15 +1097,12 @@ export default function Home() {
           <p className="text-base leading-relaxed text-zinc-600">
             Early access is limited. Get in before the queue fills up.
           </p>
-          <WaitlistButton
-            label="Join the Waitlist"
-            className="inline-block rounded-full bg-[#F2F2E5] text-zinc-900 px-8 sm:px-14 py-4 sm:py-5 text-base font-medium hover:scale-[1.03] transition-all cursor-pointer btn-hero-shadow"
-          />
+          <WaitlistButton label="Join the Waitlist" glass />
         </FadeIn>
       </section>
 
       {/* ── Footer ─────────────────────────────────────────── */}
-      <footer className="bg-[#83A5D4] px-6 py-20 sm:py-28">
+      <footer className="bg-[#0b0d12] px-6 py-28 sm:py-44">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-start justify-between gap-6">
             {/* Logo */}
@@ -1003,20 +1114,32 @@ export default function Home() {
                 height={36}
                 className="size-9 rounded-xl object-cover"
               />
-              <span className="text-2xl tracking-tight text-[#1a2744] font-instrument-serif">
+              <span className="text-2xl tracking-tight text-[#F2F2E5] font-instrument-serif">
                 yaven
               </span>
             </div>
 
             {/* Social icons */}
             <div className="flex items-center gap-3">
+              {/* X / Twitter */}
+              <a
+                href="https://x.com/yavenai"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X"
+                className="flex items-center justify-center size-9 rounded-full border border-white/15 text-white/50 hover:text-white hover:border-white/30 transition-colors"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="size-3.5">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
               {/* LinkedIn */}
               <a
                 href="https://www.linkedin.com/company/yaven/posts/?feedView=all"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="flex items-center justify-center size-9 rounded-full border border-[#1a2744]/20 text-[#1a2744]/60 hover:text-[#1a2744] hover:border-[#1a2744]/40 transition-colors"
+                className="flex items-center justify-center size-9 rounded-full border border-white/15 text-white/50 hover:text-white hover:border-white/30 transition-colors"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="size-4">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
@@ -1026,17 +1149,17 @@ export default function Home() {
           </div>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-[#1a2744]/50 leading-relaxed">
+            <p className="text-xs text-white/30 leading-relaxed">
               © 2026 Yaven. All rights reserved.
             </p>
             <nav className="flex flex-wrap gap-x-6 gap-y-2 items-center">
               <WaitlistButton
                 label="Join Waitlist"
-                className="text-xs text-[#1a2744]/55 hover:text-[#1a2744] transition-colors"
+                className="text-xs text-white/40 hover:text-white/70 transition-colors"
               />
               <a
                 href="mailto:hello@yaven.ai"
-                className="text-xs text-[#1a2744]/55 hover:text-[#1a2744] transition-colors"
+                className="text-xs text-white/40 hover:text-white/70 transition-colors"
               >
                 Email founders
               </a>

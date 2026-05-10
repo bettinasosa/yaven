@@ -137,7 +137,7 @@ export function ChatQuestion({
           type="button"
           onClick={onContinue}
           disabled={!canContinue || loading}
-          className="inline-flex h-12 items-center gap-2 rounded-full border border-transparent bg-zinc-900 px-6 text-sm font-medium text-white shadow-sm transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400 sm:h-10 sm:px-5"
+          className="inline-flex h-12 items-center gap-2 rounded-full border border-transparent bg-zinc-900 px-6 text-base font-medium text-white shadow-sm transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400 sm:h-10 sm:px-5 sm:text-sm"
         >
           {questionNumber === totalQuestions ? "Build preview" : "Continue"}
           <ArrowRight className="size-4 shrink-0" />

@@ -215,6 +215,36 @@ export const toolsByRole: Record<string, string[]> = {
     "ClickUp",
     OTHER_OPTION
   ],
+  "Research": [
+    "Notion",
+    "Google Scholar",
+    "Zotero",
+    "Mendeley",
+    "Obsidian",
+    "Excel",
+    "Google Sheets",
+    "Slack",
+    "Gmail / Outlook",
+    "Zoom / Gmeet",
+    "Miro",
+    "Loom",
+    "Airtable",
+    OTHER_OPTION
+  ],
+  "Student": [
+    "Notion",
+    "Google Docs",
+    "Google Scholar",
+    "Zotero",
+    "Obsidian",
+    "ChatGPT",
+    "Gmail / Outlook",
+    "Zoom / Gmeet",
+    "Slack",
+    "Canvas",
+    "Anki",
+    OTHER_OPTION
+  ],
   [OTHER_OPTION]: [
     "Gmail / Outlook",
     "Slack",
@@ -358,6 +388,29 @@ export const painfulTasksByRole: Record<string, string[]> = {
     "Preparing briefing docs",
     OTHER_OPTION
   ],
+  "Research": [
+    "Summarising papers and articles",
+    "Pulling quotes and citations into notes",
+    "Writing literature review sections",
+    "Organising references in Zotero / Mendeley",
+    "Transcribing interviews",
+    "Building data collection trackers",
+    "Formatting reports and presentations",
+    "Writing meeting recaps from calls",
+    "Keeping stakeholders updated",
+    OTHER_OPTION
+  ],
+  "Student": [
+    "Taking and tidying lecture notes",
+    "Summarising readings and papers",
+    "Writing essay drafts",
+    "Organising references and citations",
+    "Building revision notes from scratch",
+    "Tracking deadlines and assignments",
+    "Emailing tutors and professors",
+    "Preparing for presentations",
+    OTHER_OPTION
+  ],
   [OTHER_OPTION]: [
     "Copy-pasting information across tools",
     "Drafting reports from research",
@@ -390,6 +443,8 @@ export const blueprintQuestions: QuestionConfig[] = [
       "Customer Success",
       "Finance / Ops",
       "Executive Assistant",
+      "Research",
+      "Student",
       OTHER_OPTION
     ],
     mode: "single",
