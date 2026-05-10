@@ -991,7 +991,7 @@ export default function Home() {
       </section>
 
       {/* ── Footer ─────────────────────────────────────────── */}
-      <footer className="bg-[#83A5D4] px-6 py-12 sm:py-16">
+      <footer className="bg-[#83A5D4] px-6 py-20 sm:py-28">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-start justify-between gap-6">
             {/* Logo */}
@@ -1025,23 +1025,21 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-[#1a2744]/15 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-[#1a2744]/50 leading-relaxed">
               © 2026 Yaven. All rights reserved.
             </p>
-            <nav className="flex flex-wrap gap-x-6 gap-y-2">
-              {[
-                { label: "Join Waitlist", href: "#" },
-                { label: "Email founders", href: "mailto:hello@yaven.ai" },
-              ].map(link => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-xs text-[#1a2744]/55 hover:text-[#1a2744] transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+            <nav className="flex flex-wrap gap-x-6 gap-y-2 items-center">
+              <WaitlistButton
+                label="Join Waitlist"
+                className="text-xs text-[#1a2744]/55 hover:text-[#1a2744] transition-colors"
+              />
+              <a
+                href="mailto:hello@yaven.ai"
+                className="text-xs text-[#1a2744]/55 hover:text-[#1a2744] transition-colors"
+              >
+                Email founders
+              </a>
             </nav>
           </div>
         </div>
