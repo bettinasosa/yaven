@@ -294,7 +294,7 @@ export function BlueprintPanel() {
             textValue={draftText}
             secondaryValue={secondaryDraft}
             canGoBack={currentIndex > 0}
-            canContinue={currentIndex > 0 || selectedChips.length > 0 || draftText.trim().split(/\s+/).filter(Boolean).length >= 3}
+            canContinue={selectedChips.length > 0}
             onToggleChip={handleToggleChip}
             onTextChange={setDraftText}
             onSecondaryChange={setSecondaryDraft}
@@ -323,7 +323,8 @@ export function BlueprintPanel() {
               body: JSON.stringify({
                 email,
                 role: answers.role,
-                typicalDay: answers.typicalDay,
+                tools: answers.toolsUsed.join(", "),
+                tasks: answers.painfulTasks.join(", "),
               })
             })
             if (!response.ok) throw new Error("Failed")

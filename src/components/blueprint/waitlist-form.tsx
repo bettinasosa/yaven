@@ -1,7 +1,7 @@
 "use client"
 
 import { ArrowRight, Loader2 } from "lucide-react"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import type { AutomationBlueprint, BlueprintInput } from "@/lib/blueprint/types"
 
 type WaitlistFormProps = {
@@ -19,20 +19,6 @@ export function WaitlistForm({
   onSubmitted,
   onStarted
 }: WaitlistFormProps) {
-  const desiredAutomation = useMemo(() => {
-    const options = [
-      ...blueprint.topOpportunities,
-      ...blueprint.quickWins,
-      ...blueprint.customToolIdeas
-    ].map(opportunity => opportunity.taskName)
-
-    return options[0] ?? answers.desiredFirstAutomation
-  }, [
-    answers.desiredFirstAutomation,
-    blueprint.customToolIdeas,
-    blueprint.quickWins,
-    blueprint.topOpportunities
-  ])
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
@@ -51,12 +37,13 @@ export function WaitlistForm({
           email,
           name,
           role: answers.role,
-          typicalDay: answers.typicalDay,
+          tools: answers.toolsUsed.join(", "),
+          tasks: answers.painfulTasks.join(", "),
         })
       })
 
       if (!response.ok) throw new Error("Failed to save signup")
-      onSubmitted(email, desiredAutomation)
+      onSubmitted(email, "")
     } catch {
       setError("Something went wrong. Please try again.")
     } finally {
