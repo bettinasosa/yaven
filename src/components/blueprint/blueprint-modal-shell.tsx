@@ -34,7 +34,7 @@ export function BlueprintModalShell({
       onClick={onClose}
     >
       <div
-        className={`flex w-[calc(100vw-2rem)] max-w-[58rem] flex-col overflow-hidden rounded-[1.5rem] bg-[#FDFDF9] shadow-[0_28px_100px_rgba(15,23,42,0.22)] ring-1 ring-white/50 md:h-[82vh] ${expanded ? "h-[85vh]" : "h-[70vh]"} ${isClosing ? "animate-puff-out" : ""}`}
+        className={`flex w-[calc(100vw-2rem)] max-w-[58rem] flex-col overflow-hidden rounded-[1.5rem] bg-[#FDFDF9] shadow-[0_28px_100px_rgba(15,23,42,0.22)] ring-1 ring-white/50 md:h-[88vh] ${expanded ? "h-[90vh]" : "h-[80vh]"} ${isClosing ? "animate-puff-out" : ""}`}
         onClick={event => event.stopPropagation()}
       >
 

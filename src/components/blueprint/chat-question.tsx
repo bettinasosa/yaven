@@ -46,7 +46,7 @@ export function ChatQuestion({
 
   return (
     <div className="flex min-h-full flex-col">
-      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center gap-5 pb-24 text-center">
+      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center gap-5 pb-6 text-center">
         <div className="space-y-2">
           <h3 className="text-4xl leading-tight text-zinc-900 font-instrument-serif">
             {question.title}
@@ -122,7 +122,7 @@ export function ChatQuestion({
         )}
       </div>
 
-      <div className="mt-auto flex items-center justify-between pt-4">
+      <div className="sticky bottom-0 flex items-center justify-between bg-gradient-to-t from-[#FDFDF9] via-[#FDFDF9]/95 to-transparent pt-6 pb-2">
         <button
           type="button"
           onClick={onBack}
