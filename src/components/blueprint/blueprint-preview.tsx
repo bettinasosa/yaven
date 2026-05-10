@@ -2,128 +2,18 @@
 
 import { ArrowRight, Loader2 } from "lucide-react"
 import { useRef, useState } from "react"
-import type { AutomationBlueprint, AutomationOpportunity } from "@/lib/blueprint/types"
+import type { AutomationBlueprint } from "@/lib/blueprint/types"
 
 type BlueprintPreviewProps = {
   blueprint: AutomationBlueprint
+  role: string
   onUnlock: () => void
   onDirectSubmit: (email: string) => Promise<void>
 }
 
-const WARM_COPY: { keywords: string[]; text: string }[] = [
-  {
-    keywords: ["email", "writing email", "message"],
-    text: "AI drafts in your tone. You read, tweak, send. No more staring at a blank page."
-  },
-  {
-    keywords: ["scheduling", "coordination"],
-    text: "No more back-and-forth to find a time. Coordination handled before you even check your inbox."
-  },
-  {
-    keywords: ["data entry"],
-    text: "Information flows where it needs to go, automatically. Copy-paste is officially over."
-  },
-  {
-    keywords: ["report"],
-    text: "Pull the numbers, press go. Formatted and ready to share — without the manual work."
-  },
-  {
-    keywords: ["follow"],
-    text: "Every follow-up lands on time, without you needing to remember it exists."
-  },
-  {
-    keywords: ["meeting note", "note"],
-    text: "Meeting ends, notes appear. Decisions and action items sorted before you close your laptop."
-  },
-  {
-    keywords: ["spreadsheet"],
-    text: "Spreadsheets that update themselves. You just review the result."
-  },
-  {
-    keywords: ["review", "document"],
-    text: "AI flags what actually matters. You focus on decisions, not reading every line."
-  },
-  {
-    keywords: ["research"],
-    text: "Deep research in minutes. AI reads and summarizes so you can skip straight to the insights."
-  },
-  {
-    keywords: ["invoice"],
-    text: "Invoices in, records updated. Zero manual entry required."
-  },
-  {
-    keywords: ["task", "project"],
-    text: "Your task list prioritized and updated without you lifting a finger."
-  }
-]
-
-function getWarmCopy(taskName: string): string {
-  const lower = taskName.toLowerCase()
-  const match = WARM_COPY.find(({ keywords }) =>
-    keywords.some(k => lower.includes(k))
-  )
-  return (
-    match?.text ??
-    `AI handles the repetitive parts of ${taskName.toLowerCase()} so you can stay focused on what actually moves things forward.`
-  )
-}
-
-const ACCENTS = ["#83A5D4", "#F3C5CB", "#A99CF2"]
-
-function OpportunityCard({
-  opportunity,
-  index
-}: {
-  opportunity: AutomationOpportunity
-  index: number
-}) {
-  const accent = ACCENTS[index % ACCENTS.length]
-  const outputs = opportunity.expectedOutputs.slice(0, 3)
-
-  return (
-    <div className="rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm space-y-3">
-      <div className="flex items-start gap-3">
-        <span
-          className="mt-[5px] size-2.5 shrink-0 rounded-full"
-          style={{ backgroundColor: accent }}
-        />
-        <h4 className="text-base font-semibold leading-snug text-zinc-900 font-instrument-serif">
-          {opportunity.taskName}
-        </h4>
-      </div>
-
-      <p className="text-sm leading-relaxed text-zinc-600 pl-[1.375rem]">
-        {getWarmCopy(opportunity.taskName)}
-      </p>
-
-      <p className="text-sm leading-relaxed text-zinc-600 pl-[1.375rem]">
-        {opportunity.whyAutomatable}
-      </p>
-
-      <p className="text-sm leading-relaxed text-zinc-700 pl-[1.375rem]">
-        <span className="font-medium">How to start: </span>
-        {opportunity.firstVersion}
-      </p>
-
-      {outputs.length > 0 && (
-        <div className="pl-[1.375rem] flex flex-wrap gap-1.5 pt-1">
-          {outputs.map(output => (
-            <span
-              key={output}
-              className="rounded-full px-2.5 py-1 text-xs font-medium text-zinc-700"
-              style={{ backgroundColor: `${accent}22` }}
-            >
-              {output}
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
 export function BlueprintPreview({
   blueprint,
+  role,
   onUnlock,
   onDirectSubmit
 }: BlueprintPreviewProps) {
@@ -132,18 +22,14 @@ export function BlueprintPreview({
   const [submitError, setSubmitError] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const hours = blueprint.agentTeam?.hoursPerWeek ?? 8
-
   const opportunities = [
     ...blueprint.topOpportunities,
     ...blueprint.quickWins
   ]
-    .filter(
-      (item, index, arr) => arr.findIndex(o => o.id === item.id) === index
-    )
-    .slice(0, 3)
+    .filter((item, index, arr) => arr.findIndex(o => o.id === item.id) === index)
+    .slice(0, 4)
 
-  async function handleInlineSubmit(event: React.FormEvent) {
+  async function handleInlineSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!email.trim()) return
     setLoading(true)
@@ -158,44 +44,45 @@ export function BlueprintPreview({
   }
 
   return (
-    <div className="flex flex-col gap-5 pb-28">
+    <div className="flex flex-col gap-7 pb-28">
       {/* Header */}
-      <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#83A5D4]">
-          Your results
-        </p>
+      <div className="space-y-2">
         <h3 className="text-4xl leading-tight text-zinc-900 font-instrument-serif">
-          You could get{" "}
-          <span className="text-[#83A5D4]">{hours} hours back</span> every
-          week.
+          {role} — here&apos;s your week, optimised.
         </h3>
-        <p className="text-sm leading-relaxed text-zinc-600">
-          {blueprint.userSummary}
+        <p className="text-sm leading-relaxed text-zinc-500">
+          Based on your stack and what you flagged, here&apos;s what we&apos;d
+          take off your plate first. These aren&apos;t hypotheticals.
         </p>
       </div>
 
-      {/* Opportunities */}
-      <div className="space-y-2.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-400">
-          Where AI fits into your week
-        </p>
-        {opportunities.map((opportunity, index) => (
-          <OpportunityCard
-            key={opportunity.id}
-            opportunity={opportunity}
-            index={index}
-          />
+      {/* Automation items */}
+      <div className="space-y-4">
+        {opportunities.map(opportunity => (
+          <div key={opportunity.id} className="flex gap-3">
+            <span className="mt-0.5 shrink-0 text-sm font-semibold text-[#83A5D4]">
+              →
+            </span>
+            <p className="text-sm leading-relaxed text-zinc-700">
+              <span className="font-semibold text-zinc-900">
+                {opportunity.taskName}
+              </span>
+              {" — "}
+              {opportunity.whyAutomatable}
+            </p>
+          </div>
         ))}
       </div>
 
-      {/* Don't fall behind */}
-      <div className="rounded-2xl bg-[#F2F2E5] px-5 py-4">
-        <p className="text-sm font-semibold text-zinc-800">
-          The most productive people in your field are already doing this.
+      {/* Bridge */}
+      <div className="space-y-3 rounded-2xl bg-[#F2F2E5] px-5 py-4">
+        <p className="text-sm leading-relaxed text-zinc-700">
+          Existing tools that promise to fix this are unintuitive, hard to
+          setup, and leave you wondering where to start.
         </p>
-        <p className="mt-1 text-sm leading-relaxed text-zinc-600">
-          Not to replace their work — to do twice as much with the same hours.
-          Don&apos;t fall behind.
+        <p className="text-sm leading-relaxed text-zinc-700">
+          Yaven knows your role, knows your stack, and runs the handoffs. You
+          just do the parts only you can do.
         </p>
       </div>
 
@@ -243,7 +130,7 @@ export function BlueprintPreview({
           onClick={onUnlock}
           className="animate-slow-bounce sm:hidden w-full inline-flex items-center justify-center gap-2 rounded-full bg-zinc-900 px-8 py-4 text-base font-semibold text-white shadow-md hover:animate-none hover:bg-zinc-700"
         >
-          Claim my spot <ArrowRight className="size-4" />
+          Get early access <ArrowRight className="size-4" />
         </button>
       </div>
     </div>

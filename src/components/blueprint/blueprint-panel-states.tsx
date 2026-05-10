@@ -48,10 +48,10 @@ export function IntroBlueprintState({ onClick }: StateProps) {
       <div className="flex flex-1 items-center justify-center">
         <div className="space-y-3">
           <h3 className="text-5xl leading-tight text-zinc-900 font-instrument-serif">
-            You blink. It&apos;s Friday.
+            Reclaim your week.
           </h3>
           <p className="text-sm leading-relaxed text-zinc-600">
-            A few questions about your week. We&apos;ll show you what could run
+            A few questions about your day. We&apos;ll show you what could run
             itself; and hand the hours back to you.
           </p>
         </div>

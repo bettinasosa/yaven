@@ -48,10 +48,11 @@ export function readStoredSession(): StoredSession | null {
 
 export function selectedForQuestion(
   question: QuestionConfig,
-  answers: BlueprintInput
+  answers: BlueprintInput,
+  availableChips?: string[]
 ) {
   const value = answers[question.primaryKey]
-  const chips = question.chips ?? []
+  const chips = availableChips ?? question.chips ?? []
 
   if (Array.isArray(value)) {
     const selected = value.filter(item => chips.includes(item))
@@ -69,10 +70,11 @@ export function selectedForQuestion(
 
 export function freeTextForQuestion(
   question: QuestionConfig,
-  answers: BlueprintInput
+  answers: BlueprintInput,
+  availableChips?: string[]
 ) {
   const value = answers[question.primaryKey]
-  const chips = new Set(question.chips ?? [])
+  const chips = new Set(availableChips ?? question.chips ?? [])
 
   if (!Array.isArray(value)) {
     return question.mode !== "textarea" && chips.has(value) ? "" : value

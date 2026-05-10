@@ -11,6 +11,7 @@ import {
   FALLBACK_TASKS,
   HUMAN_LED_DEFAULTS,
   TOOL_KEYWORDS,
+  buildWhyAutomatable,
   firstNonEmpty,
   includesAny,
   titleCase,
@@ -117,8 +118,7 @@ function buildOpportunity(
       riskSuitability,
       businessValue
     },
-    whyAutomatable:
-      "The input and output repeat often enough that AI can draft, summarize, classify, or route the work before you review it.",
+    whyAutomatable: buildWhyAutomatable(task, answers.toolsUsed),
     firstVersion: buildFirstVersion(task, automationType, answers),
     requiredInputs: buildRequiredInputs(task, answers),
     expectedOutputs: buildExpectedOutputs(task, automationType),

@@ -11,7 +11,9 @@ import { getAnsweredQuestionCount } from "@/lib/blueprint/validation"
 import {
   OTHER_OPTION,
   blueprintQuestions,
-  emptyBlueprintInput
+  emptyBlueprintInput,
+  toolsByRole,
+  painfulTasksByRole
 } from "./blueprint-config"
 import { BlueprintModalShell } from "./blueprint-modal-shell"
 import { BlueprintPreview } from "./blueprint-preview"
@@ -35,6 +37,12 @@ import {
 import { SuccessState } from "./success-state"
 import { WaitlistForm } from "./waitlist-form"
 
+function chipsForQuestion(questionId: string, role: string): string[] {
+  if (questionId === "toolsUsed") return toolsByRole[role] ?? toolsByRole[OTHER_OPTION] ?? []
+  if (questionId === "painfulTasks") return painfulTasksByRole[role] ?? painfulTasksByRole[OTHER_OPTION] ?? []
+  return []
+}
+
 export function BlueprintPanel() {
   const [phase, setPhase] = useState<PanelPhase>("idle")
   const [answers, setAnswers] = useState<BlueprintInput>(emptyBlueprintInput)
@@ -50,13 +58,17 @@ export function BlueprintPanel() {
   const [isClosing, setIsClosing] = useState(false)
 
   const question = blueprintQuestions[currentIndex]
-  const dynamicChips = useMemo(() => question.chips ?? [], [question])
+  const dynamicChips = useMemo(
+    () => question.chips ?? chipsForQuestion(question.id, answers.role),
+    [question, answers.role]
+  )
 
   const loadQuestionDraft = useCallback(
     (index: number, sourceAnswers: BlueprintInput) => {
       const nextQuestion = blueprintQuestions[index]
-      setSelectedChips(selectedForQuestion(nextQuestion, sourceAnswers))
-      setDraftText(freeTextForQuestion(nextQuestion, sourceAnswers))
+      const chips = nextQuestion.chips ?? chipsForQuestion(nextQuestion.id, sourceAnswers.role)
+      setSelectedChips(selectedForQuestion(nextQuestion, sourceAnswers, chips))
+      setDraftText(freeTextForQuestion(nextQuestion, sourceAnswers, chips))
       setSecondaryDraft(secondaryTextForQuestion(nextQuestion, sourceAnswers))
     },
     []
@@ -294,7 +306,10 @@ export function BlueprintPanel() {
             textValue={draftText}
             secondaryValue={secondaryDraft}
             canGoBack={currentIndex > 0}
-            canContinue={selectedChips.length > 0}
+            canContinue={
+              selectedChips.length > 0 &&
+              (!selectedChips.includes(OTHER_OPTION) || draftText.trim().length > 0)
+            }
             onToggleChip={handleToggleChip}
             onTextChange={setDraftText}
             onSecondaryChange={setSecondaryDraft}
@@ -310,6 +325,7 @@ export function BlueprintPanel() {
       {phase === "preview" && blueprint && (
         <BlueprintPreview
           blueprint={blueprint}
+          role={answers.role}
           onUnlock={() => setPhase("email")}
           onDirectSubmit={async (email: string) => {
             const desiredAutomation = [

@@ -252,12 +252,13 @@
   }
 
   @keyframes testimonial-marquee-right {
-    from {
-      transform: translateX(-50%);
-    }
-    to {
-      transform: translateX(0);
-    }
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+
+  @keyframes testimonial-marquee-left {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
   }
 
   .testimonial-marquee {
@@ -282,7 +283,12 @@
     animation: testimonial-marquee-right 42s linear infinite;
   }
 
-  .testimonial-marquee:hover .testimonial-marquee-track {
+  .testimonial-marquee-track-reverse {
+    animation: testimonial-marquee-left 38s linear infinite;
+  }
+
+  .testimonial-marquee:hover .testimonial-marquee-track,
+  .testimonial-marquee:hover .testimonial-marquee-track-reverse {
     animation-play-state: paused;
   }
 
