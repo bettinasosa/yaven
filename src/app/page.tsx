@@ -565,7 +565,7 @@ function ProfessionalSections() {
                 do it.
               </p>
               {/* EY Survey Chart */}
-              <div className="rounded-2xl bg-[#5B99C4]/10 px-6 py-6">
+              <div className="rounded-2xl bg-[#5B99C4]/10 px-6 py-6" style={{ boxShadow: "0 2px 12px rgba(32,83,165,0.08)" }}>
                 <div className="space-y-4">
                   {/* Bar 1 */}
                   <div className="space-y-1.5">
@@ -869,50 +869,43 @@ function ProfessionalSections() {
                   approve, edit, or redirect, and it moves on.
                 </p>
               </FadeIn>
-              <FadeIn delay={0.2} className="flex-1 space-y-2">
+              <FadeIn delay={0.2} className="flex-1 space-y-3">
                 {[
                   {
-                    label: "Investor update email",
-                    note: "Sent automatically · every Friday"
+                    msg: "Investor update sent. Pulled your numbers from Notion, kept your usual tone, and hit send at 8am like always.",
+                    note: "Every Friday · no input needed"
                   },
                   {
-                    label: "Monthly client report — 4 accounts",
-                    note: "Compiled and sent · no action needed"
-                  },
-                  {
-                    label: "New hire welcome pack",
-                    note: "Sent automatically · on contract signing"
+                    msg: "Jamie's welcome pack is out. IT access, intro meetings, and first-week plan all handled.",
+                    note: "Triggered on contract signing"
                   }
                 ].map(item => (
                   <div
-                    key={item.label}
-                    className="rounded-xl bg-white border border-zinc-200 px-4 py-3 flex items-center justify-between gap-3 shadow-sm"
+                    key={item.msg}
+                    className="rounded-xl bg-white px-4 py-3 space-y-1.5"
+                    style={{ boxShadow: "0 2px 12px rgba(32,83,165,0.08)" }}
                   >
-                    <div>
-                      <p className="text-xs font-medium text-zinc-700">
-                        {item.label}
-                      </p>
-                      <p className="text-[11px] text-zinc-400 mt-0.5">
-                        {item.note}
-                      </p>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#5B99C4] shrink-0" />
+                      <p className="text-[10px] tracking-[0.12em] uppercase text-[#5B99C4] font-medium">Yaven</p>
                     </div>
-                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
-                      AUTO
-                    </span>
+                    <p className="text-xs leading-relaxed text-zinc-600">{item.msg}</p>
+                    <p className="text-[10px] text-zinc-400">{item.note}</p>
                   </div>
                 ))}
-                <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-medium text-amber-800">
-                      Q3 proposal — Northfield Partners
-                    </p>
-                    <p className="text-[11px] text-amber-600 mt-0.5">
-                      Draft ready · needs your sign-off before sending
-                    </p>
+                <div className="rounded-xl bg-[#EEF3FA] px-4 py-4 space-y-3" style={{ boxShadow: "0 4px 16px rgba(32,83,165,0.12)" }}>
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#5B99C4] shrink-0" />
+                    <p className="text-[10px] tracking-[0.12em] uppercase text-[#5B99C4] font-medium">Yaven</p>
                   </div>
-                  <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-amber-800 text-white shrink-0">
-                    Approve
-                  </button>
+                  <p className="text-xs leading-relaxed text-[#2053A5]">
+                    I&apos;ve drafted your board update. Pulled last month&apos;s metrics, matched your tone from the last one, and kept it under two minutes to read. Ready to go — just need you to say the word.
+                  </p>
+                  <div className="flex justify-end">
+                    <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-[#5B99C4] text-white shrink-0">
+                      Send it
+                    </button>
+                  </div>
                 </div>
               </FadeIn>
             </div>
