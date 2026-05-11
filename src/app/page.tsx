@@ -1195,6 +1195,14 @@ export default function Home() {
           <span className="text-4xl tracking-tight text-white font-instrument-serif">
             yaven
           </span>
+          <a
+            href="https://calendly.com/nickprice2000/yaven-support"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-white/15 backdrop-blur-sm border border-white/25 px-5 py-2 text-sm font-medium text-white hover:bg-white/25 transition-colors"
+          >
+            Book a call
+          </a>
         </div>
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-start px-6 pb-16 pt-40 sm:px-8 lg:pb-20 lg:pt-56">

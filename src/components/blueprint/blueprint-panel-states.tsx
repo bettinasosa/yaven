@@ -3,7 +3,6 @@
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { useEffect, useState } from "react"
-import { BubbleButton } from "@/components/bubble-button"
 
 type StateProps = {
   onClick: () => void
@@ -22,15 +21,9 @@ const loadingPuns = [
 export function IdleBlueprintState({ onClick }: StateProps) {
   return (
     <div className="space-y-4">
-      <BubbleButton
-        onClick={onClick}
-        style={{
-          color: "white",
-          fontSize: "1.25rem"
-        }}
-      >
+      <button type="button" onClick={onClick} className="btn-press">
         Show me
-      </BubbleButton>
+      </button>
     </div>
   )
 }
@@ -55,7 +48,7 @@ export function IntroBlueprintState({ onClick }: StateProps) {
             Reclaim your week.
           </h3>
           <p className="text-sm leading-relaxed text-zinc-600">
-            A few questions about your day. We&apos;ll show you what could run
+            A few questions about your week. We&apos;ll show you what could run
             itself; and hand the hours back to you.
           </p>
         </div>
