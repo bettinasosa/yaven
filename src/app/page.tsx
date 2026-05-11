@@ -1197,7 +1197,7 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-start px-6 pb-16 pt-28 sm:px-8 lg:pb-20 lg:pt-40">
+        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-start px-6 pb-16 pt-40 sm:px-8 lg:pb-20 lg:pt-56">
           <div className="max-w-3xl">
             <h1 className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}>
               Focus in a distracted world
