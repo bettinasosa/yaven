@@ -468,7 +468,7 @@ function CTAMarqueeCard() {
             <button
               type="submit"
               disabled={loading}
-              className="shrink-0 rounded-full bg-zinc-900 px-5 py-3 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-60 whitespace-nowrap"
+              className="btn-press-dark shrink-0 disabled:opacity-60"
             >
               {loading ? "Saving…" : "Get early access"}
             </button>
@@ -1117,19 +1117,19 @@ function InlineWaitlistForm() {
 
   return (
     <div className="space-y-2">
-      <form onSubmit={handleSubmit} className="flex items-center gap-2">
+      <form onSubmit={handleSubmit} className="flex items-end gap-2">
         <input
           type="email"
           required
           placeholder="your@email.com"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="flex-1 min-w-0 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-500 transition-colors shadow-sm"
+          className="flex-1 min-w-0 rounded-full border border-zinc-300 bg-white px-5 py-[0.7em] text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-500 transition-colors shadow-sm"
         />
         <button
           type="submit"
           disabled={loading}
-          className="shrink-0 rounded-full bg-[#F5C0C1] hover:bg-[#f0aaab] disabled:opacity-50 px-5 py-3 text-sm font-bold text-zinc-900 transition-colors whitespace-nowrap"
+          className="btn-press shrink-0 disabled:opacity-50"
         >
           {loading ? "Saving…" : "Get early access"}
         </button>
@@ -1199,7 +1199,7 @@ export default function Home() {
             href="https://calendly.com/nickprice2000/yaven-support"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-white/15 backdrop-blur-sm border border-white/25 px-5 py-2 text-sm font-medium text-white hover:bg-white/25 transition-colors"
+            className="btn-press"
           >
             Book a call
           </a>

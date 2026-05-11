@@ -57,10 +57,9 @@ export function IntroBlueprintState({ onClick }: StateProps) {
         <button
           type="button"
           onClick={onClick}
-          className="inline-flex items-center gap-2 rounded-full bg-[#F5C0C1] px-10 py-3.5 text-base font-semibold text-zinc-900 shadow-sm animate-slow-bounce hover:animate-none hover:scale-[1.02] transition-transform"
+          className="btn-press inline-flex items-center gap-2"
         >
           Start
-          <ArrowRight className="size-4" />
         </button>
       </div>
     </div>
