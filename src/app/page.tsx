@@ -732,7 +732,7 @@ function ProfessionalSections() {
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                   Tell Yaven what you&apos;re working toward.
                 </h3>
-                <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
                   Your day-to-day, your goals, your tools, how your week runs.
                   The more it understands your world, the more it can do in it.
                   You don&apos;t need to know what to automate. Yaven figures
@@ -810,7 +810,7 @@ function ProfessionalSections() {
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                   It builds the playbook.
                 </h3>
-                <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
                   Yaven maps your workflows, orchestrates the right agents, and
                   starts automating the repeatable. No configuration required.
                 </p>
@@ -870,7 +870,7 @@ function ProfessionalSections() {
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                   It runs in the background. You make the calls.
                 </h3>
-                <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
                   Most AI tools wait to be asked. Yaven doesn&apos;t. Once it
                   knows your workflow, it runs quietly in the corner of your
                   screen. Following up, logging, updating, compiling. When
@@ -940,7 +940,7 @@ function ProfessionalSections() {
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                   In when you want. Out when you don&apos;t.
                 </h3>
-                <p className="text-base leading-relaxed text-zinc-600 max-w-sm pt-1">
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
                   Open the agent playground when you want to dig in or
                   customise. Close it when you don&apos;t. Either way, the work
                   is moving. Not a tab you forget to check. A system that&apos;s
@@ -1064,7 +1064,7 @@ function ProfessionalSections() {
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <p className="text-base leading-relaxed text-zinc-600">
+                      <p className="text-base sm:text-lg leading-relaxed text-zinc-600">
                         {faq.a}
                       </p>
                     </div>
@@ -1266,7 +1266,7 @@ export default function Home() {
             Your industry is moving.
             <span> Get ahead of it.</span>
           </h2>
-          <p className="text-base leading-relaxed text-zinc-600">
+          <p className="text-base sm:text-lg leading-relaxed text-zinc-600">
             Early access is limited. Get in before the queue fills up.
           </p>
           <InlineWaitlistForm />
