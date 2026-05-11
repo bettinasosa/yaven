@@ -809,8 +809,8 @@ function ProfessionalSections() {
 
             {/* Step 4 */}
             <div className="relative flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-center">
-              <div className="absolute -inset-x-24 -inset-y-16 pointer-events-none" style={{ background: "linear-gradient(to bottom, transparent 0%, #E3E2C4 25%, #E3E2C4 75%, transparent 100%)" }} />
-              <FadeIn className="flex-1 space-y-1 lg:pt-2">
+              <div className="absolute -inset-y-32 pointer-events-none" style={{ left: "50%", transform: "translateX(-50%)", width: "100vw", background: "linear-gradient(to bottom, transparent 0%, #E3E2C4 25%, #E3E2C4 75%, transparent 100%)" }} />
+              <FadeIn className="relative flex-1 space-y-1 lg:pt-2">
                 <span className="text-xs tracking-[0.2em] uppercase text-zinc-500">
                   04
                 </span>
