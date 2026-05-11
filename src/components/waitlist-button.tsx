@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { BubbleButton } from "@/components/bubble-button";
+import { useState } from "react"
+import { BubbleButton } from "@/components/bubble-button"
 
 const WORK_TYPES = [
   "Founder",
@@ -19,59 +19,59 @@ const WORK_TYPES = [
   "Executive Assistant",
   "Research",
   "Student",
-  "Other",
-];
+  "Other"
+]
 
 interface WaitlistButtonProps {
-  label?: string;
-  className?: string;
-  glass?: boolean;
+  label?: string
+  className?: string
+  glass?: boolean
 }
 
 export function WaitlistButton({
   label = "Join the Waitlist",
   className,
-  glass,
+  glass
 }: WaitlistButtonProps) {
-  const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [workType, setWorkType] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [open, setOpen] = useState(false)
+  const [email, setEmail] = useState("")
+  const [workType, setWorkType] = useState("")
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   async function submit() {
-    if (!email) return;
-    setLoading(true);
-    setError("");
+    if (!email) return
+    setLoading(true)
+    setError("")
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, workType }),
-      });
-      if (!res.ok) throw new Error("Failed");
-      setSubmitted(true);
+        body: JSON.stringify({ email, workType })
+      })
+      if (!res.ok) throw new Error("Failed")
+      setSubmitted(true)
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Something went wrong. Please try again.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    submit();
+    e.preventDefault()
+    submit()
   }
 
   function handleClose() {
-    setOpen(false);
+    setOpen(false)
     setTimeout(() => {
-      setSubmitted(false);
-      setEmail("");
-      setWorkType("");
-      setError("");
-    }, 300);
+      setSubmitted(false)
+      setEmail("")
+      setWorkType("")
+      setError("")
+    }, 300)
   }
 
   return (
@@ -91,7 +91,7 @@ export function WaitlistButton({
         >
           <div
             className="relative bg-white rounded-3xl max-w-md w-full shadow-2xl flex flex-col max-h-[90dvh]"
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
             <button
               onClick={handleClose}
@@ -107,35 +107,61 @@ export function WaitlistButton({
                     You&apos;re on the list.
                   </p>
                   <p className="text-zinc-500 text-sm leading-relaxed">
-                    We&apos;ll be in touch as soon as early access opens — you&apos;ll be among the first to get in.
+                    We&apos;ll be in touch as soon as early access opens —
+                    you&apos;ll be among the first to get in.
                   </p>
                 </div>
                 <div className="space-y-3">
                   {[
-                    { icon: "→", text: "A personal onboarding call to map your workflows" },
-                    { icon: "→", text: "Full access to your agent workspace from day one" },
-                    { icon: "→", text: "Direct line to the team while we build together" },
+                    {
+                      icon: "→",
+                      text: "A personal onboarding call to map your workflows"
+                    },
+                    {
+                      icon: "→",
+                      text: "Full access to your agent workspace from day one"
+                    },
+                    {
+                      icon: "→",
+                      text: "Direct line to the team while we build together"
+                    }
                   ].map(({ icon, text }) => (
                     <div key={text} className="flex items-start gap-3">
-                      <span className="text-[#F5C0C1] text-sm font-bold shrink-0 mt-0.5">{icon}</span>
-                      <p className="text-sm text-zinc-600 leading-snug">{text}</p>
+                      <span className="text-[#F5C0C1] text-sm font-bold shrink-0 mt-0.5">
+                        {icon}
+                      </span>
+                      <p className="text-sm text-zinc-600 leading-snug">
+                        {text}
+                      </p>
                     </div>
                   ))}
                 </div>
                 <p className="text-xs text-zinc-400 leading-relaxed">
-                  In the meantime, if you have questions or want to share what you&apos;re building, reach us at{" "}
-                  <a href="mailto:hello@yaven.ai" className="underline hover:text-zinc-600 transition-colors">hello@yaven.ai</a>.
+                  In the meantime, if you have questions or want to share what
+                  you&apos;re building, reach us at{" "}
+                  <a
+                    href="mailto:support@yaven.us"
+                    className="underline hover:text-zinc-600 transition-colors"
+                  >
+                    support@yaven.us
+                  </a>
+                  .
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col flex-1 min-h-0"
+              >
                 {/* Scrollable content */}
                 <div className="overflow-y-auto flex-1 px-8 sm:px-10 pt-8 sm:pt-10 pb-4">
                   <p className="text-2xl sm:text-3xl font-instrument-serif text-zinc-900 mb-2">
                     Join the waitlist
                   </p>
                   <p className="text-sm text-zinc-500 leading-relaxed mb-6">
-                    We&apos;re opening access in small batches — tell us a bit about yourself and we&apos;ll reach out when your spot is ready.
+                    We&apos;re opening access in small batches — tell us a bit
+                    about yourself and we&apos;ll reach out when your spot is
+                    ready.
                   </p>
 
                   <div className="space-y-4">
@@ -148,7 +174,7 @@ export function WaitlistButton({
                         required
                         placeholder="you@example.com"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={e => setEmail(e.target.value)}
                         className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 font-inter placeholder:text-zinc-400 focus:outline-none focus:border-zinc-400 transition-colors"
                       />
                     </div>
@@ -159,13 +185,13 @@ export function WaitlistButton({
                       <div className="relative">
                         <select
                           value={workType}
-                          onChange={(e) => setWorkType(e.target.value)}
+                          onChange={e => setWorkType(e.target.value)}
                           className="w-full appearance-none rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm font-inter text-zinc-900 focus:outline-none focus:border-zinc-400 transition-colors cursor-pointer pr-10"
                         >
                           <option value="" disabled>
                             Select one…
                           </option>
-                          {WORK_TYPES.map((t) => (
+                          {WORK_TYPES.map(t => (
                             <option key={t} value={t}>
                               {t}
                             </option>
@@ -189,8 +215,16 @@ export function WaitlistButton({
                     disabled={loading || !email || !workType}
                     className="w-full rounded-full text-zinc-900 text-base font-bold py-3.5 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                     style={{ background: "#F5C0C1" }}
-                    onMouseEnter={e => { if (!loading && email && workType) (e.currentTarget as HTMLButtonElement).style.background = "#f0aaab" }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "#F5C0C1" }}
+                    onMouseEnter={e => {
+                      if (!loading && email && workType)
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.background = "#f0aaab"
+                    }}
+                    onMouseLeave={e => {
+                      ;(e.currentTarget as HTMLButtonElement).style.background =
+                        "#F5C0C1"
+                    }}
                   >
                     {loading ? "Saving…" : "Get early access"}
                   </button>
@@ -201,5 +235,5 @@ export function WaitlistButton({
         </div>
       )}
     </>
-  );
+  )
 }

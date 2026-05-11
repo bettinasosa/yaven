@@ -1313,7 +1313,7 @@ export default function Home() {
                 className="text-xs text-white/40 hover:text-white/70 transition-colors"
               />
               <a
-                href="mailto:hello@yaven.ai"
+                href="mailto:support@yaven.us"
                 className="text-xs text-white/40 hover:text-white/70 transition-colors"
               >
                 Email founders
