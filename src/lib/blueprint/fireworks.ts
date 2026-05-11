@@ -1,15 +1,7 @@
-import {
-  buildAgentTeamPrompt,
-  buildAgentTeamSchematic,
-  normalizeAgentTeam
-} from "./agent-team"
+import { buildBlueprintPrompt } from "./agent-team"
 import { generateLocalBlueprint } from "./local-generator"
-import { agentTeamJsonSchema } from "./schema"
-import type {
-  AgentTeam,
-  AutomationBlueprint,
-  BlueprintInput
-} from "./types"
+import { opportunitiesJsonSchema } from "./schema"
+import type { BlueprintInput } from "./types"
 import { parseJsonObject } from "./validation"
 
 const FIREWORKS_CHAT_URL = "https://api.fireworks.ai/inference/v1/chat/completions"
@@ -39,24 +31,10 @@ function getBlueprintModel() {
   return process.env.FIREWORKS_BLUEPRINT_MODEL || DEFAULT_MODEL
 }
 
-function getBestOpportunity(blueprint: AutomationBlueprint) {
-  return (
-    blueprint.topOpportunities[0] ??
-    blueprint.quickWins[0] ??
-    blueprint.customToolIdeas[0] ??
-    null
-  )
-}
-
-async function requestAgentTeam(
-  apiKey: string,
-  answers: BlueprintInput,
-  baseBlueprint: AutomationBlueprint
-) {
-  const opportunity = getBestOpportunity(baseBlueprint)
+async function requestOpportunities(apiKey: string, answers: BlueprintInput) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), getBlueprintTimeoutMs())
-  const systemContent = buildAgentTeamPrompt(answers, opportunity)
+  const systemContent = buildBlueprintPrompt(answers)
 
   try {
     const response = await fetch(FIREWORKS_CHAT_URL, {
@@ -77,8 +55,8 @@ async function requestAgentTeam(
         response_format: {
           type: "json_schema",
           json_schema: {
-            name: "agent_team",
-            schema: agentTeamJsonSchema
+            name: "opportunities",
+            schema: opportunitiesJsonSchema
           }
         }
       })
@@ -88,7 +66,7 @@ async function requestAgentTeam(
 
     if (!response.ok) {
       throw new Error(
-        payload.error?.message ?? "Fireworks workflow request failed"
+        payload.error?.message ?? "Fireworks opportunities request failed"
       )
     }
 
@@ -103,7 +81,7 @@ type FireworksOpportunity = {
   description?: string
 }
 
-type FireworksResponse = AgentTeam & {
+type FireworksResponse = {
   opportunities?: FireworksOpportunity[]
 }
 
@@ -148,23 +126,12 @@ export async function generateFireworksBlueprint(answers: BlueprintInput) {
 
   const baseBlueprint = generateLocalBlueprint(answers)
   const parsed = parseFireworksResponse(
-    await requestAgentTeam(apiKey, answers, baseBlueprint)
+    await requestOpportunities(apiKey, answers)
   )
-  const opportunity = getBestOpportunity(baseBlueprint)
-  const agentTeam = parsed
-    ? normalizeAgentTeam(parsed, answers, opportunity)
-    : null
 
-  if (!agentTeam) throw new Error("Fireworks returned invalid agent team JSON")
-
-  const patchedBlueprint =
-    parsed?.opportunities && parsed.opportunities.length > 0
-      ? applyAiOpportunities(baseBlueprint, parsed.opportunities)
-      : baseBlueprint
-
-  return {
-    ...patchedBlueprint,
-    agentTeam,
-    workflowSchematic: buildAgentTeamSchematic(agentTeam)
+  if (!parsed?.opportunities || parsed.opportunities.length === 0) {
+    throw new Error("Fireworks returned invalid opportunities JSON")
   }
+
+  return applyAiOpportunities(baseBlueprint, parsed.opportunities)
 }

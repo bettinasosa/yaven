@@ -102,36 +102,14 @@ const workflowSchematicSchema = {
 
 export const workflowSchematicJsonSchema = workflowSchematicSchema
 
-export const agentTeamJsonSchema = {
+export const opportunitiesJsonSchema = {
   type: "object",
   additionalProperties: false,
-  required: ["hoursPerWeek", "summary", "agents", "opportunities"],
+  required: ["opportunities"],
   properties: {
-    hoursPerWeek: {
-      type: "integer",
-      minimum: 4,
-      maximum: 20
-    },
-    summary: { type: "string" },
-    agents: {
-      type: "array",
-      minItems: 4,
-      maxItems: 4,
-      items: {
-        type: "object",
-        additionalProperties: false,
-        required: ["name", "role", "handles", "schedule"],
-        properties: {
-          name: { type: "string" },
-          role: { type: "string" },
-          handles: { type: "string" },
-          schedule: { type: "string" }
-        }
-      }
-    },
     opportunities: {
       type: "array",
-      minItems: 3,
+      minItems: 4,
       maxItems: 4,
       items: {
         type: "object",

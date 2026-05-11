@@ -1,12 +1,13 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { ChevronDown } from "lucide-react"
 import { WaitlistButton } from "@/components/waitlist-button"
 import { FadeIn } from "@/components/fade-in"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { HeroRefractionVideo } from "@/components/hero-refraction-video"
+import { GeneratingBlueprintState } from "@/components/blueprint/blueprint-panel-states"
 
 /* ── Goal card mockup (professional) ────────────────────── */
 function GoalCard({
@@ -539,8 +540,8 @@ function ProfessionalSections() {
                 </p>
                 <p>
                   You come back to decisions, not groundwork. It runs in the
-                  background, flags what needs you, and keeps everything
-                  moving. No prompting. No babysitting.
+                  background, flags what needs you, and keeps everything moving.
+                  No prompting. No babysitting.
                 </p>
               </div>
             </div>
@@ -586,7 +587,7 @@ function ProfessionalSections() {
         className="relative overflow-hidden px-6 py-20 sm:py-40"
         style={{
           background:
-            "linear-gradient(to bottom, white 0%, #EEF3FA 12%, #EEF3FA 88%, white 100%)"
+            "linear-gradient(to bottom, white 0%, #E3E2C4 12%, #E3E2C4 88%, white 100%)"
         }}
       >
         <Image
@@ -606,14 +607,6 @@ function ProfessionalSections() {
           <div className="space-y-16 sm:space-y-32">
             {/* Step 1 */}
             <div className="relative flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
-              <Image
-                src="/cloud.png"
-                alt=""
-                width={440}
-                height={236}
-                className="pointer-events-none select-none absolute -right-20 -top-12 w-[260px] opacity-35 sm:w-[380px] hidden sm:block -z-10"
-                aria-hidden="true"
-              />
               <FadeIn className="flex-1 space-y-1 lg:pt-2">
                 <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
                   01
@@ -683,7 +676,15 @@ function ProfessionalSections() {
             </div>
 
             {/* Step 2 */}
-            <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-start">
+            <div className="relative flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-start">
+              <Image
+                src="/cloud.png"
+                alt=""
+                width={440}
+                height={236}
+                className="pointer-events-none select-none absolute -left-20 -top-12 w-[260px] opacity-35 sm:w-[380px] hidden sm:block -z-10"
+                aria-hidden="true"
+              />
               <FadeIn className="flex-1 space-y-1 lg:pt-2">
                 <span className="text-xs tracking-[0.2em] uppercase text-zinc-400">
                   02
@@ -824,54 +825,8 @@ function ProfessionalSections() {
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1">
-                <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-                  <div className="px-5 py-3 border-b border-zinc-100 flex items-center justify-between">
-                    <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400">
-                      Agent playground
-                    </p>
-                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600">
-                      Running
-                    </span>
-                  </div>
-                  <div className="px-5 py-4 space-y-3">
-                    {[
-                      {
-                        agent: "Follow-up agent",
-                        status: "Sent 3 emails this morning",
-                        auto: true
-                      },
-                      {
-                        agent: "CRM agent",
-                        status: "Logged 2 calls to HubSpot",
-                        auto: true
-                      },
-                      {
-                        agent: "Report agent",
-                        status: "Friday update compiling now",
-                        auto: true
-                      }
-                    ].map(row => (
-                      <div
-                        key={row.agent}
-                        className="flex items-center justify-between gap-3"
-                      >
-                        <div>
-                          <p className="text-xs font-medium text-zinc-700">
-                            {row.agent}
-                          </p>
-                          <p className="text-xs text-zinc-400">{row.status}</p>
-                        </div>
-                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
-                          AUTO
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="px-5 py-3 bg-zinc-50 border-t border-zinc-100">
-                    <p className="text-xs text-zinc-400">
-                      Working whether you&apos;re here or not
-                    </p>
-                  </div>
+                <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden min-h-56 flex flex-col">
+                  <GeneratingBlueprintState />
                 </div>
               </FadeIn>
             </div>
@@ -1045,6 +1000,107 @@ function InlineWaitlistForm() {
   )
 }
 
+/* ── Contrast subtitle — samples video pixels behind text ── */
+function ContrastSubtitle({
+  children,
+  className
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  const textRef = useRef<HTMLParagraphElement>(null)
+  const [textColor, setTextColor] = useState("#ffffff")
+  const frameRef = useRef(0)
+  const tickRef = useRef(0)
+
+  useEffect(() => {
+    const canvas = document.createElement("canvas")
+    canvas.width = 40
+    canvas.height = 20
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })
+    if (!ctx) return
+    const safeCtx = ctx
+
+    function sample() {
+      frameRef.current = requestAnimationFrame(sample)
+      tickRef.current++
+      if (tickRef.current % 8 !== 0) return // ~7.5 fps is plenty
+
+      const video = document.querySelector<HTMLVideoElement>("video")
+      const text = textRef.current
+      if (!video || !text || !video.videoWidth || !video.videoHeight) return
+
+      const section = text.closest("section")
+      if (!section) return
+
+      const sectionRect = section.getBoundingClientRect()
+      const textRect = text.getBoundingClientRect()
+      const sectionW = sectionRect.width
+      const sectionH = sectionRect.height
+
+      // Text centre relative to section
+      const tx = textRect.left - sectionRect.left + textRect.width / 2
+      const ty = textRect.top - sectionRect.top + textRect.height / 2
+
+      // Undo video CSS transform: translateY(25%) then scaleX(-1)
+      const vidLocalY = ty - 0.25 * sectionH
+      const vidLocalX = sectionW - tx
+
+      // Map to video natural coords via object-fit: cover
+      const natW = video.videoWidth
+      const natH = video.videoHeight
+      const displayAspect = sectionW / sectionH
+      const videoAspect = natW / natH
+
+      let srcX: number, srcY: number, srcW: number, srcH: number
+      if (videoAspect > displayAspect) {
+        srcH = natH
+        srcW = natH * displayAspect
+        srcX = (natW - srcW) / 2 + (vidLocalX / sectionW) * srcW
+        srcY = (vidLocalY / sectionH) * srcH
+      } else {
+        srcW = natW
+        srcH = natW / displayAspect
+        srcX = (vidLocalX / sectionW) * srcW
+        srcY = (natH - srcH) / 2 + (vidLocalY / sectionH) * srcH
+      }
+
+      const sx = Math.max(0, srcX - 20)
+      const sy = Math.max(0, srcY - 10)
+      const sw = Math.min(40, natW - sx)
+      const sh = Math.min(20, natH - sy)
+      if (sw <= 0 || sh <= 0) return
+
+      try {
+        safeCtx.drawImage(video, sx, sy, sw, sh, 0, 0, 40, 20)
+        const { data } = safeCtx.getImageData(0, 0, 40, 20)
+        let lum = 0
+        const pixelCount = data.length / 4
+        for (let i = 0; i < data.length; i += 4) {
+          lum += (data[i] * 299 + data[i + 1] * 587 + data[i + 2] * 114) / 1000
+        }
+        lum /= pixelCount
+        setTextColor(lum > 100 ? "#2053A5" : "#ffffff")
+      } catch {
+        // tainted canvas — skip
+      }
+    }
+
+    frameRef.current = requestAnimationFrame(sample)
+    return () => cancelAnimationFrame(frameRef.current)
+  }, [])
+
+  return (
+    <p
+      ref={textRef}
+      className={className}
+      style={{ color: textColor, transition: "color 0.4s ease" }}
+    >
+      {children}
+    </p>
+  )
+}
+
 export default function Home() {
   return (
     <>
@@ -1106,10 +1162,10 @@ export default function Home() {
               Focus in a distracted world
             </h1>
 
-            <p className="text-base font-black italic max-w-lg mt-6 leading-relaxed" style={{ mixBlendMode: "difference", color: "#ffffff" }}>
+            <div className="text-base font-black text-white italic max-w-lg mt-6 leading-relaxed">
               Tell us how you work, we&apos;ll show you what&apos;s wasting your
               time, and leave you to do the bits only you can.
-            </p>
+            </div>
 
             <div className="mt-8 max-w-[440px] animate-fade-rise-delay-2">
               <BlueprintPanel />

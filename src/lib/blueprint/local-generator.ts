@@ -5,7 +5,6 @@ import type {
   AutomationType,
   BlueprintInput
 } from "./types"
-import { buildAgentTeamSchematic, buildLocalAgentTeam } from "./agent-team"
 import {
   CATEGORY_KEYWORDS,
   FALLBACK_TASKS,
@@ -359,8 +358,6 @@ export function generateLocalBlueprint(
   const topTask =
     topOpportunities[0]?.taskName ??
     "turn messy notes into a useful work output"
-  const topOpportunity = topOpportunities[0]
-  const agentTeam = buildLocalAgentTeam(answers, topOpportunity)
   const role = answers.role || "your role"
   const repeated = uniq([
     ...answers.repeatedTasks,
@@ -375,8 +372,6 @@ export function generateLocalBlueprint(
     customToolIdeas,
     humanLedTasks: HUMAN_LED_DEFAULTS,
     automationMap: buildAutomationMap(topOpportunities),
-    agentTeam,
-    workflowSchematic: buildAgentTeamSchematic(agentTeam),
     suggestedPromptTemplate: {
       title: `${topTask} template`,
       useCase: `Use this when you need to turn messy input into ${topTask.toLowerCase()}.`,
