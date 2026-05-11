@@ -1149,6 +1149,14 @@ export default function Home() {
       >
         <HeroRefractionVideo src="/hero-bg.mp4" playbackRate={0.45} flipX />
 
+        {/* Text area overlay — improves white text legibility over clouds */}
+        <div
+          className="absolute inset-0 z-2 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 80% 70% at 20% 70%, rgba(0,0,0,0.18) 0%, transparent 70%)"
+          }}
+        />
+
         {/* Bottom fade to white */}
         <div
           className="absolute bottom-0 left-0 right-0 h-48 z-2 pointer-events-none"
@@ -1191,11 +1199,11 @@ export default function Home() {
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-start px-6 pb-16 pt-28 sm:px-8 lg:pb-20 lg:pt-40">
           <div className="max-w-3xl">
-            <h1 className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl">
+            <h1 className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}>
               Focus in a distracted world
             </h1>
 
-            <div className="text-base font-black text-white max-w-lg mt-6 leading-relaxed">
+            <div className="text-base font-black text-white max-w-lg mt-6 leading-relaxed" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>
               Tell us how you work, we&apos;ll show you what&apos;s wasting your
               time, and leave you to do the bits only you can.
             </div>
