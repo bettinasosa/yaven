@@ -571,12 +571,12 @@ function ProfessionalSections() {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-sm text-zinc-500">
                       <span>Use AI for basic tasks</span>
-                      <span className="font-medium text-zinc-700">75%</span>
+                      <span className="font-medium text-zinc-700">88%</span>
                     </div>
                     <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
                       <div
                         className="h-full rounded-full bg-[#F5C0C1]"
-                        style={{ width: "75%" }}
+                        style={{ width: "88%" }}
                       />
                     </div>
                   </div>
@@ -584,12 +584,12 @@ function ProfessionalSections() {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-sm text-zinc-500">
                       <span>Use AI to transform their work</span>
-                      <span className="font-medium text-zinc-700">8%</span>
+                      <span className="font-medium text-zinc-700">5%</span>
                     </div>
                     <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
                       <div
                         className="h-full rounded-full"
-                        style={{ width: "8%", background: "#5B99C4" }}
+                        style={{ width: "5%", background: "#5B99C4" }}
                       />
                     </div>
                   </div>
@@ -701,7 +701,7 @@ function ProfessionalSections() {
 
       {/* ── How it works ───────────────────────────────────── */}
       <section
-        className="relative overflow-hidden px-6 py-20 sm:py-40"
+        className="relative overflow-hidden px-6 pt-0 pb-20 sm:pb-40"
         style={{
           background:
             "linear-gradient(to bottom, white 0%, #fff 12%, #FFFF 72%, #FFFFFF 88%, white 100%)"
@@ -951,7 +951,7 @@ function ProfessionalSections() {
 
       {/* ── Social proof ───────────────────────────────────── */}
       <section
-        className="relative overflow-hidden px-6 py-20 sm:py-40"
+        className="relative overflow-hidden px-6 pt-0 pb-20 sm:pb-40"
         style={{
           background:
             "linear-gradient(to bottom, white 0%, #EEF3FA 12%, #EEF3FA 88%, white 100%)"
@@ -1013,7 +1013,7 @@ function ProfessionalSections() {
       </section>
 
       {/* ── FAQ ────────────────────────────────────────────── */}
-      <section className="bg-white px-6 py-20 sm:py-40">
+      <section className="bg-white px-6 pt-0 pb-20 sm:pb-40">
         <div className="max-w-3xl mx-auto">
           <FadeIn>
             <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-8 sm:mb-16">
@@ -1206,7 +1206,7 @@ export default function Home() {
 
       {/* ── Footer CTA ─────────────────────────────────────── */}
       <section
-        className="relative overflow-hidden px-4 sm:px-6 py-20 sm:py-40 text-center"
+        className="relative overflow-hidden px-4 sm:px-6 pt-0 pb-20 sm:pb-40 text-center"
         style={{
           background:
             "linear-gradient(to bottom, white 0%, #EEF3FA 20%, #EEF3FA 80%, white 100%)"
@@ -1241,9 +1241,9 @@ export default function Home() {
           <span className="block text-4xl tracking-tight text-zinc-900 font-instrument-serif">
             yaven
           </span>
-          <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] font-instrument-serif text-zinc-900">
+          <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] font-instrument-serif text-zinc-900 flex flex-col">
             Your industry is moving.
-            <span>Get ahead of it.</span>
+            <span> Get ahead of it.</span>
           </h2>
           <p className="text-base leading-relaxed text-zinc-600">
             Early access is limited. Get in before the queue fills up.
