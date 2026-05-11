@@ -41,9 +41,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${satoshi.variable} h-full antialiased scroll-smooth bg-white`}
+      className={`${instrumentSerif.variable} ${satoshi.variable} h-full antialiased scroll-smooth`}
+      style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}
     >
-      <body className="min-h-full flex flex-col bg-white">
+      <body className="min-h-full flex flex-col" style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}>
         <PageLoader />
         {children}
         <Analytics />

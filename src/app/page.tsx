@@ -421,6 +421,64 @@ function TestimonialCard({
   )
 }
 
+/* ── CTA card inside the marquee ─────────────────────────── */
+function CTAMarqueeCard() {
+  const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  async function handleSubmit(e: { preventDefault(): void }) {
+    e.preventDefault()
+    if (!email) return
+    setLoading(true)
+    try {
+      await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      })
+      setSubmitted(true)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="w-[22rem] shrink-0 rounded-2xl bg-white border border-zinc-200 shadow-sm p-6 flex flex-col justify-between gap-6 min-h-56 sm:w-[26rem]">
+      {submitted ? (
+        <p className="text-base font-medium text-zinc-700 my-auto">
+          You&apos;re on the list — we&apos;ll be in touch soon.
+        </p>
+      ) : (
+        <>
+          <p className="text-xl leading-snug font-bold italic text-[#7696dc] font-instrument-serif">
+            Want to see what your week looks like without the noise?
+          </p>
+          <form onSubmit={handleSubmit} className="flex items-center gap-2">
+            <div className="flex flex-1 items-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1 focus-within:border-zinc-400">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="flex-1 bg-transparent py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="shrink-0 rounded-full bg-zinc-900 px-5 py-3 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-60 whitespace-nowrap"
+            >
+              {loading ? "Saving…" : "Get early access"}
+            </button>
+          </form>
+        </>
+      )}
+    </div>
+  )
+}
+
 /* ── FAQ data ─────────────────────────────────────────────── */
 const faqs = [
   {
@@ -495,22 +553,74 @@ function ProfessionalSections() {
           <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-12">
             You are a master of many domains.
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 text-base leading-relaxed text-zinc-500">
-            <p>
-              There&apos;s a gap opening up in every industry. On one side:
-              people who&apos;ve figured out how to make AI do the repetitive
-              half of their job. On the other: everyone still doing it
-              themselves. The difference isn&apos;t intelligence. It&apos;s
-              knowing what to hand off, and having something that can actually
-              do it.
-            </p>
-            <p>
-              Yaven connects to the tools you already use, learns how your week
-              runs, and handles the tasks that repeat. Follow-ups sent. Notes
-              logged. Reports pulled. When something needs a human decision, it
-              surfaces it. Everything else just happens. No code. No
-              configuration. Just your work, moving forward.
-            </p>
+          <div className="flex flex-col gap-12 sm:gap-16">
+            {/* Row 1: paragraph + chart */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
+              <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
+                There&apos;s a gap opening up in every industry. On one side:
+                people who&apos;ve figured out how to make AI do the repetitive
+                half of their job. On the other: everyone still doing it
+                themselves. The difference isn&apos;t intelligence. It&apos;s
+                knowing what to hand off, and having something that can actually
+                do it.
+              </p>
+              {/* EY Survey Chart */}
+              <div className="rounded-2xl bg-[#5B99C4]/10 px-6 py-6">
+                <div className="space-y-4">
+                  {/* Bar 1 */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-sm text-zinc-500">
+                      <span>Use AI for basic tasks</span>
+                      <span className="font-medium text-zinc-700">75%</span>
+                    </div>
+                    <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-[#F5C0C1]"
+                        style={{ width: "75%" }}
+                      />
+                    </div>
+                  </div>
+                  {/* Bar 2 */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-sm text-zinc-500">
+                      <span>Use AI to transform their work</span>
+                      <span className="font-medium text-zinc-700">8%</span>
+                    </div>
+                    <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: "8%", background: "#5B99C4" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-5 text-xs text-zinc-400 leading-snug">
+                  Source: EY Work Reimagined Survey 2025,
+                  <br />
+                  15,000 employees across 29 countries
+                </p>
+              </div>
+            </div>
+
+            {/* Row 2: Yaven logo + paragraph */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
+              <div className="flex items-center justify-center">
+                <Image
+                  src="/logo.png"
+                  alt="Yaven"
+                  width={120}
+                  height={120}
+                  className="w-24 h-24 sm:w-32 sm:h-32 object-contain rounded-2xl hover-shadow-blue"
+                />
+              </div>
+              <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
+                Yaven connects to the tools you already use, learns how your
+                week runs, and handles the tasks that repeat. Follow-ups sent.
+                Notes logged. Reports pulled. When something needs a human
+                decision, it surfaces it. Everything else just happens. No code.
+                No configuration. Just your work, moving forward.
+              </p>
+            </div>
           </div>
         </FadeIn>
       </section>
@@ -594,7 +704,7 @@ function ProfessionalSections() {
         className="relative overflow-hidden px-6 py-20 sm:py-40"
         style={{
           background:
-            "linear-gradient(to bottom, white 0%, #EEF3FA 12%, #EEF3FA 88%, white 100%)"
+            "linear-gradient(to bottom, white 0%, #fff 12%, #FFFF 72%, #FFFFFF 88%, white 100%)"
         }}
       >
         <div className="max-w-6xl mx-auto">
@@ -808,9 +918,8 @@ function ProfessionalSections() {
             </div>
 
             {/* Step 4 */}
-            <div className="relative flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-center">
-              <div className="absolute -inset-y-32 pointer-events-none" style={{ left: "50%", transform: "translateX(-50%)", width: "100vw", background: "linear-gradient(to bottom, transparent 0%, #E3E2C4 25%, #E3E2C4 75%, transparent 100%)" }} />
-              <FadeIn className="relative flex-1 space-y-1 lg:pt-2">
+            <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row-reverse lg:items-center">
+              <FadeIn className="flex-1 space-y-1 lg:pt-2">
                 <span className="text-xs tracking-[0.2em] uppercase text-zinc-500">
                   04
                 </span>
@@ -879,9 +988,19 @@ function ProfessionalSections() {
                 ))}
               </div>
               <div className="testimonial-marquee-track-reverse flex w-max gap-4">
-                {[...testimonials, ...testimonials].map((t, i) => (
+                <CTAMarqueeCard />
+                {testimonials.map((t, i) => (
                   <TestimonialCard
-                    key={`row2-${i}`}
+                    key={`row2a-${i}`}
+                    quote={t.quote}
+                    name={t.name}
+                    role={t.role}
+                  />
+                ))}
+                <CTAMarqueeCard />
+                {testimonials.map((t, i) => (
+                  <TestimonialCard
+                    key={`row2b-${i}`}
                     quote={t.quote}
                     name={t.name}
                     role={t.role}
@@ -904,12 +1023,12 @@ function ProfessionalSections() {
           <div>
             {faqs.map((faq, i) => (
               <FadeIn key={i} delay={0.04}>
-                <div className="border-t border-zinc-200 py-8">
+                <div className="border-t border-zinc-200">
                   <button
                     type="button"
                     aria-expanded={openFaqIndex === i}
                     aria-controls={`faq-answer-${i}`}
-                    className="flex w-full items-center justify-between gap-4 text-left"
+                    className="flex w-full items-center justify-between gap-4 text-left py-8"
                     onClick={() => setOpenFaqIndex(openFaqIndex === i ? -1 : i)}
                   >
                     <span className="text-lg font-medium text-zinc-900">
@@ -996,7 +1115,7 @@ function InlineWaitlistForm() {
         <button
           type="submit"
           disabled={loading}
-          className="shrink-0 rounded-full bg-[#2053A5] hover:bg-[#2053A5]/80 disabled:opacity-50 px-5 py-3 text-sm font-bold text-white transition-colors whitespace-nowrap"
+          className="shrink-0 rounded-full bg-[#F5C0C1] hover:bg-[#f0aaab] disabled:opacity-50 px-5 py-3 text-sm font-bold text-zinc-900 transition-colors whitespace-nowrap"
         >
           {loading ? "Saving…" : "Get early access"}
         </button>
@@ -1006,7 +1125,6 @@ function InlineWaitlistForm() {
   )
 }
 
-
 export default function Home() {
   return (
     <>
@@ -1015,20 +1133,15 @@ export default function Home() {
         className="relative min-h-screen overflow-hidden"
         style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}
       >
-        {/* Gradient block behind video — extends into safe area on mobile */}
-        <div
-          className="absolute inset-x-0 top-0 z-0 pointer-events-none"
-          style={{
-            background: "linear-gradient(to right, #2053A5, #036CB0)",
-            height: "calc(70% + env(safe-area-inset-top, 0px))",
-            marginTop: "calc(-1 * env(safe-area-inset-top, 0px))"
-          }}
-        />
-
         <HeroRefractionVideo src="/hero-bg.mp4" playbackRate={0.45} flipX />
 
         {/* Bottom fade to white */}
-        <div className="absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t from-white to-transparent z-2 pointer-events-none" />
+        <div
+          className="absolute bottom-0 left-0 right-0 h-48 z-2 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, transparent, white)"
+          }}
+        />
 
         {/* Top fade — gradient colour bleeding into the video */}
         <div
@@ -1062,13 +1175,13 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-center px-6 pb-16 pt-24 sm:px-8 lg:pb-20 lg:pt-36">
+        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-start px-6 pb-16 pt-28 sm:px-8 lg:pb-20 lg:pt-40">
           <div className="max-w-3xl">
             <h1 className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl">
               Focus in a distracted world
             </h1>
 
-            <div className="text-base font-black text-white italic max-w-lg mt-6 leading-relaxed">
+            <div className="text-base font-black text-white max-w-lg mt-6 leading-relaxed">
               Tell us how you work, we&apos;ll show you what&apos;s wasting your
               time, and leave you to do the bits only you can.
             </div>
@@ -1077,7 +1190,7 @@ export default function Home() {
               <BlueprintPanel />
             </div>
 
-            <p className="mt-6 text-xs text-[#2053A5] animate-fade-rise-delay-2">
+            <p className="mt-6 text-xs text-white animate-fade-rise-delay-2">
               <span className="font-bold">явен (yaven)</span>{" "}
               <span className="italic">
                 {" "}

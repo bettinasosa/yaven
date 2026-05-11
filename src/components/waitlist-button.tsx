@@ -117,7 +117,7 @@ export function WaitlistButton({
                     { icon: "→", text: "Direct line to the team while we build together" },
                   ].map(({ icon, text }) => (
                     <div key={text} className="flex items-start gap-3">
-                      <span className="text-[#2053A5] text-sm font-bold shrink-0 mt-0.5">{icon}</span>
+                      <span className="text-[#F5C0C1] text-sm font-bold shrink-0 mt-0.5">{icon}</span>
                       <p className="text-sm text-zinc-600 leading-snug">{text}</p>
                     </div>
                   ))}
@@ -187,10 +187,10 @@ export function WaitlistButton({
                   <button
                     type="submit"
                     disabled={loading || !email || !workType}
-                    className="w-full rounded-full text-white text-base font-bold py-3.5 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                    style={{ background: "#2053A5" }}
-                    onMouseEnter={e => { if (!loading && email && workType) (e.currentTarget as HTMLButtonElement).style.background = "rgba(32,83,165,0.8)" }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "#2053A5" }}
+                    className="w-full rounded-full text-zinc-900 text-base font-bold py-3.5 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ background: "#F5C0C1" }}
+                    onMouseEnter={e => { if (!loading && email && workType) (e.currentTarget as HTMLButtonElement).style.background = "#f0aaab" }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "#F5C0C1" }}
                   >
                     {loading ? "Saving…" : "Get early access"}
                   </button>

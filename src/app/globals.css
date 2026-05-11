@@ -255,11 +255,11 @@
 .bubble-btn {
   -webkit-appearance: none;
   appearance: none;
-  background: #2053A5;
+  background: #F5C0C1;
   padding: 1em 2.25em;
   border-radius: 100px;
   border: none;
-  color: white;
+  color: #18181b;
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.125rem;
   font-weight: 700;
@@ -274,6 +274,16 @@
 }
 
 .bubble-btn:hover {
+  color: #18181b;
+}
+
+.bubble-btn.bubble-btn-serif-white {
+  font-family: var(--font-instrument-serif);
+  color: white;
+  font-weight: 400;
+}
+
+.bubble-btn.bubble-btn-serif-white:hover {
   color: white;
 }
 
@@ -310,7 +320,7 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background-image: linear-gradient(to right, #2053A5, color-mix(in srgb, #2053A5, white 40%));
+  background-image: linear-gradient(to right, #F5C0C1, color-mix(in srgb, #F5C0C1, white 40%));
   transition: transform 0.4s ease;
   transform: scale(0);
   border-radius: 100px;
@@ -633,6 +643,15 @@
 
   .animate-puff-out {
     animation: puff-out 0.5s ease-out forwards;
+  }
+
+  /* ── Blue hover shadow ──────────────────────────────── */
+  .hover-shadow-blue {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .hover-shadow-blue:hover {
+    box-shadow: 0 0 0 1px rgba(32,83,165,0.15), 0 8px 32px rgba(32,83,165,0.22), 0 2px 8px rgba(32,83,165,0.12);
+    transform: translateY(-2px);
   }
 
   /* ── Slow bounce ─────────────────────────────────────── */

@@ -22,8 +22,14 @@ const loadingPuns = [
 export function IdleBlueprintState({ onClick }: StateProps) {
   return (
     <div className="space-y-4">
-      <BubbleButton onClick={onClick}>
-        Show me <ArrowRight className="size-4" />
+      <BubbleButton
+        onClick={onClick}
+        style={{
+          color: "white",
+          fontSize: "1.25rem"
+        }}
+      >
+        Show me
       </BubbleButton>
     </div>
   )
@@ -33,13 +39,15 @@ export function IntroBlueprintState({ onClick }: StateProps) {
   return (
     <div className="flex flex-1 flex-col text-center">
       <div className="flex justify-center pt-2">
-        <Image
-          src="/logo.png"
-          alt="Yaven"
-          width={48}
-          height={48}
-          className="size-12 rounded-xl object-cover"
-        />
+        <div className="size-12 rounded-2xl shadow-md hover:shadow-2xl hover:scale-110 transition-all duration-300 cursor-pointer overflow-hidden">
+          <Image
+            src="/logo.png"
+            alt="Yaven"
+            width={48}
+            height={48}
+            className="size-12 object-cover"
+          />
+        </div>
       </div>
       <div className="flex flex-1 items-center justify-center">
         <div className="space-y-3">
@@ -56,7 +64,7 @@ export function IntroBlueprintState({ onClick }: StateProps) {
         <button
           type="button"
           onClick={onClick}
-          className="inline-flex items-center gap-2 rounded-full bg-[#2053A5] px-10 py-3.5 text-base font-semibold text-white shadow-sm animate-slow-bounce hover:animate-none hover:scale-[1.02] transition-transform"
+          className="inline-flex items-center gap-2 rounded-full bg-[#F5C0C1] px-10 py-3.5 text-base font-semibold text-zinc-900 shadow-sm animate-slow-bounce hover:animate-none hover:scale-[1.02] transition-transform"
         >
           Start
           <ArrowRight className="size-4" />

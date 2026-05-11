@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useRef, useState } from "react"
 import type { AutomationBlueprint } from "@/lib/blueprint/types"
 
@@ -105,7 +105,7 @@ export function BlueprintPreview({
               <Loader2 className="size-4 animate-spin" />
             ) : (
               <>
-                Get early access <ArrowRight className="size-4" />
+                Get early access
               </>
             )}
           </button>
@@ -121,7 +121,7 @@ export function BlueprintPreview({
           onClick={onUnlock}
           className="animate-slow-bounce sm:hidden w-full inline-flex items-center justify-center gap-2 rounded-full bg-zinc-900 px-8 py-4 text-base font-semibold text-white shadow-md hover:animate-none hover:bg-zinc-700"
         >
-          Get early access <ArrowRight className="size-4" />
+          Get early access
         </button>
       </div>
     </div>

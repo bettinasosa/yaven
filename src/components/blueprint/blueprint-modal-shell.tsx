@@ -39,7 +39,7 @@ export function BlueprintModalShell({
       >
 
         <main className="min-h-0 flex-1 flex flex-col overflow-hidden text-zinc-900">
-          <div className="mx-auto flex w-full flex-1 flex-col overflow-auto px-6 pt-6 pb-4 sm:px-10 sm:pt-10 sm:pb-6 md:px-12 md:pt-12 md:pb-6 animate-fade-rise">
+          <div className="mx-auto flex w-full flex-1 flex-col min-h-0 overflow-y-auto px-6 pt-6 pb-4 sm:px-10 sm:pt-10 sm:pb-6 md:px-12 md:pt-12 md:pb-6 animate-fade-rise">
             {children}
           </div>
         </main>

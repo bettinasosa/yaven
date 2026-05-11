@@ -9,17 +9,20 @@ export function BubbleButton({
   children,
   type = "button",
   className,
+  style,
 }: {
   onClick?: () => void
   children: React.ReactNode
   type?: "button" | "submit" | "reset"
   className?: string
+  style?: React.CSSProperties
 }) {
   return (
     <button
       type={type}
       onClick={onClick}
       className={`bubble-btn${className ? ` ${className}` : ""}`}
+      style={style}
     >
       <span className="bubble-btn-cells" aria-hidden="true">
         {CELLS.map((_, i) => (
