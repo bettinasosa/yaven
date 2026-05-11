@@ -6,28 +6,6 @@ import type {
   WorkflowSchematicStep
 } from "./types"
 
-const AGENT_NAME_POOL = [
-  "Iris",
-  "Theo",
-  "Marcus",
-  "Juno",
-  "Ada",
-  "Wren",
-  "Cleo",
-  "Ezra",
-  "Mara",
-  "Nico",
-  "Remy",
-  "Sage",
-  "Mila",
-  "Orla",
-  "Vera",
-  "Kit",
-  "Noa",
-  "Rafi",
-  "Lena",
-  "Owen"
-]
 const FALLBACK_ROLES = [
   "Source Collector",
   "Draft Builder",
@@ -111,36 +89,51 @@ export function buildAgentTeamPrompt(
   const { role } = getAgentTeamContext(answers, opportunity)
   const tools = answers.toolsUsed.join(", ") || "Not specified"
   const painfulTasks = answers.painfulTasks.join(", ") || "Not specified"
+  const repeatedTasks = answers.repeatedTasks.join(", ") || "Not specified"
+  const copyPasteFlows = answers.copyPasteFlows.join(", ") || "Not specified"
+  const recurringDecisions = answers.recurringDecisions.join(", ") || "Not specified"
+  const regularOutputs = answers.regularOutputs.join(", ") || "Not specified"
+  const typicalDay = answers.typicalDay.trim() || "Not specified"
+  const responsibilitySummary = answers.responsibilitySummary.trim() || "Not specified"
+  const desiredFirstAutomation = answers.desiredFirstAutomation.trim() || "Not specified"
   const agentNames = AGENT_NAME_POOL.join(", ")
 
   return (
     "You are designing an AI automation plan for a real person who wants to know exactly what could be automated for them.\n\n" +
-    `Their role: "${role.replace(/"/g, "'")}"\n` +
-    `Tools they use every day: "${tools.replace(/"/g, "'")}"\n` +
-    `Tasks that eat their time (everything they flagged, including any custom ones they typed): "${painfulTasks.replace(/"/g, "'")}"\n\n` +
+    "Here is everything they told us about their work:\n\n" +
+    `Role: "${role.replace(/"/g, "'")}"\n` +
+    `Responsibilities: "${responsibilitySummary.replace(/"/g, "'")}"\n` +
+    `Typical day: "${typicalDay.replace(/"/g, "'")}"\n` +
+    `Tools used daily: "${tools.replace(/"/g, "'")}"\n` +
+    `Tasks that eat their time: "${painfulTasks.replace(/"/g, "'")}"\n` +
+    `Tasks they do on repeat: "${repeatedTasks.replace(/"/g, "'")}"\n` +
+    `Things they copy-paste between tools: "${copyPasteFlows.replace(/"/g, "'")}"\n` +
+    `Decisions they make over and over: "${recurringDecisions.replace(/"/g, "'")}"\n` +
+    `Regular outputs they produce: "${regularOutputs.replace(/"/g, "'")}"\n` +
+    `The first thing they want automated: "${desiredFirstAutomation.replace(/"/g, "'")}"\n\n` +
     "You must return TWO things:\n\n" +
     "PART 1 - Automation opportunities\n" +
-    "Generate 3-4 specific automations for this person based on their actual tasks and tools.\n\n" +
+    "Generate exactly 4 specific automations for this person. Every automation must be grounded in what they told you — quote or directly reference their actual tasks, tools, outputs, or copy-paste flows. Do not invent things they didn't mention.\n\n" +
     "Rules for opportunities:\n" +
     "- taskName: 2-5 words, concrete noun phrase. Examples: CRM auto-logging, Follow-up drafting, Prospect enrichment, Pipeline alerts, Weekly report assembly, Candidate outreach. No verbs. No generic names like Task Automation.\n" +
-    "- description: 1-2 SHORT sentences. Must:\n" +
-    "  * Name the specific tool (e.g. pushed to HubSpot, Apollo to Clay to Salesforce, synced to Notion)\n" +
-    "  * Say what the person no longer has to do. End with a punchy closing like: No copy-paste. / Review and send, don't write from scratch. / No manual data entry. / No weekly review needed. / Zero cleanup. / Nothing to remember.\n" +
+    "- description: 2-3 sentences. Must:\n" +
+    "  * Reference their specific situation — name the exact tool they mentioned, the exact task they flagged, or the exact output they produce\n" +
+    "  * Explain HOW the automation works (what triggers it, what it does, where the result goes)\n" +
+    "  * Say what they no longer have to do manually. End with a punchy closing: No copy-paste. / Review and send, don't write from scratch. / No manual data entry. / No weekly review needed. / Zero cleanup. / Nothing to remember.\n" +
     "  * Be written in present tense, active voice\n" +
     "  * Sound like it is already built and working, not hypothetical\n\n" +
     "Good examples for Sales / BD with HubSpot and Apollo:\n" +
     "  taskName: CRM auto-logging\n" +
-    "  description: Call notes summarised and pushed to HubSpot after every meeting. No copy-paste.\n\n" +
+    "  description: After every call, your notes are automatically summarised and pushed to HubSpot with the contact, deal stage, and next action filled in. No switching between tabs, no copy-paste into the CRM. No copy-paste.\n\n" +
     "  taskName: Follow-up drafting\n" +
-    "  description: Context-aware follow-ups written from your call transcript. Review and send, don't write from scratch.\n\n" +
+    "  description: As soon as a call ends, a follow-up email is drafted from the transcript — matching your tone, referencing what was discussed, and ready to send in one click. You never start from a blank page. Review and send, don't write from scratch.\n\n" +
     "  taskName: Prospect enrichment\n" +
-    "  description: Apollo to Clay to HubSpot, automatic. No manual data entry.\n\n" +
-    "  taskName: Pipeline alerts\n" +
-    "  description: Stale deals flagged with suggested next actions. No weekly review needed.\n\n" +
+    "  description: New prospects flow from Apollo through Clay into HubSpot automatically, enriched with company size, funding stage, and tech stack. No manual research tab. No manual data entry.\n\n" +
     "Bad (too vague): AI handles email tasks automatically.\n" +
     "Bad (no tool named): Notes are summarised and sent somewhere.\n" +
-    "Bad (hypothetical): This could help you save time on reports.\n\n" +
-    "Use the person's ACTUAL tools from their answers, not generic placeholders.\n\n" +
+    "Bad (hypothetical): This could help you save time on reports.\n" +
+    "Bad (no explanation of how): Follow-up emails are sent automatically.\n\n" +
+    "Use the person's ACTUAL tools, tasks, outputs, and copy-paste flows from their answers. Every bullet should feel like it was written specifically for them.\n\n" +
     "PART 2 - Agent team\n" +
     "Design exactly 4 agents that would deliver the automations above.\n\n" +
     "Rules for agents:\n" +
@@ -158,7 +151,7 @@ export function buildAgentTeamPrompt(
     '  "opportunities": [\n' +
     '    {\n' +
     '      "taskName": "<2-5 word noun phrase>",\n' +
-    '      "description": "<1-2 sentences, tool-specific, ends with punchy closing>"\n' +
+    '      "description": "<2-3 sentences: how it works, which specific tool, what they no longer do — ends with punchy closing>"\n' +
     '    }\n' +
     '  ],\n' +
     '  "agents": [\n' +

@@ -255,7 +255,7 @@
 .bubble-btn {
   -webkit-appearance: none;
   appearance: none;
-  background: #384175;
+  background: #2053A5;
   padding: 1em 2.25em;
   border-radius: 100px;
   border: none;
@@ -310,7 +310,7 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background-image: linear-gradient(to right, #607da7, color-mix(in srgb, #607da7, white 40%));
+  background-image: linear-gradient(to right, #2053A5, color-mix(in srgb, #2053A5, white 40%));
   transition: transform 0.4s ease;
   transform: scale(0);
   border-radius: 100px;

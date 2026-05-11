@@ -68,9 +68,6 @@ export function BlueprintPreview({
               <p className="text-base leading-relaxed text-zinc-500">
                 {opportunity.whyAutomatable}
               </p>
-              <p className="text-sm leading-relaxed text-zinc-400 italic">
-                {opportunity.firstVersion}
-              </p>
             </div>
           </div>
         ))}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
@@ -23,6 +23,10 @@ const satoshi = localFont({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: "Yaven | Run Your Agent Team",
   description:
@@ -37,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${satoshi.variable} h-full antialiased scroll-smooth`}
+      className={`${instrumentSerif.variable} ${satoshi.variable} h-full antialiased scroll-smooth bg-white`}
     >
       <body className="min-h-full flex flex-col bg-white">
         <PageLoader />

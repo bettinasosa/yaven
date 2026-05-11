@@ -52,7 +52,7 @@ export function WaitlistForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex min-h-full flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <h3 className="mt-2 text-4xl leading-tight text-zinc-900 font-instrument-serif">
         This team could be yours.
       </h3>
@@ -91,11 +91,11 @@ export function WaitlistForm({
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      <div className="mt-auto flex justify-end pt-4">
+      <div className="flex justify-end pt-2">
         <button
           type="submit"
           disabled={loading}
-          className="animate-glow-pulse inline-flex items-center gap-2 rounded-full bg-[#83A5D4] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+          className="animate-glow-pulse inline-flex items-center gap-2 rounded-full bg-[#5B99C4] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? (
             <>

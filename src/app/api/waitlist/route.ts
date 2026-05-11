@@ -23,19 +23,23 @@ export async function POST(request: Request) {
     return Response.json({ error: "Webhook not configured" }, { status: 500 })
   }
 
-  const res = await fetch(webhookUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    redirect: "follow",
-    body: JSON.stringify({
-      source: "website",
-      submittedAt: new Date().toISOString(),
-      ...payload,
-      email: String(payload.email).trim()
+  try {
+    // Google Apps Script webhooks return a 302 redirect after processing doPost.
+    // The data IS written before the redirect fires, so any response (including
+    // non-ok) means Google received it. Only a network-level throw is a real failure.
+    await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      redirect: "follow",
+      body: JSON.stringify({
+        source: "website",
+        submittedAt: new Date().toISOString(),
+        ...payload,
+        email: String(payload.email).trim()
+      })
     })
-  })
-
-  if (!res.ok) {
+  } catch (err) {
+    console.error("[waitlist] webhook fetch failed:", err)
     return Response.json({ error: "Failed to save" }, { status: 502 })
   }
 

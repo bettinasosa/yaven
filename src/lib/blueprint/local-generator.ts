@@ -368,7 +368,7 @@ export function generateLocalBlueprint(
   ]).slice(0, 3)
 
   return {
-    userSummary: `Your ${role.toLowerCase()} work has repeated input-to-output tasks: ${repeated.join(", ") || "notes, updates, follow-ups, and decisions"}. Tasks that we can handle for you, letting you focus on the tasks that only you can do.`,
+    userSummary: `Your ${role.toLowerCase()} work has repeated input-to-output tasks: ${repeated.join(", ") || "notes, updates, follow-ups, and decisions"}. These are the tasks that we can handle for you, letting you focus on the tasks that only you can do.`,
     blueprintHeadline: `${topTask} is your best first automation candidate.`,
     topOpportunities,
     quickWins,

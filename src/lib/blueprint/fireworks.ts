@@ -69,7 +69,7 @@ async function requestAgentTeam(
       body: JSON.stringify({
         model: getBlueprintModel(),
         temperature: 0.3,
-        max_tokens: 1100,
+        max_tokens: 2000,
         messages: [
           { role: "system", content: systemContent },
           { role: "user", content: "Return the JSON now." }
