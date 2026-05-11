@@ -18,11 +18,17 @@ import {
   uniq
 } from "./local-generator-rules"
 
-function inferCategory(task: string, answers: BlueprintInput): AutomationCategory {
+function inferCategory(
+  task: string,
+  answers: BlueprintInput
+): AutomationCategory {
   const taskText = task.toLowerCase()
   const directMatch = Object.entries(CATEGORY_KEYWORDS).find(
     ([category, keywords]) => {
-      return category !== "other" && keywords.some(keyword => taskText.includes(keyword))
+      return (
+        category !== "other" &&
+        keywords.some(keyword => taskText.includes(keyword))
+      )
     }
   )
 
@@ -32,9 +38,14 @@ function inferCategory(task: string, answers: BlueprintInput): AutomationCategor
     .join(" ")
     .toLowerCase()
 
-  const match = Object.entries(CATEGORY_KEYWORDS).find(([category, keywords]) => {
-    return category !== "other" && keywords.some(keyword => haystack.includes(keyword))
-  })
+  const match = Object.entries(CATEGORY_KEYWORDS).find(
+    ([category, keywords]) => {
+      return (
+        category !== "other" &&
+        keywords.some(keyword => haystack.includes(keyword))
+      )
+    }
+  )
 
   return (match?.[0] as AutomationCategory | undefined) ?? "other"
 }
@@ -45,7 +56,9 @@ function inferAutomationType(
   answers: BlueprintInput
 ): AutomationType {
   const normalized = task.toLowerCase()
-  const usesTools = answers.toolsUsed.some(tool => includesAny(tool, TOOL_KEYWORDS))
+  const usesTools = answers.toolsUsed.some(tool =>
+    includesAny(tool, TOOL_KEYWORDS)
+  )
   const copyPaste = answers.copyPasteFlows.length > 0
 
   if (
@@ -57,7 +70,10 @@ function inferAutomationType(
     return "custom_tool"
   }
 
-  if (copyPaste || (usesTools && ["operations", "sales", "engineering"].includes(category))) {
+  if (
+    copyPaste ||
+    (usesTools && ["operations", "sales", "engineering"].includes(category))
+  ) {
     return "workflow_automation"
   }
 
@@ -92,16 +108,35 @@ function buildOpportunity(
   const category = inferCategory(task, answers)
   const automationType = inferAutomationType(task, category, answers)
   const isPainful = answers.painfulTasks.some(pain => {
-    return task.toLowerCase().includes(pain.toLowerCase()) || pain.toLowerCase().includes(task.toLowerCase())
+    return (
+      task.toLowerCase().includes(pain.toLowerCase()) ||
+      pain.toLowerCase().includes(task.toLowerCase())
+    )
   })
-  const hasToolFlow = answers.copyPasteFlows.length > 0 || answers.toolsUsed.length > 1
+  const hasToolFlow =
+    answers.copyPasteFlows.length > 0 || answers.toolsUsed.length > 1
   const repetition = answers.repeatedTasks.length ? 4 : 3
   const pain = isPainful ? 5 : answers.painfulTasks.length ? 4 : 3
-  const structure = automationType === "custom_tool" ? 3 : automationType === "human_led_ai_assisted" ? 2 : 4
+  const structure =
+    automationType === "custom_tool"
+      ? 3
+      : automationType === "human_led_ai_assisted"
+        ? 2
+        : 4
   const dataAvailability = hasToolFlow ? 4 : 3
   const riskSuitability = automationType === "human_led_ai_assisted" ? 2 : 4
-  const businessValue = ["sales", "customer_work", "operations"].includes(category) ? 5 : 4
-  const total = repetition + pain + structure + dataAvailability + riskSuitability + businessValue
+  const businessValue = ["sales", "customer_work", "operations"].includes(
+    category
+  )
+    ? 5
+    : 4
+  const total =
+    repetition +
+    pain +
+    structure +
+    dataAvailability +
+    riskSuitability +
+    businessValue
 
   return {
     id: `opportunity_${index + 1}`,
@@ -122,7 +157,8 @@ function buildOpportunity(
     firstVersion: buildFirstVersion(task, automationType, answers),
     requiredInputs: buildRequiredInputs(task, answers),
     expectedOutputs: buildExpectedOutputs(task, automationType),
-    humanReviewNeeded: automationType !== "workflow_automation" || riskSuitability < 5
+    humanReviewNeeded:
+      automationType !== "workflow_automation" || riskSuitability < 5
   }
 }
 
@@ -161,7 +197,9 @@ function inferSourceMaterial(task: string, answers: BlueprintInput) {
     return "call notes or meeting transcript"
   }
 
-  if (includesAny(task, ["report", "dashboard", "numbers", "metric", "sheet"])) {
+  if (
+    includesAny(task, ["report", "dashboard", "numbers", "metric", "sheet"])
+  ) {
     return "dashboard numbers + notes"
   }
 
@@ -179,7 +217,9 @@ function inferSourceMaterial(task: string, answers: BlueprintInput) {
 
   const context = [answers.typicalDay, ...answers.toolsUsed].join(" ")
 
-  if (includesAny(context, ["report", "dashboard", "numbers", "metric", "sheet"])) {
+  if (
+    includesAny(context, ["report", "dashboard", "numbers", "metric", "sheet"])
+  ) {
     return "dashboard numbers + notes"
   }
 
@@ -212,7 +252,12 @@ function buildExpectedOutputs(task: string, type: AutomationType) {
   }
 
   if (includesAny(task, ["call", "meeting", "transcript"])) {
-    return ["Clean meeting summary", "decisions", "action items", "follow-up draft"]
+    return [
+      "Clean meeting summary",
+      "decisions",
+      "action items",
+      "follow-up draft"
+    ]
   }
 
   if (type === "human_led_ai_assisted") {
@@ -236,7 +281,10 @@ function getCandidateTasks(answers: BlueprintInput) {
   ]).slice(0, 7)
 }
 
-function sortByOpportunityScore(a: AutomationOpportunity, b: AutomationOpportunity) {
+function sortByOpportunityScore(
+  a: AutomationOpportunity,
+  b: AutomationOpportunity
+) {
   const score = (item: AutomationOpportunity) =>
     Object.values(item.scores).reduce((sum, value) => sum + value, 0)
 
@@ -255,14 +303,17 @@ function buildAutomationMap(opportunities: AutomationOpportunity[]) {
     category,
     items: items.slice(0, 3).map(item => ({
       task: item.taskName,
-      recommendation: item.humanReviewNeeded ? "AI-assisted with review" : "Automatable",
+      recommendation: item.humanReviewNeeded
+        ? "AI-assisted with review"
+        : "Automatable",
       automationType: titleCase(item.automationType)
     }))
   }))
 }
 
 function buildPromptTemplate(answers: BlueprintInput, topTask: string) {
-  const workflow = answers.typicalDay || answers.responsibilitySummary || "my recurring work"
+  const workflow =
+    answers.typicalDay || answers.responsibilitySummary || "my recurring work"
   const output = firstNonEmpty(answers.regularOutputs, topTask)
 
   return `You are my workflow automation assistant.
@@ -283,7 +334,9 @@ Input:
 [paste notes here]`
 }
 
-export function generateLocalBlueprint(answers: BlueprintInput): AutomationBlueprint {
+export function generateLocalBlueprint(
+  answers: BlueprintInput
+): AutomationBlueprint {
   const opportunities = getCandidateTasks(answers)
     .map((task, index) => buildOpportunity(task, index, answers))
     .sort(sortByOpportunityScore)
@@ -292,20 +345,30 @@ export function generateLocalBlueprint(answers: BlueprintInput): AutomationBluep
   const quickWins = topOpportunities
     .filter(item => item.difficultyLabel === "low")
     .concat(topOpportunities)
-    .filter((item, index, arr) => arr.findIndex(match => match.id === item.id) === index)
+    .filter(
+      (item, index, arr) =>
+        arr.findIndex(match => match.id === item.id) === index
+    )
     .slice(0, 3)
   const customToolIdeas = topOpportunities.filter(item => {
-    return item.automationType === "custom_tool" || item.difficultyLabel === "high"
+    return (
+      item.automationType === "custom_tool" || item.difficultyLabel === "high"
+    )
   })
 
-  const topTask = topOpportunities[0]?.taskName ?? "turn messy notes into a useful work output"
+  const topTask =
+    topOpportunities[0]?.taskName ??
+    "turn messy notes into a useful work output"
   const topOpportunity = topOpportunities[0]
   const agentTeam = buildLocalAgentTeam(answers, topOpportunity)
   const role = answers.role || "your role"
-  const repeated = uniq([...answers.repeatedTasks, ...answers.regularOutputs]).slice(0, 3)
+  const repeated = uniq([
+    ...answers.repeatedTasks,
+    ...answers.regularOutputs
+  ]).slice(0, 3)
 
   return {
-    userSummary: `Your ${role.toLowerCase()} work has repeated input-to-output tasks: ${repeated.join(", ") || "notes, updates, follow-ups, and decisions"}. The best first automation should handle the messy middle, then leave the final call with you.`,
+    userSummary: `Your ${role.toLowerCase()} work has repeated input-to-output tasks: ${repeated.join(", ") || "notes, updates, follow-ups, and decisions"}. Tasks that we can handle for you, letting you focus on the tasks that only you can do.`,
     blueprintHeadline: `${topTask} is your best first automation candidate.`,
     topOpportunities,
     quickWins,

@@ -230,7 +230,7 @@ const proFeatures = [
               color: "#d97706"
             },
             {
-              name: "GPT-4",
+              name: "GPT-5",
               task: "Fact-checking statistics",
               color: "#10b981"
             },
@@ -1010,6 +1010,65 @@ function ProfessionalSections() {
   )
 }
 
+/* ── Inline waitlist form ─────────────────────────────────── */
+function InlineWaitlistForm() {
+  const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState("")
+
+  async function handleSubmit(e: { preventDefault(): void }) {
+    e.preventDefault()
+    if (!email) return
+    setLoading(true)
+    setError("")
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      })
+      if (!res.ok) throw new Error("Failed")
+      setSubmitted(true)
+    } catch {
+      setError("Something went wrong. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (submitted) {
+    return (
+      <p className="text-base font-medium text-zinc-700">
+        You&apos;re on the list — we&apos;ll be in touch soon.
+      </p>
+    )
+  }
+
+  return (
+    <div className="space-y-2">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
+        <input
+          type="email"
+          required
+          placeholder="your@email.com"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          className="flex-1 min-w-0 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-500 transition-colors shadow-sm"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="shrink-0 rounded-full bg-[#384175] hover:bg-[#607da7] disabled:opacity-50 px-5 py-3 text-sm font-bold text-white transition-colors whitespace-nowrap"
+        >
+          {loading ? "Saving…" : "Get early access"}
+        </button>
+      </form>
+      {error && <p className="text-xs text-red-500">{error}</p>}
+    </div>
+  )
+}
+
 export default function Home() {
   return (
     <>
@@ -1027,11 +1086,11 @@ export default function Home() {
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-center px-6 pb-16 pt-24 sm:px-8 lg:pb-20 lg:pt-36">
           <div className="max-w-3xl">
-            <h1 className="text-5xl leading-[0.98] tracking-normal text-[#1a2744] font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl">
+            <h1 className="text-5xl leading-[0.98] tracking-normal font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl">
               Focus in a distracted world
             </h1>
 
-            <p className="text-base font-medium max-w-lg mt-8 leading-relaxed text-[#1a2744]/70 animate-fade-rise-delay">
+            <p className="text-base font-black italic max-w-lg mt-8 leading-relaxed animate-fade-rise-delay">
               Tell us how you work, we&apos;ll show you what&apos;s wasting your
               time, and leave you to do the bits only you can.
             </p>
@@ -1098,7 +1157,7 @@ export default function Home() {
           <p className="text-base leading-relaxed text-zinc-600">
             Early access is limited. Get in before the queue fills up.
           </p>
-          <WaitlistButton label="Join the Waitlist" glass />
+          <InlineWaitlistForm />
         </FadeIn>
       </section>
 
