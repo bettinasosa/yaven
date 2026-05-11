@@ -561,11 +561,14 @@ function ProfessionalSections() {
                 people who&apos;ve figured out how to make AI do the repetitive
                 half of their job. On the other: everyone still doing it
                 themselves. The difference isn&apos;t intelligence. It&apos;s
-                knowing what to hand off, and having something that can actually
-                do it.
+                knowing what to hand off, and having trust that something can
+                actually do it accurately.
               </p>
               {/* EY Survey Chart */}
-              <div className="rounded-2xl bg-[#5B99C4]/10 px-6 py-6" style={{ boxShadow: "0 2px 12px rgba(32,83,165,0.08)" }}>
+              <div
+                className="rounded-2xl bg-[#5B99C4]/10 px-6 py-6"
+                style={{ boxShadow: "0 2px 12px rgba(32,83,165,0.08)" }}
+              >
                 <div className="space-y-4">
                   {/* Bar 1 */}
                   <div className="space-y-1.5">
@@ -614,11 +617,12 @@ function ProfessionalSections() {
                 />
               </div>
               <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
-                Yaven connects to the tools you already use, learns how your
-                week runs, and handles the tasks that repeat. Follow-ups sent.
-                Notes logged. Reports pulled. When something needs a human
-                decision, it surfaces it. Everything else just happens. No code.
-                No configuration. Just your work, moving forward.
+                Yaven connects to all your devices and tools. It learns your
+                habits, follows how your week runs, and handles the tasks that
+                repeat. Follow-ups sent. Notes logged. Reports found. When
+                something needs a human decision, it brings it to your
+                attention. Everything else is handled for you. No code. No
+                configuration. Just your work, moving forward.
               </p>
             </div>
           </div>
@@ -653,7 +657,7 @@ function ProfessionalSections() {
                 <p>
                   Your investor update drafted in your tone and ready to send.
                   Your new hire onboarded without a checklist in sight. Your
-                  holiday researched, compared, and booked.
+                  holiday researched, compared, and waiting for your final word.
                 </p>
                 <p>
                   You come back to decisions, not groundwork. It runs in the
@@ -687,12 +691,17 @@ function ProfessionalSections() {
               <GoalCard
                 title="Holiday research — Japan"
                 tag="Personal"
-                status="done"
+                status="review"
                 tasks={[
                   { label: "5 itineraries compared", state: "done" },
                   { label: "Budget tracker built", state: "done" },
-                  { label: "Flights and hotels purchased", state: "done" }
+                  {
+                    label:
+                      "Flights and hotels found — here's what we think you'll like",
+                    state: "done"
+                  }
                 ]}
+                footer="Your approval needed before anything is booked"
               />
             </div>
           </div>
@@ -887,19 +896,31 @@ function ProfessionalSections() {
                   >
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#5B99C4] shrink-0" />
-                      <p className="text-[10px] tracking-[0.12em] uppercase text-[#5B99C4] font-medium">Yaven</p>
+                      <p className="text-[10px] tracking-[0.12em] uppercase text-[#5B99C4] font-medium">
+                        Yaven
+                      </p>
                     </div>
-                    <p className="text-xs leading-relaxed text-zinc-600">{item.msg}</p>
+                    <p className="text-xs leading-relaxed text-zinc-600">
+                      {item.msg}
+                    </p>
                     <p className="text-[10px] text-zinc-400">{item.note}</p>
                   </div>
                 ))}
-                <div className="rounded-xl bg-[#EEF3FA] px-4 py-4 space-y-3" style={{ boxShadow: "0 4px 16px rgba(32,83,165,0.12)" }}>
+                <div
+                  className="rounded-xl bg-[#EEF3FA] px-4 py-4 space-y-3"
+                  style={{ boxShadow: "0 4px 16px rgba(32,83,165,0.12)" }}
+                >
                   <div className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#5B99C4] shrink-0" />
-                    <p className="text-[10px] tracking-[0.12em] uppercase text-[#5B99C4] font-medium">Yaven</p>
+                    <p className="text-[10px] tracking-[0.12em] uppercase text-[#5B99C4] font-medium">
+                      Yaven
+                    </p>
                   </div>
                   <p className="text-xs leading-relaxed text-[#2053A5]">
-                    I&apos;ve drafted your board update. Pulled last month&apos;s metrics, matched your tone from the last one, and kept it under two minutes to read. Ready to go — just need you to say the word.
+                    I&apos;ve drafted your board update. Pulled last
+                    month&apos;s metrics, matched your tone from the last one,
+                    and kept it under two minutes to read. Ready to go — just
+                    need you to say the word.
                   </p>
                   <div className="flex justify-end">
                     <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-[#5B99C4] text-white shrink-0">
@@ -1038,7 +1059,7 @@ function ProfessionalSections() {
                     id={`faq-answer-${i}`}
                     className={`grid transition-all duration-300 ease-out ${
                       openFaqIndex === i
-                        ? "grid-rows-[1fr] pt-3 opacity-100"
+                        ? "grid-rows-[1fr] pt-3 pb-6 opacity-100"
                         : "grid-rows-[0fr] opacity-0"
                     }`}
                   >
@@ -1183,12 +1204,11 @@ export default function Home() {
               <BlueprintPanel />
             </div>
 
-            <p className="mt-6 text-xs text-white animate-fade-rise-delay-2">
-              <span className="font-bold">явен (yaven)</span>{" "}
-              <span className="italic">
-                {" "}
-                — Bulgarian for open, plain to see, obvious.
-              </span>
+            <p
+              className="mt-6 text-sm animate-fade-rise-delay-2 text-shine font-bold"
+              style={{ animationDuration: "4s" }}
+            >
+              явен (yaven) — Bulgarian for open, plain to see, obvious.
             </p>
           </div>
         </div>
