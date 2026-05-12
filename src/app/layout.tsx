@@ -1,42 +1,49 @@
-import type { Metadata, Viewport } from "next";
-import { Fraunces } from "next/font/google";
-import localFont from "next/font/local";
-import { Analytics } from "@vercel/analytics/next";
-import { PageLoader } from "@/components/page-loader";
-import "./globals.css";
+import type { Metadata, Viewport } from "next"
+import { Fraunces } from "next/font/google"
+import localFont from "next/font/local"
+import { Analytics } from "@vercel/analytics/next"
+import { PageLoader } from "@/components/page-loader"
+import "./globals.css"
 
 const instrumentSerif = Fraunces({
   variable: "--font-instrument-serif",
   subsets: ["latin"],
   weight: ["300", "400", "600"],
-  style: ["normal", "italic"],
-});
+  style: ["normal", "italic"]
+})
 
 const satoshi = localFont({
   variable: "--font-dm-sans",
   src: [
-    { path: "./fonts/Satoshi-Light.woff2",   weight: "300", style: "normal" },
+    { path: "./fonts/Satoshi-Light.woff2", weight: "300", style: "normal" },
     { path: "./fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/Satoshi-Medium.woff2",  weight: "500", style: "normal" },
-    { path: "./fonts/Satoshi-Bold.woff2",    weight: "700", style: "normal" },
+    { path: "./fonts/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/Satoshi-Bold.woff2", weight: "700", style: "normal" }
   ],
-  display: "swap",
-});
+  display: "swap"
+})
 
 export const viewport: Viewport = {
-  viewportFit: "cover",
-};
+  viewportFit: "cover"
+}
 
 export const metadata: Metadata = {
-  title: "Yaven | Run Your Agent Team",
+  title: "Yaven | Focus in a distracted world.",
   description:
     "A workspace where agents are first-class members of your team. A manager-agent watches every session and surfaces only what needs your decision.",
-};
+  openGraph: {
+    images: ["/yaven.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/yaven.png"],
+  },
+}
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html
@@ -44,11 +51,14 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${satoshi.variable} h-full antialiased scroll-smooth`}
       style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}
     >
-      <body className="min-h-full flex flex-col" style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}>
+      <body
+        className="min-h-full flex flex-col"
+        style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}
+      >
         <PageLoader />
         {children}
         <Analytics />
       </body>
     </html>
-  );
+  )
 }
