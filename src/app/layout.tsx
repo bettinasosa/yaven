@@ -28,6 +28,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.yaven.us"),
   title: "Yaven | Focus in a distracted world.",
   description:
     "A workspace where agents are first-class members of your team. A manager-agent watches every session and surfaces only what needs your decision.",
