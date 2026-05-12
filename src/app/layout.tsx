@@ -31,14 +31,14 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.yaven.us"),
   title: "Yaven | Focus in a distracted world.",
   description:
-    "A workspace where agents are first-class members of your team. A manager-agent watches every session and surfaces only what needs your decision.",
+    "The boring half of your day, handled. Yaven automates the admin, drafts the emails, and keeps you in the loop, so you can focus on the work only you can do.",
   openGraph: {
-    images: ["/yaven.png"],
+    images: ["/yaven.png"]
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/yaven.png"],
-  },
+    images: ["/yaven.png"]
+  }
 }
 
 export default function RootLayout({
