@@ -93,276 +93,6 @@ function GoalCard({
   )
 }
 
-/* ── Professional features data ─────────────────────────── */
-const proFeatures = [
-  {
-    number: "01",
-    heading: "One view of everything.",
-    body: "Every goal you've set. Every task in progress. Every result waiting for your review. No tab-hunting, no status updates, no re-explaining.",
-    visual: (
-      <div className="space-y-3">
-        <GoalCard
-          title="Newsletter — May edition"
-          tag="Content"
-          status="active"
-          tasks={[
-            { label: "Topic research done", state: "done" },
-            { label: "Outline approved", state: "done" },
-            { label: "Writing intro section...", state: "active" }
-          ]}
-        />
-        <GoalCard
-          title="New hire onboarding — Sarah"
-          tag="HR"
-          status="review"
-          tasks={[
-            { label: "IT setup confirmed", state: "done" },
-            { label: "Welcome doc drafted", state: "done" },
-            { label: "Intro meetings scheduled", state: "done" }
-          ]}
-          footer="Welcome pack ready for your review"
-        />
-      </div>
-    )
-  },
-  {
-    number: "02",
-    heading: "Context that carries.",
-    body: "Your agents share what they know. Research feeds into writing. A client brief informs the outreach. Nothing gets lost between sessions.",
-    visual: (
-      <div className="space-y-2">
-        <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-          <div className="px-5 py-3 border-b border-zinc-100">
-            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
-              Research goal
-            </p>
-            <p className="text-zinc-800 font-medium">
-              Customer interview synthesis
-            </p>
-          </div>
-          <div className="px-5 py-3 space-y-1.5">
-            <p className="text-xs text-emerald-600">
-              ✓ 8 interview transcripts processed
-            </p>
-            <p className="text-xs text-emerald-600">
-              ✓ Pain points and themes mapped
-            </p>
-            <p className="text-xs text-zinc-400">
-              → Context passed to next goal
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-center py-1">
-          <div className="w-px h-5 bg-zinc-200" />
-        </div>
-        <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-          <div className="px-5 py-3 border-b border-zinc-100">
-            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
-              Writing goal
-            </p>
-            <p className="text-zinc-800 font-medium">
-              Product spec — v2 feature set
-            </p>
-          </div>
-          <div className="px-5 py-3 space-y-1.5">
-            <p className="text-xs text-zinc-500">
-              Using interview insights from research goal
-            </p>
-            <p className="text-xs text-emerald-600">
-              ● Drafting section 2 — user pain points...
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  },
-  {
-    number: "03",
-    heading: "You're in control.",
-    body: "Yaven won't make the calls that need a human. It surfaces decisions, gets your input, and moves on. You stay the director. It does the work.",
-    visual: (
-      <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-        <div className="px-5 py-4 border-b border-zinc-100">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-amber-500 mb-1.5">
-            Decision needed
-          </p>
-          <p className="text-zinc-800 font-medium">
-            Partnership outreach — APAC
-          </p>
-        </div>
-        <div className="px-5 py-4 space-y-3">
-          <p className="text-zinc-500 text-sm leading-relaxed">
-            3 outreach emails drafted. Waiting for your approval before sending.
-          </p>
-          <div className="bg-zinc-50 rounded-xl px-4 py-3 text-zinc-500 text-xs leading-relaxed border border-zinc-100 italic">
-            &ldquo;Hi Mei, I came across your work on regional distribution and
-            thought there might be a strong fit...&rdquo;
-          </div>
-        </div>
-        <div className="px-5 py-4 border-t border-zinc-100 flex gap-3">
-          <button className="flex-1 rounded-lg bg-zinc-900 text-white text-xs py-2.5 font-medium">
-            Approve &amp; send
-          </button>
-          <button className="flex-1 rounded-lg border border-zinc-200 text-zinc-600 text-xs py-2.5">
-            Edit drafts
-          </button>
-        </div>
-      </div>
-    )
-  },
-  {
-    number: "04",
-    heading: "Works across all major models.",
-    body: "Claude, ChatGPT, Gemini. Yaven sits above the models. You don't manage which one does what. Yaven does.",
-    visual: (
-      <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-        <div className="px-5 py-4 border-b border-zinc-100">
-          <p className="text-zinc-800 font-medium">Active on this goal</p>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Newsletter — May edition
-          </p>
-        </div>
-        <div className="px-5 py-5 space-y-4">
-          {[
-            {
-              name: "Claude",
-              task: "Drafting the newsletter intro",
-              color: "#d97706"
-            },
-            {
-              name: "GPT-5",
-              task: "Fact-checking statistics",
-              color: "#10b981"
-            },
-            {
-              name: "Gemini",
-              task: "Formatting for web publish",
-              color: "#3b82f6"
-            }
-          ].map(m => (
-            <div key={m.name} className="flex items-center gap-3">
-              <span
-                className="w-2 h-2 rounded-full shrink-0"
-                style={{ background: m.color }}
-              />
-              <div className="flex-1 min-w-0">
-                <p className="text-zinc-700 text-xs font-medium">{m.name}</p>
-                <p className="text-zinc-400 text-xs truncate">{m.task}</p>
-              </div>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-            </div>
-          ))}
-        </div>
-        <div className="px-5 py-3 bg-zinc-50 border-t border-zinc-100">
-          <p className="text-xs text-zinc-400">
-            Yaven routes automatically — you don&apos;t choose
-          </p>
-        </div>
-      </div>
-    )
-  },
-  {
-    number: "05",
-    heading: "We show you where to start.",
-    body: "Most people know AI can save them time. They don't know which tasks, which tools, or how to connect them. Yaven audits your week and tells you exactly what to hand off, so you're not starting from a blank page.",
-    visual: (
-      <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-        <div className="px-5 py-3 border-b border-zinc-100">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
-            Your automation audit
-          </p>
-          <p className="text-zinc-800 font-medium">
-            3 quick wins found this week
-          </p>
-        </div>
-        <div className="px-5 py-4 space-y-3.5">
-          {[
-            {
-              task: "Weekly pipeline report",
-              save: "~2 hrs",
-              note: (
-                <>
-                  Auto-compiled from{" "}
-                  <span className="inline-flex items-center justify-center w-[16px] h-[16px] rounded-md bg-[#EEF3FA] align-middle mx-1 rotate-3">
-                    <Image
-                      src="/logos/hubspot.png"
-                      alt="HubSpot"
-                      width={10}
-                      height={10}
-                      className="object-contain"
-                    />
-                  </span>{" "}
-                  every Friday
-                </>
-              )
-            },
-            {
-              task: "Follow-up emails after calls",
-              save: "~1.5 hrs",
-              note: (
-                <>
-                  <span className="inline-flex items-center justify-center w-[16px] h-[16px] rounded-md bg-[#EEF3FA] align-middle mr-1 -rotate-2">
-                    <Image
-                      src="/logos/gmail.png"
-                      alt="Gmail"
-                      width={10}
-                      height={10}
-                      className="object-contain"
-                    />
-                  </span>
-                  Drafted from your call transcript, ready to send
-                </>
-              )
-            },
-            {
-              task: "Logging call notes to CRM",
-              save: "~1 hr",
-              note: (
-                <>
-                  Pushed to{" "}
-                  <span className="inline-flex items-center justify-center w-[16px] h-[16px] rounded-md bg-[#EEF3FA] align-middle mx-1 rotate-6">
-                    <Image
-                      src="/logos/salesforce.png"
-                      alt="Salesforce"
-                      width={10}
-                      height={10}
-                      className="object-contain"
-                    />
-                  </span>{" "}
-                  after each meeting
-                </>
-              )
-            }
-          ].map(item => (
-            <div key={item.task} className="flex items-start gap-3">
-              <span className="mt-0.5 shrink-0 text-[10px] font-semibold text-[#83A5D4]">
-                →
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-xs font-medium text-zinc-800">
-                    {item.task}
-                  </p>
-                  <span className="shrink-0 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
-                    {item.save}
-                  </span>
-                </div>
-                <p className="text-[11px] text-zinc-400 mt-0.5">{item.note}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="px-5 py-3 bg-zinc-50 border-t border-zinc-100">
-          <p className="text-xs text-zinc-400">
-            Total time back this week:{" "}
-            <span className="font-semibold text-zinc-700">~4.5 hours</span>
-          </p>
-        </div>
-      </div>
-    )
-  }
-]
-
 /* ── Social proof data ───────────────────────────────────── */
 const testimonials = [
   {
@@ -1153,7 +883,8 @@ export default function Home() {
         <div
           className="absolute inset-0 z-2 pointer-events-none"
           style={{
-            background: "radial-gradient(ellipse 80% 70% at 20% 70%, rgba(0,0,0,0.18) 0%, transparent 70%)"
+            background:
+              "radial-gradient(ellipse 80% 70% at 20% 70%, rgba(0,0,0,0.18) 0%, transparent 70%)"
           }}
         />
 
@@ -1207,11 +938,17 @@ export default function Home() {
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-start px-6 pb-16 pt-40 sm:px-8 lg:pb-20 lg:pt-56">
           <div className="max-w-3xl">
-            <h1 className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}>
+            <h1
+              className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl"
+              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
+            >
               Focus in a distracted world
             </h1>
 
-            <div className="text-base font-black text-white max-w-lg mt-6 leading-relaxed" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>
+            <div
+              className="text-base font-black text-white max-w-lg mt-6 leading-relaxed"
+              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}
+            >
               Tell us how you work, we&apos;ll show you what&apos;s wasting your
               time, and leave you to do the bits only you can.
             </div>
