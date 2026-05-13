@@ -985,7 +985,7 @@ export default function Home() {
           className="absolute inset-0 z-2 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 80% 70% at 20% 70%, rgba(0,0,0,0.18) 0%, transparent 70%)"
+              "radial-gradient(ellipse 80% 70% at 20% 70%, rgba(20,50,120,0.5) 0%, transparent 70%)"
           }}
         />
 
@@ -1047,8 +1047,8 @@ export default function Home() {
             </h1>
 
             <div
-              className="text-base text-white/90 max-w-lg mt-6 leading-relaxed space-y-3"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}
+              className="text-base text-white max-w-lg mt-6 leading-relaxed space-y-3"
+              style={{ textShadow: "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)" }}
             >
               <p>
                 You constantly switch tabs and apps. You copy-paste from
@@ -1064,7 +1064,7 @@ export default function Home() {
 
             <p
               className="mt-6 text-sm animate-fade-rise-delay-2 text-shine font-bold"
-              style={{ animationDuration: "4s" }}
+              style={{ animationDuration: "4s", textShadow: "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)" }}
             >
               явен (yaven) — Bulgarian for open, plain to see, obvious.
             </p>
