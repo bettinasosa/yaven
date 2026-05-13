@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import { useState, Fragment } from "react"
 import { ChevronDown } from "lucide-react"
 import { WaitlistButton } from "@/components/waitlist-button"
 import { FadeIn } from "@/components/fade-in"
@@ -381,6 +381,7 @@ function ProfessionalSections() {
           width={520}
           height={280}
           className="pointer-events-none select-none absolute -right-32 top-1/2 -translate-y-1/2 w-[420px] opacity-40 sm:w-[520px]"
+          style={{ height: "auto" }}
           aria-hidden="true"
         />
         <FadeIn className="max-w-6xl mx-auto">
@@ -478,7 +479,7 @@ function ProfessionalSections() {
       >
         <div className="max-w-6xl mx-auto">
           <FadeIn>
-            <div className="flex items-end gap-16 mb-10 sm:mb-20">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-8 sm:gap-16 mb-10 sm:mb-20">
               <div className="flex-1">
                 <h2
                   id="how-it-works"
@@ -584,6 +585,7 @@ function ProfessionalSections() {
                 width={440}
                 height={236}
                 className="pointer-events-none select-none absolute -left-20 -top-12 w-[260px] opacity-35 sm:w-[380px] hidden sm:block -z-10"
+                style={{ height: "auto" }}
                 aria-hidden="true"
               />
               <FadeIn className="flex-1 space-y-1 lg:pt-2">
@@ -812,6 +814,7 @@ function ProfessionalSections() {
           width={480}
           height={260}
           className="pointer-events-none select-none absolute -right-28 top-16 w-[340px] opacity-30 sm:w-[480px]"
+          style={{ height: "auto" }}
           aria-hidden="true"
         />
         <div className="max-w-6xl mx-auto">
@@ -828,28 +831,26 @@ function ProfessionalSections() {
             <div className="testimonial-marquee -mx-6 px-6 space-y-4">
               <div className="testimonial-marquee-track flex w-max gap-4">
                 {[...testimonials, ...testimonials].map((t, i) => (
-                  <>
+                  <Fragment key={`row1-${i}`}>
                     <TestimonialCard
-                      key={`row1-${i}`}
                       quote={t.quote}
                       name={t.name}
                       role={t.role}
                     />
-                    {(i + 1) % 4 === 0 && <CTAMarqueeCard key={`cta1-${i}`} />}
-                  </>
+                    {(i + 1) % 4 === 0 && <CTAMarqueeCard />}
+                  </Fragment>
                 ))}
               </div>
               <div className="testimonial-marquee-track-reverse flex w-max gap-4">
                 {[...testimonials, ...testimonials].map((t, i) => (
-                  <>
+                  <Fragment key={`row2-${i}`}>
                     <TestimonialCard
-                      key={`row2-${i}`}
                       quote={t.quote}
                       name={t.name}
                       role={t.role}
                     />
-                    {(i + 1) % 4 === 0 && <CTAMarqueeCard key={`cta2-${i}`} />}
-                  </>
+                    {(i + 1) % 4 === 0 && <CTAMarqueeCard />}
+                  </Fragment>
                 ))}
               </div>
             </div>
@@ -1089,6 +1090,7 @@ export default function Home() {
           width={440}
           height={240}
           className="pointer-events-none select-none absolute -right-24 bottom-0 w-[300px] opacity-30 sm:w-[440px]"
+          style={{ height: "auto" }}
           aria-hidden="true"
         />
         <Image
