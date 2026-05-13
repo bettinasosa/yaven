@@ -5,101 +5,70 @@ import { useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { WaitlistButton } from "@/components/waitlist-button"
 import { FadeIn } from "@/components/fade-in"
-import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { HeroRefractionVideo } from "@/components/hero-refraction-video"
 
 /* ── Goal card mockup (professional) ────────────────────── */
-function GoalCard({
-  title,
-  tag,
-  status,
-  tasks,
-  footer
-}: {
-  title: string
-  tag?: string
-  status: "active" | "review" | "done"
-  tasks: { label: string; state: "done" | "active" | "pending" }[]
-  footer?: string
-}) {
-  const s =
-    status === "active"
-      ? {
-          dot: "bg-emerald-400",
-          text: "text-emerald-600",
-          label: "In progress"
-        }
-      : status === "review"
-        ? {
-            dot: "bg-amber-400",
-            text: "text-amber-600",
-            label: "Needs your input"
-          }
-        : { dot: "bg-zinc-300", text: "text-zinc-400", label: "Done" }
-
-  return (
-    <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-      <div className="px-5 py-4 border-b border-zinc-100 flex items-start justify-between gap-4">
-        <div>
-          {tag && (
-            <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-1">
-              {tag}
-            </p>
-          )}
-          <span className="text-zinc-800 font-medium leading-snug">
-            {title}
-          </span>
-        </div>
-        <div className="flex items-center gap-1.5 shrink-0 mt-0.5">
-          <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-          <span className={`text-[10px] ${s.text}`}>{s.label}</span>
-        </div>
-      </div>
-      <div className="px-5 py-4 space-y-2.5">
-        {tasks.map((task, i) => (
-          <div key={i} className="flex items-start gap-2.5">
-            {task.state === "done" && (
-              <span className="text-emerald-500 text-xs leading-5 mt-px shrink-0">
-                ✓
-              </span>
-            )}
-            {task.state === "active" && (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
-            )}
-            {task.state === "pending" && (
-              <span className="w-1.5 h-1.5 rounded-full bg-zinc-200 mt-1.5 shrink-0" />
-            )}
-            <span
-              className={
-                task.state === "done"
-                  ? "text-zinc-500"
-                  : task.state === "active"
-                    ? "text-zinc-700"
-                    : "text-zinc-400"
-              }
-            >
-              {task.label}
-            </span>
-          </div>
-        ))}
-      </div>
-      {footer && (
-        <div className="px-5 py-3 bg-zinc-50 border-t border-zinc-100 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-          <span className="text-xs text-zinc-500">{footer}</span>
-        </div>
-      )}
-    </div>
-  )
-}
-
 /* ── Social proof data ───────────────────────────────────── */
 const testimonials = [
   {
     quote:
-      "I'd need an AI coach sitting with me to even know where the opportunities are.",
-    name: "Matthew",
-    role: "Head of Artist and Industry Development"
+      "Someone showed me ChatGPT could turn my lecture slides into flashcards automatically. I'd been doing that by hand for two years. It hadn't occurred to me to ask.",
+    name: "Ellie",
+    role: "Postgraduate Student, Medicine"
+  },
+  {
+    quote:
+      "Every time I open ChatGPT, it has no idea who I am. I find myself re-explaining the same context just to get a useful answer.",
+    name: "Sarah",
+    role: "Digital Strategy and Transformation"
+  },
+  {
+    quote:
+      "I can see there's time to be saved. I just don't know where to start, and I don't really have the time to figure it out.",
+    name: "James",
+    role: "PhD Researcher, Engineering"
+  },
+  {
+    quote:
+      "I use AI every day — emails, recipes, trip planning. But apparently it can do a lot more than that. I just haven't worked out what.",
+    name: "Lauren",
+    role: "Administrator, Church Organisation"
+  },
+  {
+    quote:
+      "I build automations at work. Somehow I've never set one up for myself. I know I should — I just don't know where to begin.",
+    name: "Marcus",
+    role: "Analyst, Search Consultancy"
+  },
+  {
+    quote:
+      "How does AI apply to my personal life? I don't know yet. I'd need someone to sit down with me and work it out.",
+    name: "Priya",
+    role: "Postgraduate Student, Immunology"
+  },
+  {
+    quote:
+      "AI is helpful for the boring stuff. But I'm not ready to let it run anything without checking it first.",
+    name: "Rachel",
+    role: "Clinical Scientist, NHS"
+  },
+  {
+    quote:
+      "I got into the habit of doing my own research. It's hard to know which parts of that to hand over.",
+    name: "Anna",
+    role: "Masters Graduate, Nutrition"
+  },
+  {
+    quote:
+      "I can identify individual things AI would improve. I just can't find the one thing that ties it all together.",
+    name: "Phil",
+    role: "Managing Director"
+  },
+  {
+    quote:
+      "The gap between what AI can do and what a normal person can actually get AI to do is only growing.",
+    name: "Steve",
+    role: "Strategy and Growth"
   },
   {
     quote:
@@ -109,21 +78,9 @@ const testimonials = [
   },
   {
     quote:
-      "The gap between what AI can do and what a normal person can actually get it to do is only growing.",
-    name: "Steve",
-    role: "Strategy and Growth"
-  },
-  {
-    quote:
       "I've built five custom workflows for myself. But my team can't do that.",
     name: "Nasir",
     role: "Sales"
-  },
-  {
-    quote:
-      "I can identify individual things AI would improve. I just can't find the one thing that ties it all together.",
-    name: "Phil",
-    role: "Managing Director"
   }
 ]
 
@@ -137,15 +94,22 @@ function TestimonialCard({
   role: string
 }) {
   return (
-    <div className="w-[18rem] shrink-0 rounded-2xl bg-white border border-zinc-200 shadow-sm p-6 flex flex-col gap-5 min-h-56 sm:w-84 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-      <p className="text-zinc-700 text-sm leading-relaxed italic flex-1">
-        &ldquo;{quote}&rdquo;
+    <div
+      className="w-[18rem] shrink-0 rounded-2xl bg-white border border-zinc-100 p-6 flex flex-col gap-5 min-h-56 sm:w-84 transition-all duration-300 hover:-translate-y-1"
+      style={{ boxShadow: "0 4px 24px rgba(32,83,165,0.10), 0 1px 4px rgba(0,0,0,0.04)" }}
+    >
+      <span className="text-3xl leading-none text-[#5B99C4] font-instrument-serif select-none">&ldquo;</span>
+      <p className="text-zinc-700 text-sm leading-relaxed flex-1 -mt-3">
+        {quote}
       </p>
-      <div>
-        <p className="text-xs font-semibold text-zinc-700">{name}</p>
-        <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mt-0.5">
-          {role}
-        </p>
+      <div className="flex items-center gap-3 pt-2 border-t border-zinc-100">
+        <div className="w-7 h-7 rounded-full bg-[#EEF3FA] flex items-center justify-center shrink-0">
+          <span className="text-[10px] font-semibold text-[#2053A5]">{name[0]}</span>
+        </div>
+        <div>
+          <p className="text-xs font-semibold text-zinc-800">{name}</p>
+          <p className="text-[10px] tracking-[0.12em] uppercase text-zinc-400 mt-0.5">{role}</p>
+        </div>
       </div>
     </div>
   )
@@ -198,7 +162,7 @@ function CTAMarqueeCard() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-press-dark shrink-0 disabled:opacity-60"
+              className="btn-press shrink-0 disabled:opacity-60 mb-2"
             >
               {loading ? "Saving…" : "Get early access"}
             </button>
@@ -213,11 +177,15 @@ function CTAMarqueeCard() {
 const faqs = [
   {
     q: "Do I need to know how to code?",
-    a: "No. Yaven is built for people who work in complex systems — not people who build them. If you can describe a workflow, Yaven can help run it."
+    a: "No. Yaven is built for people who work in complex systems, not people who build them. If you can describe a workflow, Yaven can help run it."
   },
   {
     q: "How is this different from just using ChatGPT?",
-    a: "ChatGPT answers questions in a conversation. Yaven manages ongoing work. It remembers context between sessions, connects to the tools you already use, and keeps things moving without constant input from you."
+    a: "ChatGPT is a conversation. You ask, it answers, and then it forgets. Every session starts from scratch, and nothing happens unless you prompt it. Yaven is different at the level of how it works. It connects to your actual tools, remembers what you're working on between sessions, and runs tasks in the background without being asked. You describe a workflow once. Yaven maps it, automates the repeatable parts, and flags the bits that need you. The output isn't a text response you then have to act on. It's the work, done."
+  },
+  {
+    q: "Can I customise Yaven?",
+    a: "Yes. You can adjust how Yaven presents itself, tune the personality of individual agents so they match your tone and working style, and set preferences for how much it does versus flags for your review. The more it knows about how you work, the better it gets at it."
   },
   {
     q: "What tools does Yaven connect to?",
@@ -255,7 +223,7 @@ const faqs = [
   },
   {
     q: "When will I get access?",
-    a: "We're onboarding our first users now. Join the waitlist and we'll reach out directly — no queue number, just a conversation."
+    a: "We're onboarding our first users now. Join the waitlist and we'll reach out directly. No queue number, just a conversation."
   },
   {
     q: "Is my data private?",
@@ -266,6 +234,74 @@ const faqs = [
 /* ── Professional content ────────────────────────────────── */
 function ProfessionalSections() {
   const [openFaqIndex, setOpenFaqIndex] = useState(0)
+  const [currentCard, setCurrentCard] = useState(0)
+  const [currentPlaybook, setCurrentPlaybook] = useState(0)
+
+  const playbookCards = [
+    {
+      title: "LinkedIn outreach — new leads",
+      icon: "/logos/linkedin.png",
+      schedule: "↻ Runs every Monday · no setup required",
+      agents: [
+        { label: "AUTO", agent: "Research agent", task: "Finds 10 relevant profiles based on your criteria", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
+        { label: "AUTO", agent: "Writing agent", task: "Drafts a personalised message in your voice for each", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
+        { label: "REVIEW", agent: "Outreach agent", task: "Sends on Monday morning once you approve", color: "bg-[#f5c0c1] text-zinc-900" }
+      ]
+    },
+    {
+      title: "CV & cover letter — new listings",
+      icon: "/logos/notion.png",
+      schedule: "↻ Runs daily when new listings appear",
+      agents: [
+        { label: "AUTO", agent: "Research agent", task: "Pulls new job listings matching your criteria", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
+        { label: "AUTO", agent: "Writing agent", task: "Tailors your CV and cover letter to each role", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
+        { label: "REVIEW", agent: "Delivery agent", task: "Saves drafts — you decide which ones to send", color: "bg-[#f5c0c1] text-zinc-900" }
+      ]
+    },
+    {
+      title: "Invoice chasing — overdue clients",
+      icon: "/logos/gmail.png",
+      schedule: "↻ Runs every Friday · no setup required",
+      agents: [
+        { label: "AUTO", agent: "Finance agent", task: "Pulls overdue invoices from your accounting tool", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
+        { label: "AUTO", agent: "Writing agent", task: "Drafts a friendly reminder in your tone", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
+        { label: "REVIEW", agent: "Outreach agent", task: "Nothing sent until you say so", color: "bg-[#f5c0c1] text-zinc-900" }
+      ]
+    },
+    {
+      title: "Monthly expense report",
+      icon: "/logos/excel.png",
+      schedule: "↻ Runs on the 1st of each month",
+      agents: [
+        { label: "AUTO", agent: "Finance agent", task: "Pulls transactions from your connected accounts", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
+        { label: "AUTO", agent: "Organising agent", task: "Categorises and totals by client or project", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
+        { label: "AUTO", agent: "Reporting agent", task: "Formats into a spreadsheet, ready to export", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" }
+      ]
+    }
+  ]
+
+  const notificationCards = [
+    {
+      msg: "Your 10 LinkedIn messages are ready. Personalised to each profile, written in your tone. Want to send them or tweak a few first?",
+      actions: ["Send all", "Review first"]
+    },
+    {
+      msg: "Tailored your CV and cover letter for the four roles you saved this week. Each one adjusted to match the job description.",
+      actions: ["Review them", "Send one"]
+    },
+    {
+      msg: "Pulled this month's expenses into a spreadsheet, categorised, and totalled by client. Ready to export or turn into an invoice.",
+      actions: ["Export", "Review first"]
+    },
+    {
+      msg: "Friendly invoice reminder drafted for the three clients who are overdue. Nothing sent until you say so.",
+      actions: ["Send them", "Edit first"]
+    },
+    {
+      msg: "Research summary done. Pulled the key points from the eight sources you flagged, formatted into a one-pager.",
+      actions: ["Open it", "Add more"]
+    }
+  ]
 
   return (
     <>
@@ -281,19 +317,16 @@ function ProfessionalSections() {
         />
         <FadeIn className="max-w-6xl mx-auto">
           <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-12">
-            You are a master of many domains.
+            A gap is opening up.
           </h2>
           <div className="flex flex-col gap-12 sm:gap-16">
             {/* Row 1: paragraph + chart */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
-              <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
-                There&apos;s a gap opening up in every industry. On one side:
-                people who&apos;ve figured out how to make AI do the repetitive
-                half of their job. On the other: everyone still doing it
-                themselves. The difference isn&apos;t intelligence. It&apos;s
-                knowing what to hand off, and having trust that something can
-                actually do it accurately.
-              </p>
+              <div className="space-y-5 text-base sm:text-lg leading-relaxed text-zinc-500">
+                <p>Most people use AI like a faster Google. Type a question, get an answer, repeat tomorrow.</p>
+                <p>The people pulling ahead have worked out which half of their job repeats, and handed it off. They come back to decisions, not groundwork. The 5% of power users aren&apos;t necessarily smarter; until now, the tools have just been built for them.</p>
+                <p>Yaven is built for the 83% who aren&apos;t there yet.</p>
+              </div>
               {/* EY Survey Chart */}
               <div
                 className="rounded-2xl bg-[#5B99C4]/10 px-6 py-6"
@@ -349,90 +382,11 @@ function ProfessionalSections() {
               <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
                 Yaven connects to all your devices and tools. It learns your
                 habits, follows how your week runs, and handles the tasks that
-                repeat. Follow-ups sent. Notes logged. Reports found. When
+                repeat. Follow-ups sent. Notes logged. Reports found. You decide
+                what you want to handle, and what you want to hand over. When
                 something needs a human decision, it brings it to your
-                attention. Everything else is handled for you. No code. No
-                configuration. Just your work, moving forward.
+                attention. Everything else is covered for you.
               </p>
-            </div>
-          </div>
-        </FadeIn>
-      </section>
-
-      {/* ── Use cases ──────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-white px-6 pb-20 sm:pb-40">
-        <Image
-          src="/cloud.png"
-          alt=""
-          width={520}
-          height={280}
-          className="pointer-events-none select-none absolute -left-36 bottom-0 w-[380px] opacity-40 sm:w-[520px]"
-          aria-hidden="true"
-        />
-        <FadeIn className="max-w-6xl mx-auto">
-          <div className="flex flex-col gap-10 sm:gap-16 lg:flex-row lg:items-start">
-            <div className="flex-1 space-y-8 lg:pt-4">
-              <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif">
-                Built for the way you actually work.
-              </h2>
-              <div className="space-y-6 text-base sm:text-lg leading-relaxed text-zinc-600">
-                <p>
-                  Work, operations, personal — it doesn&apos;t matter what the
-                  task is.{" "}
-                  <span className="text-shimmer-dark font-bold italic">
-                    yaven
-                  </span>{" "}
-                  handles it.
-                </p>
-                <p>
-                  Your investor update drafted in your tone and ready to send.
-                  Your new hire onboarded without a checklist in sight. Your
-                  holiday researched, compared, and waiting for your final word.
-                </p>
-                <p>
-                  You come back to decisions, not groundwork. It runs in the
-                  background, flags what needs you, and keeps everything moving.
-                  No prompting. No babysitting.
-                </p>
-              </div>
-            </div>
-            <div className="flex-1 space-y-3">
-              <GoalCard
-                title="Investor update — May"
-                tag="Work"
-                status="active"
-                tasks={[
-                  { label: "Portfolio data pulled", state: "done" },
-                  { label: "Draft written in your tone", state: "done" },
-                  { label: "Sending to distribution list...", state: "active" }
-                ]}
-              />
-              <GoalCard
-                title="New hire onboarding — Jamie"
-                tag="Operations"
-                status="review"
-                tasks={[
-                  { label: "IT access set up", state: "done" },
-                  { label: "Intro meetings scheduled", state: "done" },
-                  { label: "First week plan drafted", state: "done" }
-                ]}
-                footer="Welcome pack ready for your review"
-              />
-              <GoalCard
-                title="Holiday research — Japan"
-                tag="Personal"
-                status="review"
-                tasks={[
-                  { label: "5 itineraries compared", state: "done" },
-                  { label: "Budget tracker built", state: "done" },
-                  {
-                    label:
-                      "Flights and hotels found — here's what we think you'll like",
-                    state: "done"
-                  }
-                ]}
-                footer="Your approval needed before anything is booked"
-              />
             </div>
           </div>
         </FadeIn>
@@ -448,9 +402,28 @@ function ProfessionalSections() {
       >
         <div className="max-w-6xl mx-auto">
           <FadeIn>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-10 sm:mb-20">
-              How it works.
-            </h2>
+            <div className="flex items-end gap-16 mb-10 sm:mb-20">
+              <div className="flex-1">
+                <h2
+                  id="how-it-works"
+                  className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-4"
+                >
+                  How Yaven works.
+                </h2>
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
+                  Think of Yaven like a virtual pet. It lives on your computer, ready when you need it and asleep when you don&apos;t. Here&apos;s what that looks like in practice.
+                </p>
+              </div>
+              <div className="flex-1 flex justify-center">
+                <Image
+                  src="/cloud-pet.png"
+                  alt="Yaven cloud pet"
+                  width={420}
+                  height={180}
+                  className="w-52 sm:w-72 md:w-96 object-contain hover-drop-shadow-blue"
+                />
+              </div>
+            </div>
           </FadeIn>
           <div className="space-y-16 sm:space-y-32">
             {/* Step 1 */}
@@ -460,13 +433,14 @@ function ProfessionalSections() {
                   01
                 </span>
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                  Tell Yaven what you&apos;re working toward.
+                  Tell Yaven how your week runs.
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
-                  Your day-to-day, your goals, your tools, how your week runs.
-                  The more it understands your world, the more it can do in it.
-                  You don&apos;t need to know what to automate. Yaven figures
-                  that out from what you tell it.
+                  Your tools, your goals, what repeats. Chasing invoice
+                  payments? Sending LinkedIn outreach? Tailoring your CV for
+                  every application? Describe it in plain language. You
+                  don&apos;t need to know how to automate anything. That part
+                  is on Yaven.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1 relative z-10">
@@ -506,8 +480,9 @@ function ProfessionalSections() {
                         What you&apos;re focused on
                       </p>
                       <p className="text-xs text-zinc-700 leading-relaxed">
-                        Weekly investor updates · Q2 content calendar for four
-                        clients · onboarding two new hires
+                        Cold outreach to 10 new leads a week · Tailor CV and
+                        cover letter for new job listings · Follow up on unpaid
+                        invoices
                       </p>
                     </div>
                     <div className="bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
@@ -541,52 +516,71 @@ function ProfessionalSections() {
                   It builds the playbook.
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
-                  Yaven maps your workflows, orchestrates the right agents, and
-                  starts automating the repeatable. No configuration required.
+                  Yaven maps the workflow, strings together the right agents,
+                  and sets it running. No configuration, no code. One playbook
+                  per recurring task. Share yours, tweak it, or start from one
+                  someone else has already built.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1">
-                <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
-                  <div className="px-5 py-3 border-b border-zinc-100">
-                    <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
-                      Playbook created
-                    </p>
-                    <p className="text-zinc-800 font-medium">
-                      Weekly investor update
-                    </p>
-                  </div>
-                  <div className="px-5 py-4 space-y-3">
-                    {[
-                      {
-                        agent: "Research agent",
-                        task: "Pulls portfolio performance data"
-                      },
-                      {
-                        agent: "Writing agent",
-                        task: "Drafts the update in your tone and format"
-                      },
-                      {
-                        agent: "Outreach agent",
-                        task: "Sends to your distribution list"
-                      }
-                    ].map(row => (
-                      <div key={row.agent} className="flex items-start gap-3">
-                        <span className="mt-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 shrink-0">
-                          AUTO
-                        </span>
-                        <div>
-                          <p className="text-xs font-medium text-zinc-700">
-                            {row.agent}
-                          </p>
-                          <p className="text-xs text-zinc-400">{row.task}</p>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setCurrentPlaybook(i => (i - 1 + playbookCards.length) % playbookCards.length)}
+                    className="btn-press shrink-0 !px-3 !py-2 !text-sm"
+                  >
+                    ←
+                  </button>
+                  <div className="flex-1 rounded-2xl bg-white border border-zinc-200 overflow-hidden text-sm" style={{ boxShadow: "0 8px 32px rgba(32,83,165,0.18), 0 2px 8px rgba(0,0,0,0.06)" }}>
+                    <div className="px-5 py-4 border-b border-zinc-100 flex items-center gap-3">
+                      <Image
+                        src={playbookCards[currentPlaybook].icon}
+                        alt=""
+                        width={28}
+                        height={28}
+                        className="w-7 h-7 rounded object-contain shrink-0"
+                      />
+                      <div>
+                        <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
+                          Playbook created
+                        </p>
+                        <p className="text-zinc-800 font-medium leading-tight">
+                          {playbookCards[currentPlaybook].title}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="px-5 py-4 space-y-3">
+                      {playbookCards[currentPlaybook].agents.map(row => (
+                        <div key={row.agent} className="flex items-start gap-3">
+                          <span className={`mt-0.5 text-[10px] font-semibold w-14 text-center py-0.5 rounded ${row.color} shrink-0`}>
+                            {row.label}
+                          </span>
+                          <div>
+                            <p className="text-xs font-medium text-zinc-700">{row.agent}</p>
+                            <p className="text-xs text-zinc-400">{row.task}</p>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="h-px bg-zinc-100" />
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-zinc-400">{playbookCards[currentPlaybook].schedule}</p>
+                        <div className="flex gap-1.5">
+                          {playbookCards.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={() => setCurrentPlaybook(i)}
+                              className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentPlaybook ? "bg-zinc-400" : "bg-zinc-200"}`}
+                            />
+                          ))}
                         </div>
                       </div>
-                    ))}
-                    <div className="h-px bg-zinc-100" />
-                    <p className="text-xs text-zinc-400">
-                      ↻ Runs every Friday morning · no setup required
-                    </p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => setCurrentPlaybook(i => (i + 1) % playbookCards.length)}
+                    className="btn-press shrink-0 !px-3 !py-2 !text-sm"
+                  >
+                    →
+                  </button>
                 </div>
               </FadeIn>
             </div>
@@ -598,65 +592,62 @@ function ProfessionalSections() {
                   03
                 </span>
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                  It runs in the background. You make the calls.
+                  It works. You decide.
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
-                  Most AI tools wait to be asked. Yaven doesn&apos;t. Once it
-                  knows your workflow, it runs quietly in the corner of your
-                  screen. Following up, logging, updating, compiling. When
-                  something genuinely needs you, it lands in your inbox. You
-                  approve, edit, or redirect, and it moves on.
+                  Yaven handles the groundwork. When something needs a genuine
+                  human call (a decision, an approval, a judgement) it flags
+                  it. Everything else is covered. How much you hand over is
+                  entirely up to you.
                 </p>
               </FadeIn>
-              <FadeIn delay={0.2} className="flex-1 space-y-3">
-                {[
-                  {
-                    msg: "Investor update sent. Pulled your numbers from Notion, kept your usual tone, and hit send at 8am like always.",
-                    note: "Every Friday · no input needed"
-                  },
-                  {
-                    msg: "Jamie's welcome pack is out. IT access, intro meetings, and first-week plan all handled.",
-                    note: "Triggered on contract signing"
-                  }
-                ].map(item => (
-                  <div
-                    key={item.msg}
-                    className="rounded-xl bg-white px-4 py-3 space-y-1.5"
-                    style={{ boxShadow: "0 2px 12px rgba(32,83,165,0.08)" }}
+              <FadeIn delay={0.2} className="flex-1">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setCurrentCard(i => (i - 1 + notificationCards.length) % notificationCards.length)}
+                    className="btn-press shrink-0 !px-3 !py-2 !text-sm"
                   >
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#5B99C4] shrink-0" />
-                      <p className="text-[10px] tracking-[0.12em] uppercase text-[#5B99C4] font-medium">
-                        Yaven
-                      </p>
+                    ←
+                  </button>
+                  <div
+                    className="flex-1 rounded-xl bg-white border border-zinc-200 px-5 py-7 flex flex-col gap-5 min-h-[13rem]"
+                    style={{ boxShadow: "0 8px 32px rgba(32,83,165,0.18), 0 2px 8px rgba(0,0,0,0.06)" }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Image src="/logo.png" alt="Yaven" width={20} height={20} className="w-5 h-5 rounded-md object-cover shrink-0" />
+                      <span className="text-base tracking-tight text-[#2053A5] font-instrument-serif">
+                        yaven
+                      </span>
                     </div>
-                    <p className="text-xs leading-relaxed text-zinc-600">
-                      {item.msg}
+                    <p className="text-xs leading-relaxed text-zinc-700 flex-1">
+                      {notificationCards[currentCard].msg}
                     </p>
-                    <p className="text-[10px] text-zinc-400">{item.note}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex gap-1.5">
+                        {notificationCards.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setCurrentCard(i)}
+                            className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentCard ? "bg-[#5B99C4]" : "bg-[#5B99C4]/30"}`}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-[#2053A5] text-white">
+                          {notificationCards[currentCard].actions[0]}
+                        </button>
+                        <button className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-[#EEF3FA] text-[#2053A5]">
+                          {notificationCards[currentCard].actions[1]}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                ))}
-                <div
-                  className="rounded-xl bg-[#EEF3FA] px-4 py-4 space-y-3"
-                  style={{ boxShadow: "0 4px 16px rgba(32,83,165,0.12)" }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#5B99C4] shrink-0" />
-                    <p className="text-[10px] tracking-[0.12em] uppercase text-[#5B99C4] font-medium">
-                      Yaven
-                    </p>
-                  </div>
-                  <p className="text-xs leading-relaxed text-[#2053A5]">
-                    I&apos;ve drafted your board update. Pulled last
-                    month&apos;s metrics, matched your tone from the last one,
-                    and kept it under two minutes to read. Ready to go — just
-                    need you to say the word.
-                  </p>
-                  <div className="flex justify-end">
-                    <button className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-[#5B99C4] text-white shrink-0">
-                      Send it
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => setCurrentCard(i => (i + 1) % notificationCards.length)}
+                    className="btn-press shrink-0 !px-3 !py-2 !text-sm"
+                  >
+                    →
+                  </button>
                 </div>
               </FadeIn>
             </div>
@@ -668,13 +659,12 @@ function ProfessionalSections() {
                   04
                 </span>
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                  In when you want. Out when you don&apos;t.
+                  Check in. Or don&apos;t.
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
-                  Open the agent playground when you want to dig in or
-                  customise. Close it when you don&apos;t. Either way, the work
-                  is moving. Not a tab you forget to check. A system that&apos;s
-                  already working.
+                  Open Yaven to see what&apos;s running, check history, update a
+                  playbook, or manage a connection. Close it when you don&apos;t
+                  need it. The work doesn&apos;t stop either way.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1">
@@ -684,6 +674,7 @@ function ProfessionalSections() {
                   muted
                   playsInline
                   className="w-full h-auto block"
+                  style={{ mixBlendMode: "multiply" }}
                 >
                   <source src="/agent-team.mp4" type="video/mp4" />
                 </video>
@@ -723,32 +714,28 @@ function ProfessionalSections() {
             <div className="testimonial-marquee -mx-6 px-6 space-y-4">
               <div className="testimonial-marquee-track flex w-max gap-4">
                 {[...testimonials, ...testimonials].map((t, i) => (
-                  <TestimonialCard
-                    key={`row1-${i}`}
-                    quote={t.quote}
-                    name={t.name}
-                    role={t.role}
-                  />
+                  <>
+                    <TestimonialCard
+                      key={`row1-${i}`}
+                      quote={t.quote}
+                      name={t.name}
+                      role={t.role}
+                    />
+                    {(i + 1) % 4 === 0 && <CTAMarqueeCard key={`cta1-${i}`} />}
+                  </>
                 ))}
               </div>
               <div className="testimonial-marquee-track-reverse flex w-max gap-4">
-                <CTAMarqueeCard />
-                {testimonials.map((t, i) => (
-                  <TestimonialCard
-                    key={`row2a-${i}`}
-                    quote={t.quote}
-                    name={t.name}
-                    role={t.role}
-                  />
-                ))}
-                <CTAMarqueeCard />
-                {testimonials.map((t, i) => (
-                  <TestimonialCard
-                    key={`row2b-${i}`}
-                    quote={t.quote}
-                    name={t.name}
-                    role={t.role}
-                  />
+                {[...testimonials, ...testimonials].map((t, i) => (
+                  <>
+                    <TestimonialCard
+                      key={`row2-${i}`}
+                      quote={t.quote}
+                      name={t.name}
+                      role={t.role}
+                    />
+                    {(i + 1) % 4 === 0 && <CTAMarqueeCard key={`cta2-${i}`} />}
+                  </>
                 ))}
               </div>
             </div>
@@ -942,19 +929,25 @@ export default function Home() {
               className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl"
               style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
             >
-              Focus in a distracted world
+              Focus in a distracted world.
             </h1>
 
             <div
-              className="text-base font-black text-white max-w-lg mt-6 leading-relaxed"
+              className="text-base text-white/90 max-w-lg mt-6 leading-relaxed space-y-3"
               style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}
             >
-              Tell us how you work, we&apos;ll show you what&apos;s wasting your
-              time, and leave you to do the bits only you can.
+              <p>You constantly switch tabs and apps. You copy-paste from ChatGPT, rinse, repeat. You know there are better ways to work — you just haven&apos;t had time to figure out what they are.</p>
+              <p>That&apos;s what Yaven is for.</p>
             </div>
 
-            <div className="mt-8 max-w-[440px] animate-fade-rise-delay-2">
-              <BlueprintPanel />
+            <div className="mt-8 flex items-center gap-3 animate-fade-rise-delay-2">
+              <WaitlistButton label="Get early access" className="btn-press" />
+              <a
+                href="#how-it-works"
+                className="text-sm text-white/80 hover:text-white transition-colors font-medium"
+              >
+                See how it works ↓
+              </a>
             </div>
 
             <p
