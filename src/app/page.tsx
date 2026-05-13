@@ -96,19 +96,27 @@ function TestimonialCard({
   return (
     <div
       className="w-[18rem] shrink-0 rounded-2xl bg-white border border-zinc-100 p-6 flex flex-col gap-5 min-h-56 sm:w-84 transition-all duration-300 hover:-translate-y-1"
-      style={{ boxShadow: "0 4px 24px rgba(32,83,165,0.10), 0 1px 4px rgba(0,0,0,0.04)" }}
+      style={{
+        boxShadow: "0 4px 24px rgba(32,83,165,0.10), 0 1px 4px rgba(0,0,0,0.04)"
+      }}
     >
-      <span className="text-3xl leading-none text-[#5B99C4] font-instrument-serif select-none">&ldquo;</span>
+      <span className="text-3xl leading-none text-[#5B99C4] font-instrument-serif select-none">
+        &ldquo;
+      </span>
       <p className="text-zinc-700 text-sm leading-relaxed flex-1 -mt-3">
         {quote}
       </p>
       <div className="flex items-center gap-3 pt-2 border-t border-zinc-100">
         <div className="w-7 h-7 rounded-full bg-[#EEF3FA] flex items-center justify-center shrink-0">
-          <span className="text-[10px] font-semibold text-[#2053A5]">{name[0]}</span>
+          <span className="text-[10px] font-semibold text-[#2053A5]">
+            {name[0]}
+          </span>
         </div>
         <div>
           <p className="text-xs font-semibold text-zinc-800">{name}</p>
-          <p className="text-[10px] tracking-[0.12em] uppercase text-zinc-400 mt-0.5">{role}</p>
+          <p className="text-[10px] tracking-[0.12em] uppercase text-zinc-400 mt-0.5">
+            {role}
+          </p>
         </div>
       </div>
     </div>
@@ -162,7 +170,7 @@ function CTAMarqueeCard() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-press shrink-0 disabled:opacity-60 mb-2"
+              className="btn-press shrink-0 disabled:opacity-60 mb-4"
             >
               {loading ? "Saving…" : "Get early access"}
             </button>
@@ -243,9 +251,24 @@ function ProfessionalSections() {
       icon: "/logos/linkedin.png",
       schedule: "↻ Runs every Monday · no setup required",
       agents: [
-        { label: "AUTO", agent: "Research agent", task: "Finds 10 relevant profiles based on your criteria", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
-        { label: "AUTO", agent: "Writing agent", task: "Drafts a personalised message in your voice for each", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
-        { label: "REVIEW", agent: "Outreach agent", task: "Sends on Monday morning once you approve", color: "bg-[#f5c0c1] text-zinc-900" }
+        {
+          label: "AUTO",
+          agent: "Research agent",
+          task: "Finds 10 relevant profiles based on your criteria",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        },
+        {
+          label: "AUTO",
+          agent: "Writing agent",
+          task: "Drafts a personalised message in your voice for each",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        },
+        {
+          label: "REVIEW",
+          agent: "Outreach agent",
+          task: "Sends on Monday morning once you approve",
+          color: "bg-[#f5c0c1] text-zinc-900"
+        }
       ]
     },
     {
@@ -253,9 +276,24 @@ function ProfessionalSections() {
       icon: "/logos/notion.png",
       schedule: "↻ Runs daily when new listings appear",
       agents: [
-        { label: "AUTO", agent: "Research agent", task: "Pulls new job listings matching your criteria", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
-        { label: "AUTO", agent: "Writing agent", task: "Tailors your CV and cover letter to each role", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
-        { label: "REVIEW", agent: "Delivery agent", task: "Saves drafts — you decide which ones to send", color: "bg-[#f5c0c1] text-zinc-900" }
+        {
+          label: "AUTO",
+          agent: "Research agent",
+          task: "Pulls new job listings matching your criteria",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        },
+        {
+          label: "AUTO",
+          agent: "Writing agent",
+          task: "Tailors your CV and cover letter to each role",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        },
+        {
+          label: "REVIEW",
+          agent: "Delivery agent",
+          task: "Saves drafts — you decide which ones to send",
+          color: "bg-[#f5c0c1] text-zinc-900"
+        }
       ]
     },
     {
@@ -263,9 +301,24 @@ function ProfessionalSections() {
       icon: "/logos/gmail.png",
       schedule: "↻ Runs every Friday · no setup required",
       agents: [
-        { label: "AUTO", agent: "Finance agent", task: "Pulls overdue invoices from your accounting tool", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
-        { label: "AUTO", agent: "Writing agent", task: "Drafts a friendly reminder in your tone", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
-        { label: "REVIEW", agent: "Outreach agent", task: "Nothing sent until you say so", color: "bg-[#f5c0c1] text-zinc-900" }
+        {
+          label: "AUTO",
+          agent: "Finance agent",
+          task: "Pulls overdue invoices from your accounting tool",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        },
+        {
+          label: "AUTO",
+          agent: "Writing agent",
+          task: "Drafts a friendly reminder in your tone",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        },
+        {
+          label: "REVIEW",
+          agent: "Outreach agent",
+          task: "Nothing sent until you say so",
+          color: "bg-[#f5c0c1] text-zinc-900"
+        }
       ]
     },
     {
@@ -273,9 +326,24 @@ function ProfessionalSections() {
       icon: "/logos/excel.png",
       schedule: "↻ Runs on the 1st of each month",
       agents: [
-        { label: "AUTO", agent: "Finance agent", task: "Pulls transactions from your connected accounts", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
-        { label: "AUTO", agent: "Organising agent", task: "Categorises and totals by client or project", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" },
-        { label: "AUTO", agent: "Reporting agent", task: "Formats into a spreadsheet, ready to export", color: "border border-[#5B99C4] text-[#5B99C4] bg-white" }
+        {
+          label: "AUTO",
+          agent: "Finance agent",
+          task: "Pulls transactions from your connected accounts",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        },
+        {
+          label: "AUTO",
+          agent: "Organising agent",
+          task: "Categorises and totals by client or project",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        },
+        {
+          label: "AUTO",
+          agent: "Reporting agent",
+          task: "Formats into a spreadsheet, ready to export",
+          color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
+        }
       ]
     }
   ]
@@ -323,8 +391,16 @@ function ProfessionalSections() {
             {/* Row 1: paragraph + chart */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
               <div className="space-y-5 text-base sm:text-lg leading-relaxed text-zinc-500">
-                <p>Most people use AI like a faster Google. Type a question, get an answer, repeat tomorrow.</p>
-                <p>The people pulling ahead have worked out which half of their job repeats, and handed it off. They come back to decisions, not groundwork. The 5% of power users aren&apos;t necessarily smarter; until now, the tools have just been built for them.</p>
+                <p>
+                  Most people use AI like a faster Google. Type a question, get
+                  an answer, repeat tomorrow.
+                </p>
+                <p>
+                  The people pulling ahead have worked out which half of their
+                  job repeats, and handed it off. They come back to decisions,
+                  not groundwork. The 5% of power users aren&apos;t necessarily
+                  smarter; until now, the tools have just been built for them.
+                </p>
                 <p>Yaven is built for the 83% who aren&apos;t there yet.</p>
               </div>
               {/* EY Survey Chart */}
@@ -411,7 +487,9 @@ function ProfessionalSections() {
                   How Yaven works.
                 </h2>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
-                  Think of Yaven like a virtual pet. It lives on your computer, ready when you need it and asleep when you don&apos;t. Here&apos;s what that looks like in practice.
+                  Think of Yaven like a virtual pet. It lives on your computer,
+                  ready when you need it and asleep when you don&apos;t.
+                  Here&apos;s what that looks like in practice.
                 </p>
               </div>
               <div className="flex-1 flex justify-center">
@@ -439,8 +517,8 @@ function ProfessionalSections() {
                   Your tools, your goals, what repeats. Chasing invoice
                   payments? Sending LinkedIn outreach? Tailoring your CV for
                   every application? Describe it in plain language. You
-                  don&apos;t need to know how to automate anything. That part
-                  is on Yaven.
+                  don&apos;t need to know how to automate anything. That part is
+                  on Yaven.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1 relative z-10">
@@ -525,12 +603,23 @@ function ProfessionalSections() {
               <FadeIn delay={0.2} className="flex-1">
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => setCurrentPlaybook(i => (i - 1 + playbookCards.length) % playbookCards.length)}
+                    onClick={() =>
+                      setCurrentPlaybook(
+                        i =>
+                          (i - 1 + playbookCards.length) % playbookCards.length
+                      )
+                    }
                     className="btn-press shrink-0 !px-3 !py-2 !text-sm"
                   >
                     ←
                   </button>
-                  <div className="flex-1 rounded-2xl bg-white border border-zinc-200 overflow-hidden text-sm" style={{ boxShadow: "0 8px 32px rgba(32,83,165,0.18), 0 2px 8px rgba(0,0,0,0.06)" }}>
+                  <div
+                    className="flex-1 rounded-2xl bg-white border border-zinc-200 overflow-hidden text-sm"
+                    style={{
+                      boxShadow:
+                        "0 8px 32px rgba(32,83,165,0.18), 0 2px 8px rgba(0,0,0,0.06)"
+                    }}
+                  >
                     <div className="px-5 py-4 border-b border-zinc-100 flex items-center gap-3">
                       <Image
                         src={playbookCards[currentPlaybook].icon}
@@ -551,18 +640,24 @@ function ProfessionalSections() {
                     <div className="px-5 py-4 space-y-3">
                       {playbookCards[currentPlaybook].agents.map(row => (
                         <div key={row.agent} className="flex items-start gap-3">
-                          <span className={`mt-0.5 text-[10px] font-semibold w-14 text-center py-0.5 rounded ${row.color} shrink-0`}>
+                          <span
+                            className={`mt-0.5 text-[10px] font-semibold w-14 text-center py-0.5 rounded ${row.color} shrink-0`}
+                          >
                             {row.label}
                           </span>
                           <div>
-                            <p className="text-xs font-medium text-zinc-700">{row.agent}</p>
+                            <p className="text-xs font-medium text-zinc-700">
+                              {row.agent}
+                            </p>
                             <p className="text-xs text-zinc-400">{row.task}</p>
                           </div>
                         </div>
                       ))}
                       <div className="h-px bg-zinc-100" />
                       <div className="flex items-center justify-between">
-                        <p className="text-xs text-zinc-400">{playbookCards[currentPlaybook].schedule}</p>
+                        <p className="text-xs text-zinc-400">
+                          {playbookCards[currentPlaybook].schedule}
+                        </p>
                         <div className="flex gap-1.5">
                           {playbookCards.map((_, i) => (
                             <button
@@ -576,7 +671,9 @@ function ProfessionalSections() {
                     </div>
                   </div>
                   <button
-                    onClick={() => setCurrentPlaybook(i => (i + 1) % playbookCards.length)}
+                    onClick={() =>
+                      setCurrentPlaybook(i => (i + 1) % playbookCards.length)
+                    }
                     className="btn-press shrink-0 !px-3 !py-2 !text-sm"
                   >
                     →
@@ -596,25 +693,40 @@ function ProfessionalSections() {
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
                   Yaven handles the groundwork. When something needs a genuine
-                  human call (a decision, an approval, a judgement) it flags
-                  it. Everything else is covered. How much you hand over is
-                  entirely up to you.
+                  human call (a decision, an approval, a judgement) it flags it.
+                  Everything else is covered. How much you hand over is entirely
+                  up to you.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1">
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => setCurrentCard(i => (i - 1 + notificationCards.length) % notificationCards.length)}
+                    onClick={() =>
+                      setCurrentCard(
+                        i =>
+                          (i - 1 + notificationCards.length) %
+                          notificationCards.length
+                      )
+                    }
                     className="btn-press shrink-0 !px-3 !py-2 !text-sm"
                   >
                     ←
                   </button>
                   <div
                     className="flex-1 rounded-xl bg-white border border-zinc-200 px-5 py-7 flex flex-col gap-5 min-h-[13rem]"
-                    style={{ boxShadow: "0 8px 32px rgba(32,83,165,0.18), 0 2px 8px rgba(0,0,0,0.06)" }}
+                    style={{
+                      boxShadow:
+                        "0 8px 32px rgba(32,83,165,0.18), 0 2px 8px rgba(0,0,0,0.06)"
+                    }}
                   >
                     <div className="flex items-center gap-2">
-                      <Image src="/logo.png" alt="Yaven" width={20} height={20} className="w-5 h-5 rounded-md object-cover shrink-0" />
+                      <Image
+                        src="/logo.png"
+                        alt="Yaven"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5 rounded-md object-cover shrink-0"
+                      />
                       <span className="text-base tracking-tight text-[#2053A5] font-instrument-serif">
                         yaven
                       </span>
@@ -643,7 +755,9 @@ function ProfessionalSections() {
                     </div>
                   </div>
                   <button
-                    onClick={() => setCurrentCard(i => (i + 1) % notificationCards.length)}
+                    onClick={() =>
+                      setCurrentCard(i => (i + 1) % notificationCards.length)
+                    }
                     className="btn-press shrink-0 !px-3 !py-2 !text-sm"
                   >
                     →
@@ -846,7 +960,7 @@ function InlineWaitlistForm() {
         <button
           type="submit"
           disabled={loading}
-          className="btn-press shrink-0 disabled:opacity-50"
+          className="btn-press shrink-0 disabled:opacity-50 mb-2"
         >
           {loading ? "Saving…" : "Get early access"}
         </button>
@@ -936,18 +1050,16 @@ export default function Home() {
               className="text-base text-white/90 max-w-lg mt-6 leading-relaxed space-y-3"
               style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}
             >
-              <p>You constantly switch tabs and apps. You copy-paste from ChatGPT, rinse, repeat. You know there are better ways to work — you just haven&apos;t had time to figure out what they are.</p>
+              <p>
+                You constantly switch tabs and apps. You copy-paste from
+                ChatGPT, rinse, repeat. You know there are better ways to work —
+                you just haven&apos;t had time to figure out what they are.
+              </p>
               <p>That&apos;s what Yaven is for.</p>
             </div>
 
-            <div className="mt-8 flex items-center gap-3 animate-fade-rise-delay-2">
+            <div className="mt-8 flex items-center gap-3 animate-fade-rise-delay-2 mb-2">
               <WaitlistButton label="Get early access" className="btn-press" />
-              <a
-                href="#how-it-works"
-                className="text-sm text-white/80 hover:text-white transition-colors font-medium"
-              >
-                See how it works ↓
-              </a>
             </div>
 
             <p
