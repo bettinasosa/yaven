@@ -1053,8 +1053,8 @@ export default function Home() {
             >
               <p>
                 You constantly switch tabs and apps. You copy-paste from
-                ChatGPT, rinse, repeat. You know there are better ways to work —
-                you just haven&apos;t had time to figure out what they are.
+                ChatGPT, rinse, repeat. You know there are better ways to work.
+                You just haven&apos;t had time to figure out what they are.
               </p>
               <p>That&apos;s what Yaven is for.</p>
             </div>
