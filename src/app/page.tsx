@@ -100,24 +100,17 @@ function TestimonialCard({
         boxShadow: "0 4px 24px rgba(32,83,165,0.10), 0 1px 4px rgba(0,0,0,0.04)"
       }}
     >
-      <span className="text-3xl leading-none text-[#5B99C4] font-instrument-serif select-none">
+      <span className="text-3xl leading-none text-[#7696dc] font-instrument-serif select-none">
         &ldquo;
       </span>
       <p className="text-zinc-700 text-sm leading-relaxed flex-1 -mt-3">
         {quote}
       </p>
-      <div className="flex items-center gap-3 pt-2 border-t border-zinc-100">
-        <div className="w-7 h-7 rounded-full bg-[#EEF3FA] flex items-center justify-center shrink-0">
-          <span className="text-[10px] font-semibold text-[#2053A5]">
-            {name[0]}
-          </span>
-        </div>
-        <div>
-          <p className="text-xs font-semibold text-zinc-800">{name}</p>
-          <p className="text-[10px] tracking-[0.12em] uppercase text-zinc-400 mt-0.5">
-            {role}
-          </p>
-        </div>
+      <div className="pt-2 border-t border-zinc-100">
+        <p className="text-xs font-semibold text-zinc-800">{name}</p>
+        <p className="text-[10px] tracking-[0.12em] uppercase text-zinc-400 mt-0.5">
+          {role}
+        </p>
       </div>
     </div>
   )
@@ -157,7 +150,7 @@ function CTAMarqueeCard() {
             Want to see what your week looks like without the noise?
           </p>
           <form onSubmit={handleSubmit} className="flex items-center gap-2">
-            <div className="flex flex-1 items-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1 focus-within:border-zinc-400">
+            <div className="flex flex-1 min-w-0 items-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1 focus-within:border-zinc-400">
               <input
                 type="email"
                 required
@@ -170,7 +163,7 @@ function CTAMarqueeCard() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-press shrink-0 disabled:opacity-60 mb-4"
+              className="btn-press shrink-0 disabled:opacity-60 mb-2"
             >
               {loading ? "Saving…" : "Get early access"}
             </button>
@@ -747,10 +740,10 @@ function ProfessionalSections() {
                         ))}
                       </div>
                       <div className="flex items-center gap-2">
-                        <button className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-[#2053A5] text-white">
+                        <button className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-[#4a6bbf] text-white">
                           {notificationCards[currentCard].actions[0]}
                         </button>
-                        <button className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-[#EEF3FA] text-[#2053A5]">
+                        <button className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-[#7696dc] text-white">
                           {notificationCards[currentCard].actions[1]}
                         </button>
                       </div>
