@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useState, Fragment } from "react"
 import { ChevronDown } from "lucide-react"
 import { WaitlistButton } from "@/components/waitlist-button"
+import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { FadeIn } from "@/components/fade-in"
 import { HeroRefractionVideo } from "@/components/hero-refraction-video"
 
@@ -1052,8 +1053,8 @@ export default function Home() {
               <p>That&apos;s what Yaven is for.</p>
             </div>
 
-            <div className="mt-8 flex items-center gap-3 animate-fade-rise-delay-2 mb-2">
-              <WaitlistButton label="Get early access" className="btn-press" />
+            <div className="mt-8 max-w-[440px] animate-fade-rise-delay-2">
+              <BlueprintPanel />
             </div>
 
             <p
