@@ -24,6 +24,9 @@ export function HeroRefractionVideo({
     }
     apply()
     video.addEventListener("loadedmetadata", apply)
+    // iOS Safari won't always honour the autoPlay attribute — explicitly
+    // calling play() dismisses the native play-button overlay.
+    video.play().catch(() => {})
     return () => video.removeEventListener("loadedmetadata", apply)
   }, [playbackRate])
 
@@ -43,6 +46,8 @@ export function HeroRefractionVideo({
       loop
       muted
       playsInline
+      disablePictureInPicture
+      x-webkit-airplay="deny"
     >
       <source src={src} type="video/mp4" />
     </video>

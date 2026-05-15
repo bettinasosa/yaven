@@ -150,7 +150,10 @@ function CTAMarqueeCard() {
           <p className="text-xl leading-snug font-bold italic text-[#7696dc] font-instrument-serif">
             Want to see what your week looks like without the noise?
           </p>
-          <form onSubmit={handleSubmit} className="flex items-center gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-2 sm:flex-row sm:items-center"
+          >
             <div className="flex flex-1 min-w-0 items-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1 focus-within:border-zinc-400">
               <input
                 type="email"
@@ -164,7 +167,7 @@ function CTAMarqueeCard() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-press shrink-0 disabled:opacity-60 mb-2"
+              className="btn-press sm:shrink-0 disabled:opacity-60 mb-0 sm:mb-4"
             >
               {loading ? "Saving…" : "Get early access"}
             </button>
@@ -349,7 +352,7 @@ function ProfessionalSections() {
     },
     {
       msg: "Tailored your CV and cover letter for the four roles you saved this week. Each one adjusted to match the job description.",
-      actions: ["Review them", "Send one"]
+      actions: ["Review", "Send"]
     },
     {
       msg: "Pulled this month's expenses into a spreadsheet, categorised, and totalled by client. Ready to export or turn into an invoice.",
@@ -441,7 +444,7 @@ function ProfessionalSections() {
 
             {/* Row 2: Yaven logo + paragraph */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center order-2 sm:order-1">
                 <Image
                   src="/logo.png"
                   alt="Yaven"
@@ -450,7 +453,7 @@ function ProfessionalSections() {
                   className="w-24 h-24 sm:w-32 sm:h-32 object-contain rounded-2xl hover-shadow-blue"
                 />
               </div>
-              <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
+              <p className="text-base sm:text-lg leading-relaxed text-zinc-500 order-1 sm:order-2">
                 Yaven connects to all your devices and tools. It learns your
                 habits, follows how your week runs, and handles the tasks that
                 repeat. Follow-ups sent. Notes logged. Reports found. You decide
@@ -482,9 +485,9 @@ function ProfessionalSections() {
                   How Yaven works.
                 </h2>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
-                  Think of Yaven like a virtual pet. It lives on your computer,
-                  ready when you need it and asleep when you don&apos;t.
-                  Here&apos;s what that looks like in practice.
+                  Think of Yaven like a virtual intern. It lives on your
+                  computer, ready when you need it and asleep when you
+                  don&apos;t. Here&apos;s what that looks like in practice.
                 </p>
               </div>
               <div className="flex-1 flex justify-center">
@@ -783,6 +786,8 @@ function ProfessionalSections() {
                   loop
                   muted
                   playsInline
+                  disablePictureInPicture
+                  x-webkit-airplay="deny"
                   className="w-full h-auto block"
                   style={{ mixBlendMode: "multiply" }}
                 >
@@ -1043,7 +1048,10 @@ export default function Home() {
 
             <div
               className="text-base text-white max-w-lg mt-6 leading-relaxed space-y-3"
-              style={{ textShadow: "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)" }}
+              style={{
+                textShadow:
+                  "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)"
+              }}
             >
               <p>
                 You constantly switch tabs and apps. You copy and paste from
