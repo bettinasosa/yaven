@@ -43,6 +43,8 @@ export function HeroRefractionVideo({
       loop
       muted
       playsInline
+      disablePictureInPicture
+      x-webkit-airplay="deny"
     >
       <source src={src} type="video/mp4" />
     </video>
