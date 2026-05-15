@@ -150,7 +150,10 @@ function CTAMarqueeCard() {
           <p className="text-xl leading-snug font-bold italic text-[#7696dc] font-instrument-serif">
             Want to see what your week looks like without the noise?
           </p>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-2 sm:flex-row sm:items-center"
+          >
             <div className="flex flex-1 min-w-0 items-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1 focus-within:border-zinc-400">
               <input
                 type="email"
@@ -164,7 +167,7 @@ function CTAMarqueeCard() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-press sm:shrink-0 disabled:opacity-60"
+              className="btn-press sm:shrink-0 disabled:opacity-60 mb-0 sm:mb-4"
             >
               {loading ? "Saving…" : "Get early access"}
             </button>
