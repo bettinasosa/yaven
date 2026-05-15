@@ -1047,9 +1047,14 @@ export default function Home() {
             >
               <p>
                 You constantly switch tabs and apps. You copy and paste from
-                ChatGPT. You know there are better ways to work, you just
-                haven&apos;t had time to figure out what they are. That&apos;s
-                what Yaven is for.
+                ChatGPT. You know there are better ways to use AI at work, you
+                just haven&apos;t had time to figure out what they are.
+              </p>
+              <p
+                className="text-shine font-bold"
+                style={{ animationDuration: "4s", textShadow: "none" }}
+              >
+                That&apos;s where yaven comes in.
               </p>
             </div>
 
