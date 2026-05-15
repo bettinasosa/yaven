@@ -1038,7 +1038,7 @@ export default function Home() {
               className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl"
               style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
             >
-              Focus in a distracted world.
+              Focus on the tasks only you can do.
             </h1>
 
             <div
@@ -1046,23 +1046,16 @@ export default function Home() {
               style={{ textShadow: "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)" }}
             >
               <p>
-                You constantly switch tabs and apps. You copy-paste from
-                ChatGPT, rinse, repeat. You know there are better ways to work.
-                You just haven&apos;t had time to figure out what they are.
+                You constantly switch tabs and apps. You copy and paste from
+                ChatGPT. You know there are better ways to work, you just
+                haven&apos;t had time to figure out what they are. That&apos;s
+                what Yaven is for.
               </p>
-              <p>That&apos;s what Yaven is for.</p>
             </div>
 
             <div className="mt-8 max-w-[440px] animate-fade-rise-delay-2">
               <BlueprintPanel />
             </div>
-
-            <p
-              className="mt-6 text-sm animate-fade-rise-delay-2 text-shine font-bold"
-              style={{ animationDuration: "4s", textShadow: "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)" }}
-            >
-              явен (yaven) — Bulgarian for open, plain to see, obvious.
-            </p>
           </div>
         </div>
       </section>
