@@ -33,11 +33,11 @@ export const metadata: Metadata = {
   description:
     "The boring half of your day, handled. Yaven automates the admin, drafts the emails, and keeps you in the loop, so you can focus on the work only you can do.",
   openGraph: {
-    images: ["/yaven.png"]
+    images: ["/yaven-og.png"]
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/yaven.png"]
+    images: ["/yaven-og.png"]
   }
 }
 
