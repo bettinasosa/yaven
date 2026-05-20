@@ -7,6 +7,11 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.1 })
 
+    function onContentChanged() {
+      lenis.resize()
+    }
+    window.addEventListener("content-changed", onContentChanged)
+
     let frameId: number
     function raf(time: number) {
       lenis.raf(time)
@@ -16,6 +21,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     return () => {
       cancelAnimationFrame(frameId)
+      window.removeEventListener("content-changed", onContentChanged)
       lenis.destroy()
     }
   }, [])

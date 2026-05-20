@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useState, Fragment } from "react"
+import { useState, useRef, useEffect, Fragment } from "react"
 import { ChevronDown } from "lucide-react"
 import { WaitlistButton } from "@/components/waitlist-button"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
@@ -243,7 +243,7 @@ const faqs = [
 ]
 
 /* ── Gap interactive section ─────────────────────────────── */
-function GapSection() {
+function GapSection({ onReveal }: { onReveal: () => void }) {
   const [sliderValue, setSliderValue] = useState(50)
   const [guess, setGuess] = useState<number | null>(null)
   const [visible, setVisible] = useState(false)
@@ -252,6 +252,7 @@ function GapSection() {
 
   function handleGuess() {
     setGuess(sliderValue)
+    onReveal()
     requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)))
   }
 
@@ -275,7 +276,7 @@ function GapSection() {
           /* ── Pre-reveal: question + graph card with integrated slider ── */
           <FadeIn>
             <div className="flex flex-col items-center gap-6 text-center max-w-xl mx-auto">
-              <p className="text-lg sm:text-xl leading-relaxed text-zinc-500">
+              <p className="text-lg sm:text-xl leading-relaxed text-zinc-500 text-balance">
                 What percentage of people use AI to genuinely transform their work?
               </p>
 
@@ -387,10 +388,10 @@ function GapSection() {
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-sm text-zinc-500">
                         <span>Use AI for basic tasks</span>
-                        <AnimatedStat value={88} suffix="%" className="font-medium text-zinc-700" />
+                        <span className="font-medium text-zinc-700">88%</span>
                       </div>
                       <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
-                        <AnimatedBar value={88} className="h-full rounded-full bg-[#F5C0C1]" />
+                        <div className="h-full rounded-full bg-[#F5C0C1]" style={{ width: "88%" }} />
                       </div>
                     </div>
 
@@ -462,10 +463,20 @@ function GapSection() {
 }
 
 /* ── Professional content ────────────────────────────────── */
-function ProfessionalSections() {
+function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
+  const [sectionsRevealed, setSectionsRevealed] = useState(false)
   const [openFaqIndex, setOpenFaqIndex] = useState(0)
   const [currentCard, setCurrentCard] = useState(0)
   const [currentPlaybook, setCurrentPlaybook] = useState(0)
+
+  useEffect(() => {
+    if (sectionsRevealed) window.dispatchEvent(new Event("content-changed"))
+  }, [sectionsRevealed])
+
+  function handleReveal() {
+    setSectionsRevealed(true)
+    onReveal()
+  }
 
   const playbookCards = [
     {
@@ -603,7 +614,9 @@ function ProfessionalSections() {
 
   return (
     <>
-      <GapSection />
+      <GapSection onReveal={handleReveal} />
+
+      {sectionsRevealed && <>
 
       {/* ── How it works ───────────────────────────────────── */}
       <section
@@ -1057,6 +1070,9 @@ function ProfessionalSections() {
           </div>
         </div>
       </section>
+
+      </>}
+
     </>
   )
 }
@@ -1121,6 +1137,16 @@ function InlineWaitlistForm() {
 }
 
 export default function Home() {
+  const [revealed, setRevealed] = useState(false)
+
+  useEffect(() => {
+    if (revealed) window.dispatchEvent(new Event("content-changed"))
+  }, [revealed])
+
+  function handleReveal() {
+    setRevealed(true)
+  }
+
   return (
     <>
       {/* ── Hero ───────────────────────────────────────────── */}
@@ -1228,7 +1254,9 @@ export default function Home() {
       </section>
 
       {/* ── Content ────────────────────────────────────────── */}
-      <ProfessionalSections />
+      <ProfessionalSections onReveal={handleReveal} />
+
+      {revealed && <>
 
       {/* ── Footer CTA ─────────────────────────────────────── */}
       <section
@@ -1376,6 +1404,8 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      </>}
     </>
   )
 }
