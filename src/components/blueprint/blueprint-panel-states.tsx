@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { useEffect, useState } from "react"
+import { Magnetic } from "@/components/magnetic"
 
 type StateProps = {
   onClick: () => void
@@ -21,9 +22,11 @@ const loadingPuns = [
 export function IdleBlueprintState({ onClick }: StateProps) {
   return (
     <div className="space-y-4">
-      <button type="button" onClick={onClick} className="btn-press">
-        Show me
-      </button>
+      <Magnetic>
+        <button type="button" onClick={onClick} className="btn-press">
+          Show me
+        </button>
+      </Magnetic>
     </div>
   )
 }

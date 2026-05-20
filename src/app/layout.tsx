@@ -3,6 +3,7 @@ import { Fraunces } from "next/font/google"
 import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/next"
 import { PageLoader } from "@/components/page-loader"
+import { SmoothScroll } from "@/components/smooth-scroll"
 import "./globals.css"
 
 const instrumentSerif = Fraunces({
@@ -57,7 +58,7 @@ export default function RootLayout({
         style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}
       >
         <PageLoader />
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
         <Analytics />
       </body>
     </html>

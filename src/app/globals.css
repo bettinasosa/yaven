@@ -717,7 +717,7 @@
     transform: translateY(-2px);
   }
 
-  /* ── Press button (3D style) ─────────────────────────── */
+  /* ── Fill button ─────────────────────────────────────── */
   .btn-press,
   .btn-press-dark {
     display: inline-block;
@@ -728,58 +728,42 @@
     font-family: var(--font-dm-sans), sans-serif;
     cursor: pointer;
     border: none;
-    transform: translateY(0);
-    transition:
-      transform 0.08s ease,
-      box-shadow 0.08s ease,
-      background-color 0.08s ease;
     white-space: nowrap;
+    transition: background-position 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.1s ease;
   }
 
+  /* Resting: dark burgundy. Hover: pink fills from the bottom. */
   .btn-press {
-    background-color: #f5c0c1;
-    color: #18181b;
-    box-shadow:
-      inset 0 1px 0 #fde8e8,
-      0 8px 0 #5c1a1a;
+    background: linear-gradient(to top, #f5c0c1 50%, #5c1a1a 50%);
+    background-size: 100% 210%;
+    background-position: top;
+    color: #fff;
   }
 
   .btn-press:hover {
-    transform: translateY(4px);
-    box-shadow:
-      inset 0 1px 0 #fde8e8,
-      0 4px 0 #5c1a1a;
+    background-position: bottom;
   }
 
   .btn-press:active {
-    transform: translateY(8px);
-    background-color: #eeaaab;
-    box-shadow:
-      inset 0 1px 0 #fde8e8,
-      inset 0 -2px 0 #5c1a1a;
+    background-position: bottom;
+    transform: scale(0.97);
   }
 
   .btn-press-dark {
-    background-color: #18181b;
+    background: linear-gradient(to top, #3f3f46 50%, #18181b 50%);
+    background-size: 100% 210%;
+    background-position: top;
     color: #fff;
-    box-shadow:
-      inset 0 1px 0 #3f3f46,
-      0 8px 0 #000;
   }
 
   .btn-press-dark:hover {
-    transform: translateY(4px);
-    box-shadow:
-      inset 0 1px 0 #3f3f46,
-      0 4px 0 #000;
+    background-position: bottom;
   }
 
   .btn-press-dark:active {
-    transform: translateY(8px);
-    background-color: #09090b;
-    box-shadow:
-      inset 0 1px 0 #3f3f46,
-      inset 0 -2px 0 #000;
+    background-position: bottom;
+    transform: scale(0.97);
   }
 
   /* ── Slow bounce ─────────────────────────────────────── */

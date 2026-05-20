@@ -7,6 +7,12 @@ import { WaitlistButton } from "@/components/waitlist-button"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { FadeIn } from "@/components/fade-in"
 import { HeroRefractionVideo } from "@/components/hero-refraction-video"
+import { HeroScramble } from "@/components/hero-scramble"
+import { ScrollFadeOut } from "@/components/scroll-fade-out"
+import { WordReveal } from "@/components/word-reveal"
+import { AnimatedStat, AnimatedBar } from "@/components/animated-counter"
+import { Magnetic } from "@/components/magnetic"
+import { ParallaxCloud } from "@/components/parallax-cloud"
 
 /* ── Goal card mockup (professional) ────────────────────── */
 /* ── Social proof data ───────────────────────────────────── */
@@ -380,19 +386,23 @@ function ProfessionalSections() {
     <>
       {/* ── Intro: master of many domains ──────────────────── */}
       <section className="relative overflow-hidden bg-white px-6 pt-20 sm:pt-36 pb-28 sm:pb-52">
-        <Image
-          src="/cloud.png"
-          alt=""
-          width={520}
-          height={280}
-          className="pointer-events-none select-none absolute -right-32 top-1/2 -translate-y-1/2 w-[420px] opacity-40 sm:w-[520px]"
-          style={{ height: "auto" }}
-          aria-hidden="true"
-        />
+        <ParallaxCloud className="pointer-events-none select-none absolute -right-32 top-1/2 -translate-y-1/2 w-[420px] opacity-40 sm:w-[520px]">
+          <Image
+            src="/cloud.png"
+            alt=""
+            width={520}
+            height={280}
+            style={{ height: "auto" }}
+            aria-hidden="true"
+          />
+        </ParallaxCloud>
         <FadeIn className="max-w-6xl mx-auto">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-12">
+          <WordReveal
+            as="h2"
+            className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-12"
+          >
             A gap is opening up.
-          </h2>
+          </WordReveal>
           <div className="flex flex-col gap-12 sm:gap-16">
             {/* Row 1: paragraph + chart */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
@@ -419,26 +429,20 @@ function ProfessionalSections() {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-sm text-zinc-500">
                       <span>Use AI for basic tasks</span>
-                      <span className="font-medium text-zinc-700">88%</span>
+                      <AnimatedStat value={88} suffix="%" className="font-medium text-zinc-700" />
                     </div>
                     <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-[#F5C0C1]"
-                        style={{ width: "88%" }}
-                      />
+                      <AnimatedBar value={88} className="h-full rounded-full bg-[#F5C0C1]" />
                     </div>
                   </div>
                   {/* Bar 2 */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-sm text-zinc-500">
                       <span>Use AI to transform their work</span>
-                      <span className="font-medium text-zinc-700">5%</span>
+                      <AnimatedStat value={5} suffix="%" className="font-medium text-zinc-700" />
                     </div>
                     <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: "5%", background: "#5B99C4" }}
-                      />
+                      <AnimatedBar value={5} className="h-full rounded-full" style={{ background: "#5B99C4" }} />
                     </div>
                   </div>
                 </div>
@@ -486,12 +490,13 @@ function ProfessionalSections() {
           <FadeIn>
             <div className="flex flex-col sm:flex-row sm:items-end gap-8 sm:gap-16 mb-10 sm:mb-20">
               <div className="flex-1">
-                <h2
+                <WordReveal
+                  as="h2"
                   id="how-it-works"
                   className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-4"
                 >
                   How Yaven works.
-                </h2>
+                </WordReveal>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
                   Yaven lives on your computer. It works quietly in the
                   background, notices what repeats, and gets ahead of it.
@@ -818,20 +823,24 @@ function ProfessionalSections() {
             "linear-gradient(to bottom, white 0%, #EEF3FA 12%, #EEF3FA 88%, white 100%)"
         }}
       >
-        <Image
-          src="/cloud.png"
-          alt=""
-          width={480}
-          height={260}
-          className="pointer-events-none select-none absolute -right-28 top-16 w-[340px] opacity-30 sm:w-[480px]"
-          style={{ height: "auto" }}
-          aria-hidden="true"
-        />
+        <ParallaxCloud className="pointer-events-none select-none absolute -right-28 top-16 w-[340px] opacity-30 sm:w-[480px]" speed={0.1}>
+          <Image
+            src="/cloud.png"
+            alt=""
+            width={480}
+            height={260}
+            style={{ height: "auto" }}
+            aria-hidden="true"
+          />
+        </ParallaxCloud>
         <div className="max-w-6xl mx-auto">
           <FadeIn>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-4">
+            <WordReveal
+              as="h2"
+              className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-4"
+            >
               Built with people like you.
-            </h2>
+            </WordReveal>
             <p className="text-base sm:text-lg text-zinc-500 mb-8 sm:mb-16 max-w-xl">
               Before we wrote a line of code, we sat down with the people
               who&apos;d use it. Here&apos;s what we heard.
@@ -872,9 +881,12 @@ function ProfessionalSections() {
       <section className="bg-white px-6 pt-0 pb-20 sm:pb-40">
         <div className="max-w-3xl mx-auto">
           <FadeIn>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-8 sm:mb-16">
+            <WordReveal
+              as="h2"
+              className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-8 sm:mb-16"
+            >
               Frequently asked questions.
-            </h2>
+            </WordReveal>
           </FadeIn>
           <div>
             {faqs.map((faq, i) => (
@@ -1038,48 +1050,52 @@ export default function Home() {
           <span className="text-4xl tracking-tight text-white font-instrument-serif">
             yaven
           </span>
-          <a
-            href="https://calendly.com/nickprice2000/yaven-support"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-press"
-          >
-            Book a call
-          </a>
+          <Magnetic>
+            <a
+              href="https://calendly.com/nickprice2000/yaven-support"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-press"
+            >
+              Book a call
+            </a>
+          </Magnetic>
         </div>
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-7xl items-start px-6 pb-16 pt-40 sm:px-8 lg:pb-20 lg:pt-56">
           <div className="max-w-3xl">
-            <h1
-              className="text-5xl leading-[0.98] tracking-normal text-white font-instrument-serif animate-fade-rise sm:text-6xl xl:text-7xl"
+            <HeroScramble
+              className="text-5xl leading-[1.05] tracking-normal text-white font-instrument-serif sm:text-6xl xl:text-7xl"
               style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
             >
               Focus on the tasks only you can do.
-            </h1>
+            </HeroScramble>
 
-            <div
-              className="text-base text-white max-w-lg mt-6 leading-relaxed space-y-3"
-              style={{
-                textShadow:
-                  "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)"
-              }}
-            >
-              <p>
-                You constantly switch tabs and apps. You copy and paste from
-                ChatGPT. You know there are better ways to use AI at work, you
-                just haven&apos;t had time to figure out what they are.
-              </p>
-              <p
-                className="text-shine font-bold"
-                style={{ animationDuration: "4s", textShadow: "none" }}
+            <ScrollFadeOut>
+              <div
+                className="text-base text-white max-w-lg mt-6 leading-relaxed space-y-3"
+                style={{
+                  textShadow:
+                    "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)"
+                }}
               >
-                That&apos;s where yaven comes in.
-              </p>
-            </div>
+                <p>
+                  You constantly switch tabs and apps. You copy and paste from
+                  ChatGPT. You know there are better ways to use AI at work, you
+                  just haven&apos;t had time to figure out what they are.
+                </p>
+                <p
+                  className="text-shine font-bold"
+                  style={{ animationDuration: "4s", textShadow: "none" }}
+                >
+                  That&apos;s where yaven comes in.
+                </p>
+              </div>
 
-            <div className="mt-8 max-w-[440px] animate-fade-rise-delay-2">
-              <BlueprintPanel />
-            </div>
+              <div className="mt-8 max-w-[440px]">
+                <BlueprintPanel />
+              </div>
+            </ScrollFadeOut>
           </div>
         </div>
       </section>
@@ -1095,23 +1111,26 @@ export default function Home() {
             "linear-gradient(to bottom, white 0%, #EEF3FA 20%, #EEF3FA 80%, white 100%)"
         }}
       >
-        <Image
-          src="/cloud.png"
-          alt=""
-          width={440}
-          height={240}
-          className="pointer-events-none select-none absolute -right-24 bottom-0 w-[300px] opacity-30 sm:w-[440px]"
-          style={{ height: "auto" }}
-          aria-hidden="true"
-        />
-        <Image
-          src="/cloud.png"
-          alt=""
-          width={360}
-          height={200}
-          className="pointer-events-none select-none absolute -left-28 top-8 w-[260px] opacity-25 sm:w-[360px]"
-          aria-hidden="true"
-        />
+        <ParallaxCloud className="pointer-events-none select-none absolute -right-24 bottom-0 w-[300px] opacity-30 sm:w-[440px]" speed={0.08}>
+          <Image
+            src="/cloud.png"
+            alt=""
+            width={440}
+            height={240}
+            style={{ height: "auto" }}
+            aria-hidden="true"
+          />
+        </ParallaxCloud>
+        <ParallaxCloud className="pointer-events-none select-none absolute -left-28 top-8 w-[260px] opacity-25 sm:w-[360px]" speed={-0.08}>
+          <Image
+            src="/cloud.png"
+            alt=""
+            width={360}
+            height={200}
+            style={{ height: "auto" }}
+            aria-hidden="true"
+          />
+        </ParallaxCloud>
         <FadeIn className="max-w-2xl mx-auto space-y-8">
           <div className="flex justify-center">
             <Image
