@@ -242,6 +242,225 @@ const faqs = [
   }
 ]
 
+/* ── Gap interactive section ─────────────────────────────── */
+function GapSection() {
+  const [sliderValue, setSliderValue] = useState(50)
+  const [guess, setGuess] = useState<number | null>(null)
+  const [visible, setVisible] = useState(false)
+  const revealed = guess !== null
+  const gotIt = guess !== null && guess <= 7
+
+  function handleGuess() {
+    setGuess(sliderValue)
+    requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)))
+  }
+
+  return (
+    <section className="relative overflow-hidden bg-white px-6 pt-20 sm:pt-36 pb-28 sm:pb-52">
+      <ParallaxCloud className="pointer-events-none select-none absolute -right-32 top-1/2 -translate-y-1/2 w-[420px] opacity-40 sm:w-[520px]">
+        <Image src="/cloud.png" alt="" width={520} height={280} style={{ height: "auto" }} aria-hidden="true" />
+      </ParallaxCloud>
+
+      <div className="max-w-6xl mx-auto">
+        <FadeIn>
+          <WordReveal
+            as="h2"
+            className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-12"
+          >
+            A gap is opening up.
+          </WordReveal>
+        </FadeIn>
+
+        {!revealed ? (
+          /* ── Pre-reveal: question + graph card with integrated slider ── */
+          <FadeIn>
+            <div className="flex flex-col items-center gap-6 text-center max-w-xl mx-auto">
+              <p className="text-lg sm:text-xl leading-relaxed text-zinc-500">
+                What percentage of people use AI to genuinely transform their work?
+              </p>
+
+              <div
+                className="w-full rounded-2xl bg-[#5B99C4]/10 px-6 py-6 text-left"
+                style={{ boxShadow: "0 2px 12px rgba(32,83,165,0.08)" }}
+              >
+                <div className="space-y-4">
+                  {/* 88% bar */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-sm text-zinc-500">
+                      <span>Use AI for basic tasks</span>
+                      <AnimatedStat value={88} suffix="%" className="font-medium text-zinc-700" />
+                    </div>
+                    <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
+                      <AnimatedBar value={88} className="h-full rounded-full bg-[#F5C0C1]" />
+                    </div>
+                  </div>
+
+                  {/* Slider row — styled as a bar */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-sm text-zinc-500">
+                      <span>Use AI to transform their work</span>
+                      <span className="font-medium text-zinc-700 tabular-nums">{sliderValue}%</span>
+                    </div>
+                    {/* Expanded hit area: py-3 makes the clickable zone 34px tall */}
+                    <div className="relative py-3 -my-3 cursor-pointer">
+                      {/* Visual bar track */}
+                      <div className="h-2.5 rounded-full bg-white overflow-visible relative">
+                        {/* Fill */}
+                        <div
+                          className="h-full rounded-full bg-[#5B99C4]"
+                          style={{ width: `${sliderValue}%` }}
+                        />
+                      </div>
+                      {/* Thumb indicator */}
+                      <div
+                        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-[#5B99C4] shadow-sm pointer-events-none"
+                        style={{ left: `${sliderValue}%` }}
+                      />
+                      {/* Invisible full-area range input on top */}
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={sliderValue}
+                        onChange={e => setSliderValue(Number(e.target.value))}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        style={{ margin: 0 }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-center">
+                  <Magnetic>
+                    <button onClick={handleGuess} className="btn-press">
+                      Guess
+                    </button>
+                  </Magnetic>
+                </div>
+
+                <p className="mt-4 text-xs text-zinc-400 leading-snug">
+                  Source: EY Work Reimagined Survey 2025,
+                  <br />
+                  15,000 employees across 29 countries
+                </p>
+              </div>
+            </div>
+          </FadeIn>
+        ) : (
+          /* ── Post-reveal: text left, chart slides right ── */
+          <div className="flex flex-col gap-12 sm:gap-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
+              {/* Text fades in */}
+              <div
+                className="space-y-5 text-base sm:text-lg leading-relaxed text-zinc-500"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transition: "opacity 0.65s ease 0.35s",
+                }}
+              >
+                <p>
+                  Most people use AI like a faster Google. Type a question, get
+                  an answer, repeat tomorrow.
+                </p>
+                <p>
+                  The people pulling ahead have worked out which half of their
+                  job repeats, and handed it off. They come back to decisions,
+                  not groundwork. The 5% of power users aren&apos;t necessarily
+                  smarter; until now, the tools have just been built for them.
+                </p>
+                <p>Yaven is built for the 83% who aren&apos;t there yet.</p>
+              </div>
+
+              {/* Chart slides in from center */}
+              <div
+                style={{
+                  transform: visible ? "translateX(0)" : "translateX(-30%)",
+                  opacity: visible ? 1 : 0,
+                  transition: "transform 1s cubic-bezier(0.16,1,0.3,1), opacity 0.55s ease",
+                }}
+              >
+                <div
+                  className="rounded-2xl bg-[#5B99C4]/10 px-6 py-6"
+                  style={{ boxShadow: "0 2px 12px rgba(32,83,165,0.08)" }}
+                >
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-sm text-zinc-500">
+                        <span>Use AI for basic tasks</span>
+                        <AnimatedStat value={88} suffix="%" className="font-medium text-zinc-700" />
+                      </div>
+                      <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
+                        <AnimatedBar value={88} className="h-full rounded-full bg-[#F5C0C1]" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-sm text-zinc-500">
+                        <span>Use AI to transform their work</span>
+                        <AnimatedStat value={5} suffix="%" className="font-medium text-zinc-700" />
+                      </div>
+                      {/* Bar + guess marker */}
+                      <div className="relative">
+                        <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
+                          <AnimatedBar value={5} className="h-full rounded-full" style={{ background: "#5B99C4" }} />
+                        </div>
+                        {guess !== null && (
+                          <div
+                            className="absolute top-0 h-2.5 flex items-center pointer-events-none"
+                            style={{ left: `${Math.min(guess, 96)}%` }}
+                          >
+                            <div className="w-0.5 h-5 bg-zinc-400 rounded-full" />
+                            <span className="absolute top-5 left-1/2 -translate-x-1/2 text-[10px] text-zinc-400 whitespace-nowrap">
+                              your guess
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="mt-8 text-xs text-zinc-400 leading-snug">
+                    Source: EY Work Reimagined Survey 2025,
+                    <br />
+                    15,000 employees across 29 countries
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2: Yaven logo + text */}
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center"
+              style={{
+                opacity: visible ? 1 : 0,
+                transition: "opacity 0.65s ease 0.7s",
+              }}
+            >
+              <div className="flex items-center justify-center order-2 sm:order-1">
+                <Image
+                  src="/logo.png"
+                  alt="Yaven"
+                  width={120}
+                  height={120}
+                  className="w-24 h-24 sm:w-32 sm:h-32 object-contain rounded-2xl hover-shadow-blue"
+                />
+              </div>
+              <p className="text-base sm:text-lg leading-relaxed text-zinc-500 order-1 sm:order-2">
+                Yaven connects to all your tools. It learns from every decision
+                you make and gets better at predicting what you want.
+                Follow-ups sent. Notes logged. Reports found. You decide what
+                you want to handle, and what you want to hand over. When
+                something needs a human decision, it brings it to your
+                attention. Everything else is covered.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
 /* ── Professional content ────────────────────────────────── */
 function ProfessionalSections() {
   const [openFaqIndex, setOpenFaqIndex] = useState(0)
@@ -384,99 +603,7 @@ function ProfessionalSections() {
 
   return (
     <>
-      {/* ── Intro: master of many domains ──────────────────── */}
-      <section className="relative overflow-hidden bg-white px-6 pt-20 sm:pt-36 pb-28 sm:pb-52">
-        <ParallaxCloud className="pointer-events-none select-none absolute -right-32 top-1/2 -translate-y-1/2 w-[420px] opacity-40 sm:w-[520px]">
-          <Image
-            src="/cloud.png"
-            alt=""
-            width={520}
-            height={280}
-            style={{ height: "auto" }}
-            aria-hidden="true"
-          />
-        </ParallaxCloud>
-        <FadeIn className="max-w-6xl mx-auto">
-          <WordReveal
-            as="h2"
-            className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-12"
-          >
-            A gap is opening up.
-          </WordReveal>
-          <div className="flex flex-col gap-12 sm:gap-16">
-            {/* Row 1: paragraph + chart */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
-              <div className="space-y-5 text-base sm:text-lg leading-relaxed text-zinc-500">
-                <p>
-                  Most people use AI like a faster Google. Type a question, get
-                  an answer, repeat tomorrow.
-                </p>
-                <p>
-                  The people pulling ahead have worked out which half of their
-                  job repeats, and handed it off. They come back to decisions,
-                  not groundwork. The 5% of power users aren&apos;t necessarily
-                  smarter; until now, the tools have just been built for them.
-                </p>
-                <p>Yaven is built for the 83% who aren&apos;t there yet.</p>
-              </div>
-              {/* EY Survey Chart */}
-              <div
-                className="rounded-2xl bg-[#5B99C4]/10 px-6 py-6"
-                style={{ boxShadow: "0 2px 12px rgba(32,83,165,0.08)" }}
-              >
-                <div className="space-y-4">
-                  {/* Bar 1 */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-sm text-zinc-500">
-                      <span>Use AI for basic tasks</span>
-                      <AnimatedStat value={88} suffix="%" className="font-medium text-zinc-700" />
-                    </div>
-                    <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
-                      <AnimatedBar value={88} className="h-full rounded-full bg-[#F5C0C1]" />
-                    </div>
-                  </div>
-                  {/* Bar 2 */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-sm text-zinc-500">
-                      <span>Use AI to transform their work</span>
-                      <AnimatedStat value={5} suffix="%" className="font-medium text-zinc-700" />
-                    </div>
-                    <div className="h-2.5 w-full rounded-full bg-white overflow-hidden">
-                      <AnimatedBar value={5} className="h-full rounded-full" style={{ background: "#5B99C4" }} />
-                    </div>
-                  </div>
-                </div>
-                <p className="mt-5 text-xs text-zinc-400 leading-snug">
-                  Source: EY Work Reimagined Survey 2025,
-                  <br />
-                  15,000 employees across 29 countries
-                </p>
-              </div>
-            </div>
-
-            {/* Row 2: Yaven logo + paragraph */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
-              <div className="flex items-center justify-center order-2 sm:order-1">
-                <Image
-                  src="/logo.png"
-                  alt="Yaven"
-                  width={120}
-                  height={120}
-                  className="w-24 h-24 sm:w-32 sm:h-32 object-contain rounded-2xl hover-shadow-blue"
-                />
-              </div>
-              <p className="text-base sm:text-lg leading-relaxed text-zinc-500 order-1 sm:order-2">
-                Yaven connects to all your tools. It learns from every decision
-                you make and gets better at predicting what you want.
-                Follow-ups sent. Notes logged. Reports found. You decide what
-                you want to handle, and what you want to hand over. When
-                something needs a human decision, it brings it to your
-                attention. Everything else is covered.
-              </p>
-            </div>
-          </div>
-        </FadeIn>
-      </section>
+      <GapSection />
 
       {/* ── How it works ───────────────────────────────────── */}
       <section
@@ -1001,7 +1128,7 @@ export default function Home() {
         className="relative min-h-screen overflow-hidden"
         style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}
       >
-        <HeroRefractionVideo src="/hero-bg.mp4" playbackRate={0.45} flipX />
+        <HeroRefractionVideo src="/hero-bg.mp4" staticSrc="/clouds-hero.png" playbackRate={0.45} flipX />
 
         {/* Text area overlay — improves white text legibility over clouds */}
         <div

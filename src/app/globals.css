@@ -737,16 +737,16 @@
   .btn-press {
     background: linear-gradient(to top, #f5c0c1 50%, #5c1a1a 50%);
     background-size: 100% 210%;
-    background-position: top;
+    background-position: 0 0%;
     color: #fff;
   }
 
   .btn-press:hover {
-    background-position: bottom;
+    background-position: 0 100%;
   }
 
   .btn-press:active {
-    background-position: bottom;
+    background-position: 0 100%;
     transform: scale(0.97);
   }
 

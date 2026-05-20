@@ -1,21 +1,35 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import NextImage from "next/image"
+import { useEffect, useRef, useState } from "react"
 
 type Props = {
   src: string
+  staticSrc: string
   playbackRate?: number
   flipX?: boolean
 }
 
 export function HeroRefractionVideo({
   src,
+  staticSrc,
   playbackRate = 0.75,
   flipX = false
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  // Start false — video element never SSR'd, avoids iOS Safari play button
+  const [isDesktop, setIsDesktop] = useState(false)
 
   useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)")
+    setIsDesktop(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches)
+    mq.addEventListener("change", handler)
+    return () => mq.removeEventListener("change", handler)
+  }, [])
+
+  useEffect(() => {
+    if (!isDesktop) return
     const video = videoRef.current
     if (!video) return
     const apply = () => {
@@ -24,32 +38,48 @@ export function HeroRefractionVideo({
     }
     apply()
     video.addEventListener("loadedmetadata", apply)
-    // iOS Safari won't always honour the autoPlay attribute — explicitly
-    // calling play() dismisses the native play-button overlay.
     video.play().catch(() => {})
     return () => video.removeEventListener("loadedmetadata", apply)
-  }, [playbackRate])
+  }, [isDesktop, playbackRate])
+
+  const sharedStyle = {
+    objectPosition: "center 100%",
+    transform: flipX ? "scaleX(-1) translateY(20%)" : "translateY(20%)",
+    maskImage:
+      "linear-gradient(to bottom, black 0%, black 65%, transparent 90%)",
+    WebkitMaskImage:
+      "linear-gradient(to bottom, black 0%, black 65%, transparent 90%)"
+  }
 
   return (
-    <video
-      ref={videoRef}
-      className="absolute inset-0 w-full h-full object-cover z-0"
-      style={{
-        objectPosition: "center 100%",
-        transform: flipX ? "scaleX(-1) translateY(20%)" : "translateY(20%)",
-        maskImage:
-          "linear-gradient(to bottom, black 0%, black 65%, transparent 90%)",
-        WebkitMaskImage:
-          "linear-gradient(to bottom, black 0%, black 65%, transparent 90%)"
-      }}
-      autoPlay
-      loop
-      muted
-      playsInline
-      disablePictureInPicture
-      x-webkit-airplay="deny"
-    >
-      <source src={src} type="video/mp4" />
-    </video>
+    <>
+      {/* Always rendered on mobile — static image, no video element in DOM */}
+      {!isDesktop && (
+        <NextImage
+          src={staticSrc}
+          alt=""
+          aria-hidden
+          fill
+          priority
+          className="object-cover z-0"
+          style={sharedStyle}
+        />
+      )}
+      {/* Video only mounted in DOM on desktop — eliminates iOS Safari play button */}
+      {isDesktop && (
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          style={sharedStyle}
+          autoPlay
+          loop
+          muted
+          playsInline
+          disablePictureInPicture
+        >
+          <source src={src} type="video/mp4" />
+        </video>
+      )}
+    </>
   )
 }
