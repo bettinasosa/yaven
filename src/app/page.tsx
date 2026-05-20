@@ -31,13 +31,13 @@ const testimonials = [
   },
   {
     quote:
-      "I use AI every day — emails, recipes, trip planning. But apparently it can do a lot more than that. I just haven't worked out what.",
+      "I use AI every day: emails, recipes, trip planning. But apparently it can do a lot more than that. I just haven't worked out what.",
     name: "Lauren",
     role: "Administrator, Church Organisation"
   },
   {
     quote:
-      "I build automations at work. Somehow I've never set one up for myself. I know I should — I just don't know where to begin.",
+      "I build automations at work. Somehow I've never set one up for myself. I know I should. I just don't know where to begin.",
     name: "Marcus",
     role: "Analyst, Search Consultancy"
   },
@@ -186,7 +186,7 @@ const faqs = [
   },
   {
     q: "How is this different from just using ChatGPT?",
-    a: "ChatGPT is a conversation. You ask, it answers, and then it forgets. Every session starts from scratch, and nothing happens unless you prompt it. Yaven is different at the level of how it works. It connects to your actual tools, remembers what you're working on between sessions, and runs tasks in the background without being asked. You describe a workflow once. Yaven maps it, automates the repeatable parts, and flags the bits that need you. The output isn't a text response you then have to act on. It's the work, done."
+    a: "Unlike ChatGPT, Yaven acts without being asked. ChatGPT is a conversation. You ask, it answers, it forgets, and nothing happens unless you prompt it. Yaven connects to your actual tools, remembers what you're working on, and runs tasks in the background on its own. Describe a workflow once and Yaven maps it, automates the repeatable parts, and flags what needs you. The output isn't a text response you then have to act on. It's the work, done."
   },
   {
     q: "Can I customise Yaven?",
@@ -365,6 +365,14 @@ function ProfessionalSections() {
     {
       msg: "Research summary done. Pulled the key points from the eight sources you flagged, formatted into a one-pager.",
       actions: ["Open it", "Add more"]
+    },
+    {
+      msg: "You've spent about 40 minutes on LinkedIn this week finding leads manually. Want me to handle that going forward?",
+      actions: ["Set it up", "Not yet"]
+    },
+    {
+      msg: "Looks like you're writing a proposal similar to the one from March. Want me to pull the template and update the numbers?",
+      actions: ["Yes please", "I've got it"]
     }
   ]
 
@@ -454,12 +462,12 @@ function ProfessionalSections() {
                 />
               </div>
               <p className="text-base sm:text-lg leading-relaxed text-zinc-500 order-1 sm:order-2">
-                Yaven connects to all your devices and tools. It learns your
-                habits, follows how your week runs, and handles the tasks that
-                repeat. Follow-ups sent. Notes logged. Reports found. You decide
-                what you want to handle, and what you want to hand over. When
+                Yaven connects to all your tools. It learns from every decision
+                you make and gets better at predicting what you want.
+                Follow-ups sent. Notes logged. Reports found. You decide what
+                you want to handle, and what you want to hand over. When
                 something needs a human decision, it brings it to your
-                attention. Everything else is covered for you.
+                attention. Everything else is covered.
               </p>
             </div>
           </div>
@@ -485,9 +493,9 @@ function ProfessionalSections() {
                   How Yaven works.
                 </h2>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
-                  Think of Yaven like a virtual intern. It lives on your
-                  computer, ready when you need it and asleep when you
-                  don&apos;t. Here&apos;s what that looks like in practice.
+                  Yaven lives on your computer. It works quietly in the
+                  background, notices what repeats, and gets ahead of it.
+                  Here&apos;s what that looks like in practice.
                 </p>
               </div>
               <div className="flex-1 flex justify-center">
@@ -509,61 +517,64 @@ function ProfessionalSections() {
                   01
                 </span>
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                  Tell Yaven how your week runs.
+                  Connect once. Yaven figures out the rest.
                 </h3>
-                <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
-                  Your tools, your goals, what repeats. Chasing invoice
-                  payments? Sending LinkedIn outreach? Tailoring your CV for
-                  every application? Describe it in plain language. You
-                  don&apos;t need to know how to automate anything. That part is
-                  on Yaven.
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-500 max-w-sm pt-1">
+                  Connect your tools and Yaven gets to work. It reads your
+                  email patterns and calendar, spots what repeats, and arrives
+                  with suggestions. You don&apos;t describe your workflow. Yaven
+                  finds it.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1 relative z-10">
                 <div className="rounded-2xl bg-white border border-zinc-200 shadow-sm overflow-hidden text-sm">
                   <div className="px-5 py-3 border-b border-zinc-100">
                     <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400">
-                      Getting to know your work
+                      Reading your patterns
                     </p>
                   </div>
                   <div className="px-5 py-4 space-y-4">
                     <div>
                       <p className="text-xs text-zinc-400 mb-2">
-                        Tools you use daily
+                        Connected
                       </p>
                       <div className="flex gap-2 flex-wrap">
                         {[
-                          "/logos/notion.png",
                           "/logos/gmail.png",
-                          "/logos/hubspot.png",
-                          "/logos/monday.png",
+                          "/logos/google.png",
+                          "/logos/notion.png",
                           "/logos/linkedin.png",
-                          "/logos/asana.png"
+                          "/logos/asana.png",
+                          "/logos/salesforce.png"
                         ].map((l, i) => (
-                          <Image
+                          <span
                             key={i}
-                            src={l}
-                            alt=""
-                            width={24}
-                            height={24}
-                            className="w-6 h-6 rounded object-contain opacity-40"
-                          />
+                            className="flex items-center justify-center w-7 h-7 rounded-md bg-white border border-zinc-100"
+                          >
+                            <Image
+                              src={l}
+                              alt=""
+                              width={18}
+                              height={18}
+                              className="w-[18px] h-[18px] object-contain"
+                            />
+                          </span>
                         ))}
                       </div>
                     </div>
                     <div>
                       <p className="text-xs text-zinc-400 mb-1">
-                        What you&apos;re focused on
+                        What Yaven found
                       </p>
                       <p className="text-xs text-zinc-700 leading-relaxed">
-                        Cold outreach to 10 new leads a week · Tailor CV and
-                        cover letter for new job listings · Follow up on unpaid
-                        invoices
+                        You send similar follow-up emails most Monday mornings
+                        · Your weekly prep involves a lot of repeated groundwork
+                        · LinkedIn activity spikes every Tuesday
                       </p>
                     </div>
                     <div className="bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
                       <p className="text-xs text-zinc-500 mb-2">
-                        Yaven is mapping your recurring workflows...
+                        Yaven is building your first flows...
                       </p>
                       <div className="h-1.5 bg-zinc-200 rounded-full overflow-hidden">
                         <div className="h-full bg-zinc-800 rounded-full w-[65%]" />
@@ -590,12 +601,12 @@ function ProfessionalSections() {
                   02
                 </span>
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                  It builds the playbook.
+                  It builds the flow.
                 </h3>
-                <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-500 max-w-sm pt-1">
                   Yaven maps the workflow, strings together the right agents,
-                  and sets it running. No configuration, no code. One playbook
-                  per recurring task. Share yours, tweak it, or start from one
+                  and sets it running. No configuration, no code. One flow per
+                  recurring task. Share yours, tweak it, or start from one
                   someone else has already built.
                 </p>
               </FadeIn>
@@ -629,7 +640,7 @@ function ProfessionalSections() {
                       />
                       <div>
                         <p className="text-[10px] tracking-[0.15em] uppercase text-zinc-400 mb-0.5">
-                          Playbook created
+                          Flow created
                         </p>
                         <p className="text-zinc-800 font-medium leading-tight">
                           {playbookCards[currentPlaybook].title}
@@ -690,7 +701,7 @@ function ProfessionalSections() {
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                   It works. You decide.
                 </h3>
-                <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-500 max-w-sm pt-1">
                   Yaven handles the groundwork. When something needs a genuine
                   human call (a decision, an approval, a judgement) it flags it.
                   Everything else is covered. How much you hand over is entirely
@@ -774,9 +785,9 @@ function ProfessionalSections() {
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
                   Check in. Or don&apos;t.
                 </h3>
-                <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
+                <p className="text-base sm:text-lg leading-relaxed text-zinc-500 max-w-sm pt-1">
                   Open Yaven to see what&apos;s running, check history, update a
-                  playbook, or manage a connection. Close it when you don&apos;t
+                  flow, or manage a connection. Close it when you don&apos;t
                   need it. The work doesn&apos;t stop either way.
                 </p>
               </FadeIn>
