@@ -154,7 +154,7 @@ function CTAMarqueeCard() {
       ) : (
         <>
           <p className="text-xl leading-snug font-bold italic text-[#7696dc] font-instrument-serif">
-            Want to see what your week looks like without the noise?
+            Want to be first to see what this actually looks like?
           </p>
           <form
             onSubmit={handleSubmit}
@@ -188,57 +188,27 @@ function CTAMarqueeCard() {
 const faqs = [
   {
     q: "Do I need to know how to code?",
-    a: "No. Yaven is built for people who work in complex systems, not people who build them. If you can describe a workflow, Yaven can help run it."
+    a: "No. Yaven is built for people who navigate complex work, not people who build software. If you know how your day flows, you already know how to use it."
   },
   {
     q: "How is this different from just using ChatGPT?",
-    a: "Unlike ChatGPT, Yaven acts without being asked. ChatGPT is a conversation. You ask, it answers, it forgets, and nothing happens unless you prompt it. Yaven connects to your actual tools, remembers what you're working on, and runs tasks in the background on its own. Describe a workflow once and Yaven maps it, automates the repeatable parts, and flags what needs you. The output isn't a text response you then have to act on. It's the work, done."
+    a: "ChatGPT is a destination where you go to ask a question and leave. Yaven lives where you work, connecting your tools into a single timeline so you can stay focused instead of hunting for context."
   },
   {
-    q: "Can I customise Yaven?",
-    a: "Yes. You can adjust how Yaven presents itself, tune the personality of individual agents so they match your tone and working style, and set preferences for how much it does versus flags for your review. The more it knows about how you work, the better it gets at it."
+    q: "Can I customize Yaven?",
+    a: "Absolutely. You control how information is filtered, what gets brought to your attention, and how your timeline is structured. It adapts to your specific workflow."
   },
   {
     q: "What tools does Yaven connect to?",
-    a: (
-      <>
-        We&apos;re building integrations with the tools people actually use:{" "}
-        {[
-          { src: "/logos/notion.png", label: "Notion", rotate: "rotate-3" },
-          { src: "/logos/gmail.png", label: "Gmail", rotate: "-rotate-2" },
-          { src: "/logos/hubspot.png", label: "HubSpot", rotate: "rotate-6" },
-          {
-            src: "/logos/monday.png",
-            label: "Monday.com",
-            rotate: "-rotate-3"
-          },
-          { src: "/logos/linkedin.png", label: "LinkedIn", rotate: "rotate-2" }
-        ].map(({ src, label, rotate }) => (
-          <span
-            key={label}
-            className={`inline-flex items-center justify-center w-[22px] h-[22px] rounded-lg bg-[#EEF3FA] align-middle mx-1 ${rotate}`}
-          >
-            <Image
-              src={src}
-              alt={label}
-              width={14}
-              height={14}
-              className="object-contain"
-            />
-          </span>
-        ))}
-        , Slack, Airtable, and more. Tell us what you need when you join the
-        waitlist.
-      </>
-    )
+    a: "Yaven unifies the core apps you rely on every day, including your calendar, email, and messaging platforms. It brings them all into one calm command center."
   },
   {
     q: "When will I get access?",
-    a: "We're onboarding our first users now. Join the waitlist and we'll reach out directly. No queue number, just a conversation."
+    a: "We are rolling out access in stages to ensure the best experience. Once you join the waitlist, we will update you as soon as your slot opens up."
   },
   {
     q: "Is my data private?",
-    a: "Yes. Your workflows, goals, and data are yours. We don't use your content to train models or share it with third parties."
+    a: "Yes, completely. Your security is built into our architecture. Your workspace data belongs to you, and it is only used to keep you organized and ahead of your day."
   }
 ]
 
@@ -268,7 +238,7 @@ function GapSection({ onReveal }: { onReveal: () => void }) {
             as="h2"
             className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-12"
           >
-            A gap is opening up.
+            There&apos;s a gap opening up.
           </WordReveal>
         </FadeIn>
 
@@ -360,16 +330,16 @@ function GapSection({ onReveal }: { onReveal: () => void }) {
                 }}
               >
                 <p>
-                  Most people use AI like a faster Google. Type a question, get
-                  an answer, repeat tomorrow.
+                  Most people use AI like a faster Google. They type a
+                  question, get an answer, and go back to a fragmented day of
+                  endless tabs and scattered tasks.
                 </p>
                 <p>
-                  The people pulling ahead have worked out which half of their
-                  job repeats, and handed it off. They come back to decisions,
-                  not groundwork. The 5% of power users aren&apos;t necessarily
-                  smarter; until now, the tools have just been built for them.
+                  The people pulling ahead have figured out how to offload the
+                  mental noise. They consolidate the chaos to focus entirely on
+                  execution. They come back to clear decisions, not digital
+                  groundwork.
                 </p>
-                <p>Yaven is built for the 83% who aren&apos;t there yet.</p>
               </div>
 
               {/* Chart slides in from center */}
@@ -446,14 +416,15 @@ function GapSection({ onReveal }: { onReveal: () => void }) {
                   className="w-24 h-24 sm:w-32 sm:h-32 object-contain rounded-2xl hover-shadow-blue"
                 />
               </div>
-              <p className="text-base sm:text-lg leading-relaxed text-zinc-500 order-1 sm:order-2">
-                Yaven connects to all your tools. It learns from every decision
-                you make and gets better at predicting what you want.
-                Follow-ups sent. Notes logged. Reports found. You decide what
-                you want to handle, and what you want to hand over. When
-                something needs a human decision, it brings it to your
-                attention. Everything else is covered.
-              </p>
+              <div className="space-y-4 text-base sm:text-lg leading-relaxed text-zinc-500 order-1 sm:order-2">
+                <p>
+                  The 5% of power users aren&apos;t necessarily smarter; until
+                  now, the systems for true focus were just built for them.
+                </p>
+                <p>
+                  Yaven is built for the 83% who want their focus back too.
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -480,50 +451,50 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
 
   const playbookCards = [
     {
-      title: "LinkedIn outreach — new leads",
+      title: "Weekly client follow-ups",
       icon: "/logos/linkedin.png",
       schedule: "↻ Runs every Monday · no setup required",
       agents: [
         {
           label: "AUTO",
-          agent: "Research agent",
-          task: "Finds 10 relevant profiles based on your criteria",
+          agent: "Context check",
+          task: "Finds the 10 contacts worth reaching out to this week",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         },
         {
           label: "AUTO",
-          agent: "Writing agent",
-          task: "Drafts a personalised message in your voice for each",
+          agent: "Draft",
+          task: "Writes a personalised message in your voice for each",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         },
         {
           label: "REVIEW",
-          agent: "Outreach agent",
-          task: "Sends on Monday morning once you approve",
+          agent: "Send",
+          task: "Nothing goes out until you approve",
           color: "bg-[#f5c0c1] text-zinc-900"
         }
       ]
     },
     {
-      title: "CV & cover letter — new listings",
+      title: "CV & cover letter — new roles",
       icon: "/logos/notion.png",
       schedule: "↻ Runs daily when new listings appear",
       agents: [
         {
           label: "AUTO",
-          agent: "Research agent",
-          task: "Pulls new job listings matching your criteria",
+          agent: "Search",
+          task: "Pulls new listings that match your criteria",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         },
         {
           label: "AUTO",
-          agent: "Writing agent",
+          agent: "Draft",
           task: "Tailors your CV and cover letter to each role",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         },
         {
           label: "REVIEW",
-          agent: "Delivery agent",
+          agent: "Send",
           task: "Saves drafts — you decide which ones to send",
           color: "bg-[#f5c0c1] text-zinc-900"
         }
@@ -536,20 +507,20 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
       agents: [
         {
           label: "AUTO",
-          agent: "Finance agent",
-          task: "Pulls overdue invoices from your accounting tool",
+          agent: "Check",
+          task: "Identifies which clients are overdue this week",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         },
         {
           label: "AUTO",
-          agent: "Writing agent",
-          task: "Drafts a friendly reminder in your tone",
+          agent: "Draft",
+          task: "Writes a friendly reminder in your tone",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         },
         {
           label: "REVIEW",
-          agent: "Outreach agent",
-          task: "Nothing sent until you say so",
+          agent: "Send",
+          task: "Nothing goes out until you say so",
           color: "bg-[#f5c0c1] text-zinc-900"
         }
       ]
@@ -561,20 +532,20 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
       agents: [
         {
           label: "AUTO",
-          agent: "Finance agent",
-          task: "Pulls transactions from your connected accounts",
+          agent: "Pull",
+          task: "Gathers transactions from your connected accounts",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         },
         {
           label: "AUTO",
-          agent: "Organising agent",
+          agent: "Organise",
           task: "Categorises and totals by client or project",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         },
         {
           label: "AUTO",
-          agent: "Reporting agent",
-          task: "Formats into a spreadsheet, ready to export",
+          agent: "Format",
+          task: "Builds a spreadsheet, ready to export",
           color: "border border-[#5B99C4] text-[#5B99C4] bg-white"
         }
       ]
@@ -583,31 +554,31 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
 
   const notificationCards = [
     {
-      msg: "Your 10 LinkedIn messages are ready. Personalised to each profile, written in your tone. Want to send them or tweak a few first?",
+      msg: "Ten follow-ups drafted for the contacts you flagged this week. Each one written in your voice. Nothing sent until you approve.",
       actions: ["Send all", "Review first"]
     },
     {
-      msg: "Tailored your CV and cover letter for the four roles you saved this week. Each one adjusted to match the job description.",
+      msg: "CV and cover letter updated for the four roles you saved. Each one adjusted to match the job description.",
       actions: ["Review", "Send"]
     },
     {
-      msg: "Pulled this month's expenses into a spreadsheet, categorised, and totalled by client. Ready to export or turn into an invoice.",
+      msg: "This month's expenses pulled into a spreadsheet, categorised, and totalled by client. Ready to export.",
       actions: ["Export", "Review first"]
     },
     {
-      msg: "Friendly invoice reminder drafted for the three clients who are overdue. Nothing sent until you say so.",
+      msg: "Three clients are overdue. Friendly reminders drafted for each. Nothing goes out until you say so.",
       actions: ["Send them", "Edit first"]
     },
     {
-      msg: "Research summary done. Pulled the key points from the eight sources you flagged, formatted into a one-pager.",
+      msg: "Research summary done. Key points from the eight sources you flagged, formatted into a one-pager.",
       actions: ["Open it", "Add more"]
     },
     {
-      msg: "You've spent about 40 minutes on LinkedIn this week finding leads manually. Want me to handle that going forward?",
-      actions: ["Set it up", "Not yet"]
+      msg: "You've spent about 40 minutes this week finding leads manually. That's a pattern worth looking at.",
+      actions: ["Tell me more", "Not yet"]
     },
     {
-      msg: "Looks like you're writing a proposal similar to the one from March. Want me to pull the template and update the numbers?",
+      msg: "Looks like you're drafting something similar to a proposal from March. Want to start from that one?",
       actions: ["Yes please", "I've got it"]
     }
   ]
@@ -639,7 +610,7 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
                 </WordReveal>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
                   Yaven lives on your computer. It works quietly in the
-                  background, notices what repeats, and gets ahead of it.
+                  background, maps your digital day, and keeps you ahead of it.
                   Here&apos;s what that looks like in practice.
                 </p>
               </div>
@@ -665,10 +636,10 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
                   Connect once. Yaven figures out the rest.
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500 max-w-sm pt-1">
-                  Connect your tools and Yaven gets to work. It reads your
-                  email patterns and calendar, spots what repeats, and arrives
-                  with suggestions. You don&apos;t describe your workflow. Yaven
-                  finds it.
+                  Connect your tools and Yaven gets to work. It aligns with
+                  your calendar, messages, and tasks, spots how your day
+                  connects, and brings it all into one view. You don&apos;t
+                  organize your workflow. Yaven unifies it.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1 relative z-10">
@@ -712,9 +683,9 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
                         What Yaven found
                       </p>
                       <p className="text-xs text-zinc-700 leading-relaxed">
-                        You send similar follow-up emails most Monday mornings
-                        · Your weekly prep involves a lot of repeated groundwork
-                        · LinkedIn activity spikes every Tuesday
+                        Your Monday mornings involve a lot of scattered context-switching
+                        · Your weekly prep relies on updates from three different tools
+                        · High-priority tasks are buried across multiple apps
                       </p>
                     </div>
                     <div className="bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
@@ -746,13 +717,14 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
                   02
                 </span>
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                  It builds the flow.
+                  It unifies your day.
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500 max-w-sm pt-1">
-                  Yaven maps the workflow, strings together the right agents,
-                  and sets it running. No configuration, no code. One flow per
-                  recurring task. Share yours, tweak it, or start from one
-                  someone else has already built.
+                  Yaven maps your commitments, strings together the right
+                  context, and creates a clear timeline. No manual
+                  configuration, no upkeep. One dashboard for everything
+                  competing for your time. Review your day, adjust your focus,
+                  or just let it guide you.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1">
@@ -844,13 +816,13 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
                   03
                 </span>
                 <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                  It works. You decide.
+                  It organizes. You decide.
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500 max-w-sm pt-1">
-                  Yaven handles the groundwork. When something needs a genuine
-                  human call (a decision, an approval, a judgement) it flags it.
-                  Everything else is covered. How much you hand over is entirely
-                  up to you.
+                  Yaven handles the digital noise. When something genuinely
+                  needs your attention, such as a decision, an urgent message,
+                  or a critical task, it brings it forward. Everything else
+                  stays in the background.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1">
@@ -931,9 +903,9 @@ function ProfessionalSections({ onReveal }: { onReveal: () => void }) {
                   Check in. Or don&apos;t.
                 </h3>
                 <p className="text-base sm:text-lg leading-relaxed text-zinc-500 max-w-sm pt-1">
-                  Open Yaven to see what&apos;s running, check history, update a
-                  flow, or manage a connection. Close it when you don&apos;t
-                  need it. The work doesn&apos;t stop either way.
+                  Open Yaven to see your unified day, review past updates, or
+                  shift your priorities. Close it when you don&apos;t need it.
+                  Your workspace stays organized either way.
                 </p>
               </FadeIn>
               <FadeIn delay={0.2} className="flex-1">
@@ -1221,12 +1193,12 @@ export default function Home() {
               className="text-5xl leading-[1.05] tracking-normal text-white font-instrument-serif sm:text-6xl xl:text-7xl"
               style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
             >
-              Focus on the tasks only you can do.
+              Focus in a distracted world.
             </HeroScramble>
 
             <ScrollFadeOut>
               <div
-                className="text-base text-white max-w-lg mt-6 leading-relaxed space-y-3"
+                className="text-base text-white max-w-[34rem] mt-6 leading-relaxed space-y-3"
                 style={{
                   textShadow:
                     "0 1px 8px rgba(20,50,120,0.7), 0 2px 20px rgba(20,50,120,0.5)"
@@ -1234,8 +1206,10 @@ export default function Home() {
               >
                 <p>
                   You constantly switch tabs and apps. You copy and paste from
-                  ChatGPT. You know there are better ways to use AI at work, you
-                  just haven&apos;t had time to figure out what they are.
+                  ChatGPT. You lose track of where you&apos;re needed and
+                  what&apos;s most important. You know there are better ways to
+                  use AI, you just haven&apos;t had time to figure out what
+                  they are.
                 </p>
                 <p
                   className="text-shine font-bold"
@@ -1300,11 +1274,11 @@ export default function Home() {
             yaven
           </span>
           <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] font-instrument-serif text-zinc-900 flex flex-col">
-            Your industry is moving.
-            <span> Get ahead of it.</span>
+            We&apos;re building something for this.
           </h2>
           <p className="text-base sm:text-lg leading-relaxed text-zinc-600">
-            Early access is limited. Get in before the queue fills up.
+            Be first to try it. Early access is open — join the list and
+            we&apos;ll reach out when we&apos;re ready for you.
           </p>
           <InlineWaitlistForm />
         </FadeIn>
