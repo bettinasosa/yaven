@@ -1273,12 +1273,8 @@ export default function Home() {
           <span className="block text-4xl tracking-tight text-zinc-900 font-instrument-serif">
             yaven
           </span>
-          <h2 className="text-4xl sm:text-5xl leading-[1.05] tracking-[-1.2px] font-instrument-serif text-zinc-900 flex flex-col">
-            We&apos;re building something for this.
-          </h2>
           <p className="text-base sm:text-lg leading-relaxed text-zinc-600">
-            Be first to try it. Early access is open — join the list and
-            we&apos;ll reach out when we&apos;re ready for you.
+            Join the waitlist below for early access
           </p>
           <InlineWaitlistForm />
         </FadeIn>
