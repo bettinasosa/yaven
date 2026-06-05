@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, ChevronLeft } from "lucide-react"
+import { ChevronLeft } from "lucide-react"
 import { OTHER_OPTION } from "./blueprint-config"
 import type { QuestionConfig } from "./blueprint-config"
 
@@ -46,13 +46,32 @@ export function ChatQuestion({
 
   return (
     <div className="flex min-h-full flex-col">
-      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center gap-5 pb-6 text-center">
+      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center gap-6 pb-6 text-center">
+
+        {/* Progress */}
+        <p
+          style={{
+            fontFamily: "var(--font-space-mono)",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--ink)",
+            opacity: 0.5,
+          }}
+        >
+          {questionNumber} / {totalQuestions}
+        </p>
+
         <div className="space-y-2">
-          <h3 className="text-4xl leading-tight text-zinc-900 font-instrument-serif">
+          <h3
+            className="font-bold leading-tight"
+            style={{ fontSize: "clamp(26px, 4vw, 42px)", color: "var(--ink)" }}
+          >
             {question.title}
           </h3>
           {question.helper && (
-            <p className="mx-auto max-w-xl text-sm leading-relaxed text-zinc-500">
+            <p className="mx-auto max-w-xl text-sm font-medium leading-relaxed" style={{ color: "#1A1A1A", opacity: 0.6 }}>
               {question.helper}
             </p>
           )}
@@ -67,11 +86,18 @@ export function ChatQuestion({
                   key={chip}
                   type="button"
                   onClick={() => onToggleChip(chip)}
-                  className={`rounded-full border px-4 py-2 text-sm font-medium transition-all ${
-                    selected
-                      ? "border-[#83A5D4] bg-[#83A5D4] text-white shadow-sm ring-2 ring-[#83A5D4]/25 scale-[1.02]"
-                      : "border-zinc-200 bg-[#FDFDF9] text-zinc-600 hover:border-zinc-400"
-                  }`}
+                  className="text-sm font-semibold transition-all"
+                  style={{
+                    padding: "8px 18px",
+                    borderRadius: "999px",
+                    border: selected ? "1px solid #267FE5" : "1px solid rgba(0,0,0,0.12)",
+                    background: selected ? "#267FE5" : "#fff",
+                    color: selected ? "#fff" : "var(--ink)",
+                    boxShadow: selected
+                      ? "0 2px 10px rgba(38,127,229,0.28)"
+                      : "0 1px 4px rgba(0,0,0,0.06)",
+                    cursor: "pointer",
+                  }}
                 >
                   {chip}
                 </button>
@@ -92,7 +118,16 @@ export function ChatQuestion({
                 onChange={event => onTextChange(event.target.value)}
                 placeholder={question.placeholder}
                 rows={7}
-                className="w-full resize-none rounded-2xl border border-zinc-200 bg-[#FDFDF9] px-4 py-3 text-sm leading-relaxed text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none"
+                className="w-full resize-none font-medium text-sm leading-relaxed"
+                style={{
+                  border: "var(--bd)",
+                  borderRadius: "14px",
+                  background: "#fff",
+                  padding: "12px 16px",
+                  color: "var(--ink)",
+                  boxShadow: "var(--shadow-sm)",
+                  outline: "none",
+                }}
               />
             ) : (
               <input
@@ -100,13 +135,31 @@ export function ChatQuestion({
                 value={textValue}
                 onChange={event => onTextChange(event.target.value)}
                 placeholder={question.placeholder}
-                className="mx-auto block w-full max-w-sm rounded-full border border-zinc-200 bg-[#FDFDF9] px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none"
+                className="block w-full max-w-sm mx-auto text-sm font-medium"
+                style={{
+                  border: "var(--bd)",
+                  borderRadius: "40px",
+                  background: "#fff",
+                  padding: "10px 20px",
+                  color: "var(--ink)",
+                  boxShadow: "var(--shadow-sm)",
+                  outline: "none",
+                }}
               />
             )}
 
             {question.secondaryKey && (
               <div className="space-y-2">
-                <label className="text-xs font-medium text-zinc-500">
+                <label
+                  className="block text-xs font-bold"
+                  style={{
+                    fontFamily: "var(--font-space-mono)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    color: "var(--ink)",
+                    opacity: 0.6,
+                  }}
+                >
                   {question.secondaryLabel}
                 </label>
                 <textarea
@@ -114,7 +167,16 @@ export function ChatQuestion({
                   onChange={event => onSecondaryChange(event.target.value)}
                   placeholder={question.secondaryPlaceholder}
                   rows={3}
-                  className="w-full resize-none rounded-2xl border border-zinc-200 bg-[#FDFDF9] px-4 py-3 text-sm leading-relaxed text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none"
+                  className="w-full resize-none text-sm font-medium leading-relaxed"
+                  style={{
+                    border: "var(--bd)",
+                    borderRadius: "14px",
+                    background: "#fff",
+                    padding: "12px 16px",
+                    color: "var(--ink)",
+                    boxShadow: "var(--shadow-sm)",
+                    outline: "none",
+                  }}
                 />
               </div>
             )}
@@ -122,25 +184,39 @@ export function ChatQuestion({
         )}
       </div>
 
-      <div className="sticky bottom-0 flex items-center justify-between bg-gradient-to-t from-[#FDFDF9] via-[#FDFDF9]/95 to-transparent pt-6 pb-2">
+      {/* Bottom nav */}
+      <div
+        className="sticky bottom-0 flex items-center justify-between pt-6 pb-2"
+        style={{ background: "linear-gradient(to top, #fff 70%, transparent)" }}
+      >
         <button
           type="button"
           onClick={onBack}
           disabled={!canGoBack || loading}
           aria-label="Back"
-          className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-[#FDFDF9] text-sm font-medium text-zinc-600 transition-colors hover:border-zinc-400 disabled:cursor-not-allowed disabled:opacity-0 sm:h-10 sm:w-auto sm:px-4"
+          className="inline-flex items-center gap-1 text-sm font-bold disabled:opacity-0"
+          style={{
+            fontFamily: "var(--font-space-mono)",
+            color: "var(--ink)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            fontSize: "11px",
+          }}
         >
           <ChevronLeft className="size-4" />
-          <span className="hidden sm:inline">Back</span>
+          Back
         </button>
         <button
           type="button"
           onClick={onContinue}
           disabled={!canContinue || loading}
-          className="inline-flex h-12 items-center gap-2 rounded-full border border-transparent bg-zinc-900 px-6 text-base font-medium text-white shadow-sm transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400 sm:h-10 sm:px-5 sm:text-sm"
+          className="btn-press-dark disabled:opacity-40 disabled:cursor-not-allowed"
+          style={{ fontSize: "15px", padding: "0.6em 1.8em" }}
         >
-          {questionNumber === totalQuestions ? "Build preview" : "Continue"}
-          <ArrowRight className="size-4 shrink-0" />
+          {questionNumber === totalQuestions ? "Build preview" : "Continue"} →
         </button>
       </div>
     </div>

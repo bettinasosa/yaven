@@ -46,26 +46,36 @@ export function BlueprintPreview({
     <div className="flex flex-col gap-8">
       {/* Header */}
       <div className="space-y-2">
-        <h3 className="text-4xl leading-tight text-zinc-900 font-instrument-serif">
+        <h3
+          className="font-bold leading-tight"
+          style={{ fontSize: "clamp(28px, 4vw, 44px)", color: "var(--ink)" }}
+        >
           Here&apos;s your week, optimised.
         </h3>
-        <p className="text-base leading-relaxed text-zinc-500">
+        <p className="text-base font-medium leading-relaxed" style={{ color: "#1A1A1A", opacity: 0.65 }}>
           {blueprint.userSummary}
         </p>
       </div>
 
-      {/* Automation opportunities */}
-      <div className="space-y-5">
+      {/* Opportunities */}
+      <div className="space-y-4">
         {opportunities.map(opportunity => (
-          <div key={opportunity.id} className="flex gap-3">
-            <span className="mt-0.5 shrink-0 text-sm font-semibold text-[#7696dc]">
+          <div
+            key={opportunity.id}
+            className="flex gap-4 rounded-[16px] bg-white p-4"
+            style={{ border: "var(--bd)", boxShadow: "var(--shadow-sm)" }}
+          >
+            <span
+              className="mt-0.5 shrink-0 font-bold text-base"
+              style={{ color: "var(--ink)" }}
+            >
               →
             </span>
-            <div className="space-y-0.5">
-              <p className="text-base font-semibold text-zinc-900">
+            <div className="space-y-1">
+              <p className="text-base font-bold" style={{ color: "var(--ink)" }}>
                 {opportunity.taskName}
               </p>
-              <p className="text-base leading-relaxed text-zinc-500">
+              <p className="text-sm font-medium leading-relaxed" style={{ color: "#1A1A1A", opacity: 0.65 }}>
                 {opportunity.whyAutomatable}
               </p>
             </div>
@@ -73,53 +83,43 @@ export function BlueprintPreview({
         ))}
       </div>
 
-      {/* Bridge + CTA */}
-
-      <p className="text-xl leading-relaxed font-bold italic text-[#7696dc] font-instrument-serif">
+      <p className="text-lg font-bold" style={{ color: "var(--ink)" }}>
         Want to see what your week looks like without the noise?
       </p>
 
       {/* Sticky CTA */}
-      <div className="sticky bottom-0 pt-0 pb-1">
+      <div className="sticky bottom-0 pt-0 pb-1" style={{ background: "linear-gradient(to top, #fff 70%, transparent)" }}>
         <form
           onSubmit={handleInlineSubmit}
-          className="relative hidden sm:flex flex-row items-center gap-2"
+          className="relative hidden sm:flex flex-row items-center gap-3"
         >
-          <div className="flex flex-1 items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-1 shadow-sm focus-within:border-[#83A5D4]">
-            <input
-              ref={inputRef}
-              type="email"
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              className="flex-1 bg-transparent py-2 text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
-            />
-          </div>
+          <input
+            ref={inputRef}
+            type="email"
+            required
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            className="neu-input flex-1 px-5 py-[0.7em] text-base font-medium"
+            style={{ color: "var(--ink)" }}
+          />
           <button
             type="submit"
             disabled={loading}
-            className="animate-slow-bounce shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-zinc-900 px-7 py-3.5 text-sm font-semibold text-white shadow-md hover:animate-none hover:bg-zinc-700 disabled:opacity-60"
+            className="btn-press-dark shrink-0 disabled:opacity-50"
           >
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <>
-                Get early access
-              </>
-            )}
+            {loading ? <Loader2 className="size-4 animate-spin" /> : "Get early access"}
           </button>
           {submitError && (
-            <p className="absolute bottom-full mb-2 text-xs text-red-500">
-              {submitError}
-            </p>
+            <p className="absolute bottom-full mb-2 text-xs text-red-500">{submitError}</p>
           )}
         </form>
 
         <button
           type="button"
           onClick={onUnlock}
-          className="animate-slow-bounce sm:hidden w-full inline-flex items-center justify-center gap-2 rounded-full bg-zinc-900 px-8 py-4 text-base font-semibold text-white shadow-md hover:animate-none hover:bg-zinc-700"
+          className="btn-press-dark sm:hidden w-full"
+          style={{ fontSize: "16px", padding: "0.8em 1.8em" }}
         >
           Get early access
         </button>

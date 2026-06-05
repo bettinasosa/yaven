@@ -1,9 +1,6 @@
 "use client"
 
-import Image from "next/image"
-import { ArrowRight } from "lucide-react"
 import { useEffect, useState } from "react"
-import { Magnetic } from "@/components/magnetic"
 
 type StateProps = {
   onClick: () => void
@@ -21,48 +18,40 @@ const loadingPuns = [
 
 export function IdleBlueprintState({ onClick }: StateProps) {
   return (
-    <div className="space-y-4">
-      <Magnetic>
-        <button type="button" onClick={onClick} className="btn-press">
-          Show me
+    <div>
+      <div className="glass-wrap">
+        <div className="glass-shadow" />
+        <button type="button" onClick={onClick} className="glass-btn">
+          <span className="text-white">Show me</span>
         </button>
-      </Magnetic>
+      </div>
     </div>
   )
 }
 
 export function IntroBlueprintState({ onClick }: StateProps) {
   return (
-    <div className="flex flex-1 flex-col text-center">
-      <div className="flex justify-center pt-2">
-        <div className="size-12 rounded-2xl shadow-md hover:shadow-2xl hover:scale-110 transition-all duration-300 cursor-pointer overflow-hidden">
-          <Image
-            src="/logo.png"
-            alt="Yaven"
-            width={48}
-            height={48}
-            className="size-12 object-cover"
-          />
-        </div>
-      </div>
+    <div className="flex flex-1 flex-col">
       <div className="flex flex-1 items-center justify-center">
-        <div className="space-y-3">
-          <h3 className="text-5xl leading-tight text-zinc-900 font-instrument-serif">
-            Reclaim your week.
+        <div className="space-y-5 max-w-sm text-center">
+          <h3
+            className="font-bold leading-tight"
+            style={{ fontSize: "clamp(32px, 5vw, 52px)", color: "var(--ink)" }}
+          >
+            Let&apos;s find your time back.
           </h3>
-          <p className="text-sm leading-relaxed text-zinc-600">
-            A few questions about your week. We&apos;ll show you what could run
-            itself; and hand the hours back to you.
+          <p
+            className="text-base font-medium leading-relaxed"
+            style={{ color: "#1A1A1A" }}
+          >
+            A few questions about your week. We&apos;ll show you exactly what
+            Yaven would handle — and hand the hours back to you.
           </p>
         </div>
       </div>
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={onClick}
-          className="btn-press inline-flex items-center gap-2"
-        >
-          Start
+      <div className="flex justify-end pt-6">
+        <button type="button" onClick={onClick} className="btn-press-dark">
+          Start →
         </button>
       </div>
     </div>
@@ -85,20 +74,17 @@ export function GeneratingBlueprintState() {
   }, [])
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
-      <span className="inline-flex size-16 items-center justify-center overflow-hidden rounded-2xl ring-1 ring-[#83A5D4]/25">
-        <Image
-          src="/logo.png"
-          alt="Yaven"
-          width={56}
-          height={56}
-          className="size-14 rounded-xl object-cover"
-        />
-      </span>
-      <span className="size-5 rounded-full border-2 border-[#83A5D4]/20 border-t-[#83A5D4] animate-spin" />
+    <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
+      <span
+        className="inline-flex size-8 rounded-full animate-spin"
+        style={{
+          border: "3px solid var(--ink)",
+          borderTopColor: "transparent"
+        }}
+      />
       <p
-        className="max-w-xs text-base font-medium text-zinc-700 font-instrument-serif transition-opacity duration-300"
-        style={{ opacity: visible ? 1 : 0 }}
+        className="max-w-xs text-base font-medium transition-opacity duration-300"
+        style={{ color: "var(--ink)", opacity: visible ? 1 : 0 }}
       >
         {loadingPuns[punIndex]}
       </p>

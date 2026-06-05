@@ -14,6 +14,12 @@
   initial-value: -45deg;
 }
 
+@property --pill-angle {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: -30deg;
+}
+
 .glass-wrap {
   z-index: 2;
   pointer-events: none;
@@ -103,7 +109,7 @@
 .glass-btn > span {
   -webkit-user-select: none;
   user-select: none;
-  color: #323232;
+  color: #ffffff;
   text-shadow: 0 0.05em 0.05em #0000000d;
   letter-spacing: -0.18px;
   white-space: nowrap;
@@ -121,6 +127,13 @@
 
 .glass-btn:hover > span {
   text-shadow: 0.025em 0.025em 0.025em #0000000f;
+}
+
+/* Small variant — for buttons inside cards / compact UI */
+.glass-btn-sm > span {
+  font-size: 0.75rem;
+  padding-block: 0.5em;
+  padding-inline: 1.1em;
 }
 
 .glass-btn > span::after {
@@ -359,10 +372,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-instrument-serif: var(--font-instrument-serif);
+  --font-instrument-serif: var(--font-dm-sans);
   --font-inter: var(--font-helvetica);
   --font-sans: var(--font-helvetica);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-space-mono), monospace;
   --font-heading: var(--font-instrument-serif);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -405,16 +418,34 @@
 }
 
 :root {
+  /* ── Design tokens ──────────────────────── */
+  --ink: #07348B;
+  --bd: 1px solid rgba(0, 0, 0, 0.10);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.05);
+
+  /* 4-colour palette */
+  --primary:    #267FE5; /* primary blue  */
+  --secondary:  #DF4F3E; /* secondary red */
+  --cream:      #E3D5BB; /* light         */
+  --dark:       #07348B; /* dark navy     */
+
+  /* Aliases kept for backwards compat */
+  --primary-blue: #267FE5;
+  --dark-blue:    #07348B;
+  --red:          #DF4F3E;
+  --indigo:       #267FE5;
+
   --font-helvetica:
-    var(--font-dm-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+    var(--font-dm-sans), sans-serif;
+  --background: #E3D5BB;
+  --foreground: #07348B;
+  --card: #E3D5BB;
+  --card-foreground: #07348B;
+  --popover: #E3D5BB;
+  --popover-foreground: #07348B;
+  --primary: #267FE5;
+  --primary-foreground: #E3D5BB;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -481,6 +512,7 @@
   }
   body {
     @apply bg-background text-foreground font-medium;
+    overflow-x: clip;
   }
   html {
     @apply font-sans;
@@ -695,6 +727,107 @@
     animation: puff-out 0.5s ease-out forwards;
   }
 
+  /* Prevent horizontal scrollbar from clouds sliding off-screen */
+  body {
+    overflow-x: clip;
+  }
+
+  /* ────────────────────────────────────────────────────
+     LOCOMOTIVE-STYLE MICRO-INTERACTIONS
+     Exact patterns from scroll.locomotive.ca
+  ──────────────────────────────────────────────────── */
+
+  /* Directional hover underline — scales from right→left on leave, left→right on enter */
+  .u-hover-underline {
+    position: relative;
+  }
+  .u-hover-underline::before {
+    content: "";
+    position: absolute;
+    bottom: -0.1em;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    transform: scale3d(0, 1, 1);
+    transform-origin: top right;
+    transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  .u-hover-underline:hover::before {
+    transform: scale3d(1, 1, 1);
+    transform-origin: top left;
+  }
+
+  /* Section divider line — grows from right to left on scroll entry */
+  .loco-line {
+    position: relative;
+  }
+  .loco-line::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 1px;
+    background-color: rgba(10, 14, 26, 0.08);
+    transform: scale3d(0, 1, 1);
+    transform-origin: top right;
+    transition: transform 0.75s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  .loco-line.is-inview::before {
+    transform: scale3d(1, 1, 1);
+  }
+
+  /* Staggered list items — CSS-driven via --index, triggered by .is-inview on parent */
+  .loco-list-item {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+    overflow: hidden;
+    transition:
+      transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1),
+      opacity   0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition-delay: calc((var(--index, 0) + 1) * 0.08s + 0.1s);
+    border-top: 1px solid rgba(10, 14, 26, 0.08);
+  }
+  .loco-list-item:last-child {
+    border-bottom: 1px solid rgba(10, 14, 26, 0.08);
+  }
+  .is-inview .loco-list-item {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Clip-path slide button — hover reveals second layer from left */
+  .loco-btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    border-radius: 4px;
+    font-family: var(--font-space-mono), monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .loco-btn_wrap {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    gap: 6px;
+    transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  .loco-btn_wrap:nth-child(2) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: inset(10% -100% 10% 100% round 4px);
+    transition: clip-path 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  .loco-btn:hover .loco-btn_wrap:nth-child(2) {
+    clip-path: inset(0 0 0 0 round 4px);
+  }
+
   /* ── Blue hover shadow ──────────────────────────────── */
   .hover-shadow-blue {
     transition:
@@ -717,54 +850,405 @@
     transform: translateY(-2px);
   }
 
-  /* ── Fill button ─────────────────────────────────────── */
+  /* ── Glass buttons — liquid glass aesthetic ─────────── */
   .btn-press,
   .btn-press-dark {
     display: inline-block;
     padding: 0.7em 2.2em;
-    border-radius: 100px;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     font-family: var(--font-dm-sans), sans-serif;
     cursor: pointer;
-    border: none;
     white-space: nowrap;
-    transition: background-position 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.1s ease;
+    border: 1px solid rgba(255, 255, 255, 0.50);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.65),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+      0 4px 20px rgba(0, 0, 0, 0.12),
+      0 1px 4px rgba(0, 0, 0, 0.08);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
 
-  /* Resting: dark burgundy. Hover: pink fills from the bottom. */
+  /* Blue "Show me" CTA */
   .btn-press {
-    background: linear-gradient(to top, #f5c0c1 50%, #5c1a1a 50%);
-    background-size: 100% 210%;
-    background-position: 0 0%;
+    background: #267FE5;
     color: #fff;
   }
 
-  .btn-press:hover {
-    background-position: 0 100%;
-  }
-
-  .btn-press:active {
-    background-position: 0 100%;
-    transform: scale(0.97);
-  }
-
+  /* Dark / ink CTA — used in forms + modals */
   .btn-press-dark {
-    background: linear-gradient(to top, #3f3f46 50%, #18181b 50%);
-    background-size: 100% 210%;
-    background-position: top;
-    color: #fff;
+    background: var(--ink);
+    color: var(--cream);
   }
 
+  .btn-press:hover,
   .btn-press-dark:hover {
-    background-position: bottom;
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.65),
+      0 8px 28px rgba(0, 0, 0, 0.16),
+      0 2px 8px rgba(0, 0, 0, 0.10);
   }
 
+  .btn-press:active,
   .btn-press-dark:active {
-    background-position: bottom;
-    transform: scale(0.97);
+    transform: translateY(0);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.50),
+      0 2px 8px rgba(0, 0, 0, 0.10);
   }
+
+  /* ── Glass card + input ──────────────────────────────── */
+  .neu-card {
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 22px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.60),
+      0 8px 32px rgba(0, 0, 0, 0.10),
+      0 2px 8px rgba(0, 0, 0, 0.06);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .neu-input {
+    border: 1px solid rgba(255, 255, 255, 0.50);
+    border-radius: 14px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.60),
+      0 2px 8px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: box-shadow 0.18s ease;
+  }
+
+  .neu-input:focus {
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.70),
+      0 0 0 3px rgba(38, 127, 229, 0.25),
+      0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  /* ── Namebox press ──────────────────────────────────── */
+  .namebox-press {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .namebox-press:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .namebox-press:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+  }
+
+  /* ── Hero blobs ─────────────────────────────────────── */
+
+  /* Shape morphing — irregular steps for organic feel */
+  @keyframes blob-morph-a {
+    0%   { border-radius: 42% 58% 64% 36% / 38% 52% 48% 62%; }
+    13%  { border-radius: 76% 24% 40% 60% / 64% 32% 70% 36%; }
+    29%  { border-radius: 28% 72% 58% 42% / 42% 74% 34% 56%; }
+    44%  { border-radius: 62% 38% 30% 70% / 26% 62% 58% 42%; }
+    58%  { border-radius: 44% 56% 72% 28% / 68% 38% 42% 62%; }
+    73%  { border-radius: 66% 34% 46% 54% / 52% 66% 36% 48%; }
+    88%  { border-radius: 34% 66% 54% 46% / 44% 46% 62% 38%; }
+    100% { border-radius: 42% 58% 64% 36% / 38% 52% 48% 62%; }
+  }
+  @keyframes blob-morph-b {
+    0%   { border-radius: 58% 42% 36% 64% / 62% 44% 56% 38%; }
+    16%  { border-radius: 36% 64% 68% 32% / 30% 72% 40% 60%; }
+    31%  { border-radius: 70% 30% 44% 56% / 56% 36% 64% 44%; }
+    47%  { border-radius: 40% 60% 66% 34% / 68% 30% 48% 52%; }
+    62%  { border-radius: 64% 36% 30% 70% / 42% 68% 56% 44%; }
+    78%  { border-radius: 48% 52% 58% 42% / 60% 42% 38% 62%; }
+    91%  { border-radius: 72% 28% 50% 50% / 34% 58% 66% 34%; }
+    100% { border-radius: 58% 42% 36% 64% / 62% 44% 56% 38%; }
+  }
+  @keyframes blob-morph-c {
+    0%   { border-radius: 52% 48% 44% 56% / 54% 46% 52% 48%; }
+    20%  { border-radius: 36% 64% 62% 38% / 40% 68% 34% 58%; }
+    42%  { border-radius: 68% 32% 38% 62% / 66% 32% 60% 40%; }
+    63%  { border-radius: 44% 56% 70% 30% / 36% 60% 46% 54%; }
+    82%  { border-radius: 60% 40% 48% 52% / 58% 42% 66% 36%; }
+    100% { border-radius: 52% 48% 44% 56% / 54% 46% 52% 48%; }
+  }
+
+  /* Drift + scale — halved amplitude so blobs stay in their corner zones */
+  @keyframes blob-drift-a {
+    0%,  100% { transform: translate(0px,    0px)  scale(1);    }
+    25%        { transform: translate(36px,  -28px) scale(1.05); }
+    60%        { transform: translate(-24px,  20px) scale(0.95); }
+    80%        { transform: translate(14px,   10px) scale(1.02); }
+  }
+  @keyframes blob-drift-b {
+    0%,  100% { transform: translate(0px,    0px)  scale(1);    }
+    35%        { transform: translate(-30px,  26px) scale(0.93); }
+    65%        { transform: translate(28px,  -22px) scale(1.05); }
+    85%        { transform: translate(-10px,  10px) scale(0.97); }
+  }
+  @keyframes blob-drift-c {
+    0%,  100% { transform: translate(0px,    0px)  scale(1);    }
+    40%        { transform: translate(22px,  -34px) scale(1.10); }
+    75%        { transform: translate(-14px,  14px) scale(0.95); }
+  }
+
+  .hero-blob {
+    position: absolute;
+    pointer-events: none;
+  }
+  /* Top-left */
+  .hero-blob-1 {
+    width: clamp(460px, 54vw, 700px);
+    height: clamp(370px, 44vw, 560px);
+    top: -14%;
+    left: -26%;
+    animation:
+      blob-morph-a 14s ease-in-out infinite,
+      blob-drift-a 22s ease-in-out infinite;
+  }
+  /* Bottom-right — bleeds past hero bottom, peeks into chat */
+  .hero-blob-2 {
+    width: clamp(320px, 40vw, 540px);
+    height: clamp(260px, 32vw, 420px);
+    bottom: -16%;
+    right: -16%;
+    animation:
+      blob-morph-b 17s ease-in-out -6s infinite,
+      blob-drift-b 26s ease-in-out -9s infinite;
+  }
+  /* Bottom-left */
+  .hero-blob-3 {
+    width: clamp(240px, 28vw, 380px);
+    height: clamp(190px, 22vw, 300px);
+    bottom: -4%;
+    left: -8%;
+    animation:
+      blob-morph-c 20s ease-in-out -11s infinite,
+      blob-drift-c 30s ease-in-out -14s infinite;
+  }
+
+  /* Soft / Apple Intelligence — more visible, reduced blur */
+  .hero-blob-soft {
+    background:
+      radial-gradient(ellipse at 38% 36%, rgba(255, 80, 30, 1.0)  0%,  transparent 50%),
+      radial-gradient(ellipse at 68% 62%, rgba(0, 166, 166, 0.70) 0%,  transparent 54%),
+      radial-gradient(ellipse at 55% 50%, rgba(255, 200, 60, 0.65) 0%,  transparent 58%),
+      radial-gradient(ellipse at 22% 72%, rgba(160, 80, 220, 0.25) 0%,  transparent 48%);
+    opacity: 1;
+    filter: blur(16px);
+  }
+
+  /* Third blob — teal aurora */
+  .hero-blob-teal {
+    background:
+      radial-gradient(ellipse at 50% 46%, rgba(0, 210, 200, 0.95) 0%,  transparent 50%),
+      radial-gradient(ellipse at 65% 35%, rgba(80, 200, 255, 0.55) 0%,  transparent 46%);
+    opacity: 0.82;
+    filter: blur(22px);
+  }
+
+  /* Brutalist / bordered — crisp gradient, hard teal frame */
+  .hero-blob-brutalist {
+    background:
+      radial-gradient(ellipse at 44% 42%, #FF1D3B 0%, #FF5C00 22%, #FF8A40 40%, #FFB860 58%, transparent 76%),
+      radial-gradient(ellipse at 70% 65%, rgba(0, 166, 166, 0.28) 0%, transparent 50%);
+    opacity: 0.78;
+    border: 3px solid #00A6A6;
+    box-shadow: 8px 8px 0 #00A6A6;
+    filter: blur(0.5px);
+  }
+
+  /* ── Blue variant — flat #267FE5, cream text ────────── */
+  [data-blob-variant="blue"] {
+    --ink: var(--cream);
+  }
+
+  /* ── Glass pill — base + border shine ──────────────────────── */
+  .headline-pill {
+    position: relative;
+  }
+
+  .headline-pill::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+    top: -1.5px;
+    left: -1.5px;
+    width: calc(100% + 3px);
+    height: calc(100% + 3px);
+    box-sizing: border-box;
+    padding: 1.5px;
+    border-radius: 19.5px;
+    background:
+      conic-gradient(
+        from var(--pill-angle) at 50% 50%,
+        rgba(0, 0, 0, 0.30),
+        transparent 6% 44%,
+        rgba(0, 0, 0, 0.30) 50%,
+        transparent 56% 94%,
+        rgba(0, 0, 0, 0.30)
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-clip: content-box, border-box;
+    mask-clip: content-box, border-box;
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* ────────────────────────────────────────────────────
+     GLASS VARIANT — strips ALL brutalist design bits,
+     applies liquid DOM / visionOS glass aesthetic.
+  ──────────────────────────────────────────────────── */
+
+  /* Namebox — full frosted glass */
+  [data-blob-variant="glass"] .hero-namebox {
+    background: rgba(255, 255, 255, 0.32) !important;
+    border: 1px solid rgba(255, 255, 255, 0.60) !important;
+    border-radius: 36px !important;
+    box-shadow:
+      inset 0 1.5px 1px rgba(255, 255, 255, 0.80),
+      inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+      0 12px 48px rgba(80, 100, 200, 0.16),
+      0 4px 16px rgba(80, 100, 200, 0.10) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+    backdrop-filter: blur(24px) saturate(160%) !important;
+  }
+
+  /* Namebox press — replace ink offset with glass lift */
+  [data-blob-variant="glass"] .namebox-press {
+    box-shadow:
+      inset 0 1.5px 1px rgba(255, 255, 255, 0.80),
+      0 12px 48px rgba(80, 100, 200, 0.16) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  [data-blob-variant="glass"] .namebox-press:hover {
+    transform: translateY(-4px) !important;
+    box-shadow:
+      inset 0 1.5px 1px rgba(255, 255, 255, 0.70),
+      0 20px 64px rgba(80, 100, 200, 0.24),
+      0 6px 22px rgba(80, 100, 200, 0.16) !important;
+  }
+  [data-blob-variant="glass"] .namebox-press:active {
+    transform: translateY(0) !important;
+    box-shadow:
+      inset 0 1.5px 1px rgba(255, 255, 255, 0.55),
+      0 6px 20px rgba(80, 100, 200, 0.12) !important;
+  }
+
+  /* Logo — glass disc instead of ink offset */
+  [data-blob-variant="glass"] .logo-press {
+    background: rgba(255, 255, 255, 0.42) !important;
+    border: 1px solid rgba(255, 255, 255, 0.65) !important;
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.80),
+      0 3px 12px rgba(0, 0, 0, 0.10) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+  [data-blob-variant="glass"] .logo-press:hover {
+    transform: translateY(-1px) !important;
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.70),
+      0 6px 20px rgba(0, 0, 0, 0.14) !important;
+  }
+  [data-blob-variant="glass"] .logo-press:active {
+    transform: translateY(0) !important;
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.55),
+      0 2px 6px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* neu-card — glass frosted card */
+  [data-blob-variant="glass"] .neu-card {
+    border: 1px solid rgba(255, 255, 255, 0.50) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.60),
+      0 8px 32px rgba(80, 100, 200, 0.14) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    backdrop-filter: blur(16px) !important;
+  }
+
+  /* Glass — specular refraction, liquid-light feel (visionOS style) */
+  .hero-blob-glass-main {
+    background:
+      radial-gradient(ellipse at 32% 30%, rgba(255, 255, 255, 1.0)  0%, rgba(227, 213, 187, 0.82) 22%, transparent 48%),
+      radial-gradient(ellipse at 68% 62%, rgba(38, 127, 229, 0.55) 0%, rgba(38, 127, 229, 0.32) 36%, transparent 58%),
+      radial-gradient(ellipse at 22% 72%, rgba(215, 130, 73, 0.50) 0%, transparent 46%),
+      radial-gradient(ellipse at 76% 24%, rgba(190, 167, 34, 0.42) 0%, transparent 44%),
+      radial-gradient(ellipse at 50% 50%, rgba(227, 213, 187, 0.28) 0%, transparent 76%);
+    opacity: 0.80;
+    filter: blur(14px);
+  }
+  .hero-blob-glass-accent {
+    background:
+      radial-gradient(ellipse at 48% 40%, rgba(255, 255, 255, 0.95) 0%, rgba(227, 213, 187, 0.72) 28%, transparent 52%),
+      radial-gradient(ellipse at 68% 32%, rgba(223, 79, 62, 0.45) 0%, transparent 46%),
+      radial-gradient(ellipse at 30% 68%, rgba(38, 127, 229, 0.50) 0%, transparent 44%),
+      radial-gradient(ellipse at 62% 70%, rgba(215, 130, 73, 0.42) 0%, transparent 40%);
+    opacity: 0.78;
+    filter: blur(18px);
+  }
+
+
+  /* ── Blob layer grain — applied on top of blobs with overlay blend ── */
+  .blob-layer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0.28;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 160px 160px;
+    animation: grain-anim 0.3s steps(1) infinite;
+  }
+
+  /* ── Grain overlay ─────────────────────────────────────── */
+  .hero-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: var(--grain-opacity, 0.12);
+    transition: opacity 0.4s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: grain-anim 0.35s steps(1) infinite;
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 92%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 92%);
+  }
+  @keyframes grain-anim {
+    0%   { background-position:   0px   0px; }
+    20%  { background-position: -32px  14px; }
+    40%  { background-position:  18px -24px; }
+    60%  { background-position: -14px  30px; }
+    80%  { background-position:  26px  -8px; }
+    100% { background-position: -20px   8px; }
+  }
+
+  /* ── Float bob (hero icons) ─────────────────────────── */
+  @keyframes float-bob {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50%       { transform: translateY(-12px) rotate(3deg); }
+  }
+  .float-icon { animation: float-bob 5s ease-in-out infinite; }
 
   /* ── Section reveal ─────────────────────────────────── */
   @keyframes reveal-fade-in {
@@ -815,11 +1299,70 @@
     animation: shine-sweep 8s linear infinite;
   }
 
+  /* Dark-background variant — navy sweep for light/cream hero */
+  .text-shine-dark {
+    background: linear-gradient(
+      105deg,
+      #2053A5 0%,
+      #2053A5 35%,
+      #5B99C4 50%,
+      #2053A5 65%,
+      #2053A5 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine-sweep 4s linear infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .testimonial-marquee-track {
       animation: none;
       transform: translateX(0);
     }
+  }
+
+  /* ── Float icon container (hover) ───────────────────── */
+  .float-icon-container {
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .float-icon-container:hover {
+    transform: scale(1.12);
+  }
+  .float-icon-container:hover .float-icon {
+    animation-play-state: paused;
+  }
+
+  /* ── Nav logo press ──────────────────────────────────── */
+  .logo-press {
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    cursor: pointer;
+  }
+  .logo-press:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .logo-press:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  /* ── Book a call link ───────────────────────────────── */
+  .book-call-link {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+  .book-call-link:hover {
+    opacity: 1;
+  }
+  .book-call-arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .book-call-link:hover .book-call-arrow {
+    transform: translate(2px, -2px);
   }
 }
 

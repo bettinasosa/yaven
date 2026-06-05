@@ -30,15 +30,21 @@ export function BlueprintModalShell({
       role="dialog"
       aria-modal="true"
       aria-label="Automation blueprint"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/10 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(55, 48, 163, 0.12)", backdropFilter: "blur(2px)" }}
       onClick={onClose}
     >
       <div
-        className={`flex w-[calc(100vw-2rem)] max-w-[58rem] flex-col overflow-hidden rounded-[1.5rem] bg-[#FDFDF9] shadow-[0_28px_100px_rgba(15,23,42,0.22)] ring-1 ring-white/50 md:h-[88vh] ${expanded ? "h-[90vh]" : "h-[80vh]"} ${isClosing ? "animate-puff-out" : ""}`}
+        className={`flex w-[calc(100vw-2rem)] max-w-[58rem] flex-col overflow-hidden md:h-[88vh] ${expanded ? "h-[90vh]" : "h-[80vh]"} ${isClosing ? "animate-puff-out" : ""}`}
+        style={{
+          background: "#fff",
+          border: "1px solid rgba(0,0,0,0.08)",
+          borderRadius: "22px",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.16), 0 6px 24px rgba(0,0,0,0.08)",
+        }}
         onClick={event => event.stopPropagation()}
       >
-
-        <main className="min-h-0 flex-1 flex flex-col overflow-hidden text-zinc-900">
+        <main className="min-h-0 flex-1 flex flex-col overflow-hidden">
           <div className="mx-auto flex w-full flex-1 flex-col min-h-0 overflow-y-auto px-6 pt-6 pb-4 sm:px-10 sm:pt-10 sm:pb-6 md:px-12 md:pt-12 md:pb-6 animate-fade-rise">
             {children}
           </div>

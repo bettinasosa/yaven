@@ -1,26 +1,21 @@
 import type { Metadata, Viewport } from "next"
-import { Fraunces } from "next/font/google"
-import localFont from "next/font/local"
+import { Rubik, Space_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import { PageLoader } from "@/components/page-loader"
+import { LoaderDevPanel } from "@/components/loader-dev-panel"
 import { SmoothScroll } from "@/components/smooth-scroll"
 import "./globals.css"
 
-const instrumentSerif = Fraunces({
-  variable: "--font-instrument-serif",
+const rubik = Rubik({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "600"],
-  style: ["normal", "italic"]
+  weight: ["400", "500", "600", "700"],
+  display: "swap"
 })
 
-const satoshi = localFont({
-  variable: "--font-dm-sans",
-  src: [
-    { path: "./fonts/Satoshi-Light.woff2", weight: "300", style: "normal" },
-    { path: "./fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/Satoshi-Medium.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/Satoshi-Bold.woff2", weight: "700", style: "normal" }
-  ],
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap"
 })
 
@@ -50,14 +45,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${satoshi.variable} h-full antialiased scroll-smooth`}
-      style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}
+      className={`${rubik.variable} ${spaceMono.variable} h-full antialiased scroll-smooth`}
+      style={{ background: "#267FE5" }}
     >
       <body
         className="min-h-full flex flex-col"
-        style={{ background: "linear-gradient(to right, #2053A5, #036CB0)" }}
+        style={{ background: "transparent" }}
       >
-        <PageLoader />
+        <LoaderDevPanel />
         <SmoothScroll>{children}</SmoothScroll>
         <Analytics />
       </body>
