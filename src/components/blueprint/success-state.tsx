@@ -10,7 +10,7 @@ export function SuccessState() {
           border: "var(--bd)",
           borderRadius: "50%",
           boxShadow: "var(--shadow-sm)",
-          color: "var(--ink)",
+          color: "var(--ink)"
         }}
       >
         ✓
@@ -26,7 +26,7 @@ export function SuccessState() {
           className="text-sm font-medium leading-relaxed max-w-xs mx-auto"
           style={{ color: "#1A1A1A", opacity: 0.65 }}
         >
-          We saved your blueprint. We&apos;ll reach out when Yaven is ready to
+          We saved your blueprint. We&apos;ll reach out when yaven is ready to
           build it with you.
         </p>
       </div>

@@ -1,10 +1,10 @@
 "use client"
 
-type YavenGlyphProps = {
+type yavenGlyphProps = {
   className?: string
 }
 
-export function YavenGlyph({ className = "" }: YavenGlyphProps) {
+export function yavenGlyph({ className = "" }: yavenGlyphProps) {
   return (
     <span
       aria-hidden="true"

@@ -119,7 +119,7 @@
   padding-inline: 1.75em;
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   display: flex;
   position: relative;
@@ -293,7 +293,7 @@
   color: #18181b;
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.01em;
   cursor: pointer;
   position: relative;
@@ -418,6 +418,8 @@
 }
 
 :root {
+  --font-dm-sans: 'Satoshi', sans-serif;
+
   /* ── Design tokens ──────────────────────── */
   --ink: #07348B;
   --bd: 1px solid rgba(0, 0, 0, 0.10);
@@ -785,7 +787,7 @@
     border-radius: 4px;
     font-family: var(--font-space-mono), monospace;
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-decoration: none;
@@ -838,7 +840,7 @@
     display: inline-block;
     padding: 0.7em 2.2em;
     border-radius: 999px;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 1rem;
     font-family: var(--font-dm-sans), sans-serif;
     cursor: pointer;

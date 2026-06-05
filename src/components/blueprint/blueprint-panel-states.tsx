@@ -45,7 +45,7 @@ export function IntroBlueprintState({ onClick }: StateProps) {
             style={{ color: "#1A1A1A" }}
           >
             A few questions about your week. We&apos;ll show you exactly what
-            Yaven would handle — and hand the hours back to you.
+            yaven would handle — and hand the hours back to you.
           </p>
         </div>
       </div>

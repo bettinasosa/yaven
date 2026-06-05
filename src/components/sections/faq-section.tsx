@@ -8,18 +8,18 @@ import { FadeIn } from "@/components/fade-in"
 const faqs = [
   {
     q: "Do I need to know how to code?",
-    a: "No. Yaven is built for people who work in complex systems, not people who build them. If you can describe a workflow, Yaven can help run it."
+    a: "No. yaven is built for people who work in complex systems, not people who build them. If you can describe a workflow, yaven can help run it."
   },
   {
     q: "How is this different from just using ChatGPT?",
-    a: "ChatGPT is a conversation. You ask, it answers, and then it forgets. Every session starts from scratch, and nothing happens unless you prompt it. Yaven is different at the level of how it works. It connects to your actual tools, remembers what you're working on between sessions, and runs tasks in the background without being asked. You describe a workflow once. Yaven maps it, automates the repeatable parts, and flags the bits that need you. The output isn't a text response you then have to act on. It's the work, done."
+    a: "ChatGPT is a conversation. You ask, it answers, and then it forgets. Every session starts from scratch, and nothing happens unless you prompt it. yaven is different at the level of how it works. It connects to your actual tools, remembers what you're working on between sessions, and runs tasks in the background without being asked. You describe a workflow once. yaven maps it, automates the repeatable parts, and flags the bits that need you. The output isn't a text response you then have to act on. It's the work, done."
   },
   {
-    q: "Can I customise Yaven?",
-    a: "Yes. You can adjust how Yaven presents itself, tune the personality of individual agents so they match your tone and working style, and set preferences for how much it does versus flags for your review. The more it knows about how you work, the better it gets at it."
+    q: "Can I customise yaven?",
+    a: "Yes. You can adjust how yaven presents itself, tune the personality of individual agents so they match your tone and working style, and set preferences for how much it does versus flags for your review. The more it knows about how you work, the better it gets at it."
   },
   {
-    q: "What tools does Yaven connect to?",
+    q: "What tools does yaven connect to?",
     a: (
       <>
         We&apos;re building integrations with the tools people actually use:{" "}

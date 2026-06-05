@@ -80,7 +80,7 @@ export function FooterCTASection() {
           <FadeIn className="flex justify-center">
             <Image
               src="/yavenlogo.png"
-              alt="Yaven"
+              alt="yaven"
               width={80}
               height={80}
               className="size-16 object-contain"
@@ -107,7 +107,8 @@ export function FooterCTASection() {
               className="text-base sm:text-lg font-medium"
               style={{ color: "#1A1A1A", opacity: 0.7 }}
             >
-              Yaven handles the rest. Join the waitlist and we&apos;ll build your automation blueprint together.
+              yaven handles the rest. Join the waitlist and we&apos;ll build
+              your automation blueprint together.
             </p>
           </FadeIn>
           <FadeIn delay={0.3}>

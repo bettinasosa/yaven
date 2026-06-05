@@ -150,10 +150,10 @@ export function HowItWorksSection() {
                 id="how-it-works"
                 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-[-1.5px] text-zinc-900 font-instrument-serif mb-4"
               >
-                How Yaven works.
+                How yaven works.
               </h2>
               <p className="text-base sm:text-lg leading-relaxed text-zinc-500">
-                Think of Yaven like a virtual intern. It lives on your computer,
+                Think of yaven like a virtual intern. It lives on your computer,
                 ready when you need it and asleep when you don&apos;t.
                 Here&apos;s what that looks like in practice.
               </p>
@@ -161,7 +161,7 @@ export function HowItWorksSection() {
             <div className="flex-1 flex justify-center">
               <Image
                 src="/cloud-pet.png"
-                alt="Yaven cloud pet"
+                alt="yaven cloud pet"
                 width={420}
                 height={180}
                 className="w-52 sm:w-72 md:w-96 object-contain hover-drop-shadow-blue"
@@ -177,13 +177,13 @@ export function HowItWorksSection() {
                 01
               </span>
               <h3 className="text-xl sm:text-2xl tracking-[-0.4px] text-zinc-900 font-instrument-serif">
-                Tell Yaven how your week runs.
+                Tell yaven how your week runs.
               </h3>
               <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
                 Your tools, your goals, what repeats. Chasing invoice payments?
                 Sending LinkedIn outreach? Tailoring your CV for every
                 application? Describe it in plain language. You don&apos;t need
-                to know how to automate anything. That part is on Yaven.
+                to know how to automate anything. That part is on yaven.
               </p>
             </FadeIn>
             <FadeIn delay={0.2} className="flex-1 relative z-10">
@@ -229,7 +229,7 @@ export function HowItWorksSection() {
                   </div>
                   <div className="bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
                     <p className="text-xs text-zinc-500 mb-2">
-                      Yaven is mapping your recurring workflows...
+                      yaven is mapping your recurring workflows...
                     </p>
                     <div className="h-1.5 bg-zinc-200 rounded-full overflow-hidden">
                       <div className="h-full bg-zinc-800 rounded-full w-[65%]" />
@@ -259,7 +259,7 @@ export function HowItWorksSection() {
                 It builds the playbook.
               </h3>
               <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
-                Yaven maps the workflow, strings together the right agents, and
+                yaven maps the workflow, strings together the right agents, and
                 sets it running. No configuration, no code. One playbook per
                 recurring task. Share yours, tweak it, or start from one someone
                 else has already built.
@@ -356,7 +356,7 @@ export function HowItWorksSection() {
                 It works. You decide.
               </h3>
               <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
-                Yaven handles the groundwork. When something needs a genuine
+                yaven handles the groundwork. When something needs a genuine
                 human call (a decision, an approval, a judgement) it flags it.
                 Everything else is covered. How much you hand over is entirely
                 up to you.
@@ -386,7 +386,7 @@ export function HowItWorksSection() {
                   <div className="flex items-center gap-2">
                     <Image
                       src="/logo.png"
-                      alt="Yaven"
+                      alt="yaven"
                       width={20}
                       height={20}
                       className="w-5 h-5 object-contain shrink-0"
@@ -440,7 +440,7 @@ export function HowItWorksSection() {
                 Check in. Or don&apos;t.
               </h3>
               <p className="text-base sm:text-lg leading-relaxed text-zinc-600 max-w-sm pt-1">
-                Open Yaven to see what&apos;s running, check history, update a
+                Open yaven to see what&apos;s running, check history, update a
                 playbook, or manage a connection. Close it when you don&apos;t
                 need it. The work doesn&apos;t stop either way.
               </p>

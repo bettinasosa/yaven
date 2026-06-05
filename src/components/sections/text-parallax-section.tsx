@@ -40,8 +40,8 @@ function Row({ text, rowRef }: { text: string; rowRef: (el: HTMLDivElement | nul
           <span
             style={{
               fontFamily: "var(--font-dm-sans), sans-serif",
-              fontSize: "clamp(40px, 6.5vw, 88px)",
-              fontWeight: 700,
+              fontSize: "clamp(48px, 7.5vw, 100px)",
+              fontWeight: 500,
               letterSpacing: "-0.03em",
               lineHeight: 1,
               color: "#0a0e1a",

@@ -31,7 +31,7 @@ export function GapSection() {
                 groundwork. The 5% of power users aren&apos;t necessarily
                 smarter; until now, the tools have just been built for them.
               </p>
-              <p>Yaven is built for the 83% who aren&apos;t there yet.</p>
+              <p>yaven is built for the 83% who aren&apos;t there yet.</p>
             </div>
             {/* EY Survey Chart */}
             <div
@@ -74,19 +74,19 @@ export function GapSection() {
             </div>
           </div>
 
-          {/* Row 2: Yaven logo + paragraph */}
+          {/* Row 2: yaven logo + paragraph */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 items-center">
             <div className="flex items-center justify-center order-2 sm:order-1">
               <Image
                 src="/logo.png"
-                alt="Yaven"
+                alt="yaven"
                 width={120}
                 height={120}
                 className="w-24 h-24 sm:w-32 sm:h-32 object-contain"
               />
             </div>
             <p className="text-base sm:text-lg leading-relaxed text-zinc-500 order-1 sm:order-2">
-              Yaven connects to all your devices and tools. It learns your
+              yaven connects to all your devices and tools. It learns your
               habits, follows how your week runs, and handles the tasks that
               repeat. Follow-ups sent. Notes logged. Reports found. You decide
               what you want to handle, and what you want to hand over. When

@@ -10,19 +10,16 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const FEATURES = [
   {
-    num: "01",
     title: "Lives in your notch",
-    body: "Always on, always context-aware. Yaven sits in your menu bar and understands what you're working on — no briefing, no copy-paste, no context-switching."
+    body: "Always on, always context-aware. yaven sits in your menu bar and understands what you're working on — no briefing, no copy-paste, no context-switching."
   },
   {
-    num: "02",
     title: "Connects your tools",
-    body: "Email, calendar, Slack, LinkedIn, HubSpot. Yaven reads everything and joins the dots so you never have to explain yourself twice."
+    body: "Email, calendar, Slack, LinkedIn, HubSpot. yaven reads everything and joins the dots so you never have to explain yourself twice."
   },
   {
-    num: "03",
     title: "Takes action for you",
-    body: "Drafts the email. Preps the brief. Researches the prospect. Yaven doesn't suggest — it does."
+    body: "Drafts the email. Preps the brief. Researches the prospect. yaven doesn't suggest — it does."
   }
 ]
 
@@ -85,7 +82,11 @@ export function LocomotiveSections() {
   useEffect(() => {
     const SMOOTH = "power3.out"
 
-    const revealFrom = (el: Element | null, vars: gsap.TweenVars, delay = 0) => {
+    const revealFrom = (
+      el: Element | null,
+      vars: gsap.TweenVars,
+      delay = 0
+    ) => {
       if (!el) return
       gsap.fromTo(
         el,
@@ -112,53 +113,67 @@ export function LocomotiveSections() {
         stagger: 0.035,
         duration: 0.9,
         ease: "back.out(1.7)",
-        scrollTrigger: { trigger: statHeadRef.current, start: "top 82%" },
+        scrollTrigger: { trigger: statHeadRef.current, start: "top 82%" }
       })
     }
 
     revealFrom(statBodyRef.current, { y: 32 }, 0.1)
 
     // Section-card entrance — scrub border-radius as each card slides up
-    const cardEnter = (el: HTMLElement | null, trigger: Element | null) => {
+    const cardEnter = (
+      el: HTMLElement | null,
+      trigger: Element | null,
+      endRadius = "40px 40px 0 0"
+    ) => {
       if (!el) return
       gsap.fromTo(
         el,
         { borderRadius: "72px 72px 0 0" },
         {
-          borderRadius: "40px 40px 0 0",
+          borderRadius: endRadius,
           ease: "none",
           scrollTrigger: {
             trigger: trigger ?? el,
             start: "top bottom",
             end: "top top",
-            scrub: 1.2,
-          },
+            scrub: 1.2
+          }
         }
       )
     }
-    cardEnter(featSectionRef.current, blueWrapperRef.current)
+    // Blue section goes fully edge-to-edge once sticky
+    cardEnter(featSectionRef.current, blueWrapperRef.current, "0 0 0 0")
     cardEnter(capSectionRef.current, null)
 
-    // Features — each card bounces in at its own scroll position through the wrapper
+    // Features — single timeline per card: enter(1) · pin(1) · exit(1)
+    // fromTo inside a timeline sets the "from" state immediately on mount,
+    // so cards are invisible+offscreen before any scrolling occurs.
     revealFrom(featLabelRef.current, { y: 16 })
-    if (featGridRef.current) {
-      const cards = [...featGridRef.current.querySelectorAll<HTMLElement>(".feat-card")]
-      // trigger points as % of wrapper scroll: card 1 early, card 2 mid, card 3 late
-      const starts = ["8% top", "38% top", "68% top"]
-      cards.forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          { opacity: 0, y: 80, scale: 0.92 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.72,
-            ease: "back.out(1.7)",
-            scrollTrigger: { trigger: blueWrapperRef.current, start: starts[i] }
-          }
-        )
-      })
+    if (featGridRef.current && blueWrapperRef.current) {
+      const cards = [
+        ...featGridRef.current.querySelectorAll<HTMLElement>(".feat-card")
+      ]
+      const wrapper = blueWrapperRef.current
+
+      const tl = (s: string, e: string) =>
+        gsap.timeline({ scrollTrigger: { trigger: wrapper, start: s, end: e, scrub: 1.5 } })
+
+      // Card 0 — 0%→42%: enter(1) pin(1) exit(1)
+      tl("0% top", "42% top")
+        .fromTo(cards[0], { y: "110vh", opacity: 0 }, { y: 0, opacity: 1, ease: "power3.out", duration: 1 })
+        .to(cards[0], { y: 0, duration: 1 })
+        .to(cards[0], { y: "-110vh", opacity: 0, duration: 1 })
+
+      // Card 1 — 30%→72%: enter(1) pin(1) exit(1)
+      tl("30% top", "72% top")
+        .fromTo(cards[1], { y: "110vh", opacity: 0 }, { y: 0, opacity: 1, ease: "power3.out", duration: 1 })
+        .to(cards[1], { y: 0, duration: 1 })
+        .to(cards[1], { y: "-110vh", opacity: 0, duration: 1 })
+
+      // Card 2 — 62%→92%: enter(1) pin(2) stays
+      tl("62% top", "92% top")
+        .fromTo(cards[2], { y: "110vh", opacity: 0 }, { y: 0, opacity: 1, ease: "power3.out", duration: 1 })
+        .to(cards[2], { y: 0, duration: 2 })
     }
 
     // Capabilities label
@@ -183,62 +198,64 @@ export function LocomotiveSections() {
 
   return (
     <div style={{ background: "#fff", color: INK }}>
-      {/* ── 1 · Big statement — sticky ───────────────────────────────────── */}
-      <section
-        style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          padding: "clamp(120px,16vh,220px) clamp(24px,7vw,120px)",
-          background: "#ffffff",
-          zIndex: 0,
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ maxWidth: "960px" }}>
-          <h2
-            ref={statHeadRef}
-            style={{
-              fontFamily: SANS,
-              fontSize: "clamp(52px, 8.5vw, 112px)",
-              fontWeight: 700,
-              lineHeight: 1.0,
-              letterSpacing: "-0.025em",
-              margin: "0 0 56px",
-              opacity: 0
-            }}
-          >
-            The boring half
-            <br />
-            of your day,
-            <br />
-            handled.
-          </h2>
-          <p
-            ref={statBodyRef}
-            style={{
-              fontFamily: SANS,
-              fontSize: "clamp(16px, 1.8vw, 21px)",
-              fontWeight: 400,
-              lineHeight: 1.6,
-              color: MUTE,
-              margin: 0,
-              maxWidth: "520px",
-              opacity: 0
-            }}
-          >
-            Yaven automates the admin, drafts the emails, and keeps you in the
-            loop — so you can focus on the work only you can do.
-          </p>
-        </div>
-      </section>
+      {/* ── 1 · Big statement — sticky with dwell time ──────────────────── */}
+      <div style={{ position: "relative", height: "200vh" }}>
+        <section
+          style={{
+            position: "sticky",
+            top: 0,
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            padding: "clamp(120px,16vh,220px) clamp(24px,7vw,120px)",
+            background: "#ffffff",
+            zIndex: 0,
+            overflow: "hidden"
+          }}
+        >
+          <div style={{ maxWidth: "960px" }}>
+            <h2
+              ref={statHeadRef}
+              style={{
+                fontFamily: SANS,
+                fontSize: "clamp(60px, 9.5vw, 128px)",
+                fontWeight: 500,
+                lineHeight: 1.0,
+                letterSpacing: "-0.025em",
+                margin: "0 0 56px",
+                opacity: 0
+              }}
+            >
+              The boring half
+              <br />
+              of your day,
+              <br />
+              handled.
+            </h2>
+            <p
+              ref={statBodyRef}
+              style={{
+                fontFamily: SANS,
+                fontSize: "clamp(18px, 2vw, 24px)",
+                fontWeight: 400,
+                lineHeight: 1.6,
+                color: MUTE,
+                margin: 0,
+                maxWidth: "520px",
+                opacity: 0
+              }}
+            >
+              yaven automates the admin, drafts the emails, and keeps you in the
+              loop — so you can focus on the work only you can do.
+            </p>
+          </div>
+        </section>
+      </div>
 
       {/* ── 2 · Features — tall wrapper keeps blue sticky ────────────────── */}
       <div
         ref={blueWrapperRef}
-        style={{ position: "relative", height: "520vh", zIndex: 2 }}
+        style={{ position: "relative", height: "550vh", zIndex: 2 }}
       >
         <section
           ref={featSectionRef}
@@ -249,7 +266,7 @@ export function LocomotiveSections() {
             background: BLUE,
             borderRadius: "72px 72px 0 0",
             overflow: "hidden",
-            boxShadow: "0 -16px 64px rgba(0,0,0,0.22)",
+            boxShadow: "0 -16px 64px rgba(0,0,0,0.22)"
           }}
         >
           {/* Label */}
@@ -257,33 +274,34 @@ export function LocomotiveSections() {
             ref={featLabelRef}
             style={{
               position: "absolute",
-              top: "clamp(36px,4.5vh,56px)",
+              top: "clamp(40px,6vh,56px)",
               left: "clamp(40px,6vw,100px)",
-              fontFamily: SANS,
-              fontSize: "12px",
-              fontWeight: 600,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
+              fontSize: "32px",
+              fontWeight: 500,
               color: "rgba(227,213,187,0.55)",
               margin: 0,
-              opacity: 0,
+              opacity: 0
             }}
           >
             How it works
           </p>
 
           {/* Square cards — absolutely positioned, alternating sides */}
-          <div ref={featGridRef} style={{ position: "relative", width: "100%", height: "100%" }}>
+          <div
+            ref={featGridRef}
+            style={{ position: "relative", width: "100%", height: "100%" }}
+          >
             {FEATURES.map((f, i) => {
-              const isLeft = i % 2 === 0
-              const cardSize = "clamp(210px, 23vw, 290px)"
+              const cardSize = "clamp(260px, 30vw, 380px)"
               const positions: React.CSSProperties =
-                i === 0 ? { top: "42%",   left:  "clamp(48px,7vw,120px)" } :
-                i === 1 ? { bottom: "7%", right: "clamp(48px,7vw,120px)" } :
-                          { top: "18%",   left:  "clamp(48px,7vw,120px)" }
+                i === 0
+                  ? { left: "clamp(48px, 7vw, 120px)", top: "8%" }
+                  : i === 1
+                    ? { right: "clamp(48px, 7vw, 120px)", top: "36%" }
+                    : { left: "clamp(48px, 7vw, 120px)", top: "22%" }
               return (
                 <div
-                  key={f.num}
+                  key={f.title}
                   className="feat-card"
                   style={{
                     position: "absolute",
@@ -292,49 +310,36 @@ export function LocomotiveSections() {
                     background: "#ffffff",
                     borderRadius: "20px",
                     padding: "clamp(20px,2.4vw,32px)",
+                    boxShadow:
+                      "0 32px 80px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.12)",
                     opacity: 0,
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                    ...positions,
+                    ...positions
                   }}
                 >
-                  <div>
-                    <span
-                      style={{
-                        fontFamily: SANS,
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        letterSpacing: "0.1em",
-                        color: "rgba(10,14,26,0.32)",
-                        display: "block",
-                        marginBottom: "clamp(10px,1.2vh,16px)",
-                      }}
-                    >
-                      {f.num}
-                    </span>
-                    <h3
-                      style={{
-                        fontFamily: SANS,
-                        fontSize: "clamp(20px, 2.2vw, 30px)",
-                        fontWeight: 700,
-                        lineHeight: 1.05,
-                        letterSpacing: "-0.025em",
-                        margin: 0,
-                        color: INK,
-                      }}
-                    >
-                      {f.title}
-                    </h3>
-                  </div>
+                  <h3
+                    style={{
+                      fontFamily: SANS,
+                      fontSize: "clamp(22px, 2.6vw, 34px)",
+                      fontWeight: 500,
+                      lineHeight: 1.05,
+                      letterSpacing: "-0.025em",
+                      margin: 0,
+                      color: INK
+                    }}
+                  >
+                    {f.title}
+                  </h3>
                   <p
                     style={{
                       fontFamily: SANS,
-                      fontSize: "clamp(12px, 1.1vw, 14px)",
+                      fontSize: "clamp(14px, 1.3vw, 16px)",
                       fontWeight: 400,
                       lineHeight: 1.6,
                       color: MUTE,
-                      margin: 0,
+                      margin: 0
                     }}
                   >
                     {f.body}
@@ -346,81 +351,84 @@ export function LocomotiveSections() {
         </section>
       </div>
 
-      {/* ── 3 · Capabilities list — white card slides over blue ─────────── */}
-      <section
-        ref={capSectionRef}
-        style={{
-          position: "relative",
-          zIndex: 3,
-          background: "#ffffff",
-          borderRadius: "72px 72px 0 0",
-          padding: "clamp(160px,20vh,260px) clamp(24px,7vw,120px)",
-          overflow: "hidden",
-          boxShadow: "0 -12px 60px rgba(0,0,0,0.10)",
-        }}
-      >
-        <p
-          ref={capLabelRef}
+      {/* ── 3 · Capabilities list — white card pins on top of blue ─────────── */}
+      <div style={{ position: "relative", zIndex: 3 }}>
+        <section
+          ref={capSectionRef}
           style={{
-            fontFamily: SANS,
-            fontSize: "12px",
-            fontWeight: 600,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: MUTE,
-            margin: "0 0 140px",
-            opacity: 0
+            position: "sticky",
+            top: 0,
+            background: "#ffffff",
+            borderRadius: "72px 72px 0 0",
+            padding:
+              "clamp(80px,10vh,130px) clamp(24px,7vw,120px) clamp(80px,10vh,130px)",
+            overflow: "hidden",
+            boxShadow: "0 -16px 64px rgba(0,0,0,0.14)"
           }}
         >
-          What Yaven handles
-        </p>
+          <p
+            ref={capLabelRef}
+            style={{
+              fontFamily: SANS,
+              fontSize: "12px",
+              fontWeight: 500,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: MUTE,
+              margin: "0 0 140px",
+              opacity: 0
+            }}
+          >
+            What yaven handles
+          </p>
 
-        <div ref={capListRef}>
-          {CAPABILITIES.map((c, i) => (
-            <div
-              key={c.num}
-              className="loco-list-item"
-              style={
-                {
-                  "--index": i,
-                  display: "grid",
-                  gridTemplateColumns: "1fr auto",
-                  gap: "clamp(24px, 4vw, 80px)",
-                  alignItems: "baseline",
-                  padding: "clamp(48px, 5vw, 72px) 0"
-                } as React.CSSProperties
-              }
-            >
-              <span
-                className="u-hover-underline"
-                style={{
-                  fontFamily: SANS,
-                  fontSize: "clamp(28px, 4vw, 52px)",
-                  fontWeight: 700,
-                  letterSpacing: "-0.025em",
-                  lineHeight: 1.05,
-                  display: "inline-block"
-                }}
+          <div ref={capListRef}>
+            {CAPABILITIES.map((c, i) => (
+              <div
+                key={c.num}
+                className="loco-list-item"
+                style={
+                  {
+                    "--index": i,
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto",
+                    gap: "clamp(24px, 4vw, 80px)",
+                    alignItems: "baseline",
+                    padding: "clamp(48px, 5vw, 72px) 0"
+                  } as React.CSSProperties
+                }
               >
-                {c.title}
-              </span>
-              <span
-                style={{
-                  fontFamily: SANS,
-                  fontSize: "clamp(14px, 1.4vw, 17px)",
-                  fontWeight: 400,
-                  lineHeight: 1.6,
-                  color: MUTE,
-                  maxWidth: "360px",
-                  textAlign: "right"
-                }}
-              >
-                {c.desc}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
+                <span
+                  className="u-hover-underline"
+                  style={{
+                    fontFamily: SANS,
+                    fontSize: "clamp(34px, 4.8vw, 62px)",
+                    fontWeight: 500,
+                    letterSpacing: "-0.025em",
+                    lineHeight: 1.05,
+                    display: "inline-block"
+                  }}
+                >
+                  {c.title}
+                </span>
+                <span
+                  style={{
+                    fontFamily: SANS,
+                    fontSize: "clamp(16px, 1.6vw, 20px)",
+                    fontWeight: 400,
+                    lineHeight: 1.6,
+                    color: MUTE,
+                    maxWidth: "360px",
+                    textAlign: "right"
+                  }}
+                >
+                  {c.desc}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
 
       {/* ── 4 · CTA ──────────────────────────────────────────────────────── */}
       <section
@@ -431,7 +439,7 @@ export function LocomotiveSections() {
           padding: "clamp(160px,20vh,260px) clamp(24px,7vw,120px)",
           position: "relative",
           zIndex: 3,
-          background: "#ffffff",
+          background: "#ffffff"
         }}
       >
         <div>
@@ -440,7 +448,7 @@ export function LocomotiveSections() {
             style={{
               fontFamily: SANS,
               fontSize: "12px",
-              fontWeight: 600,
+              fontWeight: 500,
               letterSpacing: "0.14em",
               textTransform: "uppercase",
               color: BLUE,
@@ -454,8 +462,8 @@ export function LocomotiveSections() {
             ref={ctaHeadRef}
             style={{
               fontFamily: SANS,
-              fontSize: "clamp(52px, 8vw, 108px)",
-              fontWeight: 700,
+              fontSize: "clamp(60px, 9vw, 122px)",
+              fontWeight: 500,
               lineHeight: 1.0,
               letterSpacing: "-0.025em",
               margin: "0 0 96px",
