@@ -158,62 +158,36 @@ export function HeroSection() {
   }, [])
 
   useEffect(() => {
-    const d = 2.0
-
-    // ── entrance animations ───────────────────────────────────────────────
-    gsap.set(navRef.current, { yPercent: -120, opacity: 0 })
-    gsap.set(boxRef.current, { scale: 0.88, opacity: 0 })
-    gsap.set(ctaRef.current, { opacity: 0, y: 22 })
+    // ── set initial hidden state immediately on mount ─────────────────────
+    gsap.set(navRef.current,    { yPercent: -120, opacity: 0 })
+    gsap.set(boxRef.current,    { scale: 0.88, opacity: 0 })
+    gsap.set(ctaRef.current,    { opacity: 0, y: 22 })
     gsap.set(cloudsRef.current, { opacity: 0, y: 36 })
 
-    gsap.to(navRef.current, {
-      yPercent: 0,
-      opacity: 1,
-      duration: 0.75,
-      ease: "power3.out",
-      delay: d
-    })
-    gsap.to(boxRef.current, {
-      scale: 1,
-      opacity: 1,
-      duration: 0.7,
-      ease: "back.out(1.5)",
-      delay: d + 0.05,
-      onComplete: () => gsap.set(boxRef.current, { clearProps: "transform" })
-    })
+    const ledeSplit = new SplitText(ledeRef.current, { type: "lines", mask: "lines" })
+    gsap.set(ledeSplit.lines, { yPercent: 100 })
 
-    // Text-mask reveal on lede — SplitText lines slide up from below clip
-    const ledeSplit = new SplitText(ledeRef.current, {
-      type: "lines",
-      mask: "lines"
-    })
-    gsap.fromTo(
-      ledeSplit.lines,
-      { yPercent: 100 },
-      {
-        yPercent: 0,
-        duration: 1,
-        stagger: 0.075,
-        ease: "power3.out",
-        delay: d + 0.5
-      }
-    )
+    // ── kick off entrances once the loader curtain starts lifting ─────────
+    const onLoaderDone = () => {
+      gsap.to(navRef.current, {
+        yPercent: 0, opacity: 1, duration: 0.75, ease: "power3.out"
+      })
+      gsap.to(boxRef.current, {
+        scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)", delay: 0.05,
+        onComplete: () => gsap.set(boxRef.current, { clearProps: "transform" })
+      })
+      gsap.to(ledeSplit.lines, {
+        yPercent: 0, duration: 1, stagger: 0.075, ease: "power3.out", delay: 0.2
+      })
+      gsap.to(ctaRef.current, {
+        opacity: 1, y: 0, duration: 0.75, ease: "power3.out", delay: 0.4
+      })
+      gsap.to(cloudsRef.current, {
+        opacity: 1, y: 0, duration: 1.4, ease: "power2.out", delay: 0.15
+      })
+    }
 
-    gsap.to(ctaRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.75,
-      ease: "power3.out",
-      delay: d + 0.7
-    })
-    // clouds drift up into place
-    gsap.to(cloudsRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 1.4,
-      ease: "power2.out",
-      delay: d + 0.3
-    })
+    window.addEventListener("yaven:loader:done", onLoaderDone, { once: true })
 
     // ── individual cloud float loops (y only — x reserved for scroll exit) ─
     cloudEls.current.forEach((el, i) => {
@@ -254,6 +228,8 @@ export function HeroSection() {
     })
 
     return () => {
+      window.removeEventListener("yaven:loader:done", onLoaderDone)
+      ledeSplit.revert()
       stTriggers.forEach(t => t.kill())
     }
   }, [])
@@ -364,7 +340,7 @@ export function HeroSection() {
               color: "#E3D5BB",
               marginBottom: "20px"
             }}
-            delay={2.15}
+            delay={0.1}
             highlights={[]}
           >
             A new interface for ai

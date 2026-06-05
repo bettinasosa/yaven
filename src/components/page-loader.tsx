@@ -41,7 +41,10 @@ export function PageLoader({ onDone }: { onDone?: () => void }) {
       gsap.set(panelRef.current, {
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)",
       })
-      exitTl = gsap.timeline({ onComplete: () => onDone?.() })
+      exitTl = gsap.timeline({
+        onStart:    () => window.dispatchEvent(new CustomEvent("yaven:loader:done")),
+        onComplete: () => onDone?.(),
+      })
       exitTl.to(panelRef.current, {
         yPercent: -100,
         clipPath: "polygon(0% 0%, 100% 0%, 100% 135%, 50% 55%, 0% 135%)",

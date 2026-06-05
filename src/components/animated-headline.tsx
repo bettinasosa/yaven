@@ -10,35 +10,37 @@ interface Props {
   children: string
   className?: string
   style?: React.CSSProperties
-  /** Delay in seconds before lines start revealing. */
+  /** Seconds after loader:done before this headline starts revealing. */
   delay?: number
-  /** Kept for API compatibility — no longer used. */
   highlights?: string[]
 }
 
-export function AnimatedHeadline({ children, className, style, delay = 0.9 }: Props) {
+export function AnimatedHeadline({ children, className, style, delay = 0 }: Props) {
   const ref = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
 
-    // Text-mask: SplitText splits into lines, each wrapped in overflow:clip mask
     const split = new SplitText(el, { type: "lines", mask: "lines" })
+    gsap.set(split.lines, { yPercent: 100 })
 
-    gsap.fromTo(
-      split.lines,
-      { yPercent: 100 },
-      {
+    const start = () => {
+      gsap.to(split.lines, {
         yPercent: 0,
         duration: 1,
         stagger: 0.075,
         ease: "power3.out",
         delay,
-      }
-    )
+      })
+    }
 
-    return () => split.revert()
+    window.addEventListener("yaven:loader:done", start, { once: true })
+
+    return () => {
+      split.revert()
+      window.removeEventListener("yaven:loader:done", start)
+    }
   }, [delay])
 
   return (
