@@ -3,7 +3,7 @@ import { TextParallaxSection } from "@/components/sections/text-parallax-section
 import { LocomotiveSections } from "@/components/sections/locomotive-sections"
 import { FooterSection } from "@/components/sections/footer-section"
 
-const FOOTER_H = 580
+const FOOTER_H = 660
 
 export default function Home() {
   return (

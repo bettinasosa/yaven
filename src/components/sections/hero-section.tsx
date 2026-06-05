@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -10,6 +10,19 @@ import { HeroBlobs } from "@/components/hero-blobs"
 import { AnimatedHeadline } from "@/components/animated-headline"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
+
+// Track whether the loader event has already fired so late-mounting variants
+// (e.g. switching A→B after page load) can animate in immediately.
+let _loaderFired = false
+if (typeof window !== "undefined") {
+  window.addEventListener(
+    "yaven:loader:done",
+    () => {
+      _loaderFired = true
+    },
+    { once: true }
+  )
+}
 
 function YavenMark({ height }: { height: number }) {
   return (
@@ -25,7 +38,6 @@ function YavenMark({ height }: { height: number }) {
 }
 
 // Cloud layout — large, bottom-anchored, half below the section edge
-// bottom is px: negative = pushed below the section's bottom edge
 const CLOUDS = [
   {
     left: "-22%",
@@ -33,7 +45,6 @@ const CLOUDS = [
     width: 800,
     opacity: 0.9,
     floatY: -22,
-    floatX: 14,
     dur: 5.4,
     delay: 0.0
   },
@@ -43,7 +54,6 @@ const CLOUDS = [
     width: 540,
     opacity: 0.7,
     floatY: -26,
-    floatX: -12,
     dur: 4.6,
     delay: 0.7
   },
@@ -53,7 +63,6 @@ const CLOUDS = [
     width: 540,
     opacity: 0.7,
     floatY: -26,
-    floatX: -12,
     dur: 4.6,
     delay: 0.7
   },
@@ -63,7 +72,6 @@ const CLOUDS = [
     width: 420,
     opacity: 0.9,
     floatY: -20,
-    floatX: 10,
     dur: 5.8,
     delay: 0.3
   },
@@ -73,7 +81,6 @@ const CLOUDS = [
     width: 500,
     opacity: 0.76,
     floatY: -24,
-    floatX: -10,
     dur: 4.9,
     delay: 1.0
   },
@@ -83,7 +90,6 @@ const CLOUDS = [
     width: 300,
     opacity: 0.76,
     floatY: -24,
-    floatX: -10,
     dur: 4.9,
     delay: 1.0
   },
@@ -93,13 +99,14 @@ const CLOUDS = [
     width: 720,
     opacity: 0.88,
     floatY: -18,
-    floatX: 12,
     dur: 5.1,
     delay: 0.5
   }
 ]
 
-export function HeroSection() {
+// ── Variant A — current centered design ──────────────────────────────────────
+
+function HeroVariantA() {
   const sectionRef = useRef<HTMLElement>(null)
   const navRef = useRef<HTMLDivElement>(null)
   const boxRef = useRef<HTMLDivElement>(null)
@@ -108,19 +115,16 @@ export function HeroSection() {
   const cloudsRef = useRef<HTMLDivElement>(null)
   const cloudEls = useRef<HTMLDivElement[]>([])
 
-  // Pill border-shine tracks mouse X + scroll Y
+  // Pill shine tracks mouse + scroll
   useEffect(() => {
-    let rafId = 0
-    let targetAngle = -30
-    let currentAngle = -30
-    let mouseProgress = 0.5
-
+    let rafId = 0,
+      targetAngle = -30,
+      currentAngle = -30,
+      mouseProgress = 0.5
     const update = () => {
-      const mouseAngle = (mouseProgress - 0.5) * 200
-      const scrollAngle = (window.scrollY / window.innerHeight) * 80
-      targetAngle = mouseAngle + scrollAngle
+      targetAngle =
+        (mouseProgress - 0.5) * 200 + (window.scrollY / window.innerHeight) * 80
     }
-
     const onMove = (e: MouseEvent) => {
       mouseProgress = e.clientX / window.innerWidth
       update()
@@ -131,8 +135,6 @@ export function HeroSection() {
         update()
       }
     }
-    const onScroll = () => update()
-
     const tick = () => {
       currentAngle += (targetAngle - currentAngle) * 0.07
       document.documentElement.style.setProperty(
@@ -141,55 +143,74 @@ export function HeroSection() {
       )
       rafId = requestAnimationFrame(tick)
     }
-
     window.addEventListener("mousemove", onMove, { passive: true })
     window.addEventListener("touchmove", onTouch, { passive: true })
     window.addEventListener("touchstart", onTouch, { passive: true })
-    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("scroll", () => update(), { passive: true })
     rafId = requestAnimationFrame(tick)
-
     return () => {
       window.removeEventListener("mousemove", onMove)
       window.removeEventListener("touchmove", onTouch)
       window.removeEventListener("touchstart", onTouch)
-      window.removeEventListener("scroll", onScroll)
       cancelAnimationFrame(rafId)
     }
   }, [])
 
   useEffect(() => {
-    // ── set initial hidden state immediately on mount ─────────────────────
-    gsap.set(navRef.current,    { yPercent: -120, opacity: 0 })
-    gsap.set(boxRef.current,    { scale: 0.88, opacity: 0 })
-    gsap.set(ctaRef.current,    { opacity: 0, y: 22 })
+    gsap.set(navRef.current, { yPercent: -120, opacity: 0 })
+    gsap.set(boxRef.current, { scale: 0.88, opacity: 0 })
+    gsap.set(ctaRef.current, { opacity: 0, y: 22 })
     gsap.set(cloudsRef.current, { opacity: 0, y: 36 })
 
-    const ledeSplit = new SplitText(ledeRef.current, { type: "lines", mask: "lines" })
+    const ledeSplit = new SplitText(ledeRef.current, {
+      type: "lines",
+      mask: "lines"
+    })
     gsap.set(ledeSplit.lines, { yPercent: 100 })
 
-    // ── kick off entrances once the loader curtain starts lifting ─────────
     const onLoaderDone = () => {
       gsap.to(navRef.current, {
-        yPercent: 0, opacity: 1, duration: 0.75, ease: "power3.out"
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.75,
+        ease: "power3.out"
       })
       gsap.to(boxRef.current, {
-        scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)", delay: 0.05,
+        scale: 1,
+        opacity: 1,
+        duration: 0.7,
+        ease: "back.out(1.5)",
+        delay: 0.05,
         onComplete: () => gsap.set(boxRef.current, { clearProps: "transform" })
       })
       gsap.to(ledeSplit.lines, {
-        yPercent: 0, duration: 1, stagger: 0.075, ease: "power3.out", delay: 0.2
+        yPercent: 0,
+        duration: 1,
+        stagger: 0.075,
+        ease: "power3.out",
+        delay: 0.2
       })
       gsap.to(ctaRef.current, {
-        opacity: 1, y: 0, duration: 0.75, ease: "power3.out", delay: 0.4
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        ease: "power3.out",
+        delay: 0.4
       })
       gsap.to(cloudsRef.current, {
-        opacity: 1, y: 0, duration: 1.4, ease: "power2.out", delay: 0.15
+        opacity: 1,
+        y: 0,
+        duration: 1.4,
+        ease: "power2.out",
+        delay: 0.15
       })
     }
+    if (_loaderFired) {
+      onLoaderDone()
+    } else {
+      window.addEventListener("yaven:loader:done", onLoaderDone, { once: true })
+    }
 
-    window.addEventListener("yaven:loader:done", onLoaderDone, { once: true })
-
-    // ── individual cloud float loops (y only — x reserved for scroll exit) ─
     cloudEls.current.forEach((el, i) => {
       if (!el) return
       const c = CLOUDS[i]
@@ -203,14 +224,9 @@ export function HeroSection() {
       })
     })
 
-    // ── scroll exit — clouds slide to their sides, fully reversible ─────
-    // Indices 0–3 have left: positioning → go left (negative x)
-    // Indices 4–6 have right: positioning → go right (positive x)
-    // Positive y = drift downward with the scroll
-    const xTargets = [-500, -420, -320, -220, 300, 380, 520]
-    const yTargets = [420, 360, 300, 240, 300, 360, 420]
+    const xTargets = [-1900, -1400, -1100, -800, 900, 1200, 2000]
+    const yTargets = [600, 500, 420, 320, 420, 500, 600]
     const stTriggers: ScrollTrigger[] = []
-
     cloudEls.current.forEach((el, i) => {
       if (!el) return
       const tween = gsap.to(el, {
@@ -220,7 +236,7 @@ export function HeroSection() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "80% top",
+          end: "bottom top",
           scrub: 1.8
         }
       })
@@ -229,7 +245,7 @@ export function HeroSection() {
 
     return () => {
       window.removeEventListener("yaven:loader:done", onLoaderDone)
-      ledeSplit.revert()
+      ledeSplit.revert?.()
       stTriggers.forEach(t => t.kill())
     }
   }, [])
@@ -247,7 +263,7 @@ export function HeroSection() {
     >
       <HeroBlobs />
 
-      {/* ── Clouds ─────────────────────────────────────────────────────── */}
+      {/* Clouds */}
       <div
         ref={cloudsRef}
         aria-hidden="true"
@@ -284,31 +300,45 @@ export function HeroSection() {
         ))}
       </div>
 
-      {/* ── Nav ────────────────────────────────────────────────────────── */}
+      {/* Nav */}
       <div
         ref={navRef}
-        className="absolute z-10 w-full px-8 pt-8 flex items-center justify-between"
+        className="absolute z-10 w-full px-8 pt-8 flex items-center"
         style={{ opacity: 0, top: 0 }}
       >
-        <div className="flex items-center">
-          <YavenMark height={46} />
-          <span
-            className="hero-nav-label"
-            style={{
-              fontWeight: 700,
-              fontSize: "44px",
-              color: "#E3D5BB"
-            }}
-          >
-            Yaven
-          </span>
-        </div>
+        <YavenMark height={32} />
+        <span
+          className="hero-nav-label"
+          style={{
+            fontWeight: 700,
+            fontSize: "26px",
+            color: "#E3D5BB",
+            marginLeft: "8px"
+          }}
+        >
+          Yaven
+        </span>
       </div>
 
-      {/* ── Centred content ────────────────────────────────────────────── */}
+      {/* Bottom fade */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "320px",
+          background:
+            "linear-gradient(to bottom, rgba(38,127,229,0) 0%, rgba(38,127,229,0.65) 45%, rgba(38,127,229,1) 100%)",
+          pointerEvents: "none",
+          zIndex: 6
+        }}
+      />
+
+      {/* Centred content */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-12">
         <div className="text-center w-full max-w-3xl">
-          {/* Wordmark */}
           <div
             ref={boxRef}
             className="hero-namebox"
@@ -321,7 +351,7 @@ export function HeroSection() {
             <span
               className="font-bold hero-wordmark-text"
               style={{
-                fontSize: "clamp(64px, 11vw, 160px)",
+                fontSize: "clamp(40px, 6vw, 88px)",
                 lineHeight: 0.95,
                 color: "#E3D5BB",
                 display: "block"
@@ -331,7 +361,6 @@ export function HeroSection() {
             </span>
           </div>
 
-          {/* Headline */}
           <AnimatedHeadline
             className="font-bold hero-headline"
             style={{
@@ -343,10 +372,9 @@ export function HeroSection() {
             delay={0.1}
             highlights={[]}
           >
-            A new interface for ai
+            Less admin. More flow.
           </AnimatedHeadline>
 
-          {/* Lede */}
           <p
             ref={ledeRef}
             className="font-medium mx-auto hero-lede"
@@ -358,12 +386,10 @@ export function HeroSection() {
               marginBottom: "36px"
             }}
           >
-            Yaven lives in your notch and watches everything you work on — so
-            it&apos;s always up to speed, and you never have to explain
-            yourself.
+            Yaven lives in at the top of your screen. It&apos;s always up to
+            speed.
           </p>
 
-          {/* CTAs */}
           <div
             ref={ctaRef}
             className="flex flex-wrap items-center justify-center gap-5"
@@ -392,5 +418,264 @@ export function HeroSection() {
         </div>
       </div>
     </section>
+  )
+}
+
+// ── Variant B — flat blue, right-aligned, single cloud ───────────────────────
+
+function HeroVariantB() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const navRef = useRef<HTMLDivElement>(null)
+  const wordRef = useRef<HTMLDivElement>(null)
+  const tagRef = useRef<HTMLDivElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
+  const cloudRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Set initial hidden states (mirrors Variant A)
+    gsap.set(navRef.current,   { yPercent: -120, opacity: 0 })
+    gsap.set(wordRef.current,  { scale: 0.88,    opacity: 0 })
+    gsap.set(tagRef.current,   { opacity: 0, y: 40 })
+    gsap.set(ctaRef.current,   { opacity: 0, y: 22 })
+    gsap.set(cloudRef.current, { opacity: 0, y: 36 })
+
+    const onLoaderDone = () => {
+      gsap.to(navRef.current,   { yPercent: 0, opacity: 1, duration: 0.75, ease: "power3.out" })
+      gsap.to(wordRef.current,  { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)", delay: 0.05 })
+      gsap.to(tagRef.current,   { opacity: 1, y: 0, duration: 0.9,  ease: "power3.out", delay: 0.15 })
+      gsap.to(ctaRef.current,   { opacity: 1, y: 0, duration: 0.75, ease: "power3.out", delay: 0.35 })
+      gsap.to(cloudRef.current, { opacity: 1, y: 0, duration: 1.4,  ease: "power2.out", delay: 0.1  })
+    }
+
+    if (_loaderFired) {
+      onLoaderDone()
+    } else {
+      window.addEventListener("yaven:loader:done", onLoaderDone, { once: true })
+    }
+
+    // Scroll exit — cloud drifts down
+    const st = gsap.to(cloudRef.current, {
+      y: 120,
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 2
+      }
+    })
+
+    return () => {
+      window.removeEventListener("yaven:loader:done", onLoaderDone)
+      st.scrollTrigger?.kill()
+    }
+  }, [])
+
+  return (
+    <section
+      ref={sectionRef}
+      className="hero-grain"
+      style={{
+        background: "#267FE5",
+        position: "relative",
+        minHeight: "100vh",
+        overflow: "hidden",
+        zIndex: 50
+      }}
+    >
+      {/* Nav — top left */}
+      <div
+        ref={navRef}
+        style={{
+          position: "absolute",
+          top: "clamp(24px, 4vh, 40px)",
+          left: "clamp(28px, 4vw, 48px)",
+          zIndex: 10,
+          display: "flex",
+          alignItems: "center",
+          gap: "10px"
+        }}
+      >
+        <YavenMark height={36} />
+        <span
+          style={{
+            fontWeight: 700,
+            fontSize: "18px",
+            color: "#fff",
+            fontFamily: "var(--font-dm-sans), sans-serif"
+          }}
+        >
+          Yaven
+        </span>
+      </div>
+
+      {/* "yaven" wordmark — right, vertically centred */}
+      <div
+        ref={wordRef}
+        style={{
+          position: "absolute",
+          right: "clamp(32px, 5vw, 80px)",
+          top: "50%",
+          transform: "translateY(-58%)",
+          zIndex: 5,
+          textAlign: "right"
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-dm-sans), sans-serif",
+            fontSize: "clamp(80px, 14vw, 210px)",
+            fontWeight: 800,
+            color: "#fff",
+            letterSpacing: "-0.03em",
+            lineHeight: 0.88,
+            display: "block",
+            textTransform: "lowercase"
+          }}
+        >
+          yaven
+        </span>
+      </div>
+
+      {/* Tagline — bottom right */}
+      <div
+        ref={tagRef}
+        style={{
+          position: "absolute",
+          bottom: "clamp(40px, 7vh, 90px)",
+          right: "clamp(32px, 5vw, 80px)",
+          zIndex: 5,
+          textAlign: "right"
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-dm-sans), sans-serif",
+            fontSize: "clamp(20px, 3vw, 42px)",
+            fontWeight: 800,
+            color: "#fff",
+            lineHeight: 1.05,
+            letterSpacing: "-0.02em",
+            margin: 0,
+            opacity: 0.92
+          }}
+        >
+          stop briefing
+          <br />
+          your ai.
+        </p>
+      </div>
+
+      {/* CTA — bottom left */}
+      <div
+        ref={ctaRef}
+        style={{
+          position: "absolute",
+          bottom: "clamp(40px, 7vh, 90px)",
+          left: "clamp(32px, 5vw, 80px)",
+          zIndex: 5,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: "16px"
+        }}
+      >
+        <BlueprintPanel />
+        <a
+          href="https://calendly.com/nickprice2000/yaven-support"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontFamily: "var(--font-space-mono)",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            color: "rgba(255,255,255,0.65)",
+            textDecoration: "underline",
+            textDecorationThickness: "1.5px",
+            textUnderlineOffset: "4px"
+          }}
+        >
+          Book a call ↗
+        </a>
+      </div>
+
+      {/* Single cloud — bottom centre */}
+      <div
+        ref={cloudRef}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: "-160px",
+          left: "50%",
+          transform: "translateX(-55%)",
+          zIndex: 4,
+          width: "clamp(500px, 72vw, 1100px)",
+          pointerEvents: "none"
+        }}
+      >
+        <Image
+          src="/cloud.png"
+          alt=""
+          width={860}
+          height={480}
+          style={{ width: "100%", height: "auto", display: "block" }}
+        />
+      </div>
+    </section>
+  )
+}
+
+// ── Main export — manages variant toggle ─────────────────────────────────────
+
+export function HeroSection() {
+  const [variant, setVariant] = useState<"A" | "B">("A")
+
+  return (
+    <>
+      {variant === "A" ? <HeroVariantA /> : <HeroVariantB />}
+
+      {/* Variant toggle */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: "24px",
+          right: "24px",
+          zIndex: 200,
+          background: "rgba(255,255,255,0.55)",
+          border: "1px solid rgba(255,255,255,0.80)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          borderRadius: "40px",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
+          display: "flex",
+          padding: "3px",
+          gap: "2px"
+        }}
+      >
+        {(["A", "B"] as const).map(v => (
+          <button
+            key={v}
+            onClick={() => setVariant(v)}
+            style={{
+              fontFamily: "var(--font-space-mono)",
+              fontSize: "10px",
+              fontWeight: 700,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              padding: "5px 14px",
+              borderRadius: "40px",
+              border: "none",
+              cursor: "pointer",
+              background: variant === v ? "rgba(0,0,0,0.75)" : "transparent",
+              color: variant === v ? "#fff" : "rgba(0,0,0,0.55)",
+              transition: "all 0.15s ease"
+            }}
+          >
+            {v}
+          </button>
+        ))}
+      </div>
+    </>
   )
 }

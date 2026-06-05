@@ -67,14 +67,16 @@ const CAPABILITIES = [
 const INK = "#0a0e1a"
 const MUTE = "rgba(10,14,26,0.42)"
 const BLUE = "#267FE5"
-const MONO = "var(--font-space-mono), monospace"
 const SANS = "var(--font-dm-sans), sans-serif"
 
 export function LocomotiveSections() {
   const statHeadRef = useRef<HTMLHeadingElement>(null)
   const statBodyRef = useRef<HTMLParagraphElement>(null)
+  const blueWrapperRef = useRef<HTMLDivElement>(null)
+  const featSectionRef = useRef<HTMLElement>(null)
   const featGridRef = useRef<HTMLDivElement>(null)
   const featLabelRef = useRef<HTMLParagraphElement>(null)
+  const capSectionRef = useRef<HTMLElement>(null)
   const capLabelRef = useRef<HTMLParagraphElement>(null)
   const ctaLabelRef = useRef<HTMLParagraphElement>(null)
   const ctaHeadRef = useRef<HTMLHeadingElement>(null)
@@ -116,22 +118,47 @@ export function LocomotiveSections() {
 
     revealFrom(statBodyRef.current, { y: 32 }, 0.1)
 
-    // Features
-    revealFrom(featLabelRef.current, { y: 20 })
-    if (featGridRef.current) {
-      const cards = featGridRef.current.querySelectorAll<HTMLElement>(".feat-card")
+    // Section-card entrance — scrub border-radius as each card slides up
+    const cardEnter = (el: HTMLElement | null, trigger: Element | null) => {
+      if (!el) return
       gsap.fromTo(
-        cards,
-        { opacity: 0, y: 60 },
+        el,
+        { borderRadius: "72px 72px 0 0" },
         {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: SMOOTH,
-          stagger: 0.12,
-          scrollTrigger: { trigger: featGridRef.current, start: "top 80%" }
+          borderRadius: "40px 40px 0 0",
+          ease: "none",
+          scrollTrigger: {
+            trigger: trigger ?? el,
+            start: "top bottom",
+            end: "top top",
+            scrub: 1.2,
+          },
         }
       )
+    }
+    cardEnter(featSectionRef.current, blueWrapperRef.current)
+    cardEnter(capSectionRef.current, null)
+
+    // Features — each card bounces in at its own scroll position through the wrapper
+    revealFrom(featLabelRef.current, { y: 16 })
+    if (featGridRef.current) {
+      const cards = [...featGridRef.current.querySelectorAll<HTMLElement>(".feat-card")]
+      // trigger points as % of wrapper scroll: card 1 early, card 2 mid, card 3 late
+      const starts = ["8% top", "38% top", "68% top"]
+      cards.forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 80, scale: 0.92 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.72,
+            ease: "back.out(1.7)",
+            scrollTrigger: { trigger: blueWrapperRef.current, start: starts[i] }
+          }
+        )
+      })
     }
 
     // Capabilities label
@@ -156,14 +183,18 @@ export function LocomotiveSections() {
 
   return (
     <div style={{ background: "#fff", color: INK }}>
-      {/* ── 1 · Big statement ────────────────────────────────────────────── */}
+      {/* ── 1 · Big statement — sticky ───────────────────────────────────── */}
       <section
         style={{
-          minHeight: "100vh",
+          position: "sticky",
+          top: 0,
+          height: "100vh",
           display: "flex",
           alignItems: "center",
           padding: "clamp(120px,16vh,220px) clamp(24px,7vw,120px)",
-          background: "linear-gradient(to bottom, transparent 0%, #ffffff 28%)",
+          background: "#ffffff",
+          zIndex: 0,
+          overflow: "hidden",
         }}
       >
         <div style={{ maxWidth: "960px" }}>
@@ -171,7 +202,7 @@ export function LocomotiveSections() {
             ref={statHeadRef}
             style={{
               fontFamily: SANS,
-              fontSize: "clamp(46px, 7.5vw, 96px)",
+              fontSize: "clamp(52px, 8.5vw, 112px)",
               fontWeight: 700,
               lineHeight: 1.0,
               letterSpacing: "-0.025em",
@@ -204,91 +235,140 @@ export function LocomotiveSections() {
         </div>
       </section>
 
-      {/* ── 2 · Three features ───────────────────────────────────────────── */}
-      <section
-        style={{
-          padding: "clamp(120px,15vh,200px) clamp(24px,7vw,120px)",
-        }}
+      {/* ── 2 · Features — tall wrapper keeps blue sticky ────────────────── */}
+      <div
+        ref={blueWrapperRef}
+        style={{ position: "relative", height: "520vh", zIndex: 2 }}
       >
-        <p
-          ref={featLabelRef}
+        <section
+          ref={featSectionRef}
           style={{
-            fontSize: "32px",
-            fontWeight: 700,
-            color: MUTE,
-            margin: "0 0 100px",
-            opacity: 0
+            position: "sticky",
+            top: 0,
+            height: "100vh",
+            background: BLUE,
+            borderRadius: "72px 72px 0 0",
+            overflow: "hidden",
+            boxShadow: "0 -16px 64px rgba(0,0,0,0.22)",
           }}
         >
-          How it works
-        </p>
-        <div
-          ref={featGridRef}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: "clamp(64px, 8vw, 128px)"
-          }}
-        >
-          {FEATURES.map((f) => (
-            <div key={f.num} className="feat-card" style={{ opacity: 0 }}>
-              <span
-                style={{
-                  fontFamily: MONO,
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  color: BLUE,
-                  display: "block",
-                  marginBottom: "36px"
-                }}
-              >
-                {f.num}
-              </span>
-              <h3
-                className="u-hover-underline"
-                style={{
-                  fontFamily: SANS,
-                  fontSize: "clamp(22px, 2.6vw, 30px)",
-                  fontWeight: 700,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.015em",
-                  margin: "0 0 24px",
-                  display: "inline-block"
-                }}
-              >
-                {f.title}
-              </h3>
-              <p
-                style={{
-                  fontFamily: SANS,
-                  fontSize: "clamp(15px, 1.5vw, 17px)",
-                  fontWeight: 400,
-                  lineHeight: 1.65,
-                  color: MUTE,
-                  margin: 0
-                }}
-              >
-                {f.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+          {/* Label */}
+          <p
+            ref={featLabelRef}
+            style={{
+              position: "absolute",
+              top: "clamp(36px,4.5vh,56px)",
+              left: "clamp(40px,6vw,100px)",
+              fontFamily: SANS,
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "rgba(227,213,187,0.55)",
+              margin: 0,
+              opacity: 0,
+            }}
+          >
+            How it works
+          </p>
 
-      {/* ── 3 · Capabilities list ────────────────────────────────────────── */}
+          {/* Square cards — absolutely positioned, alternating sides */}
+          <div ref={featGridRef} style={{ position: "relative", width: "100%", height: "100%" }}>
+            {FEATURES.map((f, i) => {
+              const isLeft = i % 2 === 0
+              const cardSize = "clamp(210px, 23vw, 290px)"
+              const positions: React.CSSProperties =
+                i === 0 ? { top: "42%",   left:  "clamp(48px,7vw,120px)" } :
+                i === 1 ? { bottom: "7%", right: "clamp(48px,7vw,120px)" } :
+                          { top: "18%",   left:  "clamp(48px,7vw,120px)" }
+              return (
+                <div
+                  key={f.num}
+                  className="feat-card"
+                  style={{
+                    position: "absolute",
+                    width: cardSize,
+                    height: cardSize,
+                    background: "#ffffff",
+                    borderRadius: "20px",
+                    padding: "clamp(20px,2.4vw,32px)",
+                    opacity: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    ...positions,
+                  }}
+                >
+                  <div>
+                    <span
+                      style={{
+                        fontFamily: SANS,
+                        fontSize: "11px",
+                        fontWeight: 600,
+                        letterSpacing: "0.1em",
+                        color: "rgba(10,14,26,0.32)",
+                        display: "block",
+                        marginBottom: "clamp(10px,1.2vh,16px)",
+                      }}
+                    >
+                      {f.num}
+                    </span>
+                    <h3
+                      style={{
+                        fontFamily: SANS,
+                        fontSize: "clamp(20px, 2.2vw, 30px)",
+                        fontWeight: 700,
+                        lineHeight: 1.05,
+                        letterSpacing: "-0.025em",
+                        margin: 0,
+                        color: INK,
+                      }}
+                    >
+                      {f.title}
+                    </h3>
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: SANS,
+                      fontSize: "clamp(12px, 1.1vw, 14px)",
+                      fontWeight: 400,
+                      lineHeight: 1.6,
+                      color: MUTE,
+                      margin: 0,
+                    }}
+                  >
+                    {f.body}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      </div>
+
+      {/* ── 3 · Capabilities list — white card slides over blue ─────────── */}
       <section
+        ref={capSectionRef}
         style={{
-          padding: "clamp(120px,15vh,200px) clamp(24px,7vw,120px)",
+          position: "relative",
+          zIndex: 3,
+          background: "#ffffff",
+          borderRadius: "72px 72px 0 0",
+          padding: "clamp(160px,20vh,260px) clamp(24px,7vw,120px)",
+          overflow: "hidden",
+          boxShadow: "0 -12px 60px rgba(0,0,0,0.10)",
         }}
       >
         <p
           ref={capLabelRef}
           style={{
-            fontSize: "32px",
-            fontWeight: 700,
+            fontFamily: SANS,
+            fontSize: "12px",
+            fontWeight: 600,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
             color: MUTE,
-            margin: "0 0 100px",
+            margin: "0 0 140px",
             opacity: 0
           }}
         >
@@ -304,32 +384,21 @@ export function LocomotiveSections() {
                 {
                   "--index": i,
                   display: "grid",
-                  gridTemplateColumns: "40px 1fr 1fr",
-                  gap: "clamp(16px, 3.5vw, 56px)",
+                  gridTemplateColumns: "1fr auto",
+                  gap: "clamp(24px, 4vw, 80px)",
                   alignItems: "baseline",
-                  padding: "clamp(36px, 4vw, 52px) 0"
+                  padding: "clamp(48px, 5vw, 72px) 0"
                 } as React.CSSProperties
               }
             >
               <span
-                style={{
-                  fontFamily: MONO,
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  letterSpacing: "0.10em",
-                  color: MUTE
-                }}
-              >
-                {c.num}
-              </span>
-              <span
                 className="u-hover-underline"
                 style={{
                   fontFamily: SANS,
-                  fontSize: "clamp(17px, 2vw, 22px)",
+                  fontSize: "clamp(28px, 4vw, 52px)",
                   fontWeight: 700,
-                  letterSpacing: "-0.01em",
-                  lineHeight: 1.2,
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.05,
                   display: "inline-block"
                 }}
               >
@@ -338,10 +407,12 @@ export function LocomotiveSections() {
               <span
                 style={{
                   fontFamily: SANS,
-                  fontSize: "clamp(14px, 1.4vw, 16px)",
+                  fontSize: "clamp(14px, 1.4vw, 17px)",
                   fontWeight: 400,
                   lineHeight: 1.6,
-                  color: MUTE
+                  color: MUTE,
+                  maxWidth: "360px",
+                  textAlign: "right"
                 }}
               >
                 {c.desc}
@@ -354,20 +425,26 @@ export function LocomotiveSections() {
       {/* ── 4 · CTA ──────────────────────────────────────────────────────── */}
       <section
         style={{
-          minHeight: "60vh",
+          minHeight: "80vh",
           display: "flex",
           alignItems: "center",
-          padding: "clamp(120px,15vh,200px) clamp(24px,7vw,120px)",
+          padding: "clamp(160px,20vh,260px) clamp(24px,7vw,120px)",
+          position: "relative",
+          zIndex: 3,
+          background: "#ffffff",
         }}
       >
         <div>
           <p
             ref={ctaLabelRef}
             style={{
-              fontSize: "32px",
-              fontWeight: 700,
+              fontFamily: SANS,
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
               color: BLUE,
-              margin: "0 0 52px",
+              margin: "0 0 60px",
               opacity: 0
             }}
           >
@@ -377,11 +454,11 @@ export function LocomotiveSections() {
             ref={ctaHeadRef}
             style={{
               fontFamily: SANS,
-              fontSize: "clamp(40px, 6vw, 80px)",
+              fontSize: "clamp(52px, 8vw, 108px)",
               fontWeight: 700,
               lineHeight: 1.0,
               letterSpacing: "-0.025em",
-              margin: "0 0 72px",
+              margin: "0 0 96px",
               opacity: 0
             }}
           >

@@ -106,8 +106,8 @@ export function TextParallaxSection() {
         position: "relative",
         background: "#fff",
         overflow: "hidden",
-        paddingTop: "clamp(200px, 28vh, 320px)",
-        paddingBottom: "clamp(80px, 12vh, 140px)",
+        paddingTop: "clamp(220px, 30vh, 360px)",
+        paddingBottom: "clamp(120px, 16vh, 200px)",
       }}
     >
       {/* Blue-to-white fade that sits over the section top */}

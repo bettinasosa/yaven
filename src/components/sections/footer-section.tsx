@@ -17,7 +17,7 @@ export function FooterSection() {
       style={{ background: "var(--ink)" }}
     >
       {/* ── Top: link columns ── */}
-      <div className="px-8 pt-16 flex gap-14 shrink-0">
+      <div className="px-8 pt-20 flex gap-20 shrink-0">
 
         {/* Follow column */}
         <div>
