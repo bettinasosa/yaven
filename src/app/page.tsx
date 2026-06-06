@@ -1,31 +1,28 @@
 import { HeroSection } from "@/components/sections/hero-section"
 import { TextParallaxSection } from "@/components/sections/text-parallax-section"
-import { LocomotiveSections } from "@/components/sections/locomotive-sections"
+import { MeetYavenSection } from "@/components/sections/meet-yaven-section"
+import { CommandsSection } from "@/components/sections/commands-section"
+import { FollowUpsSection } from "@/components/sections/follow-ups-section"
+import { ProposalsCrmSection } from "@/components/sections/proposals-crm-section"
+import { TriageSection } from "@/components/sections/triage-section"
+import { FooterCTASection } from "@/components/sections/footer-cta-section"
 import { FooterSection } from "@/components/sections/footer-section"
-
-const FOOTER_H = 660
 
 export default function Home() {
   return (
     <>
       <HeroSection />
+      <MeetYavenSection />
       <TextParallaxSection />
-      <LocomotiveSections />
+      <CommandsSection />
+      <FollowUpsSection />
+      <ProposalsCrmSection />
+      <TriageSection />
+      <FooterCTASection />
 
-      {/* ── Sticky footer ── */}
-      <div
-        className="relative"
-        style={{
-          height: FOOTER_H,
-          clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)",
-          zIndex: 1,
-        }}
-      >
-        <div style={{ position: "relative", height: `calc(100vh + ${FOOTER_H}px)`, top: "-100vh" }}>
-          <div style={{ height: FOOTER_H, position: "sticky", top: `calc(100vh - ${FOOTER_H}px)` }}>
-            <FooterSection />
-          </div>
-        </div>
+      {/* ── Footer — its own full page ── */}
+      <div style={{ height: "100vh" }}>
+        <FooterSection />
       </div>
     </>
   )

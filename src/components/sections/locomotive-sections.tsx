@@ -10,16 +10,16 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const FEATURES = [
   {
-    title: "Lives in your notch",
-    body: "Always on, always context-aware. yaven sits in your menu bar and understands what you're working on — no briefing, no copy-paste, no context-switching."
+    title: "Always in context",
+    body: "Always on, always context-aware. Yaven understands what you're working on — no briefing, no copy-paste, no context-switching."
   },
   {
     title: "Connects your tools",
-    body: "Email, calendar, Slack, LinkedIn, HubSpot. yaven reads everything and joins the dots so you never have to explain yourself twice."
+    body: "Email, calendar, Slack, LinkedIn, HubSpot. Yaven reads everything and joins the dots so you never have to explain yourself twice."
   },
   {
     title: "Takes action for you",
-    body: "Drafts the email. Preps the brief. Researches the prospect. yaven doesn't suggest — it does."
+    body: "Drafts the email. Preps the brief. Researches the prospect. Yaven doesn't suggest — it does."
   }
 ]
 
@@ -65,6 +65,7 @@ const INK = "#0a0e1a"
 const MUTE = "rgba(10,14,26,0.42)"
 const BLUE = "#267FE5"
 const SANS = "var(--font-dm-sans), sans-serif"
+const HEADING = "var(--font-instrument-serif)"
 
 export function LocomotiveSections() {
   const statHeadRef = useRef<HTMLHeadingElement>(null)
@@ -217,7 +218,7 @@ export function LocomotiveSections() {
             <h2
               ref={statHeadRef}
               style={{
-                fontFamily: SANS,
+                fontFamily: HEADING,
                 fontSize: "clamp(60px, 9.5vw, 128px)",
                 fontWeight: 500,
                 lineHeight: 1.0,
@@ -245,7 +246,7 @@ export function LocomotiveSections() {
                 opacity: 0
               }}
             >
-              yaven automates the admin, drafts the emails, and keeps you in the
+              Yaven automates the admin, drafts the emails, and keeps you in the
               loop — so you can focus on the work only you can do.
             </p>
           </div>
@@ -379,7 +380,7 @@ export function LocomotiveSections() {
               opacity: 0
             }}
           >
-            What yaven handles
+            What Yaven handles
           </p>
 
           <div ref={capListRef}>
@@ -461,7 +462,7 @@ export function LocomotiveSections() {
           <h2
             ref={ctaHeadRef}
             style={{
-              fontFamily: SANS,
+              fontFamily: HEADING,
               fontSize: "clamp(60px, 9vw, 122px)",
               fontWeight: 500,
               lineHeight: 1.0,

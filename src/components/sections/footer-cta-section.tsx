@@ -1,121 +1,136 @@
 "use client"
 
-import Image from "next/image"
-import { useState } from "react"
-import { FadeIn } from "@/components/fade-in"
+import { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { Magnetic } from "@/components/magnetic"
+import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
+import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
+import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 
-function InlineWaitlistForm() {
-  const [email, setEmail] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState("")
+// Lava-lamp blobs: cream goo drifting on the blue. Paths overlap so they
+// melt into each other as they pass.
+const BLOBS = [
+  { left: "8%", top: "18%", size: 150, dx: 70, dy: 50, dur: 9 },
+  { left: "16%", top: "32%", size: 100, dx: -60, dy: 70, dur: 7.5 },
+  { left: "78%", top: "14%", size: 120, dx: -80, dy: 60, dur: 8.5 },
+  { left: "84%", top: "30%", size: 90, dx: -50, dy: -45, dur: 6.5 },
+  { left: "12%", top: "72%", size: 110, dx: 80, dy: -55, dur: 10 },
+  { left: "75%", top: "70%", size: 140, dx: -70, dy: -65, dur: 9.5 },
+  { left: "84%", top: "82%", size: 80, dx: -90, dy: 40, dur: 7 },
+  { left: "20%", top: "84%", size: 70, dx: 60, dy: -70, dur: 8 }
+]
 
-  async function handleSubmit(e: { preventDefault(): void }) {
-    e.preventDefault()
-    if (!email) return
-    setLoading(true)
-    setError("")
-    try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      })
-      if (!res.ok) throw new Error("Failed")
-      setSubmitted(true)
-    } catch {
-      setError("Something went wrong. Please try again.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (submitted) {
-    return (
-      <p className="text-base font-medium" style={{ color: "var(--ink)" }}>
-        You&apos;re on the list — we&apos;ll be in touch soon.
-      </p>
-    )
-  }
-
-  return (
-    <div className="space-y-2">
-      <form onSubmit={handleSubmit} className="flex items-end gap-3">
-        <input
-          type="email"
-          required
-          placeholder="your@email.com"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="neu-input flex-1 min-w-0 px-5 py-[0.7em] text-base font-medium"
-          style={{ color: "var(--ink)" }}
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-press-dark shrink-0 disabled:opacity-50"
-        >
-          {loading ? "Saving…" : "Get early access"}
-        </button>
-      </form>
-      {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
-    </div>
-  )
-}
-
+// Script §8 — Footer CTA. Full-screen beat before the sticky footer.
 export function FooterCTASection() {
+  const blobRefs = useRef<(HTMLDivElement | null)[]>([])
+  const reduce = usePrefersReducedMotion()
+
+  useEffect(() => {
+    if (reduce) return
+    const tweens = blobRefs.current.map((b, i) => {
+      if (!b) return null
+      return gsap.to(b, {
+        x: BLOBS[i].dx,
+        y: BLOBS[i].dy,
+        duration: BLOBS[i].dur,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      })
+    })
+    return () => tweens.forEach(t => t?.kill())
+  }, [reduce])
+
   return (
+    // Pinned for a full extra viewport so the CTA reads as its own page
+    // rather than a transition into the footer.
+    <div style={{ position: "relative", height: "200vh", background: "var(--primary)" }}>
     <section
-      className="px-4 sm:px-8 py-20 sm:py-32"
       style={{
-        background:
-          "linear-gradient(to bottom, #267FE5 0%, #E3D5BB 30%, #E3D5BB 70%, #267FE5 85%, #07348B 100%)"
+        position: "sticky",
+        top: 0,
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
+        overflow: "hidden"
       }}
     >
-      <div className="max-w-2xl mx-auto">
-        <div
-          className="neu-card px-8 py-12 sm:px-14 sm:py-16 text-center space-y-8"
-          style={{ background: "#E3D5BB", boxShadow: "var(--shadow)" }}
-        >
-          <FadeIn className="flex justify-center">
-            <Image
-              src="/yavenlogo.png"
-              alt="yaven"
-              width={80}
-              height={80}
-              className="size-16 object-contain"
-              style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.18))" }}
+      {/* Gooey lava layer */}
+      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+        <defs>
+          <filter id="yv-goo-cta">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur" />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
+              result="goo"
             />
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <h2
-              className="text-4xl sm:text-5xl font-bold leading-[1.05] tracking-tight"
-              style={{
-                color: "var(--ink)",
-                fontFamily: "var(--page-font-heading)"
-              }}
-            >
-              You didn&apos;t get here to write
-              <br />
-              follow-up emails.
-              <br />
-              No more chaos.
-            </h2>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <p
-              className="text-base sm:text-lg font-medium"
-              style={{ color: "#1A1A1A", opacity: 0.7 }}
-            >
-              yaven handles the rest. Join the waitlist and we&apos;ll build
-              your automation blueprint together.
-            </p>
-          </FadeIn>
-          <FadeIn delay={0.3}>
-            <InlineWaitlistForm />
-          </FadeIn>
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          filter: "url(#yv-goo-cta)",
+          opacity: 0.5,
+          pointerEvents: "none"
+        }}
+      >
+        {BLOBS.map((b, i) => (
+          <div
+            key={i}
+            ref={el => {
+              blobRefs.current[i] = el
+            }}
+            style={{
+              position: "absolute",
+              left: b.left,
+              top: b.top,
+              width: b.size,
+              height: b.size,
+              borderRadius: "50%",
+              background: "var(--cream)"
+            }}
+          />
+        ))}
+      </div>
+
+      <div style={{ position: "relative", textAlign: "center" }}>
+        <ScrollCutReveal
+          style={{
+            fontFamily: "var(--font-instrument-serif)",
+            fontSize: "clamp(44px, 7vw, 110px)",
+            fontWeight: 500,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.05,
+            color: "var(--cream)",
+            margin: "0 auto",
+            maxWidth: "900px"
+          }}
+        >
+          Get the boring half handled.
+        </ScrollCutReveal>
+
+        <div
+          style={{
+            marginTop: "clamp(40px, 7vh, 64px)",
+            display: "flex",
+            justifyContent: "center"
+          }}
+        >
+          <Magnetic strength={0.3}>
+            <BlueprintPanel />
+          </Magnetic>
         </div>
       </div>
     </section>
+    </div>
   )
 }

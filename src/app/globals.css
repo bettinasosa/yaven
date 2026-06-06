@@ -372,7 +372,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-instrument-serif: var(--font-dm-sans);
+  --font-instrument-serif: 'Boxing', var(--font-dm-sans), sans-serif;
   --font-inter: var(--font-helvetica);
   --font-sans: var(--font-helvetica);
   --font-mono: var(--font-space-mono), monospace;
@@ -417,6 +417,52 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ── Shared effect keyframes ── */
+@keyframes yv-caret-blink {
+  50% { opacity: 0; }
+}
+
+/* Meet Yaven presence stage */
+@keyframes yv-orb-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+.yv-orb-breathe {
+  animation: yv-orb-breathe 3.6s ease-in-out infinite;
+}
+@keyframes yv-chip-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.yv-chip-float {
+  animation: yv-chip-float 3.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .yv-orb-breathe,
+  .yv-chip-float { animation: none; }
+}
+
+/* Low-amplitude breathing for section headers (script: Breathing Text) */
+@keyframes yv-breathe {
+  0%, 100% { letter-spacing: 0em; opacity: 1; }
+  50% { letter-spacing: 0.015em; opacity: 0.92; }
+}
+.yv-breathing {
+  animation: yv-breathe 4.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .yv-breathing { animation: none; }
+}
+
+/* ── Boxing (Fontshare) — heading font. Single Regular weight;
+   bold/italic are browser-synthesized. */
+@font-face {
+  font-family: 'Boxing';
+  src: url('/fonts/Boxing-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --font-dm-sans: 'Satoshi', sans-serif;
 
@@ -431,6 +477,9 @@
   --secondary:  #DF4F3E; /* secondary red */
   --cream:      #E3D5BB; /* light         */
   --dark:       #07348B; /* dark navy     */
+
+  /* Warm accent — strikethroughs, highlights, warm labels */
+  --warm: #E8A33D;
 
   /* Aliases kept for backwards compat */
   --primary-blue: #267FE5;
@@ -519,6 +568,11 @@
   html {
     @apply font-sans;
     scroll-behavior: smooth;
+    /* Clip here too — otherwise body's clip propagates to the viewport
+       (acting as `hidden`, which is still programmatically scrollable) and
+       body itself stops clipping, so focus/scrollIntoView can shove the
+       page sideways into the cloud overflow with no way to scroll back. */
+    overflow-x: clip;
   }
 }
 

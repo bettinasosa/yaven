@@ -1,7 +1,13 @@
 "use client"
 
 import NextImage from "next/image"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useSyncExternalStore } from "react"
+
+function subscribeDesktop(callback: () => void) {
+  const mq = window.matchMedia("(min-width: 768px)")
+  mq.addEventListener("change", callback)
+  return () => mq.removeEventListener("change", callback)
+}
 
 type Props = {
   src: string
@@ -17,16 +23,12 @@ export function HeroRefractionVideo({
   flipX = false
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  // Start false — video element never SSR'd, avoids iOS Safari play button
-  const [isDesktop, setIsDesktop] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)")
-    setIsDesktop(mq.matches)
-    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches)
-    mq.addEventListener("change", handler)
-    return () => mq.removeEventListener("change", handler)
-  }, [])
+  // false on the server — video element never SSR'd, avoids iOS Safari play button
+  const isDesktop = useSyncExternalStore(
+    subscribeDesktop,
+    () => window.matchMedia("(min-width: 768px)").matches,
+    () => false
+  )
 
   useEffect(() => {
     if (!isDesktop) return

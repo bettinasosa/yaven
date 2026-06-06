@@ -46,7 +46,10 @@ export function PageThemeSwitcher() {
     root.style.setProperty("--page-footer-bg", t.footerBg)
     root.style.setProperty("--page-card-shadow", t.cardShadow)
     root.style.setProperty("--page-btn-bg", t.btnBg)
-    root.style.setProperty("--page-font-heading", "var(--font-dm-sans), sans-serif")
+    root.style.setProperty(
+      "--page-font-heading",
+      "var(--font-instrument-serif), sans-serif"
+    )
   }, [active])
 
   return (
