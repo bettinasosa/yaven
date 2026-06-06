@@ -175,7 +175,7 @@ export function FooterSection() {
             lineHeight: 0.82
           }}
         >
-          yaven
+          Yaven
         </span>
 
         <p

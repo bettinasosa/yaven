@@ -5,6 +5,7 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { SplitText } from "gsap/SplitText"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
+import { GooeyTabs } from "@/components/gooey-tabs"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -143,7 +144,8 @@ export function LocomotiveSections() {
     }
     // Blue section goes fully edge-to-edge once sticky
     cardEnter(featSectionRef.current, blueWrapperRef.current, "0 0 0 0")
-    cardEnter(capSectionRef.current, null)
+    // Capabilities card slides on top of the blue section
+    cardEnter(capSectionRef.current, capSectionRef.current, "0 0 0 0")
 
     // Features — single timeline per card: enter(1) · pin(1) · exit(1)
     // fromTo inside a timeline sets the "from" state immediately on mount,
@@ -363,7 +365,7 @@ export function LocomotiveSections() {
             padding:
               "clamp(80px,10vh,130px) clamp(24px,7vw,120px) clamp(80px,10vh,130px)",
             overflow: "hidden",
-            boxShadow: "0 -16px 64px rgba(0,0,0,0.14)"
+            boxShadow: "0 -16px 64px rgba(0,0,0,0.22)"
           }}
         >
           <p
@@ -476,6 +478,10 @@ export function LocomotiveSections() {
           </h2>
           <div ref={ctaBtnRef} style={{ opacity: 0 }}>
             <BlueprintPanel />
+          </div>
+
+          <div style={{ marginTop: "clamp(80px, 10vh, 120px)" }}>
+            <GooeyTabs />
           </div>
         </div>
       </section>
