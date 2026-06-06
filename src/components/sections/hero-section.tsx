@@ -6,8 +6,6 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { SplitText } from "gsap/SplitText"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
-import { HeroBlobs } from "@/components/hero-blobs"
-import { AnimatedHeadline } from "@/components/animated-headline"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -34,390 +32,6 @@ function YavenMark({ height }: { height: number }) {
       style={{ display: "block", objectFit: "contain" }}
       priority
     />
-  )
-}
-
-// Cloud layout — large, bottom-anchored, half below the section edge
-const CLOUDS = [
-  {
-    left: "-22%",
-    bottom: -200,
-    width: 800,
-    opacity: 0.9,
-    floatY: -22,
-    dur: 5.4,
-    delay: 0.0
-  },
-  {
-    left: "-20%",
-    bottom: -220,
-    width: 540,
-    opacity: 0.7,
-    floatY: -26,
-    dur: 4.6,
-    delay: 0.7
-  },
-  {
-    left: "5%",
-    bottom: -220,
-    width: 540,
-    opacity: 0.7,
-    floatY: -26,
-    dur: 4.6,
-    delay: 0.7
-  },
-  {
-    left: "20%",
-    bottom: -200,
-    width: 420,
-    opacity: 0.9,
-    floatY: -20,
-    dur: 5.8,
-    delay: 0.3
-  },
-  {
-    right: "6%",
-    bottom: -220,
-    width: 500,
-    opacity: 0.76,
-    floatY: -24,
-    dur: 4.9,
-    delay: 1.0
-  },
-  {
-    right: "3%",
-    bottom: -100,
-    width: 300,
-    opacity: 0.76,
-    floatY: -24,
-    dur: 4.9,
-    delay: 1.0
-  },
-  {
-    right: "-25%",
-    bottom: -210,
-    width: 720,
-    opacity: 0.88,
-    floatY: -18,
-    dur: 5.1,
-    delay: 0.5
-  }
-]
-
-// ── Variant A — current centered design ──────────────────────────────────────
-
-function HeroVariantA() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const navRef = useRef<HTMLDivElement>(null)
-  const boxRef = useRef<HTMLDivElement>(null)
-  const ledeRef = useRef<HTMLParagraphElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
-  const cloudsRef = useRef<HTMLDivElement>(null)
-  const cloudEls = useRef<HTMLDivElement[]>([])
-
-  // Pill shine tracks mouse + scroll
-  useEffect(() => {
-    let rafId = 0,
-      targetAngle = -30,
-      currentAngle = -30,
-      mouseProgress = 0.5
-    const update = () => {
-      targetAngle =
-        (mouseProgress - 0.5) * 200 + (window.scrollY / window.innerHeight) * 80
-    }
-    const onMove = (e: MouseEvent) => {
-      mouseProgress = e.clientX / window.innerWidth
-      update()
-    }
-    const onTouch = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        mouseProgress = e.touches[0].clientX / window.innerWidth
-        update()
-      }
-    }
-    const tick = () => {
-      currentAngle += (targetAngle - currentAngle) * 0.07
-      document.documentElement.style.setProperty(
-        "--pill-angle",
-        `${currentAngle}deg`
-      )
-      rafId = requestAnimationFrame(tick)
-    }
-    window.addEventListener("mousemove", onMove, { passive: true })
-    window.addEventListener("touchmove", onTouch, { passive: true })
-    window.addEventListener("touchstart", onTouch, { passive: true })
-    window.addEventListener("scroll", () => update(), { passive: true })
-    rafId = requestAnimationFrame(tick)
-    return () => {
-      window.removeEventListener("mousemove", onMove)
-      window.removeEventListener("touchmove", onTouch)
-      window.removeEventListener("touchstart", onTouch)
-      cancelAnimationFrame(rafId)
-    }
-  }, [])
-
-  useEffect(() => {
-    gsap.set(navRef.current, { yPercent: -120, opacity: 0 })
-    gsap.set(boxRef.current, { scale: 0.88, opacity: 0 })
-    gsap.set(ctaRef.current, { opacity: 0, y: 22 })
-    gsap.set(cloudsRef.current, { opacity: 0, y: 36 })
-
-    const ledeSplit = new SplitText(ledeRef.current, {
-      type: "lines",
-      mask: "lines"
-    })
-    gsap.set(ledeSplit.lines, { yPercent: 100 })
-
-    const onLoaderDone = () => {
-      gsap.to(navRef.current, {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.75,
-        ease: "power3.out"
-      })
-      gsap.to(boxRef.current, {
-        scale: 1,
-        opacity: 1,
-        duration: 0.7,
-        ease: "back.out(1.5)",
-        delay: 0.05,
-        onComplete: () => gsap.set(boxRef.current, { clearProps: "transform" })
-      })
-      gsap.to(ledeSplit.lines, {
-        yPercent: 0,
-        duration: 1,
-        stagger: 0.075,
-        ease: "power3.out",
-        delay: 0.2
-      })
-      gsap.to(ctaRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.75,
-        ease: "power3.out",
-        delay: 0.4
-      })
-      gsap.to(cloudsRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 1.4,
-        ease: "power2.out",
-        delay: 0.15
-      })
-    }
-    if (_loaderFired) {
-      onLoaderDone()
-    } else {
-      window.addEventListener("yaven:loader:done", onLoaderDone, { once: true })
-    }
-
-    cloudEls.current.forEach((el, i) => {
-      if (!el) return
-      const c = CLOUDS[i]
-      gsap.to(el, {
-        y: c.floatY,
-        duration: c.dur,
-        delay: c.delay,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      })
-    })
-
-    const xTargets = [-1900, -1400, -1100, -800, 900, 1200, 2000]
-    const yTargets = [600, 500, 420, 320, 420, 500, 600]
-    const stTriggers: ScrollTrigger[] = []
-    cloudEls.current.forEach((el, i) => {
-      if (!el) return
-      const tween = gsap.to(el, {
-        x: xTargets[i] ?? 0,
-        y: yTargets[i] ?? 80,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.8
-        }
-      })
-      if (tween.scrollTrigger) stTriggers.push(tween.scrollTrigger)
-    })
-
-    return () => {
-      window.removeEventListener("yaven:loader:done", onLoaderDone)
-      ledeSplit.revert?.()
-      stTriggers.forEach(t => t.kill())
-    }
-  }, [])
-
-  return (
-    <section
-      ref={sectionRef}
-      className="relative min-h-screen flex flex-col hero-grain"
-      style={{
-        background: "transparent",
-        position: "relative",
-        zIndex: 50,
-        overflow: "visible"
-      }}
-    >
-      <HeroBlobs />
-
-      {/* Clouds */}
-      <div
-        ref={cloudsRef}
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          zIndex: 7
-        }}
-      >
-        {CLOUDS.map((c, i) => (
-          <div
-            key={i}
-            ref={el => {
-              if (el) cloudEls.current[i] = el
-            }}
-            style={{
-              position: "absolute",
-              bottom: `${c.bottom}px`,
-              left: "left" in c ? (c as { left: string }).left : undefined,
-              right: "right" in c ? (c as { right: string }).right : undefined,
-              width: c.width,
-              opacity: c.opacity
-            }}
-          >
-            <Image
-              src="/cloud.png"
-              alt=""
-              width={c.width}
-              height={Math.round(c.width * 0.5)}
-              style={{ width: "100%", height: "auto", display: "block" }}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Nav */}
-      <div
-        ref={navRef}
-        className="absolute z-10 w-full px-8 pt-8 flex items-center"
-        style={{ opacity: 0, top: 0 }}
-      >
-        <YavenMark height={32} />
-        <span
-          className="hero-nav-label"
-          style={{
-            fontWeight: 500,
-            fontSize: "26px",
-            color: "#E3D5BB",
-            marginLeft: "8px"
-          }}
-        >
-          yaven
-        </span>
-      </div>
-
-      {/* Bottom fade */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "320px",
-          background:
-            "linear-gradient(to bottom, rgba(38,127,229,0) 0%, rgba(38,127,229,0.65) 45%, rgba(38,127,229,1) 100%)",
-          pointerEvents: "none",
-          zIndex: 6
-        }}
-      />
-
-      {/* Centred content */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-12">
-        <div className="text-center w-full max-w-3xl">
-          <div
-            ref={boxRef}
-            className="hero-namebox"
-            style={{
-              display: "inline-block",
-              marginBottom: "32px",
-              opacity: 0
-            }}
-          >
-            <span
-              className="font-medium hero-wordmark-text"
-              style={{
-                fontSize: "clamp(40px, 6vw, 88px)",
-                lineHeight: 0.95,
-                color: "#E3D5BB",
-                display: "block"
-              }}
-            >
-              yaven
-            </span>
-          </div>
-
-          <AnimatedHeadline
-            className="font-medium hero-headline"
-            style={{
-              fontSize: "clamp(26px, 4vw, 52px)",
-              lineHeight: 1.1,
-              color: "#E3D5BB",
-              marginBottom: "20px"
-            }}
-            delay={0.1}
-            highlights={[]}
-          >
-            Less admin. More flow.
-          </AnimatedHeadline>
-
-          <p
-            ref={ledeRef}
-            className="font-medium mx-auto hero-lede"
-            style={{
-              fontSize: "clamp(17px, 2vw, 23px)",
-              lineHeight: 1.45,
-              color: "#E3D5BB",
-              maxWidth: "600px",
-              marginBottom: "36px"
-            }}
-          >
-            yaven lives in at the top of your screen. It&apos;s always up to
-            speed.
-          </p>
-
-          <div
-            ref={ctaRef}
-            className="flex flex-wrap items-center justify-center gap-5"
-          >
-            <div style={{ width: "fit-content" }}>
-              <BlueprintPanel />
-            </div>
-            <a
-              href="https://calendly.com/nickprice2000/yaven-support"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="book-call-link"
-              style={{
-                fontSize: "12px",
-                fontWeight: 500,
-                letterSpacing: "0.08em",
-                color: "#E3D5BB",
-                textDecoration: "underline",
-                textDecorationThickness: "2px",
-                textUnderlineOffset: "4px"
-              }}
-            >
-              Book a call <span className="book-call-arrow">↗</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
   )
 }
 
@@ -726,65 +340,76 @@ function HeroVariantC() {
       scrollTrigger: {
         trigger: sectionRef.current,
         start: "top top",
-        end: "+=2200",
+        end: () => `+=${window.innerHeight * 3}`,
         pin: true,
         pinSpacing: true,
-        scrub: 1.2
+        scrub: 1.2,
+        invalidateOnRefresh: true
       }
     })
 
-    // Phase 1 (0 → 3): Logo zooms in
+    // Phase 1 (0 → 5): Logo zooms in — occupies most of the scroll
     tl.fromTo(
       logoRef.current,
       { scale: 1 },
-      { scale: 24, transformOrigin: "50% 50%", duration: 3, ease: "power2.in" },
+      { scale: 24, transformOrigin: "50% 50%", duration: 5, ease: "power2.in" },
       0
     )
 
-    // Phase 2 (2.5 → 5): Logo + cover fade out, text rises up simultaneously
+    // Phase 2 (5 → 7): Logo + cover fade out, text rises up simultaneously
     tl.to(
       logoRef.current,
       { opacity: 0, duration: 0.8, ease: "power1.in" },
-      2.5
+      5
     )
     tl.to(
       coverRef.current,
       { opacity: 0, duration: 1.2, ease: "power1.inOut" },
-      2.5
+      5
     )
 
     tl.to(
       bWordRef.current,
       { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" },
-      2.6
+      5.2
     )
     tl.to(
       bNavRef.current,
       { opacity: 1, y: 0, duration: 1.0, ease: "power3.out" },
-      2.7
+      5.3
     )
     tl.to(
       bTagRef.current,
       { opacity: 1, y: 0, duration: 1.0, ease: "power3.out" },
-      2.8
+      5.4
     )
     tl.to(
       bCtaRef.current,
       { opacity: 1, y: 0, duration: 1.0, ease: "power3.out" },
-      2.9
+      5.5
     )
     tl.to(
       bCloudRef.current,
       { opacity: 1, y: 0, duration: 1.4, ease: "power2.out" },
-      2.6
+      5.2
     )
 
-    // Hold at final state before unpinning
-    tl.to({}, { duration: 3 }, 4.2)
+    // Hold at final state before unpinning; cloud drifts down during this window
+    tl.to({}, { duration: 2 }, 7)
+    tl.to(
+      bCloudRef.current,
+      { y: 120, ease: "none", duration: 2 },
+      7
+    )
+
+    // Let Lenis know the page is taller now (pin spacer added) so it updates scroll limits
+    requestAnimationFrame(() => window.dispatchEvent(new Event("content-changed")))
 
     return () => {
       tl.scrollTrigger?.kill()
       tl.kill()
+      // Let Lenis recalculate after the pin spacer is removed
+      requestAnimationFrame(() => window.dispatchEvent(new Event("content-changed")))
     }
   }, [])
 
@@ -834,7 +459,8 @@ function HeroVariantC() {
             right: "clamp(32px, 5vw, 80px)",
             top: "50%",
             transform: "translateY(-58%)",
-            textAlign: "right"
+            textAlign: "right",
+            zIndex: 1
           }}
         >
           <span
@@ -965,11 +591,10 @@ function HeroVariantC() {
 // ── Main export — manages variant toggle ─────────────────────────────────────
 
 export function HeroSection() {
-  const [variant, setVariant] = useState<"A" | "B" | "C">("A")
+  const [variant, setVariant] = useState<"B" | "C">("B")
 
   return (
     <>
-      {variant === "A" && <HeroVariantA />}
       {variant === "B" && <HeroVariantB />}
       {variant === "C" && <HeroVariantC />}
 
@@ -991,7 +616,7 @@ export function HeroSection() {
           gap: "2px"
         }}
       >
-        {(["A", "B", "C"] as const).map(v => (
+        {(["B", "C"] as const).map(v => (
           <button
             key={v}
             onClick={() => setVariant(v)}

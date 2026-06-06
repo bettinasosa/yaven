@@ -1,16 +1,28 @@
+"use client"
+
+import { useState } from "react"
 import { HeroSection } from "@/components/sections/hero-section"
 import { TextParallaxSection } from "@/components/sections/text-parallax-section"
 import { LocomotiveSections } from "@/components/sections/locomotive-sections"
 import { FooterSection } from "@/components/sections/footer-section"
+import { MindMarketLayout } from "@/components/sections/mindmarket-layout"
 
 const FOOTER_H = 660
 
 export default function Home() {
+  const [layout, setLayout] = useState<"current" | "mindmarket">("current")
+
   return (
     <>
-      <HeroSection />
-      <TextParallaxSection />
-      <LocomotiveSections />
+      {layout === "current" ? (
+        <>
+          <HeroSection />
+          <TextParallaxSection />
+          <LocomotiveSections />
+        </>
+      ) : (
+        <MindMarketLayout />
+      )}
 
       {/* ── Sticky footer ── */}
       <div
@@ -26,6 +38,51 @@ export default function Home() {
             <FooterSection />
           </div>
         </div>
+      </div>
+
+      {/* ── Layout toggle — top right ── */}
+      <div
+        style={{
+          position: "fixed",
+          top: "24px",
+          right: "24px",
+          zIndex: 200,
+          background: "rgba(255,255,255,0.55)",
+          border: "1px solid rgba(255,255,255,0.80)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          borderRadius: "40px",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
+          display: "flex",
+          padding: "3px",
+          gap: "2px"
+        }}
+      >
+        {([
+          { key: "current", label: "Default" },
+          { key: "mindmarket", label: "M" }
+        ] as const).map(v => (
+          <button
+            key={v.key}
+            onClick={() => setLayout(v.key)}
+            style={{
+              fontFamily: "var(--font-space-mono)",
+              fontSize: "10px",
+              fontWeight: 500,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              padding: "5px 14px",
+              borderRadius: "40px",
+              border: "none",
+              cursor: "pointer",
+              background: layout === v.key ? "rgba(0,0,0,0.75)" : "transparent",
+              color: layout === v.key ? "#fff" : "rgba(0,0,0,0.55)",
+              transition: "all 0.15s ease"
+            }}
+          >
+            {v.label}
+          </button>
+        ))}
       </div>
     </>
   )
