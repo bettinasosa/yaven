@@ -270,7 +270,7 @@ export function TextParallaxSection() {
             margin: 0
           }}
         >
-          So when does the{" "}
+          so when does your{" "}
           <span
             ref={youRef}
             style={{
@@ -285,7 +285,7 @@ export function TextParallaxSection() {
           >
             real work
           </span>{" "}
-          happen?
+          start?
         </p>
       </div>
     </div>

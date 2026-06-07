@@ -158,7 +158,7 @@ function GooeyStage({
 
 // CRM contact card that fills itself in
 const CRM_ROWS = [
-  { field: "Name", value: "Sarah Whitman" },
+  { field: "Name", value: "Bettina Sosa" },
   { field: "Company", value: "Otto's Bakehouse" },
   { field: "Last call", value: "Tue: pricing, onboarding" },
   { field: "Promised", value: "Contract by Thursday" },
@@ -336,6 +336,7 @@ export function ProposalsCrmSection() {
   const crmRef = useRef<HTMLDivElement>(null)
   const confRef = useRef<HTMLDivElement>(null)
   const finaleRef = useRef<HTMLDivElement>(null)
+  const headerWrapRef = useRef<HTMLDivElement>(null)
   const fragRefs = useRef<(HTMLDivElement | null)[]>([])
   const [crmActive, setCrmActive] = useState(false)
   const staticLayout = usePrefersReducedMotion()
@@ -382,8 +383,9 @@ export function ProposalsCrmSection() {
     tl.to(confRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
     tl.to({}, { duration: 1.4 }) // dwell
 
-    // Phase 4 — the zoom-out
+    // Phase 4 — the zoom-out; the header leaves so the line stands alone
     tl.to(confRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
+    tl.to(headerWrapRef.current, { y: -40, opacity: 0, ease: "power2.in", duration: 0.8 }, "<")
     tl.to(finaleRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
     tl.to({}, { duration: 1.4 }) // dwell before unpinning
 
@@ -495,7 +497,9 @@ export function ProposalsCrmSection() {
           flexDirection: "column"
         }}
       >
-        <div style={{ paddingTop: "clamp(48px, 8vh, 90px)" }}>{header}</div>
+        <div ref={headerWrapRef} style={{ paddingTop: "clamp(48px, 8vh, 90px)" }}>
+          {header}
+        </div>
 
         <div style={{ position: "relative", flex: 1 }}>
         {/* Phase 1 — Proposals */}

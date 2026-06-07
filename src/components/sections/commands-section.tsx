@@ -178,9 +178,9 @@ function DraftPanel({ active }: { active: boolean }) {
                 flexShrink: 0
               }}
             >
-              S
+              B
             </span>
-            <span style={{ fontWeight: 700 }}>Sarah Whitman</span>
+            <span style={{ fontWeight: 700 }}>Bettina Sosa</span>
             <span
               style={{
                 fontFamily: "var(--font-space-mono)",
@@ -218,12 +218,12 @@ function DraftPanel({ active }: { active: boolean }) {
             {/* Unmounted until the panel lands, so it resets on backscroll */}
             {active ? (
               <Typewriter
-                startText="Hi Sarah, good speaking earlier. "
+                startText="Hi Bettina, good speaking earlier. "
                 text="The revised numbers are attached, same scope we walked through but with the onboarding fee folded in. If it all looks right I can have the contract over to you by Thursday."
                 speed={26}
               />
             ) : (
-              <span>Hi Sarah, good speaking earlier. </span>
+              <span>Hi Bettina, good speaking earlier. </span>
             )}
           </div>
         </div>

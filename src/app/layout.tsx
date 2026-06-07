@@ -40,12 +40,8 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceMono.variable} h-full antialiased scroll-smooth`}
-      style={{ backgroundColor: "#267FE5" }}
     >
-      <body
-        className="min-h-full flex flex-col"
-        style={{ backgroundColor: "transparent" }}
-      >
+      <body className="min-h-full flex flex-col">
         <link
           rel="stylesheet"
           href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400,300&f[]=general-sans@700,500,400&f[]=switzer@700,500,400&f[]=supreme@700,500,400&f[]=author@700,500,400&f[]=cabinet-grotesk@700,500,400&display=swap"

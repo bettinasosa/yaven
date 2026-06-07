@@ -2,8 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
-import { Magnetic } from "@/components/magnetic"
-import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
+import { WaitlistInline } from "@/components/waitlist-inline"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 
@@ -125,9 +124,9 @@ export function FooterCTASection() {
             justifyContent: "center"
           }}
         >
-          <Magnetic strength={0.3}>
-            <BlueprintPanel />
-          </Magnetic>
+          <div style={{ width: "min(480px, 100%)" }}>
+            <WaitlistInline />
+          </div>
         </div>
       </div>
     </section>

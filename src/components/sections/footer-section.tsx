@@ -1,6 +1,5 @@
 "use client"
 
-import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 
 const colLinkStyle: React.CSSProperties = {
   color: "var(--cream)",
@@ -165,24 +164,6 @@ export function FooterSection() {
           </div>
         </div>
 
-        {/* Waitlist CTA — pushed to the right on wide screens */}
-        <div className="ml-auto">
-          <p
-            style={{
-              fontFamily: "var(--font-space-mono)",
-              fontSize: "10px",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--cream)",
-              opacity: 0.38,
-              fontWeight: 700,
-              marginBottom: "14px"
-            }}
-          >
-            Get started
-          </p>
-          <BlueprintPanel />
-        </div>
       </div>
 
       {/* ── Bottom: giant wordmark + copyright ── */}

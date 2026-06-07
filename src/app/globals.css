@@ -562,11 +562,16 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-medium;
+    @apply text-foreground font-medium;
+    /* Transparent so the html blue shows through at overscroll edges.
+       Kept in CSS (not inline styles) to avoid React 19 hydration
+       mismatches on body/html style attributes. */
+    background-color: transparent;
     overflow-x: clip;
   }
   html {
     @apply font-sans;
+    background-color: var(--primary);
     scroll-behavior: smooth;
     /* Clip here too — otherwise body's clip propagates to the viewport
        (acting as `hidden`, which is still programmatically scrollable) and
