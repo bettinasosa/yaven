@@ -8,7 +8,6 @@ import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduce
 gsap.registerPlugin(ScrollTrigger)
 
 const INK = "#0a0e1a"
-const GREEN = "#3BA55C"
 
 // Script §1 — The Drop, as a to-do list. The admin gets ticked off one by
 // one; the real work gets the cross.
@@ -35,7 +34,7 @@ function GooeyTick({
   settled: boolean
   done: boolean
 }) {
-  const color = done ? GREEN : "var(--warm)"
+  const strokeColor = done ? "#fff" : "#fff"
   return (
     <span
       aria-hidden="true"
@@ -57,14 +56,19 @@ function GooeyTick({
           justifyContent: "center"
         }}
       >
-        {/* main blob */}
+        {/* main blob — glass (same as hero "Show me" btn) */}
         <span
           ref={blobRef}
           style={{
             width: "100%",
             height: "100%",
             borderRadius: "50%",
-            background: color,
+            background: "#267FE5",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.50)",
+            boxShadow:
+              "inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -1px 0 rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08)",
             display: "block",
             transform: settled ? "scale(1)" : "scale(0)"
           }}
@@ -77,7 +81,10 @@ function GooeyTick({
             width: "38%",
             height: "38%",
             borderRadius: "50%",
-            background: color,
+            background: "#267FE5",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.50)",
             display: "block",
             transform: settled ? "scale(0)" : "translate(0, -130%) scale(0)"
           }}
@@ -100,7 +107,7 @@ function GooeyTick({
           ref={checkRef}
           d={done ? "M14 25 L21 32 L34 17" : "M16 16 L32 32 M32 16 L16 32"}
           fill="none"
-          stroke="#fff"
+          stroke={strokeColor}
           strokeWidth="4.5"
           strokeLinecap="round"
           strokeLinejoin="round"

@@ -10,13 +10,10 @@ import { CommandsSection } from "@/components/sections/commands-section"
 import { FooterCTASection } from "@/components/sections/footer-cta-section"
 import { FooterSection } from "@/components/sections/footer-section"
 import { HeroSectionND } from "@/components/sections/hero-section-nd"
-import { TextParallaxSectionND } from "@/components/sections/text-parallax-section-nd"
 import { LocomotiveSections } from "@/components/sections/locomotive-sections"
-import { MindMarketLayout } from "@/components/sections/mindmarket-layout"
-
 const FOOTER_H = 660
 
-type Layout = "betts" | "newdesign" | "mindmarket"
+type Layout = "betts" | "newdesign"
 
 export default function Home() {
   const [layout, setLayout] = useState<Layout>("betts")
@@ -33,14 +30,12 @@ export default function Home() {
           <CommandsSection />
           <FooterCTASection />
         </>
-      ) : layout === "newdesign" ? (
+      ) : (
         <>
           <HeroSectionND />
-          <TextParallaxSectionND />
+          <TextParallaxSection />
           <LocomotiveSections />
         </>
-      ) : (
-        <MindMarketLayout />
       )}
 
       {/* ── Sticky footer ── */}
@@ -49,11 +44,23 @@ export default function Home() {
         style={{
           height: FOOTER_H,
           clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)",
-          zIndex: 1,
+          zIndex: 1
         }}
       >
-        <div style={{ position: "relative", height: `calc(100vh + ${FOOTER_H}px)`, top: "-100vh" }}>
-          <div style={{ height: FOOTER_H, position: "sticky", top: `calc(100vh - ${FOOTER_H}px)` }}>
+        <div
+          style={{
+            position: "relative",
+            height: `calc(100vh + ${FOOTER_H}px)`,
+            top: "-100vh"
+          }}
+        >
+          <div
+            style={{
+              height: FOOTER_H,
+              position: "sticky",
+              top: `calc(100vh - ${FOOTER_H}px)`
+            }}
+          >
             <FooterSection />
           </div>
         </div>
@@ -77,11 +84,10 @@ export default function Home() {
           gap: "2px"
         }}
       >
-        {([
+        {[
           { key: "betts" as const, label: "Default" },
-          { key: "newdesign" as const, label: "V2" },
-          { key: "mindmarket" as const, label: "M" }
-        ]).map(v => (
+          { key: "newdesign" as const, label: "V2" }
+        ].map(v => (
           <button
             key={v.key}
             onClick={() => setLayout(v.key)}

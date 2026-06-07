@@ -364,9 +364,8 @@ export function HeroSection() {
           </div>
 
           <AnimatedHeadline
-            className="font-medium"
+            className="font-medium hero-headline"
             style={{
-              fontFamily: "var(--font-instrument-serif)",
               fontSize: "clamp(26px, 4vw, 52px)",
               lineHeight: 1.1,
               color: "#E3D5BB",

@@ -5,7 +5,6 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { SplitText } from "gsap/SplitText"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
-import { GooeyTabs } from "@/components/gooey-tabs"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -159,23 +158,37 @@ export function LocomotiveSections() {
       const wrapper = blueWrapperRef.current
 
       const tl = (s: string, e: string) =>
-        gsap.timeline({ scrollTrigger: { trigger: wrapper, start: s, end: e, scrub: 1.5 } })
+        gsap.timeline({
+          scrollTrigger: { trigger: wrapper, start: s, end: e, scrub: 1.5 }
+        })
 
       // Card 0 — 0%→42%: enter(1) pin(1) exit(1)
       tl("0% top", "42% top")
-        .fromTo(cards[0], { y: "110vh", opacity: 0 }, { y: 0, opacity: 1, ease: "power3.out", duration: 1 })
+        .fromTo(
+          cards[0],
+          { y: "110vh", opacity: 0 },
+          { y: 0, opacity: 1, ease: "power3.out", duration: 1 }
+        )
         .to(cards[0], { y: 0, duration: 1 })
         .to(cards[0], { y: "-110vh", opacity: 0, duration: 1 })
 
       // Card 1 — 30%→72%: enter(1) pin(1) exit(1)
       tl("30% top", "72% top")
-        .fromTo(cards[1], { y: "110vh", opacity: 0 }, { y: 0, opacity: 1, ease: "power3.out", duration: 1 })
+        .fromTo(
+          cards[1],
+          { y: "110vh", opacity: 0 },
+          { y: 0, opacity: 1, ease: "power3.out", duration: 1 }
+        )
         .to(cards[1], { y: 0, duration: 1 })
         .to(cards[1], { y: "-110vh", opacity: 0, duration: 1 })
 
       // Card 2 — 62%→92%: enter(1) pin(2) stays
       tl("62% top", "92% top")
-        .fromTo(cards[2], { y: "110vh", opacity: 0 }, { y: 0, opacity: 1, ease: "power3.out", duration: 1 })
+        .fromTo(
+          cards[2],
+          { y: "110vh", opacity: 0 },
+          { y: 0, opacity: 1, ease: "power3.out", duration: 1 }
+        )
         .to(cards[2], { y: 0, duration: 2 })
     }
 
@@ -479,10 +492,6 @@ export function LocomotiveSections() {
           </h2>
           <div ref={ctaBtnRef} style={{ opacity: 0 }}>
             <BlueprintPanel />
-          </div>
-
-          <div style={{ marginTop: "clamp(80px, 10vh, 120px)" }}>
-            <GooeyTabs />
           </div>
         </div>
       </section>
