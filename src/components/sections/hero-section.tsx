@@ -389,8 +389,8 @@ export function HeroSection() {
               marginBottom: "36px"
             }}
           >
-            Yaven chases the invoices, warms the leads, drafts the replies,
-            while you focus on the things only you can do.
+            Yaven chases the invoices, warms the leads and drafts the
+            replies, while you focus on the things only you can do.
           </p>
 
           <div

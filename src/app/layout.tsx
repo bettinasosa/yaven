@@ -40,11 +40,11 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceMono.variable} h-full antialiased scroll-smooth`}
-      style={{ background: "#267FE5" }}
+      style={{ backgroundColor: "#267FE5" }}
     >
       <body
         className="min-h-full flex flex-col"
-        style={{ background: "transparent" }}
+        style={{ backgroundColor: "transparent" }}
       >
         <link
           rel="stylesheet"

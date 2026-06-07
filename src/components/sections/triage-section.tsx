@@ -1,9 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { NumberTicker } from "@/components/effects/number-ticker"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -12,10 +11,10 @@ const INK = "#0a0e1a"
 
 // The stream — five inboxes' worth of noise
 const STREAM = [
-  "Invoice #214 — 47 days overdue",
+  "Invoice #214, 47 days overdue",
   "Re: contract redlines",
   "Can we move Thursday's call?",
-  "AI Weekly — your Tuesday digest",
+  "AI Weekly: your Tuesday digest",
   "Intro: Maya ↔ you",
   "Your receipt from Figma",
   "Re: proposal timeline?",
@@ -26,22 +25,19 @@ const STREAM = [
 
 const PILES = [
   {
-    label: "Needs you",
+    label: "Your priority",
     color: "var(--warm)",
-    count: 3,
     chips: ["Can we move Thursday's call?", "Intro: Maya ↔ you"]
   },
   {
-    label: "Answered",
+    label: "Your tone",
     color: "var(--primary)",
-    count: 4,
-    chips: ["Re: proposal timeline? ✓ replied", "Invoice #214 ✓ nudged"]
+    chips: ["Re: proposal timeline? Draft ready", "Invoice #214, nudge drafted"]
   },
   {
-    label: "Friday",
+    label: "Your context",
     color: "rgba(10,14,26,0.45)",
-    count: 5,
-    chips: ["AI Weekly digest", "Webinar invite: Q3 outlook"]
+    chips: ["Knows the March quote", "Remembers the kickoff call"]
   }
 ]
 
@@ -57,90 +53,13 @@ const chipStyle: React.CSSProperties = {
   whiteSpace: "nowrap"
 }
 
-function GooFilterDefs() {
-  return (
-    <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-      <defs>
-        <filter id="yv-goo-triage">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-          <feColorMatrix
-            in="blur"
-            mode="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
-            result="goo"
-          />
-          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-        </filter>
-      </defs>
-    </svg>
-  )
-}
-
-// Organic cream pool behind each pile's content
-function PoolGoo() {
-  return (
-    <span
-      aria-hidden="true"
-      style={{
-        position: "absolute",
-        inset: 0,
-        filter: "url(#yv-goo-triage)",
-        pointerEvents: "none"
-      }}
-    >
-      <span
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: "32px",
-          background: "var(--cream)"
-        }}
-      />
-      <span
-        style={{
-          position: "absolute",
-          top: "-14px",
-          left: "18%",
-          width: "44px",
-          height: "44px",
-          borderRadius: "50%",
-          background: "var(--cream)"
-        }}
-      />
-      <span
-        style={{
-          position: "absolute",
-          bottom: "-16px",
-          right: "12%",
-          width: "56px",
-          height: "56px",
-          borderRadius: "50%",
-          background: "var(--cream)"
-        }}
-      />
-      <span
-        style={{
-          position: "absolute",
-          bottom: "-10px",
-          left: "-12px",
-          width: "38px",
-          height: "38px",
-          borderRadius: "50%",
-          background: "var(--cream)"
-        }}
-      />
-    </span>
-  )
-}
-
-// Script §6 — Inbound triage. Pinned: the stream pours through the goo,
-// which drips the sorted messages into three pools.
+// Script §6 — Inbound triage. Pinned: the stream pours past, and the three
+// sorted piles appear one by one.
 export function TriageSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const marqueeRef = useRef<HTMLDivElement>(null)
   const pileRefs = useRef<(HTMLDivElement | null)[]>([])
-  const [countsActive, setCountsActive] = useState(false)
   const staticLayout = usePrefersReducedMotion()
 
   useEffect(() => {
@@ -148,13 +67,7 @@ export function TriageSection() {
 
     gsap.set(headerRef.current, { y: 50, opacity: 0 })
     gsap.set(marqueeRef.current, { opacity: 0 })
-    pileRefs.current.forEach(p => {
-      if (!p) return
-      gsap.set(p, { y: 60, opacity: 0 })
-      p.querySelectorAll<HTMLElement>("[data-pile-chip]").forEach(c =>
-        gsap.set(c, { y: -36, opacity: 0, scale: 0.9 })
-      )
-    })
+    pileRefs.current.forEach(p => p && gsap.set(p, { y: 60, opacity: 0 }))
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -169,38 +82,16 @@ export function TriageSection() {
     tl.to(headerRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1 }, 0)
     tl.to(marqueeRef.current, { opacity: 1, duration: 1 }, 1)
 
-    // pools rise
+    // the three piles appear one by one, chips and all
     pileRefs.current.forEach((p, i) => {
       if (!p) return
-      tl.to(p, { y: 0, opacity: 1, ease: "power3.out", duration: 0.9 }, 2.2 + i * 0.3)
-    })
-
-    // sorted chips land in the pools, pile by pile
-    pileRefs.current.forEach((p, pi) => {
-      if (!p) return
-      const base = 3.4 + pi * 1.2
-      p.querySelectorAll<HTMLElement>("[data-pile-chip]").forEach((c, ci) => {
-        tl.to(
-          c,
-          { y: 0, opacity: 1, scale: 1, ease: "back.out(1.6)", duration: 0.6 },
-          base + ci * 0.35
-        )
-      })
+      tl.to(p, { y: 0, opacity: 1, ease: "power3.out", duration: 1 }, 2.4 + i * 1.4)
     })
 
     // dwell before unpinning
     tl.to({}, { duration: 1.6 })
 
-    // counts tick up once the sorting is underway
-    const gate = ScrollTrigger.create({
-      trigger: wrapperRef.current,
-      start: "55% top",
-      once: true,
-      onEnter: () => setCountsActive(true)
-    })
-
     return () => {
-      gate.kill()
       tl.scrollTrigger?.kill()
       tl.kill()
     }
@@ -232,8 +123,7 @@ export function TriageSection() {
           margin: "20px auto 0"
         }}
       >
-        Yaven sorts what needs you now, what it can answer itself, and what can
-        wait until Friday.
+        Yaven sorts what needs you now, and drafts replies in one click.
       </p>
     </div>
   )
@@ -286,51 +176,29 @@ export function TriageSection() {
             padding: "clamp(22px, 2.8vw, 32px)",
             display: "flex",
             flexDirection: "column",
-            gap: "14px"
+            gap: "14px",
+            background: "var(--cream)",
+            borderRadius: "20px"
           }}
         >
-          <PoolGoo />
-          <div
+          <span
             style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between"
+              fontFamily: "var(--font-instrument-serif)",
+              fontSize: "clamp(18px, 2vw, 24px)",
+              lineHeight: 1,
+              color: pile.color
             }}
           >
-            <span
-              style={{
-                fontFamily: "var(--font-instrument-serif)",
-                fontSize: "clamp(18px, 2vw, 24px)",
-                lineHeight: 1,
-                color: pile.color
-              }}
-            >
-              {pile.label}
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-instrument-serif)",
-                fontSize: "clamp(26px, 3vw, 38px)",
-                color: INK
-              }}
-            >
-              {staticLayout || countsActive ? (
-                <NumberTicker target={pile.count} />
-              ) : (
-                0
-              )}
-            </span>
-          </div>
+            {pile.label}
+          </span>
           {pile.chips.map(chip => (
             <span
               key={chip}
-              data-pile-chip
               style={{
                 ...chipStyle,
                 position: "relative",
                 whiteSpace: "normal",
-                opacity: pile.label === "Friday" ? 0.6 : 1
+                opacity: pile.label === "Your context" ? 0.6 : 1
               }}
             >
               {chip}
@@ -345,12 +213,11 @@ export function TriageSection() {
     return (
       <section
         style={{
-          background: "var(--dark)",
+          background: "var(--primary)",
           padding: "clamp(100px, 15vh, 180px) 0",
           overflow: "hidden"
         }}
       >
-        <GooFilterDefs />
         {header}
         {marquee}
         <div style={{ height: "24px" }} />
@@ -362,7 +229,7 @@ export function TriageSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "400vh", background: "var(--dark)" }}
+      style={{ position: "relative", height: "400vh", background: "var(--primary)" }}
     >
       <section
         style={{
@@ -377,7 +244,6 @@ export function TriageSection() {
           padding: "clamp(24px, 4vh, 48px) 0"
         }}
       >
-        <GooFilterDefs />
         {header}
         {marquee}
         <div style={{ height: "clamp(24px, 4vh, 48px)" }} />

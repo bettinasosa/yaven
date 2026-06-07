@@ -7,13 +7,12 @@ import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduce
 
 gsap.registerPlugin(ScrollTrigger)
 
-const INK = "#0a0e1a"
 
 // Script §2 — What it is (cryptic reveal). Body copy verbatim from site-script.md.
 const BODY = [
-  "Yaven is the assistant that you never knew you needed.",
-  "Yaven sits with you all day, ready whenever you need, proactively suggesting things it can handle for you.",
-  "No new tabs, apps, or chat boxes to switch between. Yaven is the future of ambient AI."
+  "Yaven is the future of ambient AI.",
+  "Yaven sits with you all day, ready whenever you need. It proactively suggests things it can handle for you, with no new tabs, apps, or chat boxes to switch between.",
+  "The work that actually needs you? Get right on it."
 ]
 
 // Satellite blobs that gooey-split out of the presence, then melt back in.
@@ -32,7 +31,7 @@ const headingStyle: React.CSSProperties = {
   fontWeight: 500,
   letterSpacing: "-0.02em",
   lineHeight: 1,
-  color: INK,
+  color: "var(--cream)",
   margin: "0 0 40px"
 }
 
@@ -40,7 +39,7 @@ const bodyTextStyle: React.CSSProperties = {
   fontSize: "clamp(18px, 2vw, 24px)",
   fontWeight: 500,
   lineHeight: 1.5,
-  color: INK
+  color: "var(--cream)"
 }
 
 // The ambient presence in the proposals-merge visual language: a flat blue
@@ -98,7 +97,7 @@ function PresenceStage({
               width: "120px",
               height: "120px",
               borderRadius: "50%",
-              background: "var(--primary)"
+              background: "var(--cream)"
             }}
           />
         </div>
@@ -115,7 +114,7 @@ function PresenceStage({
               width: `${s.w}px`,
               height: `${s.h}px`,
               borderRadius: s.round ? "50%" : "14px",
-              background: "var(--primary)",
+              background: "var(--cream)",
               transform: settled
                 ? "translate(0, 0) scale(0.4)"
                 : `translate(${s.x}px, ${s.y}px)`
@@ -143,7 +142,7 @@ function PresenceStage({
               width: "10px",
               height: "10px",
               borderRadius: "50%",
-              background: "rgba(255,255,255,0.85)",
+              background: "var(--primary)",
               animationDelay: `${i * 0.45}s`
             }}
           />
@@ -265,7 +264,7 @@ export function MeetYavenSection() {
       <section
         style={{
           position: "relative",
-          background: "#fff",
+          background: "var(--dark)",
           padding: "clamp(220px, 30vh, 360px) 24px clamp(120px, 18vh, 220px)",
           overflow: "hidden"
         }}
@@ -278,25 +277,8 @@ export function MeetYavenSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "350vh", background: "#fff" }}
+      style={{ position: "relative", height: "350vh", background: "var(--dark)" }}
     >
-      {/* Blue fade from the hero — lives in the WRAPPER (not the sticky
-          viewport) so it scrolls away instead of bleeding into the dwell */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "clamp(180px, 24vh, 300px)",
-          background:
-            "linear-gradient(to bottom, #267FE5 0%, rgba(255,255,255,0) 100%)",
-          pointerEvents: "none",
-          zIndex: 3
-        }}
-      />
-
       <section
         style={{
           position: "sticky",

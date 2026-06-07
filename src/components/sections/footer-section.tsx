@@ -1,9 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
-import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 
 const colLinkStyle: React.CSSProperties = {
   color: "var(--cream)",
@@ -15,85 +12,12 @@ const colLinkStyle: React.CSSProperties = {
   display: "block"
 }
 
-// Same lava goo as the CTA section above, quieter so the links stay readable
-const BLOBS = [
-  { left: "30%", top: "8%", size: 120, dx: 80, dy: 55, dur: 9.5 },
-  { left: "44%", top: "16%", size: 80, dx: -60, dy: 65, dur: 7.5 },
-  { left: "68%", top: "6%", size: 100, dx: -75, dy: 50, dur: 8.5 },
-  { left: "85%", top: "40%", size: 90, dx: -55, dy: -50, dur: 7 },
-  { left: "55%", top: "38%", size: 70, dx: 70, dy: -45, dur: 10 },
-  { left: "8%", top: "46%", size: 110, dx: 65, dy: -60, dur: 9 }
-]
-
 export function FooterSection() {
-  const blobRefs = useRef<(HTMLDivElement | null)[]>([])
-  const reduce = usePrefersReducedMotion()
-
-  useEffect(() => {
-    if (reduce) return
-    const tweens = blobRefs.current.map((b, i) => {
-      if (!b) return null
-      return gsap.to(b, {
-        x: BLOBS[i].dx,
-        y: BLOBS[i].dy,
-        duration: BLOBS[i].dur,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      })
-    })
-    return () => tweens.forEach(t => t?.kill())
-  }, [reduce])
-
   return (
     <footer
       className="h-full flex flex-col"
       style={{ background: "var(--ink)", position: "relative", overflow: "hidden" }}
     >
-      {/* Gooey lava layer */}
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-        <defs>
-          <filter id="yv-goo-footer">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
-              result="goo"
-            />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          filter: "url(#yv-goo-footer)",
-          opacity: 0.18,
-          pointerEvents: "none"
-        }}
-      >
-        {BLOBS.map((b, i) => (
-          <div
-            key={i}
-            ref={el => {
-              blobRefs.current[i] = el
-            }}
-            style={{
-              position: "absolute",
-              left: b.left,
-              top: b.top,
-              width: b.size,
-              height: b.size,
-              borderRadius: "50%",
-              background: "var(--cream)"
-            }}
-          />
-        ))}
-      </div>
-
       {/* ── Top: link columns + waitlist ── */}
       <div className="px-8 pt-20 flex flex-wrap gap-x-20 gap-y-10 shrink-0 items-start relative">
         {/* Follow column */}

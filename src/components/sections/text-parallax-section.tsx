@@ -10,27 +10,32 @@ gsap.registerPlugin(ScrollTrigger)
 const INK = "#0a0e1a"
 const GREEN = "#3BA55C"
 
-// Script §1 — The Drop. Pinned: lines appear, then get ticked off as you scroll.
+// Script §1 — The Drop, as a to-do list. The admin gets ticked off one by
+// one; the real work gets the cross.
 const LINES = [
-  "the invoice you forgot to chase.",
-  "the leads from Tuesday's conference.",
-  "the proposal due Friday.",
-  "the 14 unread responses."
+  { text: "chase the invoice from Monday", done: true },
+  { text: "submit the proposal before Friday", done: true },
+  { text: "reply to 42 unread inbounds", done: true },
+  { text: "start the website redesign", done: false }
 ]
 
-// Gooey tick: green blob pops in (droplet melts into it), crisp white check
-// draws on top — same language as the proposals merge / presence stage.
+// Gooey tick: blob pops in (droplet melts into it), crisp mark draws on
+// top — same language as the proposals merge / presence stage. Done items
+// get a green check, the one that slipped gets an amber cross.
 function GooeyTick({
   blobRef,
   dropRef,
   checkRef,
-  settled
+  settled,
+  done
 }: {
   blobRef: (el: HTMLDivElement | null) => void
   dropRef: (el: HTMLDivElement | null) => void
   checkRef: (el: SVGPathElement | null) => void
   settled: boolean
+  done: boolean
 }) {
+  const color = done ? GREEN : "var(--warm)"
   return (
     <span
       aria-hidden="true"
@@ -59,7 +64,7 @@ function GooeyTick({
             width: "100%",
             height: "100%",
             borderRadius: "50%",
-            background: GREEN,
+            background: color,
             display: "block",
             transform: settled ? "scale(1)" : "scale(0)"
           }}
@@ -72,7 +77,7 @@ function GooeyTick({
             width: "38%",
             height: "38%",
             borderRadius: "50%",
-            background: GREEN,
+            background: color,
             display: "block",
             transform: settled ? "scale(0)" : "translate(0, -130%) scale(0)"
           }}
@@ -93,7 +98,7 @@ function GooeyTick({
       >
         <path
           ref={checkRef}
-          d="M14 25 L21 32 L34 17"
+          d={done ? "M14 25 L21 32 L34 17" : "M16 16 L32 32 M32 16 L16 32"}
           fill="none"
           stroke="#fff"
           strokeWidth="4.5"
@@ -158,11 +163,13 @@ export function TextParallaxSection() {
       tl.to(drop, { scale: 0, duration: 0.3 }, base + 2.1)
       tl.to(blob, { scale: 1, duration: 0.4, ease: "power2.out" }, base + 2.5)
 
-      // crisp check draws on
+      // crisp mark draws on
       tl.to(check, { strokeDashoffset: 0, ease: "power2.inOut", duration: 0.7 }, base + 2.3)
 
-      // dealt with — line settles back
-      tl.to(line, { opacity: 0.4, duration: 0.6 }, base + 2.8)
+      // ticked admin settles back; the crossed-out real work stays bright
+      if (LINES[i].done) {
+        tl.to(line, { opacity: 0.4, duration: 0.6 }, base + 2.8)
+      }
     })
 
     const punchAt = LINES.length * 2.4 + 1
@@ -202,7 +209,7 @@ export function TextParallaxSection() {
         </defs>
       </svg>
 
-      {LINES.map((text, i) => (
+      {LINES.map((line, i) => (
         <div
           key={i}
           ref={el => {
@@ -211,21 +218,21 @@ export function TextParallaxSection() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "clamp(16px, 2vw, 28px)"
+            gap: "clamp(16px, 2vw, 28px)",
+            maxWidth: "calc(100vw - 48px)"
           }}
         >
           <span
             style={{
               fontFamily: "var(--font-instrument-serif)",
-              fontSize: "clamp(28px, 5vw, 64px)",
+              fontSize: "clamp(24px, 4vw, 56px)",
               fontWeight: 500,
               letterSpacing: "-0.03em",
               lineHeight: 1.1,
-              color: INK,
-              whiteSpace: "nowrap"
+              color: INK
             }}
           >
-            {text}
+            {line.text}
           </span>
           <GooeyTick
             blobRef={el => {
@@ -238,6 +245,7 @@ export function TextParallaxSection() {
               checkRefs.current[i] = el
             }}
             settled={staticLayout}
+            done={line.done}
           />
         </div>
       ))}
@@ -262,7 +270,7 @@ export function TextParallaxSection() {
             margin: 0
           }}
         >
-          None of it needs{" "}
+          So when does the{" "}
           <span
             ref={youRef}
             style={{
@@ -275,9 +283,9 @@ export function TextParallaxSection() {
               padding: "0 0.08em"
             }}
           >
-            you
-          </span>
-          . It just needs doing.
+            real work
+          </span>{" "}
+          happen?
         </p>
       </div>
     </div>
@@ -287,7 +295,7 @@ export function TextParallaxSection() {
     return (
       <section
         style={{
-          background: "var(--cream)",
+          background: "#fff",
           padding: "clamp(100px, 15vh, 180px) 24px",
           overflow: "hidden"
         }}
@@ -300,8 +308,24 @@ export function TextParallaxSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "600vh", background: "var(--cream)" }}
+      style={{ position: "relative", height: "600vh", background: "#fff" }}
     >
+      {/* Blue fade from the hero — lives in the WRAPPER (not the sticky
+          viewport) so it scrolls away instead of bleeding into the dwell */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "clamp(180px, 24vh, 300px)",
+          background:
+            "linear-gradient(to bottom, #267FE5 0%, rgba(38,127,229,0) 100%)",
+          pointerEvents: "none",
+          zIndex: 3
+        }}
+      />
       <section
         style={{
           position: "sticky",

@@ -42,8 +42,7 @@ const panelStyle: React.CSSProperties = {
   gap: "20px"
 }
 
-// Yaven-as-goo avatar: blue blob + droplet under the shared gooey filter,
-// crisp white dot on top. Mini version of the Meet Yaven presence.
+// Yaven avatar: plain blue circle with a white dot — calm, no goo.
 function GooAvatar({ size = 34 }: { size?: number }) {
   return (
     <span
@@ -53,37 +52,11 @@ function GooAvatar({ size = 34 }: { size?: number }) {
         width: size,
         height: size,
         display: "inline-block",
-        flexShrink: 0
+        flexShrink: 0,
+        borderRadius: "50%",
+        background: "var(--primary)"
       }}
     >
-      <span
-        style={{
-          position: "absolute",
-          inset: 0,
-          filter: "url(#yv-goo-cmd)"
-        }}
-      >
-        <span
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "50%",
-            background: "var(--primary)"
-          }}
-        />
-        <span
-          className="yv-chip-float"
-          style={{
-            position: "absolute",
-            top: "-22%",
-            right: "-10%",
-            width: "42%",
-            height: "42%",
-            borderRadius: "50%",
-            background: "var(--primary)"
-          }}
-        />
-      </span>
       <span
         style={{
           position: "absolute",
@@ -140,7 +113,7 @@ function DraftPanel({ active }: { active: boolean }) {
       >
         It writes where your cursor is - with the thread, the client, and the
         way <em style={{ paddingRight: "0.12em" }}>you</em> write already in
-        its head. Your voice. Not Claude&apos;s.
+        its head.
       </p>
 
       {/* Email thread — typing picks up mid-sentence */}
@@ -173,7 +146,7 @@ function DraftPanel({ active }: { active: boolean }) {
           }}
         >
           <span style={{ fontWeight: 700, fontSize: "clamp(13px, 1.4vw, 15px)" }}>
-            Re: Updated proposal — Hartwell &amp; Co
+            Re: Otto&apos;s Bakehouse proposal
           </span>
           <span
             style={{
@@ -245,12 +218,12 @@ function DraftPanel({ active }: { active: boolean }) {
             {/* Unmounted until the panel lands, so it resets on backscroll */}
             {active ? (
               <Typewriter
-                startText="Hi Sarah — good speaking earlier. "
+                startText="Hi Sarah, good speaking earlier. "
                 text="The revised numbers are attached, same scope we walked through but with the onboarding fee folded in. If it all looks right I can have the contract over to you by Thursday."
                 speed={26}
               />
             ) : (
-              <span>Hi Sarah — good speaking earlier. </span>
+              <span>Hi Sarah, good speaking earlier. </span>
             )}
           </div>
         </div>
@@ -289,7 +262,7 @@ function AskPanel({ active }: { active: boolean }) {
         Question anything on your screen, without leaving it.
       </p>
 
-      {/* Static page behind, gooey ask-bubbles over it */}
+      {/* The page you're reading, with the Ask popup over it */}
       <div
         style={{
           position: "relative",
@@ -298,24 +271,38 @@ function AskPanel({ active }: { active: boolean }) {
           border: "var(--bd)",
           padding: "clamp(16px, 2.5vw, 24px)",
           flex: 1,
-          minHeight: "210px",
+          minHeight: "230px",
           overflow: "hidden"
         }}
       >
-        {/* The page that visibly never changes */}
-        <div aria-hidden="true" style={{ opacity: 0.35 }}>
-          {[92, 78, 85, 60, 88, 72].map((w, i) => (
-            <div
-              key={i}
-              style={{
-                height: "10px",
-                width: `${w}%`,
-                background: "rgba(10,14,26,0.25)",
-                borderRadius: "5px",
-                marginBottom: "12px"
-              }}
-            />
-          ))}
+        {/* The redlined contract you're reading — visibly never changes */}
+        <div
+          style={{
+            opacity: 0.5,
+            fontSize: "clamp(13px, 1.4vw, 15px)",
+            lineHeight: 1.55,
+            color: INK
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-space-mono)",
+              fontSize: "11px",
+              marginBottom: "10px"
+            }}
+          >
+            Ottos_Bakehouse_Agreement_v3.pdf, returned with edits
+          </div>
+          <div style={{ marginBottom: "6px" }}>
+            4.2 Payment due within{" "}
+            <s style={{ opacity: 0.6 }}>thirty (30)</s>{" "}
+            <strong>sixty (60)</strong> days of invoice date.
+          </div>
+          <div>
+            4.3 <s style={{ opacity: 0.6 }}>
+              A kill fee of 25% applies to work cancelled after commencement.
+            </s>
+          </div>
         </div>
 
         {/* Question + answer melt together under the gooey filter */}
@@ -347,20 +334,7 @@ function AskPanel({ active }: { active: boolean }) {
                 background: "var(--primary)"
               }}
             />
-            {/* connecting droplet + answer blob, dripping out of the question */}
-            <div
-              style={{
-                position: "absolute",
-                left: "34px",
-                top: answered ? "44px" : "30px",
-                width: "26px",
-                height: "26px",
-                borderRadius: "50%",
-                background: "var(--primary)",
-                opacity: answered ? 1 : 0,
-                transition: "top 0.5s ease, opacity 0.3s ease"
-              }}
-            />
+            {/* answer blob, stretching open below the question */}
             <div
               style={{
                 position: "absolute",
@@ -376,6 +350,27 @@ function AskPanel({ active }: { active: boolean }) {
               }}
             />
           </div>
+
+          {/* "Ask" tag so the popup reads as the command */}
+          <span
+            style={{
+              position: "absolute",
+              top: "-10px",
+              left: "14px",
+              zIndex: 1,
+              fontFamily: "var(--font-instrument-serif)",
+              fontSize: "13px",
+              lineHeight: 1,
+              padding: "4px 10px",
+              borderRadius: "999px",
+              background: "#fff",
+              border: "var(--bd)",
+              boxShadow: "var(--shadow-sm)",
+              color: "var(--primary)"
+            }}
+          >
+            Ask
+          </span>
 
           {/* crisp text above the goo */}
           <div
@@ -394,7 +389,7 @@ function AskPanel({ active }: { active: boolean }) {
             {/* Unmounted until the panel lands, so it resets on backscroll */}
             {active && (
               <Typewriter
-                text="What did we quote them in March?"
+                text="What changed from the version I sent?"
                 speed={32}
                 delay={400}
                 onComplete={() => setAnswered(true)}
@@ -416,7 +411,7 @@ function AskPanel({ active }: { active: boolean }) {
               transition: "opacity 0.4s ease 0.55s"
             }}
           >
-            £4,800 — sent March 12 in the Hartwell proposal, 30-day terms.
+            Payment terms: 30 → 60 days. The kill fee in §4 is gone.
           </div>
         </div>
       </div>
@@ -430,8 +425,7 @@ function AskPanel({ active }: { active: boolean }) {
           margin: 0
         }}
       >
-        &quot;What did we quote them in March?&quot; Answered. Page never
-        changed.
+        Read the redlines before your coffee cooled.
       </p>
     </>
   )
@@ -470,7 +464,14 @@ export function CommandsSection() {
     peel.fromTo(
       askRef.current,
       { y: "110vh" },
-      { y: 0, ease: "power3.out", duration: 1 }
+      { y: 0, ease: "power3.out", duration: 1 },
+      0
+    )
+    // Draft recedes into the deck — top edge stays visible behind Ask
+    peel.to(
+      draftRef.current,
+      { y: -16, scale: 0.96, ease: "power2.out", duration: 1 },
+      0
     )
     if (peel.scrollTrigger) triggers.push(peel.scrollTrigger)
 
@@ -517,7 +518,7 @@ export function CommandsSection() {
     return (
       <section
         style={{
-          background: "#fff",
+          background: "var(--cream)",
           padding: "clamp(80px, 12vh, 140px) 24px"
         }}
       >
@@ -546,7 +547,7 @@ export function CommandsSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "420vh", background: "#fff" }}
+      style={{ position: "relative", height: "420vh", background: "var(--cream)" }}
     >
       <div
         style={{
@@ -590,7 +591,10 @@ export function CommandsSection() {
             style={{
               ...panelStyle,
               position: "absolute",
-              inset: 0,
+              top: "44px",
+              left: 0,
+              right: 0,
+              bottom: 0,
               maxHeight: "min(560px, 72vh)",
               transform: "translateY(110vh)"
             }}
