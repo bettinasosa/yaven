@@ -364,7 +364,7 @@ export function HeroSection() {
           </div>
 
           <AnimatedHeadline
-            className="font-medium hero-headline"
+            className="font-medium"
             style={{
               fontFamily: "var(--font-instrument-serif)",
               fontSize: "clamp(26px, 4vw, 52px)",
@@ -389,8 +389,8 @@ export function HeroSection() {
               marginBottom: "36px"
             }}
           >
-            Yaven chases the invoices, warms the leads and drafts the
-            replies, while you focus on the things only you can do.
+            Yaven chases the invoices, warms the leads and drafts the replies,
+            while you focus on the things only you can do.
           </p>
 
           <div
