@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { SplitText } from "gsap/SplitText"
 import { Typewriter } from "@/components/effects/typewriter"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
+import { GlassCard } from "@/components/effects/glass-card"
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const INK = "#0a0e1a"
 
@@ -73,7 +75,11 @@ function GooeyStage({
       <svg width="0" height="0" style={{ position: "absolute" }}>
         <defs>
           <filter id="yv-goo">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="12"
+              result="blur"
+            />
             <feColorMatrix
               in="blur"
               mode="matrix"
@@ -158,7 +164,7 @@ function GooeyStage({
 
 // CRM contact card that fills itself in
 const CRM_ROWS = [
-  { field: "Name", value: "Bettina Sosa" },
+  { field: "Name", value: "Bettina Brown" },
   { field: "Company", value: "Otto's Bakehouse" },
   { field: "Last call", value: "Tue: pricing, onboarding" },
   { field: "Promised", value: "Contract by Thursday" },
@@ -185,17 +191,16 @@ function CrmRow({
         gap: "14px",
         padding: "10px 14px",
         borderRadius: "10px",
-        background: flash ? "var(--cream)" : "transparent",
+        background: flash ? "rgba(38, 127, 229, 0.12)" : "transparent",
         transition: "background 0.8s ease",
         minHeight: "42px"
       }}
     >
       <span
         style={{
-          fontFamily: "var(--font-space-mono)",
-          fontSize: "11px",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
+          fontFamily: "var(--font-dm-sans), sans-serif",
+          fontSize: "13px",
+          letterSpacing: "0.02em",
           color: INK,
           opacity: 0.5,
           width: "84px",
@@ -225,106 +230,92 @@ function CrmRow({
 
 function CrmCard({ active }: { active: boolean }) {
   return (
-    <div
-      style={{
-        background: "#fff",
-        borderRadius: "20px",
-        border: "var(--bd)",
-        boxShadow: "var(--shadow)",
-        padding: "clamp(18px, 2.5vw, 28px)",
-        maxWidth: "460px"
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "var(--font-instrument-serif)",
-          fontSize: "clamp(18px, 2vw, 22px)",
-          lineHeight: 1,
-          color: INK,
-          opacity: 0.55,
-          padding: "0 14px 14px"
-        }}
-      >
-        Contact
+    <GlassCard borderRadius="34px" style={{ maxWidth: "460px" }}>
+      <div style={{ padding: "clamp(18px, 2.5vw, 28px)" }}>
+        <div
+          style={{
+            fontFamily: "var(--font-instrument-serif)",
+            fontSize: "clamp(18px, 2vw, 22px)",
+            lineHeight: 1,
+            color: INK,
+            opacity: 0.55,
+            padding: "0 14px 14px"
+          }}
+        >
+          Contact
+        </div>
+        {CRM_ROWS.map((row, i) => (
+          <CrmRow
+            key={row.field}
+            field={row.field}
+            value={row.value}
+            delay={i * 750}
+            active={active}
+          />
+        ))}
       </div>
-      {CRM_ROWS.map((row, i) => (
-        <CrmRow
-          key={row.field}
-          field={row.field}
-          value={row.value}
-          delay={i * 750}
-          active={active}
-        />
-      ))}
-    </div>
+    </GlassCard>
   )
 }
 
-// The conference follow-up card, in the CRM card's field/value language
+// The conference follow-up card — shows Yaven researching a new connection
+// and drafting a contextual follow-up in real time.
 const GREEN = "#3BA55C"
 const CONFERENCE_ROWS = [
-  { field: "Scanned", value: "300 contacts", done: false },
-  { field: "Worth keeping", value: "4", done: false },
-  { field: "Intros", value: "Drafted ✓", done: true },
-  { field: "Ready by", value: "Landing", done: false }
+  { field: "Met", value: "Sarah Chen, Lattice Design", done: false },
+  { field: "Found", value: "Spoke at Config '25, knows Maya", done: false },
+  { field: "Context", value: "You both discussed brand systems", done: false },
+  { field: "Follow-up", value: "Drafted ✓", done: true }
 ]
 
 function ConferenceCard() {
   return (
-    <div
-      style={{
-        background: "#fff",
-        borderRadius: "20px",
-        border: "var(--bd)",
-        boxShadow: "var(--shadow)",
-        padding: "clamp(18px, 2.5vw, 28px)",
-        maxWidth: "460px"
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "var(--font-instrument-serif)",
-          fontSize: "clamp(18px, 2vw, 22px)",
-          lineHeight: 1,
-          color: INK,
-          opacity: 0.55,
-          padding: "0 14px 14px"
-        }}
-      >
-        Tuesday&apos;s conference
-      </div>
-      {CONFERENCE_ROWS.map(row => (
+    <GlassCard borderRadius="34px" style={{ maxWidth: "460px" }}>
+      <div style={{ padding: "clamp(18px, 2.5vw, 28px)" }}>
         <div
-          key={row.field}
-          style={{ display: "flex", gap: "14px", padding: "10px 14px" }}
+          style={{
+            fontFamily: "var(--font-instrument-serif)",
+            fontSize: "clamp(18px, 2vw, 22px)",
+            lineHeight: 1,
+            color: INK,
+            opacity: 0.55,
+            padding: "0 14px 14px"
+          }}
         >
-          <span
-            style={{
-              fontFamily: "var(--font-space-mono)",
-              fontSize: "11px",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: INK,
-              opacity: 0.5,
-              width: "110px",
-              flexShrink: 0,
-              paddingTop: "2px"
-            }}
-          >
-            {row.field}
-          </span>
-          <span
-            style={{
-              fontSize: "15px",
-              fontWeight: row.done ? 700 : 500,
-              color: row.done ? GREEN : INK
-            }}
-          >
-            {row.value}
-          </span>
+          New connection
         </div>
-      ))}
-    </div>
+        {CONFERENCE_ROWS.map(row => (
+          <div
+            key={row.field}
+            style={{ display: "flex", gap: "14px", padding: "10px 14px" }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-dm-sans), sans-serif",
+                fontSize: "13px",
+                letterSpacing: "0.02em",
+                color: INK,
+                opacity: 0.5,
+                width: "110px",
+                flexShrink: 0,
+                paddingTop: "2px"
+              }}
+            >
+              {row.field}
+            </span>
+            <span
+              style={{
+                fontSize: "15px",
+                fontWeight: row.done ? 700 : 500,
+                color: row.done ? GREEN : INK
+              }}
+            >
+              {row.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    </GlassCard>
   )
 }
 
@@ -336,6 +327,7 @@ export function ProposalsCrmSection() {
   const crmRef = useRef<HTMLDivElement>(null)
   const confRef = useRef<HTMLDivElement>(null)
   const finaleRef = useRef<HTMLDivElement>(null)
+  const finaleHeadRef = useRef<HTMLHeadingElement>(null)
   const headerWrapRef = useRef<HTMLDivElement>(null)
   const fragRefs = useRef<(HTMLDivElement | null)[]>([])
   const [crmActive, setCrmActive] = useState(false)
@@ -348,8 +340,15 @@ export function ProposalsCrmSection() {
     gsap.set(crmRef.current, { y: "100vh", opacity: 0 })
     gsap.set(confRef.current, { y: "100vh", opacity: 0 })
     gsap.set(finaleRef.current, { y: "100vh", opacity: 0 })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let splitInstance: any = null
     fragRefs.current.forEach((f, i) => {
-      if (f) gsap.set(f, { x: FRAGMENTS[i].x, y: FRAGMENTS[i].y, rotation: FRAGMENTS[i].r })
+      if (f)
+        gsap.set(f, {
+          x: FRAGMENTS[i].x,
+          y: FRAGMENTS[i].y,
+          rotation: FRAGMENTS[i].r
+        })
     })
 
     const tl = gsap.timeline({
@@ -362,37 +361,96 @@ export function ProposalsCrmSection() {
     })
 
     // Phase 1 — proposals enter, fragments melt into the document
-    tl.to(proposalsRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 }, 0)
+    tl.to(
+      proposalsRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 },
+      0
+    )
     fragRefs.current.forEach((f, i) => {
       if (!f) return
       tl.to(
         f,
-        { x: 0, y: 0, rotation: 0, scale: 0.6, ease: "power2.inOut", duration: 1.6 },
+        {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scale: 0.6,
+          ease: "power2.inOut",
+          duration: 1.6
+        },
         0.8 + i * 0.12
       )
     })
     tl.to({}, { duration: 0.8 }) // dwell on the finished document
 
     // Phase 2 — proposals give way, CRM card slides up and fills in
-    tl.to(proposalsRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
-    tl.to(crmRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
-    tl.to({}, { duration: 1.8 }) // dwell while the card types itself
+    tl.to(
+      proposalsRef.current,
+      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
+      ">"
+    )
+    tl.to(
+      crmRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
+      "<0.3"
+    )
+    tl.to({}, { duration: 3.6 }) // dwell while the card types itself
 
     // Phase 3 — the conference follow-up takes the stage
-    tl.to(crmRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
-    tl.to(confRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
+    tl.to(
+      crmRef.current,
+      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
+      ">"
+    )
+    tl.to(
+      confRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
+      "<0.3"
+    )
     tl.to({}, { duration: 1.4 }) // dwell
 
     // Phase 4 — the zoom-out; the header leaves so the line stands alone
-    tl.to(confRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
-    tl.to(headerWrapRef.current, { y: -40, opacity: 0, ease: "power2.in", duration: 0.8 }, "<")
-    tl.to(finaleRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
+    tl.to(
+      confRef.current,
+      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
+      ">"
+    )
+    tl.to(
+      headerWrapRef.current,
+      { y: -40, opacity: 0, ease: "power2.in", duration: 0.8 },
+      "<"
+    )
+    tl.to(
+      finaleRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
+      "<0.3"
+    )
+
+    // SplitText char animation on the finale heading
+    if (finaleHeadRef.current) {
+      const split = new SplitText(finaleHeadRef.current, {
+        type: "chars,words"
+      })
+      tl.from(
+        split.chars,
+        {
+          yPercent: 130,
+          opacity: 0,
+          stagger: 0.035,
+          duration: 0.9,
+          ease: "back.out(1.7)"
+        },
+        "<0.1"
+      )
+      splitInstance = split
+    }
+
     tl.to({}, { duration: 1.4 }) // dwell before unpinning
 
     // Mount the typewriters only when phase 2 actually lands
     const gate = ScrollTrigger.create({
       trigger: wrapperRef.current,
-      start: "42% top",
+      start: "36% top",
       once: true,
       onEnter: () => setCrmActive(true)
     })
@@ -401,6 +459,7 @@ export function ProposalsCrmSection() {
       gate.kill()
       tl.scrollTrigger?.kill()
       tl.kill()
+      splitInstance?.revert?.()
     }
   }, [staticLayout])
 
@@ -417,7 +476,7 @@ export function ProposalsCrmSection() {
         textAlign: "center"
       }}
     >
-      Workflows.
+      Yaven creates workflows.
     </ScrollCutReveal>
   )
 
@@ -433,7 +492,7 @@ export function ProposalsCrmSection() {
           }}
         >
           <div>
-            <h2 style={headlineStyle}>Call ends. Proposal exists.</h2>
+            <h2 style={headlineStyle}>Call ended. Proposal ready.</h2>
             <p style={bodyStyle}>
               Built from your notes while the conversation is still warm.
             </p>
@@ -463,20 +522,29 @@ export function ProposalsCrmSection() {
           }}
         >
           <div>
-            <h2 style={headlineStyle}>300 badge scans. 4 worth keeping.</h2>
+            <h2 style={headlineStyle}>
+              Conference networking? Yaven handles it.
+            </h2>
             <p style={bodyStyle}>
-              Yaven finds them and writes the intros before your flight lands.
+              It finds their work, your mutual connections, and drafts a
+              follow-up that doesn&apos;t sound like a template.
             </p>
           </div>
           <ConferenceCard />
         </div>
         <div
           style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             textAlign: "center",
-            padding: "clamp(60px, 9vh, 110px) 24px clamp(100px, 15vh, 180px)"
+            minHeight: "100vh",
+            padding: "0 24px"
           }}
         >
-          <h2 style={headlineStyle}>And that&apos;s just a few examples…</h2>
+          <h2 ref={finaleHeadRef} style={headlineStyle}>
+            And that&apos;s just a few examples
+          </h2>
         </div>
       </section>
     )
@@ -485,7 +553,7 @@ export function ProposalsCrmSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "780vh", background: "#fff" }}
+      style={{ position: "relative", height: "900vh", background: "#fff" }}
     >
       <section
         style={{
@@ -497,45 +565,51 @@ export function ProposalsCrmSection() {
           flexDirection: "column"
         }}
       >
-        <div ref={headerWrapRef} style={{ paddingTop: "clamp(48px, 8vh, 90px)" }}>
+        <div
+          ref={headerWrapRef}
+          style={{ paddingTop: "clamp(48px, 8vh, 90px)" }}
+        >
           {header}
         </div>
 
         <div style={{ position: "relative", flex: 1 }}>
-        {/* Phase 1 — Proposals */}
-        <div ref={proposalsRef} style={phaseGridStyle}>
-          <div>
-            <h2 style={headlineStyle}>Call ends. Proposal exists.</h2>
-            <p style={bodyStyle}>
-              Built from your notes while the conversation is still warm.
-            </p>
+          {/* Phase 1 — Proposals */}
+          <div ref={proposalsRef} style={phaseGridStyle}>
+            <div>
+              <h2 style={headlineStyle}>Call ended. Proposal ready.</h2>
+              <p style={bodyStyle}>
+                Built from your notes, client profile and context while the
+                conversation is still warm.
+              </p>
+            </div>
+            <GooeyStage fragRefs={fragRefs} merged={false} />
           </div>
-          <GooeyStage fragRefs={fragRefs} merged={false} />
-        </div>
 
-        {/* Phase 2 — CRM */}
-        <div ref={crmRef} style={phaseGridStyle}>
-          <CrmCard active={crmActive} />
-          <div>
-            <h2 style={headlineStyle}>A CRM that fills itself in.</h2>
-            <p style={bodyStyle}>
-              Every call, email, and promise: logged. You never typed a field.
-            </p>
+          {/* Phase 2 — CRM */}
+          <div ref={crmRef} style={phaseGridStyle}>
+            <CrmCard active={crmActive} />
+            <div>
+              <h2 style={headlineStyle}>A CRM that fills itself in.</h2>
+              <p style={bodyStyle}>
+                Every call, email, and promise: logged. You never typed a field.
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Phase 3 — Conference follow-up */}
-        <div ref={confRef} style={phaseGridStyle}>
-          <div>
-            <h2 style={headlineStyle}>300 badge scans. 4 worth keeping.</h2>
-            <p style={bodyStyle}>
-              Yaven finds them and writes the intros before your flight lands.
-            </p>
+          {/* Phase 3 — Conference follow-up */}
+          <div ref={confRef} style={phaseGridStyle}>
+            <div>
+              <h2 style={headlineStyle}>Conference networking</h2>
+              <p style={bodyStyle}>
+                It finds their work, your mutual connections, and drafts a
+                follow-up that doesn&apos;t sound like a template.
+              </p>
+            </div>
+            <ConferenceCard />
           </div>
-          <ConferenceCard />
-        </div>
 
-        {/* Phase 4 — the zoom-out */}
+          {/* Phase 4 — the zoom-out */}
+        </div>
         <div
           ref={finaleRef}
           style={{
@@ -548,8 +622,9 @@ export function ProposalsCrmSection() {
             textAlign: "center"
           }}
         >
-          <h2 style={headlineStyle}>And that&apos;s just a few examples…</h2>
-        </div>
+          <h2 ref={finaleHeadRef} style={headlineStyle}>
+            And that&apos;s just a few examples
+          </h2>
         </div>
       </section>
     </div>

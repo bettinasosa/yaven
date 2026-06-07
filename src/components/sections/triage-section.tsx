@@ -4,10 +4,12 @@ import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
+import { cn } from "@/lib/utils"
+import { Sparkles, Mail, FileText, Bell } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const INK = "#0a0e1a"
+const PRIMARY_BLUE = "#267FE5"
 
 // The stream — five inboxes' worth of noise
 const STREAM = [
@@ -23,51 +25,123 @@ const STREAM = [
   "Webinar invite: Q3 outlook"
 ]
 
-const PILES = [
-  {
-    label: "Your priority",
-    color: "var(--warm)",
-    chips: ["Can we move Thursday's call?", "Intro: Maya ↔ you"]
-  },
-  {
-    label: "Your tone",
-    color: "var(--primary)",
-    chips: ["Re: proposal timeline? Draft ready", "Invoice #214, nudge drafted"]
-  },
-  {
-    label: "Your context",
-    color: "rgba(10,14,26,0.45)",
-    chips: ["Knows the March quote", "Remembers the kickoff call"]
-  }
-]
-
 const chipStyle: React.CSSProperties = {
   display: "inline-block",
   padding: "10px 18px",
   borderRadius: "999px",
-  background: "#fff",
-  boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
+  background: "rgba(255,255,255,0.18)",
+  backdropFilter: "blur(10px)",
+  WebkitBackdropFilter: "blur(10px)",
+  border: "1px solid rgba(255,255,255,0.3)",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 8px rgba(0,0,0,0.06)",
   fontSize: "clamp(13px, 1.4vw, 15px)",
   fontWeight: 500,
-  color: INK,
+  color: "#fff",
   whiteSpace: "nowrap"
 }
 
-// Script §6 — Inbound triage. Pinned: the stream pours past, and the three
-// sorted piles appear one by one.
+/* ── Display Card (glass variant) ────────────────────────────── */
+
+interface DisplayCardProps {
+  className?: string
+  icon?: React.ReactNode
+  title?: string
+  description?: string
+  date?: string
+  titleClassName?: string
+}
+
+function DisplayCard({
+  className,
+  icon = <Sparkles className="size-4 text-blue-200" />,
+  title = "Featured",
+  description = "Discover amazing content",
+  date = "Just now",
+  titleClassName = "text-white/90"
+}: DisplayCardProps) {
+  return (
+    <div
+      className={cn(
+        "relative flex h-44 w-[26rem] skew-y-[-8deg] select-none flex-col justify-between rounded-2xl border border-white/20 bg-[#4a9af0]/40 backdrop-blur-2xl px-5 py-4 transition-all duration-500 ease-out",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]",
+        "hover:bg-[#4a9af0]/55 hover:border-white/40",
+        "*:flex *:items-center *:gap-2",
+        className
+      )}
+    >
+      <div>
+        <span className="relative inline-block rounded-full bg-white/20 p-1">
+          {icon}
+        </span>
+        <p className={cn("text-lg font-medium", titleClassName)}>{title}</p>
+      </div>
+      <p className="whitespace-nowrap text-lg text-white/80">{description}</p>
+      <p className="text-white/50">{date}</p>
+    </div>
+  )
+}
+
+interface DisplayCardsProps {
+  cards?: DisplayCardProps[]
+}
+
+function DisplayCards({ cards }: DisplayCardsProps) {
+  const defaultCards: DisplayCardProps[] = [
+    {
+      icon: <Mail className="size-4 text-white" />,
+      title: "Sorted by you, not by time",
+      description: "Client intros and deadline threads surface first.",
+      date: "Priorities first",
+      titleClassName: "text-white/90",
+      className:
+        "[grid-area:stack] opacity-70 hover:opacity-100 hover:-translate-y-10"
+    },
+    {
+      icon: <FileText className="size-4 text-white" />,
+      title: "Drafted in your voice",
+      description: "Follow-ups and proposals, ready to send.",
+      date: "Your tone, always",
+      titleClassName: "text-white",
+      className:
+        "[grid-area:stack] translate-x-20 translate-y-14 opacity-70 hover:opacity-100 hover:translate-y-2"
+    },
+    {
+      icon: <Bell className="size-4 text-white" />,
+      title: "Briefed without asking",
+      description: "Context from past conversations, ready.",
+      date: "Always prepared",
+      titleClassName: "text-white",
+      className:
+        "[grid-area:stack] translate-x-40 translate-y-28 hover:translate-y-16"
+    }
+  ]
+
+  const displayCards = cards || defaultCards
+
+  return (
+    <div className="grid [grid-template-areas:'stack'] place-items-center">
+      {displayCards.map((cardProps, index) => (
+        <DisplayCard key={index} {...cardProps} />
+      ))}
+    </div>
+  )
+}
+
+/* ── Section ─────────────────────────────────────────────────── */
+
 export function TriageSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const headerRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLDivElement>(null)
   const marqueeRef = useRef<HTMLDivElement>(null)
-  const pileRefs = useRef<(HTMLDivElement | null)[]>([])
+  const boardRef = useRef<HTMLDivElement>(null)
   const staticLayout = usePrefersReducedMotion()
 
   useEffect(() => {
     if (staticLayout || !wrapperRef.current) return
 
-    gsap.set(headerRef.current, { y: 50, opacity: 0 })
+    gsap.set(textRef.current, { y: 50, opacity: 0 })
     gsap.set(marqueeRef.current, { opacity: 0 })
-    pileRefs.current.forEach(p => p && gsap.set(p, { y: 60, opacity: 0 }))
+    if (boardRef.current) gsap.set(boardRef.current, { y: 50, opacity: 0 })
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -78,17 +152,21 @@ export function TriageSection() {
       }
     })
 
-    // header, then the noise starts streaming
-    tl.to(headerRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1 }, 0)
-    tl.to(marqueeRef.current, { opacity: 1, duration: 1 }, 1)
+    tl.to(
+      textRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1 },
+      0
+    )
+    tl.to(marqueeRef.current, { opacity: 1, duration: 1 }, 0.5)
 
-    // the three piles appear one by one, chips and all
-    pileRefs.current.forEach((p, i) => {
-      if (!p) return
-      tl.to(p, { y: 0, opacity: 1, ease: "power3.out", duration: 1 }, 2.4 + i * 1.4)
-    })
+    if (boardRef.current) {
+      tl.to(
+        boardRef.current,
+        { y: 0, opacity: 1, ease: "power3.out", duration: 1 },
+        0.2
+      )
+    }
 
-    // dwell before unpinning
     tl.to({}, { duration: 1.6 })
 
     return () => {
@@ -97,42 +175,11 @@ export function TriageSection() {
     }
   }, [staticLayout])
 
-  const header = (
-    <div ref={headerRef} style={{ textAlign: "center", padding: "0 24px" }}>
-      <h2
-        style={{
-          fontFamily: "var(--font-instrument-serif)",
-          fontSize: "clamp(36px, 5.5vw, 76px)",
-          fontWeight: 500,
-          letterSpacing: "-0.02em",
-          lineHeight: 1,
-          color: "var(--cream)",
-          margin: 0
-        }}
-      >
-        Five inboxes. One queue.
-      </h2>
-      <p
-        style={{
-          fontSize: "clamp(16px, 1.9vw, 22px)",
-          fontWeight: 500,
-          lineHeight: 1.45,
-          color: "var(--cream)",
-          opacity: 0.85,
-          maxWidth: "560px",
-          margin: "20px auto 0"
-        }}
-      >
-        Yaven sorts what needs you now, and drafts replies in one click.
-      </p>
-    </div>
-  )
-
   const marquee = (
     <div
       ref={marqueeRef}
       className="testimonial-marquee"
-      style={{ marginTop: "clamp(28px, 4vh, 48px)", width: "100%" }}
+      style={{ width: "100%" }}
     >
       <div
         className="testimonial-marquee-track"
@@ -145,7 +192,7 @@ export function TriageSection() {
         }}
       >
         {[...STREAM, ...STREAM].map((msg, i) => (
-          <span key={i} style={{ ...chipStyle, opacity: 0.9 }}>
+          <span key={i} style={{ ...chipStyle, opacity: 0.7 }}>
             {msg}
           </span>
         ))}
@@ -153,59 +200,53 @@ export function TriageSection() {
     </div>
   )
 
-  const board = (
+  const content = (
     <div
       style={{
-        maxWidth: "1040px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "clamp(32px, 4vw, 64px)",
+        maxWidth: "1200px",
         width: "100%",
-        margin: "0 auto",
-        padding: "0 24px",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-        gap: "clamp(24px, 3.5vw, 44px)"
+        padding: "0 clamp(24px, 4vw, 48px)",
+        flexWrap: "wrap"
       }}
     >
-      {PILES.map((pile, pi) => (
-        <div
-          key={pile.label}
-          ref={el => {
-            pileRefs.current[pi] = el
-          }}
+      {/* Left: text */}
+      <div ref={textRef} style={{ flex: "1 1 340px", minWidth: 0 }}>
+        <h2
           style={{
-            position: "relative",
-            padding: "clamp(22px, 2.8vw, 32px)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "14px",
-            background: "var(--cream)",
-            borderRadius: "20px"
+            fontFamily: "var(--font-instrument-serif)",
+            fontSize: "clamp(36px, 5.5vw, 76px)",
+            fontWeight: 500,
+            letterSpacing: "-0.02em",
+            lineHeight: 1,
+            color: "#FFF",
+            margin: 0
           }}
         >
-          <span
-            style={{
-              fontFamily: "var(--font-instrument-serif)",
-              fontSize: "clamp(18px, 2vw, 24px)",
-              lineHeight: 1,
-              color: pile.color
-            }}
-          >
-            {pile.label}
-          </span>
-          {pile.chips.map(chip => (
-            <span
-              key={chip}
-              style={{
-                ...chipStyle,
-                position: "relative",
-                whiteSpace: "normal",
-                opacity: pile.label === "Your context" ? 0.6 : 1
-              }}
-            >
-              {chip}
-            </span>
-          ))}
-        </div>
-      ))}
+          Your real work starts when the admin ends
+        </h2>
+        <p
+          style={{
+            fontSize: "clamp(16px, 1.9vw, 22px)",
+            fontWeight: 500,
+            lineHeight: 1.45,
+            color: "#FFF",
+            opacity: 0.65,
+            maxWidth: "460px",
+            margin: "20px 0 0"
+          }}
+        >
+          Priorities, not just notifications.
+        </p>
+      </div>
+
+      {/* Right: cards */}
+      <div ref={boardRef} style={{ flex: "0 0 auto", marginRight: "3rem" }}>
+        <DisplayCards />
+      </div>
     </div>
   )
 
@@ -213,15 +254,21 @@ export function TriageSection() {
     return (
       <section
         style={{
-          background: "var(--primary)",
+          background: PRIMARY_BLUE,
           padding: "clamp(100px, 15vh, 180px) 0",
-          overflow: "hidden"
+          overflow: "hidden",
+          position: "relative"
         }}
       >
-        {header}
-        {marquee}
-        <div style={{ height: "24px" }} />
-        {board}
+        <div style={{ marginBottom: "clamp(40px, 6vh, 80px)" }}>{marquee}</div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center"
+          }}
+        >
+          {content}
+        </div>
       </section>
     )
   }
@@ -229,7 +276,11 @@ export function TriageSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "400vh", background: "var(--primary)" }}
+      style={{
+        position: "relative",
+        height: "400vh",
+        background: PRIMARY_BLUE
+      }}
     >
       <section
         style={{
@@ -244,10 +295,16 @@ export function TriageSection() {
           padding: "clamp(24px, 4vh, 48px) 0"
         }}
       >
-        {header}
-        {marquee}
-        <div style={{ height: "clamp(24px, 4vh, 48px)" }} />
-        {board}
+        <div
+          style={{
+            position: "absolute",
+            top: "clamp(16px, 3vh, 32px)",
+            width: "100%"
+          }}
+        >
+          {marquee}
+        </div>
+        {content}
       </section>
     </div>
   )

@@ -1,135 +1,144 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
+import { useRef } from "react"
 import { WaitlistInline } from "@/components/waitlist-inline"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
-import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
-
-// Lava-lamp blobs: cream goo drifting on the blue. Paths overlap so they
-// melt into each other as they pass.
-const BLOBS = [
-  { left: "8%", top: "18%", size: 150, dx: 70, dy: 50, dur: 9 },
-  { left: "16%", top: "32%", size: 100, dx: -60, dy: 70, dur: 7.5 },
-  { left: "78%", top: "14%", size: 120, dx: -80, dy: 60, dur: 8.5 },
-  { left: "84%", top: "30%", size: 90, dx: -50, dy: -45, dur: 6.5 },
-  { left: "12%", top: "72%", size: 110, dx: 80, dy: -55, dur: 10 },
-  { left: "75%", top: "70%", size: 140, dx: -70, dy: -65, dur: 9.5 },
-  { left: "84%", top: "82%", size: 80, dx: -90, dy: 40, dur: 7 },
-  { left: "20%", top: "84%", size: 70, dx: 60, dy: -70, dur: 8 }
-]
 
 // Script §8 — Footer CTA. Full-screen beat before the sticky footer.
 export function FooterCTASection() {
   const blobRefs = useRef<(HTMLDivElement | null)[]>([])
-  const reduce = usePrefersReducedMotion()
-
-  useEffect(() => {
-    if (reduce) return
-    const tweens = blobRefs.current.map((b, i) => {
-      if (!b) return null
-      return gsap.to(b, {
-        x: BLOBS[i].dx,
-        y: BLOBS[i].dy,
-        duration: BLOBS[i].dur,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      })
-    })
-    return () => tweens.forEach(t => t?.kill())
-  }, [reduce])
 
   return (
     // Pinned for a full extra viewport so the CTA reads as its own page
     // rather than a transition into the footer.
-    <div style={{ position: "relative", height: "200vh", background: "var(--primary)" }}>
-    <section
+    <div
       style={{
-        position: "sticky",
-        top: 0,
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "24px",
-        overflow: "hidden"
+        position: "relative",
+        height: "200vh",
+        background: "var(--primary)"
       }}
     >
-      {/* Gooey lava layer */}
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-        <defs>
-          <filter id="yv-goo-cta">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
-              result="goo"
-            />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
+      {/* Blur-in from previous section */}
       <div
         aria-hidden="true"
         style={{
           position: "absolute",
-          inset: 0,
-          filter: "url(#yv-goo-cta)",
-          opacity: 0.5,
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "180px",
+          background: "linear-gradient(to bottom, rgba(38,127,229,0.9) 0%, transparent 100%)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          maskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
+          zIndex: 10,
           pointerEvents: "none"
         }}
+      />
+
+      <section
+        style={{
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "24px",
+          overflow: "hidden"
+        }}
       >
-        {BLOBS.map((b, i) => (
+        {/* Blobs + grain layer */}
+        <div
+          className="blob-layer"
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 1,
+            pointerEvents: "none"
+          }}
+        >
+          {/* Blob 1 — top left, warm */}
           <div
-            key={i}
-            ref={el => {
-              blobRefs.current[i] = el
-            }}
+            className="yv-orb-breathe"
             style={{
               position: "absolute",
-              left: b.left,
-              top: b.top,
-              width: b.size,
-              height: b.size,
-              borderRadius: "50%",
-              background: "var(--cream)"
+              top: "10%",
+              left: "-5%",
+              width: "55%",
+              height: "60%",
+              borderRadius: "42% 58% 64% 36% / 38% 52% 48% 62%",
+              background: "radial-gradient(ellipse at 40% 40%, rgba(215,130,73,0.35) 0%, rgba(38,127,229,0.2) 40%, transparent 70%)",
+              filter: "blur(40px)",
+              opacity: 0.7
             }}
           />
-        ))}
-      </div>
+          {/* Blob 2 — bottom right, blue/violet */}
+          <div
+            className="yv-orb-breathe"
+            style={{
+              position: "absolute",
+              bottom: "5%",
+              right: "-8%",
+              width: "60%",
+              height: "65%",
+              borderRadius: "58% 42% 36% 64% / 52% 38% 62% 48%",
+              background: "radial-gradient(ellipse at 55% 55%, rgba(158,142,200,0.4) 0%, rgba(38,127,229,0.25) 45%, transparent 72%)",
+              filter: "blur(44px)",
+              opacity: 0.65,
+              animationDelay: "-2s"
+            }}
+          />
+          {/* Blob 3 — center top, light blue */}
+          <div
+            className="yv-orb-breathe"
+            style={{
+              position: "absolute",
+              top: "-10%",
+              left: "30%",
+              width: "45%",
+              height: "50%",
+              borderRadius: "64% 36% 48% 52% / 42% 58% 36% 64%",
+              background: "radial-gradient(ellipse at 50% 50%, rgba(77,163,240,0.4) 0%, rgba(38,127,229,0.15) 50%, transparent 75%)",
+              filter: "blur(36px)",
+              opacity: 0.6,
+              animationDelay: "-4s"
+            }}
+          />
+        </div>
 
-      <div style={{ position: "relative", textAlign: "center" }}>
-        <ScrollCutReveal
-          style={{
-            fontFamily: "var(--font-instrument-serif)",
-            fontSize: "clamp(44px, 7vw, 110px)",
-            fontWeight: 500,
-            letterSpacing: "-0.02em",
-            lineHeight: 1.05,
-            color: "var(--cream)",
-            margin: "0 auto",
-            maxWidth: "900px"
-          }}
-        >
-          Get the boring half handled.
-        </ScrollCutReveal>
+        <div style={{ position: "relative", textAlign: "center", zIndex: 2 }}>
+          <ScrollCutReveal
+            style={{
+              fontFamily: "var(--font-instrument-serif)",
+              fontSize: "clamp(44px, 7vw, 110px)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.05,
+              color: "var(--cream)",
+              margin: "0 auto",
+              maxWidth: "900px"
+            }}
+          >
+            Get the boring half handled.
+          </ScrollCutReveal>
 
-        <div
-          style={{
-            marginTop: "clamp(40px, 7vh, 64px)",
-            display: "flex",
-            justifyContent: "center"
-          }}
-        >
-          <div style={{ width: "min(480px, 100%)" }}>
-            <WaitlistInline />
+          <div
+            style={{
+              marginTop: "clamp(40px, 7vh, 64px)",
+              display: "flex",
+              justifyContent: "center"
+            }}
+          >
+            <div style={{ width: "min(480px, 100%)" }}>
+              <WaitlistInline />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
     </div>
   )
 }

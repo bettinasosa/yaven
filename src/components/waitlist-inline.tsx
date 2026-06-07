@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Loader2 } from "lucide-react"
 
 // Inline email capture for the closing sections. Posts to the same
 // /api/waitlist endpoint as the blueprint flow.
@@ -34,7 +35,7 @@ export function WaitlistInline() {
     return (
       <p
         style={{
-          fontSize: "16px",
+          fontSize: "18px",
           fontWeight: 500,
           color: "var(--cream)",
           margin: 0
@@ -47,47 +48,75 @@ export function WaitlistInline() {
 
   return (
     <div>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}
-      >
-        <input
-          type="email"
-          required
-          placeholder="your@email.com"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="neu-input"
-          style={{
-            flex: "1 1 220px",
-            minWidth: 0,
-            padding: "0.7em 1.2em",
-            fontSize: "16px",
-            fontWeight: 500,
-            color: "var(--ink)"
-          }}
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-press-dark"
-          style={{ flexShrink: 0, opacity: loading ? 0.5 : 1 }}
-        >
-          {loading ? "Saving…" : "Join the waitlist"}
-        </button>
-      </form>
       {error && (
         <p
           style={{
             fontSize: "13px",
             fontWeight: 500,
-            color: "var(--warm)",
-            margin: "8px 0 0"
+            color: "var(--secondary)",
+            margin: "0 0 12px"
           }}
         >
           {error}
         </p>
       )}
+      <form
+        onSubmit={handleSubmit}
+        className="waitlist-input-row"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "0",
+          borderRadius: "999px",
+          border: "1px solid rgba(255,255,255,0.3)",
+          background: "rgba(255,255,255,0.1)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          padding: "5px",
+          alignItems: "center"
+        }}
+      >
+        <input
+          type="email"
+          required
+          placeholder="you@example.com"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            padding: "12px 18px",
+            borderRadius: "999px",
+            border: "none",
+            background: "transparent",
+            color: "#fff",
+            fontSize: "15px",
+            fontFamily: "var(--font-dm-sans), sans-serif",
+            outline: "none"
+          }}
+        />
+        <div className="glass-wrap waitlist-btn-wrap" style={{ flexShrink: 0 }}>
+          <div className="glass-shadow" />
+          <button
+            type="submit"
+            disabled={loading}
+            className="glass-btn"
+            style={{
+              opacity: loading ? 0.6 : 1,
+              cursor: loading ? "not-allowed" : "pointer",
+              whiteSpace: "nowrap"
+            }}
+          >
+            {loading ? (
+              <span className="text-white" style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} />
+              </span>
+            ) : (
+              <span className="text-white">Get Yaven</span>
+            )}
+          </button>
+        </div>
+      </form>
     </div>
   )
 }

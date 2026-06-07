@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Typewriter } from "@/components/effects/typewriter"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
+import { GlassCard } from "@/components/effects/glass-card"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -14,7 +15,12 @@ const INK = "#0a0e1a"
 // Shared gooey filter for the Draft avatar and Ask bubbles
 function GooFilterDefs() {
   return (
-    <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+    <svg
+      width="0"
+      height="0"
+      style={{ position: "absolute" }}
+      aria-hidden="true"
+    >
       <defs>
         <filter id="yv-goo-cmd">
           <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
@@ -31,19 +37,35 @@ function GooFilterDefs() {
   )
 }
 
-const panelStyle: React.CSSProperties = {
-  background: "#fff",
-  borderRadius: "24px",
-  border: "var(--bd)",
-  boxShadow: "var(--shadow)",
-  padding: "clamp(24px, 4vw, 48px)",
+const panelContentStyle: React.CSSProperties = {
+  padding: "clamp(28px, 4vw, 44px) clamp(28px, 4vw, 48px)",
   display: "flex",
   flexDirection: "column",
-  gap: "20px"
+  gap: "16px",
+  height: "100%"
 }
 
-// Yaven avatar: plain blue circle with a white dot — calm, no goo.
-function GooAvatar({ size = 34 }: { size?: number }) {
+const panelGlassProps = {
+  borderRadius: "34px",
+  style: {
+    willChange: "transform" as const,
+    backfaceVisibility: "hidden" as const,
+    background: "rgba(255, 255, 255, 0.22)",
+    backdropFilter: "blur(28px) saturate(1.12)",
+    WebkitBackdropFilter: "blur(28px) saturate(1.12)"
+  }
+}
+
+// Grainy gradient avatar
+function GradientAvatar({
+  size = 30,
+  gradient = "linear-gradient(135deg, #6CB4EE 0%, #267FE5 40%, #1B4F9E 100%)",
+  children
+}: {
+  size?: number
+  gradient?: string
+  children?: React.ReactNode
+}) {
   return (
     <span
       aria-hidden="true"
@@ -51,34 +73,41 @@ function GooAvatar({ size = 34 }: { size?: number }) {
         position: "relative",
         width: size,
         height: size,
-        display: "inline-block",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
         flexShrink: 0,
         borderRadius: "50%",
-        background: "var(--primary)"
+        background: gradient,
+        overflow: "hidden"
       }}
     >
+      {/* Grain overlay via CSS noise */}
       <span
         style={{
           position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "22%",
-          height: "22%",
-          borderRadius: "50%",
-          background: "rgba(255,255,255,0.85)"
+          inset: 0,
+          borderRadius: "inherit",
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: "128px 128px",
+          opacity: 0.35,
+          mixBlendMode: "overlay"
         }}
       />
+      {children && (
+        <span style={{ position: "relative", zIndex: 1 }}>{children}</span>
+      )}
     </span>
   )
 }
 
+
 const emailCardStyle: React.CSSProperties = {
-  background: "#fff",
-  borderRadius: "12px",
-  border: "var(--bd)",
-  boxShadow: "var(--shadow-sm)",
-  padding: "12px 16px"
+  background: "rgba(255,255,255,0.35)",
+  borderRadius: "16px",
+  border: "1px solid rgba(255,255,255,0.4)",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.5)",
+  padding: "18px 24px"
 }
 
 const emailMetaStyle: React.CSSProperties = {
@@ -96,7 +125,7 @@ function DraftPanel({ active }: { active: boolean }) {
           fontFamily: "var(--font-instrument-serif)",
           fontSize: "clamp(20px, 2.2vw, 26px)",
           lineHeight: 1,
-          color: "var(--warm)"
+          color: "var(--secondary)"
         }}
       >
         Draft
@@ -112,17 +141,18 @@ function DraftPanel({ active }: { active: boolean }) {
         }}
       >
         It writes where your cursor is - with the thread, the client, and the
-        way <em style={{ paddingRight: "0.12em" }}>you</em> write already in
-        its head.
+        way <em style={{ paddingRight: "0.12em" }}>you</em> write already in its
+        head.
       </p>
 
       {/* Email thread — typing picks up mid-sentence */}
       <div
         style={{
-          background: "#F6F1E6",
-          borderRadius: "14px",
-          border: "var(--bd)",
-          padding: "clamp(14px, 2vw, 20px)",
+          background: "rgba(255,255,255,0.18)",
+          borderRadius: "18px",
+          border: "1px solid rgba(255,255,255,0.3)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)",
+          padding: "clamp(20px, 3vw, 28px)",
           fontSize: "clamp(13px, 1.4vw, 15px)",
           lineHeight: 1.55,
           color: INK,
@@ -131,7 +161,7 @@ function DraftPanel({ active }: { active: boolean }) {
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          gap: "10px"
+          gap: "12px"
         }}
       >
         {/* Thread subject bar */}
@@ -141,17 +171,17 @@ function DraftPanel({ active }: { active: boolean }) {
             alignItems: "baseline",
             justifyContent: "space-between",
             gap: "12px",
-            paddingBottom: "8px",
-            borderBottom: "1px solid rgba(10,14,26,0.08)"
+            padding: "0 4px 4px"
           }}
         >
-          <span style={{ fontWeight: 700, fontSize: "clamp(13px, 1.4vw, 15px)" }}>
+          <span
+            style={{ fontWeight: 700, fontSize: "clamp(13px, 1.4vw, 15px)" }}
+          >
             Re: Otto&apos;s Bakehouse proposal
           </span>
           <span
             style={{
-              fontFamily: "var(--font-space-mono)",
-              fontSize: "10px",
+              fontSize: "11px",
               opacity: 0.45,
               whiteSpace: "nowrap"
             }}
@@ -163,28 +193,16 @@ function DraftPanel({ active }: { active: boolean }) {
         {/* Received message */}
         <div style={emailCardStyle}>
           <div style={emailMetaStyle}>
-            <span
-              aria-hidden="true"
-              style={{
-                width: "30px",
-                height: "30px",
-                borderRadius: "50%",
-                background: "var(--cream)",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 700,
-                fontSize: "13px",
-                flexShrink: 0
-              }}
+            <GradientAvatar
+              size={30}
+              gradient="linear-gradient(135deg, #A8D8EA 0%, #6CB4EE 50%, #4A90D9 100%)"
             >
-              B
-            </span>
-            <span style={{ fontWeight: 700 }}>Bettina Sosa</span>
+              <span style={{ fontWeight: 700, fontSize: "12px", color: "#fff" }}>B</span>
+            </GradientAvatar>
+            <span style={{ fontWeight: 700 }}>Bettina</span>
             <span
               style={{
-                fontFamily: "var(--font-space-mono)",
-                fontSize: "10px",
+                fontSize: "11px",
                 opacity: 0.45,
                 marginLeft: "auto"
               }}
@@ -199,14 +217,29 @@ function DraftPanel({ active }: { active: boolean }) {
         </div>
 
         {/* Your reply — Yaven picks up where the cursor stopped */}
-        <div style={{ ...emailCardStyle, borderColor: "rgba(38,127,229,0.35)" }}>
+        <div
+          style={{
+            ...emailCardStyle,
+            border: "1px solid rgba(38,127,229,0.35)"
+          }}
+        >
           <div style={emailMetaStyle}>
-            <GooAvatar size={30} />
+            <GradientAvatar
+              size={30}
+              gradient="linear-gradient(135deg, #5BC0EB 0%, #267FE5 45%, #1B2F6E 100%)"
+            >
+              <span style={{
+                width: "7px",
+                height: "7px",
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.9)",
+                display: "block"
+              }} />
+            </GradientAvatar>
             <span style={{ fontWeight: 700 }}>You</span>
             <span
               style={{
-                fontFamily: "var(--font-space-mono)",
-                fontSize: "10px",
+                fontSize: "11px",
                 color: "var(--primary)",
                 marginLeft: "auto"
               }}
@@ -220,7 +253,7 @@ function DraftPanel({ active }: { active: boolean }) {
               <Typewriter
                 startText="Hi Bettina, good speaking earlier. "
                 text="The revised numbers are attached, same scope we walked through but with the onboarding fee folded in. If it all looks right I can have the contract over to you by Thursday."
-                speed={26}
+                speed={5}
               />
             ) : (
               <span>Hi Bettina, good speaking earlier. </span>
@@ -266,12 +299,13 @@ function AskPanel({ active }: { active: boolean }) {
       <div
         style={{
           position: "relative",
-          background: "#F6F1E6",
-          borderRadius: "14px",
-          border: "var(--bd)",
-          padding: "clamp(16px, 2.5vw, 24px)",
+          background: "rgba(255,255,255,0.18)",
+          borderRadius: "18px",
+          border: "1px solid rgba(255,255,255,0.3)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)",
+          padding: "clamp(22px, 3vw, 30px)",
           flex: 1,
-          minHeight: "230px",
+          minHeight: "250px",
           overflow: "hidden"
         }}
       >
@@ -281,134 +315,105 @@ function AskPanel({ active }: { active: boolean }) {
             opacity: 0.5,
             fontSize: "clamp(13px, 1.4vw, 15px)",
             lineHeight: 1.55,
-            color: INK
+            color: INK,
+            paddingBottom: "140px"
           }}
         >
           <div
             style={{
-              fontFamily: "var(--font-space-mono)",
-              fontSize: "11px",
+              fontSize: "12px",
+              opacity: 0.7,
               marginBottom: "10px"
             }}
           >
             Ottos_Bakehouse_Agreement_v3.pdf, returned with edits
           </div>
           <div style={{ marginBottom: "6px" }}>
-            4.2 Payment due within{" "}
-            <s style={{ opacity: 0.6 }}>thirty (30)</s>{" "}
+            4.2 Payment due within <s style={{ opacity: 0.6 }}>thirty (30)</s>{" "}
             <strong>sixty (60)</strong> days of invoice date.
           </div>
           <div>
-            4.3 <s style={{ opacity: 0.6 }}>
+            4.3{" "}
+            <s style={{ opacity: 0.6 }}>
               A kill fee of 25% applies to work cancelled after commencement.
             </s>
           </div>
         </div>
 
-        {/* Question + answer melt together under the gooey filter */}
+        {/* Ask popup — question + answer */}
         <div
           style={{
             position: "absolute",
-            left: "clamp(16px, 2.5vw, 24px)",
-            right: "clamp(16px, 2.5vw, 24px)",
-            bottom: "clamp(16px, 2.5vw, 24px)"
+            left: "clamp(18px, 2.5vw, 26px)",
+            right: "clamp(18px, 2.5vw, 26px)",
+            bottom: "clamp(18px, 2.5vw, 26px)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px"
           }}
         >
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: "-6px",
-              filter: "url(#yv-goo-cmd)"
-            }}
-          >
-            {/* question bubble blob */}
-            <div
+          {/* Question bubble with "Ask" tag overlapping its top edge */}
+          <div style={{ position: "relative" }}>
+            <span
               style={{
                 position: "absolute",
-                top: "6px",
-                left: "6px",
-                right: "6px",
-                height: "46px",
-                borderRadius: "23px",
-                background: "var(--primary)"
+                top: "-10px",
+                left: "14px",
+                zIndex: 1,
+                fontFamily: "var(--font-instrument-serif)",
+                fontSize: "13px",
+                lineHeight: 1,
+                padding: "4px 10px",
+                borderRadius: "999px",
+                background: "rgba(255,255,255,0.6)",
+                border: "1px solid rgba(255,255,255,0.45)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                color: "var(--primary)"
               }}
-            />
-            {/* answer blob, stretching open below the question */}
+            >
+              Ask
+            </span>
             <div
               style={{
-                position: "absolute",
-                left: "6px",
-                right: "6px",
-                top: "58px",
                 height: "46px",
+                display: "flex",
+                alignItems: "center",
+                padding: "0 20px",
                 borderRadius: "23px",
-                background: "#fff",
-                transform: answered ? "scaleY(1)" : "scaleY(0)",
-                transformOrigin: "top",
-                transition: "transform 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) 0.25s"
+                background: "var(--primary)",
+                fontSize: "clamp(13px, 1.4vw, 15px)",
+                fontWeight: 700,
+                color: "#fff"
               }}
-            />
-          </div>
-
-          {/* "Ask" tag so the popup reads as the command */}
-          <span
-            style={{
-              position: "absolute",
-              top: "-10px",
-              left: "14px",
-              zIndex: 1,
-              fontFamily: "var(--font-instrument-serif)",
-              fontSize: "13px",
-              lineHeight: 1,
-              padding: "4px 10px",
-              borderRadius: "999px",
-              background: "#fff",
-              border: "var(--bd)",
-              boxShadow: "var(--shadow-sm)",
-              color: "var(--primary)"
-            }}
-          >
-            Ask
-          </span>
-
-          {/* crisp text above the goo */}
-          <div
-            style={{
-              position: "relative",
-              height: "46px",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              padding: "0 16px",
-              fontSize: "clamp(13px, 1.4vw, 15px)",
-              fontWeight: 700,
-              color: "#fff"
-            }}
-          >
-            {/* Unmounted until the panel lands, so it resets on backscroll */}
+            >
             {active && (
               <Typewriter
                 text="What changed from the version I sent?"
-                speed={32}
-                delay={400}
+                speed={6}
+                delay={200}
                 onComplete={() => setAnswered(true)}
               />
             )}
+            </div>
           </div>
+
+          {/* Answer bubble */}
           <div
             style={{
-              position: "relative",
               height: "46px",
-              marginTop: "6px",
               display: "flex",
               alignItems: "center",
-              padding: "0 16px",
+              padding: "0 20px",
+              borderRadius: "23px",
+              background: "rgba(255,255,255,0.55)",
+              border: "1px solid rgba(255,255,255,0.35)",
               fontSize: "clamp(13px, 1.4vw, 15px)",
               lineHeight: 1.4,
               color: INK,
               opacity: answered ? 1 : 0,
-              transition: "opacity 0.4s ease 0.55s"
+              transform: answered ? "scaleY(1)" : "scaleY(0)",
+              transformOrigin: "top",
+              transition: "transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) 0.2s, opacity 0.3s ease 0.2s"
             }}
           >
             Payment terms: 30 → 60 days. The kill fee in §4 is gone.
@@ -421,8 +426,10 @@ function AskPanel({ active }: { active: boolean }) {
           fontSize: "clamp(14px, 1.5vw, 17px)",
           fontWeight: 500,
           color: INK,
-          opacity: 0.65,
-          margin: 0
+          opacity: 0.55,
+          margin: 0,
+          marginTop: "auto",
+          paddingTop: "8px"
         }}
       >
         Read the redlines before your coffee cooled.
@@ -446,49 +453,55 @@ export function CommandsSection() {
     const wrapper = wrapperRef.current
     const triggers: ScrollTrigger[] = []
 
-    // Draft panel settles in early; Ask peels over it and then dwells for
-    // the rest of the pin so the question/answer beat has time to land.
-    const enter = gsap.timeline({
-      scrollTrigger: { trigger: wrapper, start: "4% top", end: "22% top", scrub: 1.5 }
-    })
-    enter.fromTo(
+    // Draft card enters / exits
+    const draftTl = gsap.timeline({ paused: true })
+    draftTl.fromTo(
       draftRef.current,
-      { y: "60vh", opacity: 0 },
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1 }
+      { y: 120, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.7, ease: "power2.out", force3D: true }
     )
-    if (enter.scrollTrigger) triggers.push(enter.scrollTrigger)
 
-    const peel = gsap.timeline({
-      scrollTrigger: { trigger: wrapper, start: "38% top", end: "60% top", scrub: 1.5 }
-    })
-    peel.fromTo(
-      askRef.current,
-      { y: "110vh" },
-      { y: 0, ease: "power3.out", duration: 1 },
-      0
-    )
-    // Draft recedes into the deck — top edge stays visible behind Ask
-    peel.to(
-      draftRef.current,
-      { y: -16, scale: 0.96, ease: "power2.out", duration: 1 },
-      0
-    )
-    if (peel.scrollTrigger) triggers.push(peel.scrollTrigger)
-
-    // Demo gates: typing starts when each panel lands and rewinds when you
-    // scroll back above it.
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "20% top",
-        onEnter: () => setDraftActive(true),
-        onLeaveBack: () => setDraftActive(false)
-      }),
+        start: "8% top",
+        onEnter: () => {
+          draftTl.play()
+          setDraftActive(true)
+        },
+        onLeaveBack: () => {
+          draftTl.reverse()
+          setDraftActive(false)
+        }
+      })
+    )
+
+    // Ask card stacks / unstacks
+    const askTl = gsap.timeline({ paused: true })
+    askTl.to(
+      draftRef.current,
+      { y: -16, scale: 0.96, duration: 0.6, ease: "power2.out", force3D: true },
+      0
+    )
+    askTl.fromTo(
+      askRef.current,
+      { y: 120, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.7, ease: "power2.out", force3D: true },
+      0
+    )
+
+    triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "58% top",
-        onEnter: () => setAskActive(true),
-        onLeaveBack: () => setAskActive(false)
+        start: "50% top",
+        onEnter: () => {
+          askTl.play()
+          setAskActive(true)
+        },
+        onLeaveBack: () => {
+          askTl.reverse()
+          setAskActive(false)
+        }
       })
     )
 
@@ -504,12 +517,12 @@ export function CommandsSection() {
         fontWeight: 500,
         letterSpacing: "-0.02em",
         lineHeight: 1,
-        color: INK,
+        color: "#fff",
         margin: 0,
         textAlign: "center"
       }}
     >
-      Two commands.
+      Yaven drafts anywhere.
     </ScrollCutReveal>
   )
 
@@ -518,7 +531,7 @@ export function CommandsSection() {
     return (
       <section
         style={{
-          background: "var(--cream)",
+          background: "#267FE5",
           padding: "clamp(80px, 12vh, 140px) 24px"
         }}
       >
@@ -533,12 +546,16 @@ export function CommandsSection() {
         >
           <GooFilterDefs />
           {header}
-          <div style={panelStyle}>
-            <DraftPanel active />
-          </div>
-          <div style={panelStyle}>
-            <AskPanel active />
-          </div>
+          <GlassCard {...panelGlassProps}>
+            <div style={panelContentStyle}>
+              <DraftPanel active />
+            </div>
+          </GlassCard>
+          <GlassCard {...panelGlassProps}>
+            <div style={panelContentStyle}>
+              <AskPanel active />
+            </div>
+          </GlassCard>
         </div>
       </section>
     )
@@ -547,7 +564,7 @@ export function CommandsSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "420vh", background: "var(--cream)" }}
+      style={{ position: "relative", height: "450vh", background: "#267FE5" }}
     >
       <div
         style={{
@@ -573,34 +590,41 @@ export function CommandsSection() {
             marginTop: "clamp(32px, 6vh, 64px)"
           }}
         >
-          <div
+          <GlassCard
+            {...panelGlassProps}
             ref={draftRef}
             style={{
-              ...panelStyle,
+              ...panelGlassProps.style,
               position: "absolute",
               inset: 0,
               maxHeight: "min(560px, 72vh)",
               opacity: 0
             }}
           >
-            <DraftPanel active={draftActive} />
-          </div>
+            <div style={panelContentStyle}>
+              <DraftPanel active={draftActive} />
+            </div>
+          </GlassCard>
 
-          <div
+          <GlassCard
+            {...panelGlassProps}
             ref={askRef}
             style={{
-              ...panelStyle,
+              ...panelGlassProps.style,
               position: "absolute",
               top: "44px",
               left: 0,
               right: 0,
               bottom: 0,
               maxHeight: "min(560px, 72vh)",
-              transform: "translateY(110vh)"
+              transform: "translateY(120px)",
+              opacity: 0
             }}
           >
-            <AskPanel key={askActive ? "ask-on" : "ask-off"} active={askActive} />
-          </div>
+            <div style={panelContentStyle}>
+              <AskPanel active={askActive} />
+            </div>
+          </GlassCard>
         </div>
       </div>
     </div>

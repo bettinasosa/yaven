@@ -7,16 +7,12 @@ import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduce
 
 gsap.registerPlugin(ScrollTrigger)
 
-
-// Script §2 — What it is (cryptic reveal). Body copy verbatim from site-script.md.
 const BODY = [
-  "Yaven is the future of ambient AI.",
-  "Yaven sits with you all day, ready whenever you need. It proactively suggests things it can handle for you, with no new tabs, apps, or chat boxes to switch between.",
-  "The work that actually needs you? Get right on it."
+  "An AI that already knows your work.",
+  "Yaven lives in your menu bar, watching what you're working on. It drafts replies, preps for calls, and handles follow-ups before you think to ask.",
+  "No prompting. No context-switching. Just less on your plate."
 ]
 
-// Satellite blobs that gooey-split out of the presence, then melt back in.
-// Same flat-blue shape language as the proposals merge.
 const SATELLITES = [
   { x: -125, y: -95, w: 58, h: 58, round: true },
   { x: 130, y: -70, w: 72, h: 46, round: false },
@@ -24,6 +20,8 @@ const SATELLITES = [
   { x: 105, y: 110, w: 80, h: 50, round: false },
   { x: -25, y: -150, w: 40, h: 40, round: true }
 ]
+
+const CORE_SIZE = 120
 
 const headingStyle: React.CSSProperties = {
   fontFamily: "var(--font-instrument-serif)",
@@ -42,18 +40,88 @@ const bodyTextStyle: React.CSSProperties = {
   color: "var(--cream)"
 }
 
-// The ambient presence in the proposals-merge visual language: a flat blue
-// mass that gooey-splits into satellites (suggesting), then melts back into
-// one calm shape (ambient). Yaven without showing Yaven.
+// The SVG filter handles the satellite blobs + proxy core:
+//   - Gooey threshold (organic merge)
+//   - Glass fill (semi-transparent white tint via feFlood)
+//   - Rim highlight (feMorphology edge detection)
+// The real glass core is a separate .glass-btn element layered on top.
+function GlassGooFilter() {
+  return (
+    <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+      <defs>
+        <filter
+          id="yv-glass-goo"
+          x="-40%"
+          y="-40%"
+          width="180%"
+          height="180%"
+          colorInterpolationFilters="sRGB"
+        >
+          {/* Gooey threshold mask from fully-opaque white shapes */}
+          <feGaussianBlur in="SourceGraphic" stdDeviation="11" result="blur" />
+          <feColorMatrix
+            in="blur"
+            mode="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"
+            result="goo-mask"
+          />
+          {/* Glass body: semi-transparent white fill within the goo shape */}
+          <feFlood floodColor="white" floodOpacity="0.18" result="body-fill" />
+          <feComposite in="body-fill" in2="goo-mask" operator="in" result="glass-body" />
+          {/* Specular sweep: distant light at ~-75deg angle, like glass-btn's gradient */}
+          <feSpecularLighting
+            in="goo-mask"
+            surfaceScale="3"
+            specularConstant="1"
+            specularExponent="30"
+            lightingColor="white"
+            result="specular"
+          >
+            <feDistantLight azimuth="305" elevation="55" />
+          </feSpecularLighting>
+          <feComposite in="specular" in2="goo-mask" operator="in" result="specular-clipped" />
+          <feColorMatrix
+            in="specular-clipped"
+            type="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.35 0"
+            result="specular-dimmed"
+          />
+          {/* Rim highlight: thin bright edge ring */}
+          <feMorphology in="goo-mask" operator="erode" radius="3" result="inner-mask" />
+          <feComposite in="goo-mask" in2="inner-mask" operator="out" result="rim-mask" />
+          <feFlood floodColor="white" floodOpacity="0.5" result="rim-fill" />
+          <feComposite in="rim-fill" in2="rim-mask" operator="in" result="glass-rim" />
+          {/* Merge: body + specular sweep + rim */}
+          <feMerge>
+            <feMergeNode in="glass-body" />
+            <feMergeNode in="specular-dimmed" />
+            <feMergeNode in="glass-rim" />
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+  )
+}
+
 function PresenceStage({
-  coreRef,
+  proxyRef,
   satRefs,
+  glassRef,
   settled
 }: {
-  coreRef: React.RefObject<HTMLDivElement | null>
+  proxyRef: React.RefObject<HTMLDivElement | null>
   satRefs: React.RefObject<(HTMLDivElement | null)[]>
+  glassRef: React.RefObject<HTMLDivElement | null>
   settled: boolean
 }) {
+  const stageStyle: React.CSSProperties = {
+    position: "absolute",
+    inset: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+
   return (
     <div
       aria-hidden="true"
@@ -64,89 +132,76 @@ function PresenceStage({
         margin: "0 auto"
       }}
     >
-      <svg width="0" height="0" style={{ position: "absolute" }}>
-        <defs>
-          <filter id="yv-goo-presence">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
-              result="goo"
-            />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
+      <GlassGooFilter />
 
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          filter: "url(#yv-goo-presence)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-      >
-        {/* The core mass — CSS breathes the inner layer */}
-        <div ref={coreRef}>
+      {/* Layer 1: gooey filter — proxy core + satellites (all solid white for threshold) */}
+      <div style={{ ...stageStyle, filter: "url(#yv-glass-goo)" }}>
+        {/* Proxy core: same size as the glass core, merged with satellites via goo */}
+        <div ref={proxyRef}>
           <div
-            className="yv-orb-breathe"
             style={{
-              width: "120px",
-              height: "120px",
+              width: `${CORE_SIZE}px`,
+              height: `${CORE_SIZE}px`,
               borderRadius: "50%",
-              background: "var(--cream)"
+              background: "#fff"
             }}
           />
         </div>
 
-        {/* Satellites — split out of the core, melt back in */}
         {SATELLITES.map((s, i) => (
           <div
             key={i}
-            ref={el => {
-              satRefs.current[i] = el
-            }}
+            ref={el => { satRefs.current[i] = el }}
             style={{
               position: "absolute",
               width: `${s.w}px`,
               height: `${s.h}px`,
               borderRadius: s.round ? "50%" : "14px",
-              background: "var(--cream)",
+              background: "#fff",
               transform: settled
-                ? "translate(0, 0) scale(0.4)"
-                : `translate(${s.x}px, ${s.y}px)`
+                ? "translate(0,0) scale(0.4)"
+                : `translate(${s.x}px,${s.y}px)`
             }}
           />
         ))}
       </div>
 
-      {/* Crisp face above the filter — quiet listening dots */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          display: "flex",
-          gap: "9px"
-        }}
-      >
-        {[0, 1, 2].map(i => (
-          <span
-            key={i}
-            className="yv-chip-float"
-            style={{
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              background: "var(--primary)",
-              animationDelay: `${i * 0.45}s`
-            }}
-          />
-        ))}
+      {/* Layer 2: real glass core using .glass-btn — sits on top of the proxy */}
+      <div style={{ ...stageStyle, pointerEvents: "none" }}>
+        <div
+          ref={glassRef}
+          className="glass-btn"
+          style={{
+            // override pill defaults to be a fixed circle
+            width: `${CORE_SIZE}px`,
+            height: `${CORE_SIZE}px`,
+            borderRadius: "50%",
+            fontSize: "14px",   // em base for the glass-btn box-shadow values
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "9px",
+            flexDirection: "row"
+          }}
+        >
+          {/* Three white dots — the menu-bar presence indicator */}
+          {[0, 1, 2].map(i => (
+            <span
+              key={i}
+              className="yv-chip-float"
+              style={{
+                display: "block",
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                background: "#fff",
+                boxShadow: "0 0 6px rgba(255,255,255,0.6)",
+                padding: 0,
+                animationDelay: `${i * 0.45}s`
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -156,18 +211,17 @@ export function MeetYavenSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const paraRefs = useRef<(HTMLParagraphElement | null)[]>([])
-  const coreRef = useRef<HTMLDivElement>(null)
+  const proxyRef = useRef<HTMLDivElement>(null)   // gooey proxy core
   const satRefs = useRef<(HTMLDivElement | null)[]>([])
+  const glassRef = useRef<HTMLDivElement>(null)   // glass-btn core
   const staticLayout = usePrefersReducedMotion()
 
-  // Pinned reveal — text and the presence stage evolve together
   useEffect(() => {
     if (staticLayout || !wrapperRef.current) return
 
     gsap.set(headingRef.current, { y: 50, opacity: 0 })
     paraRefs.current.forEach(p => p && gsap.set(p, { y: 36, opacity: 0 }))
-    gsap.set(coreRef.current, { scale: 0 })
-    // Satellites start hidden inside the core
+    gsap.set([proxyRef.current, glassRef.current], { scale: 0 })
     satRefs.current.forEach(s => s && gsap.set(s, { x: 0, y: 0, scale: 0.4, opacity: 0 }))
 
     const tl = gsap.timeline({
@@ -179,39 +233,29 @@ export function MeetYavenSection() {
       }
     })
 
-    // Heading
     tl.to(headingRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1 }, 0)
 
-    // P1 — the presence appears
+    // P1 — core appears (both layers in sync)
     tl.to(paraRefs.current[0], { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, 1.2)
-    tl.to(coreRef.current, { scale: 1, ease: "back.out(1.6)", duration: 1.2 }, 1.4)
+    tl.to([proxyRef.current, glassRef.current], { scale: 1, ease: "back.out(1.6)", duration: 1.2 }, 1.4)
 
-    // P2 — it starts suggesting: satellites gooey-split out of the core
+    // P2 — satellites split out
     tl.to(paraRefs.current[1], { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, 3.2)
     satRefs.current.forEach((s, i) => {
       if (!s) return
       const sat = SATELLITES[i]
       tl.to(s, { opacity: 1, duration: 0.1 }, 3.4 + i * 0.25)
-      tl.to(
-        s,
-        { x: sat.x, y: sat.y, scale: 1, ease: "power2.inOut", duration: 1.3 },
-        3.45 + i * 0.25
-      )
+      tl.to(s, { x: sat.x, y: sat.y, scale: 1, ease: "power2.inOut", duration: 1.3 }, 3.45 + i * 0.25)
     })
 
-    // P3 — ambient: everything melts back into one calm shape
+    // P3 — everything melts back
     tl.to(paraRefs.current[2], { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, 5.8)
     satRefs.current.forEach((s, i) => {
       if (!s) return
-      tl.to(
-        s,
-        { x: 0, y: 0, scale: 0.4, ease: "power2.inOut", duration: 1.3 },
-        6.1 + i * 0.15
-      )
+      tl.to(s, { x: 0, y: 0, scale: 0.4, ease: "power2.inOut", duration: 1.3 }, 6.1 + i * 0.15)
     })
-    tl.to(coreRef.current, { scale: 1.12, ease: "power2.out", duration: 0.9 }, 7.2)
+    tl.to([proxyRef.current, glassRef.current], { scale: 1.12, ease: "power2.out", duration: 0.9 }, 7.2)
 
-    // dwell before unpinning
     tl.to({}, { duration: 1.4 })
 
     return () => {
@@ -240,9 +284,7 @@ export function MeetYavenSection() {
           {BODY.map((para, pi) => (
             <p
               key={pi}
-              ref={el => {
-                paraRefs.current[pi] = el
-              }}
+              ref={el => { paraRefs.current[pi] = el }}
               style={{ margin: pi === 0 ? 0 : "1.1em 0 0" }}
             >
               {para}
@@ -252,9 +294,10 @@ export function MeetYavenSection() {
       </div>
 
       <PresenceStage
-        coreRef={coreRef}
+        proxyRef={proxyRef}
         satRefs={satRefs}
-        settled={staticLayout}
+        glassRef={glassRef}
+        settled={!!staticLayout}
       />
     </div>
   )
@@ -264,7 +307,7 @@ export function MeetYavenSection() {
       <section
         style={{
           position: "relative",
-          background: "var(--dark)",
+          background: "var(--primary)",
           padding: "clamp(220px, 30vh, 360px) 24px clamp(120px, 18vh, 220px)",
           overflow: "hidden"
         }}
@@ -277,7 +320,7 @@ export function MeetYavenSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "350vh", background: "var(--dark)" }}
+      style={{ position: "relative", height: "350vh", background: "var(--primary)" }}
     >
       <section
         style={{

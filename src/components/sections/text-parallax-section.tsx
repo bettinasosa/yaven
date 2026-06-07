@@ -34,14 +34,14 @@ function GooeyTick({
   settled: boolean
   done: boolean
 }) {
-  const strokeColor = done ? "#fff" : "#fff"
+  const strokeColor = done ? "#000" : "#E1402E"
   return (
     <span
       aria-hidden="true"
       style={{
         position: "relative",
-        width: "clamp(36px, 4vw, 52px)",
-        height: "clamp(36px, 4vw, 52px)",
+        width: "clamp(44px, 5vw, 68px)",
+        height: "clamp(44px, 5vw, 68px)",
         display: "inline-block",
         flexShrink: 0
       }}
@@ -56,19 +56,19 @@ function GooeyTick({
           justifyContent: "center"
         }}
       >
-        {/* main blob — glass (same as hero "Show me" btn) */}
+        {/* main blob — glass effect */}
         <span
           ref={blobRef}
           style={{
             width: "100%",
             height: "100%",
             borderRadius: "50%",
-            background: "#267FE5",
+            background: "rgba(0, 0, 0, 0.06)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,0.50)",
+            border: "1px solid rgba(255,255,255,0.5)",
             boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -1px 0 rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08)",
+              "inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -1px 0 rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.05)",
             display: "block",
             transform: settled ? "scale(1)" : "scale(0)"
           }}
@@ -81,10 +81,12 @@ function GooeyTick({
             width: "38%",
             height: "38%",
             borderRadius: "50%",
-            background: "#267FE5",
+            background: "rgba(0, 0, 0, 0.08)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,0.50)",
+            border: "1px solid rgba(255,255,255,0.4)",
+            boxShadow:
+              "inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 8px rgba(0,0,0,0.08)",
             display: "block",
             transform: settled ? "scale(0)" : "translate(0, -130%) scale(0)"
           }}
@@ -105,10 +107,10 @@ function GooeyTick({
       >
         <path
           ref={checkRef}
-          d={done ? "M14 25 L21 32 L34 17" : "M16 16 L32 32 M32 16 L16 32"}
+          d={done ? "M15 24 L21 30 L33 18" : "M17 17 L31 31 M31 17 L17 31"}
           fill="none"
           stroke={strokeColor}
-          strokeWidth="4.5"
+          strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
           pathLength={1}
@@ -136,7 +138,9 @@ export function TextParallaxSection() {
     // Initial states
     lineRefs.current.forEach(l => l && gsap.set(l, { y: 44, opacity: 0 }))
     blobRefs.current.forEach(b => b && gsap.set(b, { scale: 0 }))
-    dropRefs.current.forEach(d => d && gsap.set(d, { yPercent: -130, scale: 0 }))
+    dropRefs.current.forEach(
+      d => d && gsap.set(d, { yPercent: -130, scale: 0 })
+    )
     checkRefs.current.forEach(c => c && gsap.set(c, { strokeDashoffset: 1 }))
     if (punchRef.current) gsap.set(punchRef.current, { y: 40, opacity: 0 })
     if (youRef.current) gsap.set(youRef.current, { backgroundSize: "0% 100%" })
@@ -165,13 +169,25 @@ export function TextParallaxSection() {
 
       // gooey tick: droplet falls in and melts as the blob swells
       tl.to(drop, { scale: 1, duration: 0.4, ease: "power2.out" }, base + 1.2)
-      tl.to(drop, { yPercent: 0, scale: 0.55, duration: 0.7, ease: "power2.in" }, base + 1.5)
-      tl.to(blob, { scale: 1.18, duration: 0.7, ease: "back.out(2.2)" }, base + 1.8)
+      tl.to(
+        drop,
+        { yPercent: 0, scale: 0.55, duration: 0.7, ease: "power2.in" },
+        base + 1.5
+      )
+      tl.to(
+        blob,
+        { scale: 1.18, duration: 0.7, ease: "back.out(2.2)" },
+        base + 1.8
+      )
       tl.to(drop, { scale: 0, duration: 0.3 }, base + 2.1)
       tl.to(blob, { scale: 1, duration: 0.4, ease: "power2.out" }, base + 2.5)
 
       // crisp mark draws on
-      tl.to(check, { strokeDashoffset: 0, ease: "power2.inOut", duration: 0.7 }, base + 2.3)
+      tl.to(
+        check,
+        { strokeDashoffset: 0, ease: "power2.inOut", duration: 0.7 },
+        base + 2.3
+      )
 
       // ticked admin settles back; the crossed-out real work stays bright
       if (LINES[i].done) {
@@ -180,8 +196,16 @@ export function TextParallaxSection() {
     })
 
     const punchAt = LINES.length * 2.4 + 1
-    tl.to(punchRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1 }, punchAt)
-    tl.to(youRef.current, { backgroundSize: "100% 100%", ease: "none", duration: 1 }, punchAt + 1)
+    tl.to(
+      punchRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1 },
+      punchAt
+    )
+    tl.to(
+      youRef.current,
+      { backgroundSize: "100% 100%", ease: "none", duration: 1 },
+      punchAt + 1
+    )
     // dwell before unpinning
     tl.to({}, { duration: 1.4 })
 
@@ -201,7 +225,12 @@ export function TextParallaxSection() {
       }}
     >
       {/* shared gooey filter for the ticks */}
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+      <svg
+        width="0"
+        height="0"
+        style={{ position: "absolute" }}
+        aria-hidden="true"
+      >
         <defs>
           <filter id="yv-goo-tick">
             <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
@@ -317,8 +346,7 @@ export function TextParallaxSection() {
       ref={wrapperRef}
       style={{ position: "relative", height: "600vh", background: "#fff" }}
     >
-      {/* Blue fade from the hero — lives in the WRAPPER (not the sticky
-          viewport) so it scrolls away instead of bleeding into the dwell */}
+      {/* Colour fade from the preceding section — adapts to context */}
       <div
         aria-hidden="true"
         style={{
@@ -326,9 +354,9 @@ export function TextParallaxSection() {
           top: 0,
           left: 0,
           right: 0,
-          height: "clamp(180px, 24vh, 300px)",
+          height: "clamp(80px, 12vh, 160px)",
           background:
-            "linear-gradient(to bottom, #267FE5 0%, rgba(38,127,229,0) 100%)",
+            "linear-gradient(to bottom, #fff 0%, rgba(255,255,255,0) 100%)",
           pointerEvents: "none",
           zIndex: 3
         }}

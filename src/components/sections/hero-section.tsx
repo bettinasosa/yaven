@@ -303,22 +303,29 @@ export function HeroSection() {
       {/* Nav */}
       <div
         ref={navRef}
-        className="absolute z-10 w-full px-8 pt-8 flex items-center"
+        className="absolute z-10 w-full px-8 pt-4 flex items-center justify-between"
         style={{ opacity: 0, top: 0 }}
       >
-        <YavenMark height={32} />
-        <span
-          className="hero-nav-label"
+        <div className="flex items-center">
+          <YavenMark height={64} />
+        </div>
+        <a
+          href="https://calendly.com/nickprice2000/yaven-support"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="book-call-link"
           style={{
-            fontFamily: "var(--font-instrument-serif)",
+            fontSize: "12px",
             fontWeight: 500,
-            fontSize: "26px",
-            color: "#E3D5BB",
-            marginLeft: "8px"
+            letterSpacing: "0.08em",
+            color: "#fff",
+            textDecoration: "underline",
+            textDecorationThickness: "2px",
+            textUnderlineOffset: "4px"
           }}
         >
-          Yaven
-        </span>
+          Book a call <span className="book-call-arrow">↗</span>
+        </a>
       </div>
 
       {/* Bottom fade */}
@@ -340,27 +347,19 @@ export function HeroSection() {
       {/* Centred content */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-12">
         <div className="text-center w-full max-w-3xl">
+          <div ref={boxRef} style={{ display: "none" }} />
+
           <div
-            ref={boxRef}
-            className="hero-namebox"
             style={{
-              display: "inline-block",
-              marginBottom: "32px",
-              opacity: 0
+              fontFamily: "var(--font-instrument-serif)",
+              fontWeight: 500,
+              fontSize: "clamp(48px, 8vw, 96px)",
+              lineHeight: 1,
+              color: "#fff",
+              marginBottom: "12px"
             }}
           >
-            <span
-              className="font-medium hero-wordmark-text"
-              style={{
-                fontFamily: "var(--font-instrument-serif)",
-                fontSize: "clamp(64px, 10vw, 150px)",
-                lineHeight: 0.95,
-                color: "#E3D5BB",
-                display: "block"
-              }}
-            >
-              Yaven
-            </span>
+            Yaven
           </div>
 
           <AnimatedHeadline
@@ -368,7 +367,7 @@ export function HeroSection() {
             style={{
               fontSize: "clamp(26px, 4vw, 52px)",
               lineHeight: 1.1,
-              color: "#E3D5BB",
+              color: "#fff",
               marginBottom: "20px"
             }}
             delay={0.1}
@@ -383,39 +382,18 @@ export function HeroSection() {
             style={{
               fontSize: "clamp(17px, 2vw, 23px)",
               lineHeight: 1.45,
-              color: "#E3D5BB",
+              color: "#fff",
               maxWidth: "600px",
               marginBottom: "36px"
             }}
           >
-            Yaven chases the invoices, warms the leads and drafts the replies,
-            while you focus on the things only you can do.
+            AI that handles the busywork while you do more of what you love.
           </p>
 
-          <div
-            ref={ctaRef}
-            className="flex flex-wrap items-center justify-center gap-5"
-          >
+          <div ref={ctaRef} className="flex justify-center">
             <div style={{ width: "fit-content" }}>
               <BlueprintPanel />
             </div>
-            <a
-              href="https://calendly.com/nickprice2000/yaven-support"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="book-call-link"
-              style={{
-                fontSize: "12px",
-                fontWeight: 500,
-                letterSpacing: "0.08em",
-                color: "#E3D5BB",
-                textDecoration: "underline",
-                textDecorationThickness: "2px",
-                textUnderlineOffset: "4px"
-              }}
-            >
-              Book a call <span className="book-call-arrow">↗</span>
-            </a>
           </div>
         </div>
       </div>

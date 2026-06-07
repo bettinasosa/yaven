@@ -1,388 +1,209 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useState } from "react"
 import { createPortal } from "react-dom"
-import type {
-  AutomationBlueprint,
-  BlueprintGenerateResponse,
-  BlueprintInput
-} from "@/lib/blueprint/types"
-import { getAnsweredQuestionCount } from "@/lib/blueprint/validation"
-import {
-  OTHER_OPTION,
-  blueprintQuestions,
-  emptyBlueprintInput,
-  toolsByRole,
-  painfulTasksByRole
-} from "./blueprint-config"
-import { BlueprintModalShell } from "./blueprint-modal-shell"
-import { BlueprintPreview } from "./blueprint-preview"
-import { ChatQuestion } from "./chat-question"
-import {
-  GeneratingBlueprintState,
-  IdleBlueprintState,
-  IntroBlueprintState
-} from "./blueprint-panel-states"
-import {
-  ARRAY_KEYS,
-  STORAGE_KEY,
-  freeTextForQuestion,
-  readStoredSession,
-  secondaryTextForQuestion,
-  selectedForQuestion,
-  splitList,
-  trackBlueprintEvent,
-  type PanelPhase
-} from "./blueprint-panel-utils"
-import { SuccessState } from "./success-state"
-import { WaitlistForm } from "./waitlist-form"
-
-function chipsForQuestion(questionId: string, role: string): string[] {
-  if (questionId === "toolsUsed") return toolsByRole[role] ?? toolsByRole[OTHER_OPTION] ?? []
-  if (questionId === "painfulTasks") return painfulTasksByRole[role] ?? painfulTasksByRole[OTHER_OPTION] ?? []
-  return []
-}
+import { Loader2 } from "lucide-react"
 
 export function BlueprintPanel() {
-  const [phase, setPhase] = useState<PanelPhase>("idle")
-  const [answers, setAnswers] = useState<BlueprintInput>(emptyBlueprintInput)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [selectedChips, setSelectedChips] = useState<string[]>([])
-  const [draftText, setDraftText] = useState("")
-  const [secondaryDraft, setSecondaryDraft] = useState("")
-  const [blueprint, setBlueprint] = useState<AutomationBlueprint | null>(null)
-  const [blueprintId, setBlueprintId] = useState("")
+  const [open, setOpen] = useState(false)
+  const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const [error, setError] = useState("")
-  const [emailStarted, setEmailStarted] = useState(false)
-  const [hydrated, setHydrated] = useState(false)
-  const [isClosing, setIsClosing] = useState(false)
 
-  const question = blueprintQuestions[currentIndex]
-  const dynamicChips = useMemo(
-    () => question.chips ?? chipsForQuestion(question.id, answers.role),
-    [question, answers.role]
-  )
-
-  const loadQuestionDraft = useCallback(
-    (index: number, sourceAnswers: BlueprintInput) => {
-      const nextQuestion = blueprintQuestions[index]
-      const chips = nextQuestion.chips ?? chipsForQuestion(nextQuestion.id, sourceAnswers.role)
-      setSelectedChips(selectedForQuestion(nextQuestion, sourceAnswers, chips))
-      setDraftText(freeTextForQuestion(nextQuestion, sourceAnswers, chips))
-      setSecondaryDraft(secondaryTextForQuestion(nextQuestion, sourceAnswers))
-    },
-    []
-  )
-
-  useEffect(() => {
-    trackBlueprintEvent("blueprint_cta_viewed")
-    const stored = readStoredSession()
-
-    window.setTimeout(() => {
-      if (!stored) {
-        setHydrated(true)
-        return
-      }
-
-      const storedAnswers = stored.answers ?? emptyBlueprintInput
-      const storedIndex = Math.min(
-        stored.currentIndex ?? 0,
-        blueprintQuestions.length - 1
-      )
-
-      setAnswers(storedAnswers)
-      setCurrentIndex(storedIndex)
-      setBlueprint(stored.blueprint ?? null)
-      setBlueprintId(stored.blueprintId ?? "")
-      setPhase(stored.phase === "generating" ? "chat" : stored.phase ?? "idle")
-      loadQuestionDraft(storedIndex, storedAnswers)
-      setHydrated(true)
-    }, 0)
-  }, [loadQuestionDraft])
-
-  useEffect(() => {
-    if (!hydrated || typeof window === "undefined") return
-
-    if (phase === "idle") {
-      window.localStorage.removeItem(STORAGE_KEY)
-      return
-    }
-
-    window.localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ phase, currentIndex, answers, blueprint, blueprintId })
-    )
-  }, [answers, blueprint, blueprintId, currentIndex, hydrated, phase])
-
-  useEffect(() => {
-    if (phase === "idle" || typeof document === "undefined") return
-
-    const originalOverflow = document.body.style.overflow
-    document.body.style.overflow = "hidden"
-
-    return () => {
-      document.body.style.overflow = originalOverflow
-    }
-  }, [phase])
-
-  function commitCurrentAnswer() {
-    const nextAnswers = { ...answers }
-    const selectedValues = selectedChips.filter(chip => chip !== OTHER_OPTION)
-    const customValues = splitList(draftText)
-    const primaryValue = ARRAY_KEYS.has(question.primaryKey)
-      ? Array.from(new Set([...selectedValues, ...customValues]))
-      : selectedChips.includes(OTHER_OPTION)
-        ? draftText.trim() || OTHER_OPTION
-        : draftText.trim() || selectedValues[0] || ""
-
-    Object.assign(nextAnswers, { [question.primaryKey]: primaryValue })
-
-    if (question.secondaryKey) {
-      Object.assign(nextAnswers, {
-        [question.secondaryKey]: ARRAY_KEYS.has(question.secondaryKey)
-          ? splitList(secondaryDraft)
-          : secondaryDraft.trim()
-      })
-    }
-
-    setAnswers(nextAnswers)
-    return nextAnswers
-  }
-
-  async function generateBlueprint(nextAnswers: BlueprintInput) {
-    setPhase("generating")
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
     setError("")
-    trackBlueprintEvent("blueprint_generation_started", {
-      role: nextAnswers.role || null,
-      questionsAnswered: getAnsweredQuestionCount(nextAnswers)
-    })
 
     try {
-      const response = await fetch("/api/blueprint/generate", {
+      const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: nextAnswers })
+        body: JSON.stringify({ email })
       })
-
-      if (!response.ok) throw new Error("Blueprint generation failed")
-
-      const data = (await response.json()) as BlueprintGenerateResponse
-      setBlueprint(data.blueprint)
-      setBlueprintId(data.blueprintId)
-      setPhase("preview")
-      trackBlueprintEvent("blueprint_generation_completed", {
-        role: nextAnswers.role || null,
-        generatedBy: data.generatedBy,
-        topCategory: data.blueprint.topOpportunities[0]?.category ?? null
-      })
-      trackBlueprintEvent("blueprint_preview_viewed")
+      if (!response.ok) throw new Error("Failed")
+      setSuccess(true)
+      setTimeout(() => {
+        setOpen(false)
+        setSuccess(false)
+        setEmail("")
+      }, 2200)
     } catch {
-      setError("Blueprint generation failed. Please try again.")
-      setPhase("chat")
+      setError("Something went wrong. Please try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
-  function handleStart() {
-    setPhase("intro")
-    trackBlueprintEvent("blueprint_cta_clicked")
-  }
+  const popup = open && typeof document !== "undefined" ? createPortal(
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px"
+      }}
+    >
+      {/* Backdrop */}
+      <div
+        onClick={() => !loading && setOpen(false)}
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "rgba(0,0,0,0.18)",
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)"
+        }}
+      />
 
-  function handleChatStart() {
-    setPhase("chat")
-    trackBlueprintEvent("blueprint_chat_started")
-  }
-
-  function handleToggleChip(chip: string) {
-    if (question.mode === "single") {
-      const isSelected = selectedChips.includes(chip)
-      setSelectedChips(isSelected ? [] : [chip])
-      setDraftText(isSelected || chip === OTHER_OPTION ? "" : chip)
-      return
-    }
-
-    const isSelected = selectedChips.includes(chip)
-    setSelectedChips(
-      isSelected
-        ? selectedChips.filter(item => item !== chip)
-        : [...selectedChips, chip]
-    )
-    if (isSelected && chip === OTHER_OPTION) setDraftText("")
-  }
-
-  function handleBack() {
-    const nextAnswers = commitCurrentAnswer()
-    const nextIndex = Math.max(0, currentIndex - 1)
-    setCurrentIndex(nextIndex)
-    loadQuestionDraft(nextIndex, nextAnswers)
-  }
-
-  function handleContinue() {
-    const nextAnswers = commitCurrentAnswer()
-    const answered =
-      selectedChips.length > 0 || draftText.trim() || secondaryDraft.trim()
-
-    trackBlueprintEvent(
-      answered ? "blueprint_question_answered" : "blueprint_question_skipped",
-      {
-        question: question.id,
-        questionNumber: currentIndex + 1,
-        role: nextAnswers.role || null
-      }
-    )
-
-    if (currentIndex === blueprintQuestions.length - 1) {
-      void generateBlueprint(nextAnswers)
-      return
-    }
-
-    const nextIndex = currentIndex + 1
-    setCurrentIndex(nextIndex)
-    loadQuestionDraft(nextIndex, nextAnswers)
-  }
-
-  function handleEmailStarted() {
-    if (emailStarted) return
-    setEmailStarted(true)
-    trackBlueprintEvent("waitlist_email_started", {
-      blueprintId: blueprintId || null
-    })
-  }
-
-  function handleWaitlistSubmitted(email: string, desiredAutomation: string) {
-    setPhase("success")
-    trackBlueprintEvent("waitlist_email_submitted", {
-      blueprintId: blueprintId || null,
-      role: answers.role || null,
-      desiredAutomation
-    })
-    trackBlueprintEvent("waitlist_signup_completed", {
-      blueprintId: blueprintId || null,
-      role: answers.role || null,
-      emailDomain: email.split("@")[1] ?? null
-    })
-    window.setTimeout(() => {
-      setIsClosing(true)
-      window.setTimeout(() => {
-        handleRestart()
-      }, 500)
-    }, 2200)
-  }
-
-  function handleClose() {
-    setIsClosing(true)
-    window.setTimeout(() => {
-      handleRestart()
-    }, 500)
-  }
-
-  function handleRestart() {
-    setPhase("idle")
-    setAnswers(emptyBlueprintInput)
-    setCurrentIndex(0)
-    setSelectedChips([])
-    setDraftText("")
-    setSecondaryDraft("")
-    setBlueprint(null)
-    setBlueprintId("")
-    setError("")
-    setEmailStarted(false)
-    setIsClosing(false)
-    window.localStorage.removeItem(STORAGE_KEY)
-    trackBlueprintEvent("blueprint_chat_restarted")
-  }
-
-  const activeContent = (
-    <>
-      {phase === "intro" && <IntroBlueprintState onClick={handleChatStart} />}
-
-      {phase === "chat" && (
-        <div className="flex min-h-full flex-col gap-4">
-          <ChatQuestion
-            question={question}
-            questionNumber={currentIndex + 1}
-            totalQuestions={blueprintQuestions.length}
-            chips={dynamicChips}
-            selectedChips={selectedChips}
-            textValue={draftText}
-            secondaryValue={secondaryDraft}
-            canGoBack={currentIndex > 0}
-            canContinue={
-              selectedChips.length > 0 &&
-              (!selectedChips.includes(OTHER_OPTION) || draftText.trim().length > 0)
-            }
-            onToggleChip={handleToggleChip}
-            onTextChange={setDraftText}
-            onSecondaryChange={setSecondaryDraft}
-            onBack={handleBack}
-            onContinue={handleContinue}
-          />
-          {error && <p className="text-sm text-red-500">{error}</p>}
-        </div>
-      )}
-
-      {phase === "generating" && <GeneratingBlueprintState />}
-
-      {phase === "preview" && blueprint && (
-        <BlueprintPreview
-          blueprint={blueprint}
-          role={answers.role}
-          onUnlock={() => setPhase("email")}
-          onDirectSubmit={async (email: string) => {
-            const desiredAutomation = [
-              ...blueprint.topOpportunities,
-              ...blueprint.quickWins,
-              ...blueprint.customToolIdeas
-            ][0]?.taskName ?? answers.desiredFirstAutomation ?? ""
-            const response = await fetch("/api/waitlist", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email,
-                role: answers.role,
-                tools: answers.toolsUsed.join(", "),
-                tasks: answers.painfulTasks.join(", "),
-              })
-            })
-            if (!response.ok) throw new Error("Failed")
-            handleWaitlistSubmitted(email, desiredAutomation)
-          }}
-        />
-      )}
-
-      {phase === "email" && blueprint && (
-        <WaitlistForm
-          blueprint={blueprint}
-          blueprintId={blueprintId}
-          answers={answers}
-          onStarted={handleEmailStarted}
-          onSubmitted={handleWaitlistSubmitted}
-        />
-      )}
-
-      {phase === "success" && <SuccessState />}
-    </>
-  )
-
-  if (phase !== "idle") {
-    const modal = (
-      <BlueprintModalShell
-        onRestart={handleRestart}
-        onClose={handleClose}
-        isClosing={isClosing}
-        expanded={phase === "preview"}
+      {/* Glass popup */}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "540px",
+          background: "rgba(255,255,255,0.12)",
+          border: "1px solid rgba(255,255,255,0.35)",
+          borderRadius: "24px",
+          padding: "clamp(36px, 6vw, 56px)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4)",
+          animation: "popup-in 0.3s ease"
+        }}
       >
-        {activeContent}
-      </BlueprintModalShell>
-    )
+        {success ? (
+          <div style={{ textAlign: "center", padding: "20px 0" }}>
+            <p
+              style={{
+                fontFamily: "var(--font-dm-sans), sans-serif",
+                fontSize: "22px",
+                fontWeight: 600,
+                color: "#fff"
+              }}
+            >
+              You&apos;re in.
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-dm-sans), sans-serif",
+                fontSize: "15px",
+                color: "rgba(255,255,255,0.7)",
+                marginTop: "8px"
+              }}
+            >
+              We&apos;ll reach out soon.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <h3
+              style={{
+                fontFamily: "var(--font-dm-sans), sans-serif",
+                fontSize: "clamp(22px, 4vw, 28px)",
+                fontWeight: 600,
+                color: "#fff",
+                margin: "0 0 8px",
+                lineHeight: 1.2
+              }}
+            >
+              Join the waitlist
+            </h3>
+            <p
+              style={{
+                fontFamily: "var(--font-dm-sans), sans-serif",
+                fontSize: "14px",
+                color: "rgba(255,255,255,0.65)",
+                margin: "0 0 24px",
+                lineHeight: 1.5
+              }}
+            >
+              Be first to get access when we launch.
+            </p>
 
-    return typeof document === "undefined"
-      ? null
-      : createPortal(modal, document.body)
-  }
+            {error && (
+              <p style={{ color: "#ff6b6b", fontSize: "13px", margin: "0 0 12px" }}>
+                {error}
+              </p>
+            )}
+
+            {/* Input + button row — stacked on mobile, inline on desktop */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "0",
+                borderRadius: "999px",
+                border: "1px solid rgba(255,255,255,0.3)",
+                background: "rgba(255,255,255,0.1)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                padding: "5px",
+                alignItems: "center"
+              }}
+              className="waitlist-input-row"
+            >
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  padding: "12px 18px",
+                  borderRadius: "999px",
+                  border: "none",
+                  background: "transparent",
+                  color: "#fff",
+                  fontSize: "15px",
+                  fontFamily: "var(--font-dm-sans), sans-serif",
+                  outline: "none"
+                }}
+              />
+              <div className="glass-wrap waitlist-btn-wrap" style={{ flexShrink: 0 }}>
+                <div className="glass-shadow" />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="glass-btn"
+                  style={{
+                    opacity: loading ? 0.6 : 1,
+                    cursor: loading ? "not-allowed" : "pointer",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  {loading ? (
+                    <span className="text-white" style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                      <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} />
+                    </span>
+                  ) : (
+                    <span className="text-white">Get Yaven</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>,
+    document.body
+  ) : null
 
   return (
-    <aside className="w-full max-w-[440px] text-zinc-900">
-      <IdleBlueprintState onClick={handleStart} />
-    </aside>
+    <>
+      <div className="glass-wrap">
+        <div className="glass-shadow" />
+        <button type="button" onClick={() => setOpen(true)} className="glass-btn">
+          <span className="text-white">Show me</span>
+        </button>
+      </div>
+      {popup}
+    </>
   )
 }

@@ -1,42 +1,89 @@
 "use client"
 
-import { useState } from "react"
-import { HeroSection } from "@/components/sections/hero-section"
-import { TextParallaxSection } from "@/components/sections/text-parallax-section"
+import { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { HeroSectionND } from "@/components/sections/hero-section-nd"
 import { MeetYavenSection } from "@/components/sections/meet-yaven-section"
 import { TriageSection } from "@/components/sections/triage-section"
 import { ProposalsCrmSection } from "@/components/sections/proposals-crm-section"
 import { CommandsSection } from "@/components/sections/commands-section"
 import { FooterCTASection } from "@/components/sections/footer-cta-section"
 import { FooterSection } from "@/components/sections/footer-section"
-import { HeroSectionND } from "@/components/sections/hero-section-nd"
-import { LocomotiveSections } from "@/components/sections/locomotive-sections"
+
+gsap.registerPlugin(ScrollTrigger)
+
 const FOOTER_H = 660
 
-type Layout = "betts" | "newdesign"
+// Card entrance — section slides up with rounded top corners that flatten on arrival
+function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!ref.current) return
+    const anim = gsap.fromTo(
+      ref.current,
+      { borderRadius: "72px 72px 0 0" },
+      {
+        borderRadius: "0 0 0 0",
+        ease: "none",
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top bottom",
+          end: "top top",
+          scrub: 1.2
+        }
+      }
+    )
+    return () => {
+      anim.scrollTrigger?.kill()
+    }
+  }, [])
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: "relative",
+        zIndex: z,
+        borderRadius: "72px 72px 0 0",
+        overflow: "clip",
+        boxShadow: "0 -16px 64px rgba(0,0,0,0.22)"
+      }}
+    >
+      {children}
+    </div>
+  )
+}
 
 export default function Home() {
-  const [layout, setLayout] = useState<Layout>("betts")
-
   return (
     <>
-      {layout === "betts" ? (
-        <>
-          <HeroSection />
-          <TextParallaxSection />
-          <MeetYavenSection />
-          <TriageSection />
-          <ProposalsCrmSection />
+      <HeroSectionND />
+      <MeetYavenSection />
+      <CardWrap z={3}>
+        <ProposalsCrmSection />
+      </CardWrap>
+      <div
+        style={{
+          position: "relative",
+          zIndex: 4,
+          background: "#fff",
+          paddingTop: "80px"
+        }}
+      >
+        <div
+          style={{
+            borderRadius: "48px 48px 0 0",
+            overflow: "clip",
+            boxShadow: "0 -16px 64px rgba(0,0,0,0.18)"
+          }}
+        >
           <CommandsSection />
-          <FooterCTASection />
-        </>
-      ) : (
-        <>
-          <HeroSectionND />
-          <TextParallaxSection />
-          <LocomotiveSections />
-        </>
-      )}
+        </div>
+      </div>
+      {/* <TriageSection /> */}
+      <CardWrap z={6}>
+        <FooterCTASection />
+      </CardWrap>
 
       {/* ── Sticky footer ── */}
       <div
@@ -64,51 +111,6 @@ export default function Home() {
             <FooterSection />
           </div>
         </div>
-      </div>
-
-      {/* ── Layout toggle — top right ── */}
-      <div
-        style={{
-          position: "fixed",
-          top: "24px",
-          right: "24px",
-          zIndex: 200,
-          background: "rgba(255,255,255,0.55)",
-          border: "1px solid rgba(255,255,255,0.80)",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          borderRadius: "40px",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
-          display: "flex",
-          padding: "3px",
-          gap: "2px"
-        }}
-      >
-        {[
-          { key: "betts" as const, label: "Default" },
-          { key: "newdesign" as const, label: "V2" }
-        ].map(v => (
-          <button
-            key={v.key}
-            onClick={() => setLayout(v.key)}
-            style={{
-              fontFamily: "var(--font-space-mono)",
-              fontSize: "10px",
-              fontWeight: 500,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              padding: "5px 14px",
-              borderRadius: "40px",
-              border: "none",
-              cursor: "pointer",
-              background: layout === v.key ? "rgba(0,0,0,0.75)" : "transparent",
-              color: layout === v.key ? "#fff" : "rgba(0,0,0,0.55)",
-              transition: "all 0.15s ease"
-            }}
-          >
-            {v.label}
-          </button>
-        ))}
       </div>
     </>
   )

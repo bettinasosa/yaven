@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Space_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { FontDevPanel } from "@/components/font-dev-panel"
+import { HeadingFontDevPanel } from "@/components/heading-font-dev-panel"
 import { LoaderDevPanel } from "@/components/loader-dev-panel"
 import { SmoothScroll } from "@/components/smooth-scroll"
 import "./globals.css"
@@ -44,13 +45,14 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <link
           rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400,300&f[]=general-sans@700,500,400&f[]=switzer@700,500,400&f[]=supreme@700,500,400&f[]=author@700,500,400&f[]=cabinet-grotesk@700,500,400&display=swap"
+          href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400,300&f[]=general-sans@700,500,400&f[]=switzer@700,500,400&f[]=supreme@700,500,400&f[]=author@700,500,400&f[]=cabinet-grotesk@700,500,400&f[]=clash-display@700,600,500,400&f[]=boska@700,500,400&f[]=zodiak@700,500,400&f[]=erode@700,500,400&f[]=gambetta@700,500,400&display=swap"
           // React 19 hoists this into <head>; rendering it as a direct child
           // of <html> is invalid HTML and caused a hydration error.
           precedence="default"
         />
         <LoaderDevPanel />
         <FontDevPanel />
+        <HeadingFontDevPanel />
         <SmoothScroll>{children}</SmoothScroll>
         <Analytics />
       </body>
