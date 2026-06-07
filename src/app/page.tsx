@@ -81,9 +81,7 @@ export default function Home() {
         </div>
       </div>
       {/* <TriageSection /> */}
-      <CardWrap z={6}>
-        <FooterCTASection />
-      </CardWrap>
+      <FooterCTASection />
 
       {/* ── Sticky footer ── */}
       <div

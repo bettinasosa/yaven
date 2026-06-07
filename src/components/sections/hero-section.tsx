@@ -356,7 +356,7 @@ export function HeroSection() {
               fontSize: "clamp(48px, 8vw, 96px)",
               lineHeight: 1,
               color: "#fff",
-              marginBottom: "12px"
+              marginBottom: "24px"
             }}
           >
             Yaven

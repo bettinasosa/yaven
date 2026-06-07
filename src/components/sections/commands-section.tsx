@@ -50,9 +50,9 @@ const panelGlassProps = {
   style: {
     willChange: "transform" as const,
     backfaceVisibility: "hidden" as const,
-    background: "rgba(255, 255, 255, 0.22)",
-    backdropFilter: "blur(28px) saturate(1.12)",
-    WebkitBackdropFilter: "blur(28px) saturate(1.12)"
+    background: "linear-gradient(-75deg, rgba(255,255,255,0.12), rgba(255,255,255,0.3), rgba(255,255,255,0.12))",
+    backdropFilter: "blur(24px) saturate(1.2)",
+    WebkitBackdropFilter: "blur(24px) saturate(1.2)"
   }
 }
 
@@ -457,8 +457,8 @@ export function CommandsSection() {
     const draftTl = gsap.timeline({ paused: true })
     draftTl.fromTo(
       draftRef.current,
-      { y: 120, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, ease: "power2.out", force3D: true }
+      { y: 60, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1.4, ease: "power3.out", force3D: true }
     )
 
     triggers.push(
@@ -480,13 +480,13 @@ export function CommandsSection() {
     const askTl = gsap.timeline({ paused: true })
     askTl.to(
       draftRef.current,
-      { y: -16, scale: 0.96, duration: 0.6, ease: "power2.out", force3D: true },
+      { y: -16, scale: 0.96, duration: 1.2, ease: "power3.out", force3D: true },
       0
     )
     askTl.fromTo(
       askRef.current,
-      { y: 120, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, ease: "power2.out", force3D: true },
+      { y: 60, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1.4, ease: "power3.out", force3D: true },
       0
     )
 
@@ -510,7 +510,7 @@ export function CommandsSection() {
 
   const header = (
     <ScrollCutReveal
-      className="yv-breathing"
+      className=""
       style={{
         fontFamily: "var(--font-instrument-serif)",
         fontSize: "clamp(40px, 6vw, 84px)",
@@ -564,8 +564,28 @@ export function CommandsSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "450vh", background: "#267FE5" }}
+      className="hero-grain"
+      style={{ position: "relative", height: "450vh", background: "#267FE5", ["--grain-opacity" as string]: 0.1 }}
     >
+      {/* Bottom blur fade-out into next section */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "200px",
+          background: "linear-gradient(to bottom, transparent 0%, rgba(38,127,229,0.95) 100%)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 100%)",
+          zIndex: 10,
+          pointerEvents: "none"
+        }}
+      />
+
       <div
         style={{
           position: "sticky",

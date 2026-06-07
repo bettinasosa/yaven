@@ -73,7 +73,8 @@ export function WaitlistInline() {
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
           padding: "5px",
-          alignItems: "center"
+          alignItems: "center",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3)"
         }}
       >
         <input

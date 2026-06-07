@@ -20,64 +20,80 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
       shineRef.current.style.opacity = "1"
-      shineRef.current.style.background = `radial-gradient(450px circle at ${x}px ${y}px, rgba(255,255,255,0.7) 0%, rgba(200,225,255,0.25) 35%, transparent 65%)`
-      // Lift card on hover
-      e.currentTarget.style.boxShadow = [
-        "0 20px 60px rgba(38, 127, 229, 0.18)",
-        "0 8px 20px rgba(0, 0, 0, 0.08)",
-        "0 0 0 0.5px rgba(180, 210, 250, 0.6)",
-        "inset 0 2px 0 rgba(255, 255, 255, 0.9)",
-        "inset 0 0 32px rgba(255, 255, 255, 0.25)",
-      ].join(", ")
-      e.currentTarget.style.borderColor = "rgba(160, 190, 240, 0.6)"
+      shineRef.current.style.background = `radial-gradient(400px circle at ${x}px ${y}px, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 40%, transparent 65%)`
     }, [])
 
-    const handlePointerLeave = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const handlePointerLeave = useCallback(() => {
       if (!shineRef.current) return
       shineRef.current.style.opacity = "0"
-      e.currentTarget.style.boxShadow = ""
-      e.currentTarget.style.borderColor = ""
     }, [])
 
     const glassStyle: React.CSSProperties = {
       position: "relative",
-      background: "linear-gradient(135deg, rgba(235, 242, 255, 0.7) 0%, rgba(245, 248, 255, 0.5) 100%)",
-      backdropFilter: "blur(40px) saturate(1.4)",
-      WebkitBackdropFilter: "blur(40px) saturate(1.4)",
+      backdropFilter: "blur(4px)",
+      WebkitBackdropFilter: "blur(4px)",
+      background: "linear-gradient(-75deg, rgba(255,255,255,0.05), rgba(255,255,255,0.2), rgba(255,255,255,0.05))",
       borderRadius: radius,
-      border: "1.5px solid rgba(180, 200, 235, 0.5)",
       boxShadow: [
-        "0 12px 40px rgba(38, 127, 229, 0.12)",
-        "0 4px 12px rgba(0, 0, 0, 0.06)",
-        "0 0 0 0.5px rgba(180, 210, 250, 0.5)",
-        "inset 0 2px 0 rgba(255, 255, 255, 0.85)",
-        "inset 0 0 32px rgba(255, 255, 255, 0.2)",
+        "inset 0 2px 2px rgba(0,0,0,0.03)",
+        "inset 0 -2px 2px rgba(255,255,255,0.5)",
+        "0 4px 2px -2px rgba(0,0,0,0.12)",
+        "inset 0 0 1.5px 4px rgba(255,255,255,0.2)",
+        "0 0 0 rgba(255,255,255,0)",
       ].join(", "),
       overflow: "hidden",
-      transition: "box-shadow 0.3s ease, border-color 0.3s ease",
       ...style,
     }
 
     return (
       <div
         ref={ref}
-        className={className}
+        className={`glass-card ${className || ""}`}
         style={glassStyle}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
         {...rest}
       >
-        {/* Directional light sheen from top-left (-45deg) */}
+        {/* Conic gradient border — same style as glass-btn */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            top: "-1px",
+            left: "-1px",
+            width: "calc(100% + 2px)",
+            height: "calc(100% + 2px)",
+            padding: "1.5px",
+            boxSizing: "border-box",
+            background: `conic-gradient(from -75deg at 50% 50%, rgba(0,0,0,0.3), transparent 5% 40%, rgba(0,0,0,0.3) 50%, transparent 60% 95%, rgba(0,0,0,0.3)), linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.5))`,
+            boxShadow: "inset 0 0 0 0.75px rgba(255,255,255,0.5)",
+            borderRadius: radius,
+            WebkitMaskImage: "linear-gradient(#000 0 0), linear-gradient(#000 0 0)",
+            maskImage: "linear-gradient(#000 0 0), linear-gradient(#000 0 0)",
+            WebkitMaskClip: "content-box, border-box",
+            maskClip: "content-box, border-box",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            pointerEvents: "none",
+          }}
+        />
+        {/* Sweep shine overlay — shifts on hover via CSS */}
         <div
           aria-hidden="true"
           style={{
             position: "absolute",
             inset: 0,
             borderRadius: "inherit",
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 40%, transparent 70%)",
+            background: "linear-gradient(-45deg, transparent 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 55%, transparent 100%)",
+            backgroundSize: "200% 200%",
+            backgroundPosition: "100% 100%",
+            mixBlendMode: "screen",
+            opacity: 0.6,
+            transition: "background-position 0.5s cubic-bezier(0.25, 1, 0.5, 1)",
             pointerEvents: "none",
           }}
+          className="glass-card-sweep"
         />
         {/* Mouse-following specular shine */}
         <div
@@ -88,24 +104,8 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
             inset: 0,
             borderRadius: "inherit",
             opacity: 0,
+            mixBlendMode: "screen",
             transition: "opacity 0.3s ease",
-            pointerEvents: "none",
-          }}
-        />
-        {/* Gradient border for refraction edge */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "inherit",
-            padding: "1.2px",
-            background:
-              "linear-gradient(135deg, rgba(180,210,255,0.5) 0%, rgba(200,220,250,0.2) 30%, transparent 50%, rgba(200,220,250,0.15) 80%, rgba(180,210,255,0.4) 100%)",
-            WebkitMask:
-              "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
             pointerEvents: "none",
           }}
         />

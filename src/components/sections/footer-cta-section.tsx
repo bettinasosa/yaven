@@ -61,51 +61,49 @@ export function FooterCTASection() {
             pointerEvents: "none"
           }}
         >
-          {/* Blob 1 — top left, warm */}
+          {/* Blob 1 — cream/white specular highlight */}
           <div
-            className="yv-orb-breathe"
+            className="yv-orb-drift-1"
             style={{
               position: "absolute",
-              top: "10%",
+              top: "8%",
               left: "-5%",
               width: "55%",
               height: "60%",
               borderRadius: "42% 58% 64% 36% / 38% 52% 48% 62%",
-              background: "radial-gradient(ellipse at 40% 40%, rgba(215,130,73,0.35) 0%, rgba(38,127,229,0.2) 40%, transparent 70%)",
-              filter: "blur(40px)",
-              opacity: 0.7
+              background: "radial-gradient(ellipse at 32% 30%, rgba(255,255,255,0.9) 0%, rgba(227,213,187,0.6) 25%, transparent 50%)",
+              filter: "blur(14px)",
+              opacity: 0.8
             }}
           />
-          {/* Blob 2 — bottom right, blue/violet */}
+          {/* Blob 2 — warm orange/gold */}
           <div
-            className="yv-orb-breathe"
+            className="yv-orb-drift-2"
             style={{
               position: "absolute",
-              bottom: "5%",
+              bottom: "10%",
               right: "-8%",
-              width: "60%",
-              height: "65%",
+              width: "55%",
+              height: "60%",
               borderRadius: "58% 42% 36% 64% / 52% 38% 62% 48%",
-              background: "radial-gradient(ellipse at 55% 55%, rgba(158,142,200,0.4) 0%, rgba(38,127,229,0.25) 45%, transparent 72%)",
-              filter: "blur(44px)",
-              opacity: 0.65,
-              animationDelay: "-2s"
+              background: "radial-gradient(ellipse at 50% 55%, rgba(215,130,73,0.55) 0%, rgba(190,167,34,0.35) 35%, transparent 65%)",
+              filter: "blur(18px)",
+              opacity: 0.78
             }}
           />
-          {/* Blob 3 — center top, light blue */}
+          {/* Blob 3 — primary blue accent */}
           <div
-            className="yv-orb-breathe"
+            className="yv-orb-drift-3"
             style={{
               position: "absolute",
-              top: "-10%",
-              left: "30%",
-              width: "45%",
-              height: "50%",
+              top: "-5%",
+              left: "25%",
+              width: "50%",
+              height: "55%",
               borderRadius: "64% 36% 48% 52% / 42% 58% 36% 64%",
-              background: "radial-gradient(ellipse at 50% 50%, rgba(77,163,240,0.4) 0%, rgba(38,127,229,0.15) 50%, transparent 75%)",
-              filter: "blur(36px)",
-              opacity: 0.6,
-              animationDelay: "-4s"
+              background: "radial-gradient(ellipse at 60% 50%, rgba(38,127,229,0.6) 0%, rgba(38,127,229,0.3) 38%, transparent 65%)",
+              filter: "blur(14px)",
+              opacity: 0.8
             }}
           />
         </div>
