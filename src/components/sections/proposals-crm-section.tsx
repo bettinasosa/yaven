@@ -165,24 +165,40 @@ function GooeyStage({
 
 // CRM contact card that fills itself in
 const CRM_ROWS = [
-  { field: "Last call", value: "Tue: pricing, onboarding" },
-  { field: "Promised", value: "Contract by Thursday" },
-  { field: "Next step", value: "Send revised proposal" }
+  { field: "Matched", value: "Fits your ideal client" },
+  { field: "Outreach", value: "Intro drafted in your voice" },
+  { field: "Replied", value: "Call booked Thursday" },
+  { field: "Logged", value: "Synced after the call" }
 ]
 
+// Raw signals (tool logos) that gooey-merge into the structured card. Start
+// well outside the card so they visibly fly in from beyond its edges.
+const SIGNALS = [
+  { logo: "linkedin", x: -255, y: -95 },
+  { logo: "gmail", x: 255, y: -85 },
+  { logo: "gcal", x: -265, y: 100 },
+  { logo: "hubspot", x: 255, y: 115 }
+]
+
+// Goo blobs sit behind the signal pills so they melt as they converge
+const SIGNAL_BLOBS = [
+  { x: -255, y: -95, s: 46 },
+  { x: 255, y: -85, s: 40 },
+  { x: -265, y: 100, s: 44 },
+  { x: 255, y: 115, s: 38 }
+]
+
+// Presentational row. The value is revealed by the parent's scrubbed
+// timeline (via [data-crm-value]) so it reverses smoothly on backscroll.
 function CrmRow({
   field,
   value,
-  delay,
-  active
+  animated
 }: {
   field: string
   value: string
-  delay: number
-  active: boolean
+  animated: boolean
 }) {
-  const [flash, setFlash] = useState(false)
-
   return (
     <div
       style={{
@@ -190,8 +206,6 @@ function CrmRow({
         gap: "14px",
         padding: "10px 14px",
         borderRadius: "10px",
-        background: flash ? "rgba(38, 127, 229, 0.08)" : "transparent",
-        transition: "background 0.8s ease",
         minHeight: "42px"
       }}
     >
@@ -209,24 +223,26 @@ function CrmRow({
       >
         {field}
       </span>
-      <span style={{ fontSize: "15px", fontWeight: 500, color: INK }}>
-        {active && (
-          <Typewriter
-            text={value}
-            speed={16}
-            delay={delay}
-            onComplete={() => {
-              setFlash(true)
-              setTimeout(() => setFlash(false), 900)
-            }}
-          />
-        )}
+      <span
+        data-crm-value
+        style={{
+          fontSize: "15px",
+          fontWeight: 500,
+          color: INK,
+          opacity: animated ? 0 : 1
+        }}
+      >
+        {value}
       </span>
     </div>
   )
 }
 
-function CrmCard({ active }: { active: boolean }) {
+// The signal pills/blobs and row values are animated by the parent's
+// scrubbed timeline (selected via data attributes), so the whole fill
+// scrubs forward and backward smoothly. When not animated (reduced motion)
+// the card just renders filled, with no signals.
+function CrmCard({ animated }: { animated: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null)
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -246,18 +262,113 @@ function CrmCard({ active }: { active: boolean }) {
   }
 
   return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        maxWidth: "520px",
-        transition: "transform 0.35s cubic-bezier(0.25,1,0.5,1)",
-        transformStyle: "preserve-3d",
-        willChange: "transform",
-        cursor: "default"
-      }}
-    >
+    <div style={{ position: "relative", maxWidth: "520px", margin: "0 auto" }}>
+      {/* Goo blob layer behind the pills — melts as they converge */}
+      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+        <defs>
+          <filter id="yv-goo-signal">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+      {animated && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            filter: "url(#yv-goo-signal)",
+            pointerEvents: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 0
+          }}
+        >
+          {SIGNAL_BLOBS.map((b, i) => (
+            <div
+              key={i}
+              data-signal-blob
+              style={{
+                position: "absolute",
+                width: `${b.s}px`,
+                height: `${b.s}px`,
+                borderRadius: "50%",
+                background: "#267FE5",
+                opacity: 0,
+                transform: `translate(${b.x}px, ${b.y}px)`
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Crisp source pills, on top of the goo */}
+      {animated && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 2
+          }}
+        >
+          {SIGNALS.map(s => (
+            <div
+              key={s.logo}
+              data-signal-pill
+              style={{
+                position: "absolute",
+                width: "48px",
+                height: "48px",
+                borderRadius: "14px",
+                background: "#fff",
+                border: "1px solid rgba(38,127,229,0.18)",
+                boxShadow: "0 6px 18px rgba(38,127,229,0.18)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: 0,
+                transform: `translate(${s.x}px, ${s.y}px)`
+              }}
+            >
+              <Image
+                src={`/logos/${s.logo}.png`}
+                alt=""
+                width={28}
+                height={28}
+                style={{ objectFit: "contain" }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          position: "relative",
+          zIndex: 1,
+          maxWidth: "520px",
+          transition: "transform 0.35s cubic-bezier(0.25,1,0.5,1)",
+          transformStyle: "preserve-3d",
+          willChange: "transform",
+          cursor: "default"
+        }}
+      >
       <GlassCard
         borderRadius="28px"
         style={{
@@ -272,8 +383,7 @@ function CrmCard({ active }: { active: boolean }) {
             padding: "18px clamp(18px, 2.5vw, 28px) 14px",
             display: "flex",
             alignItems: "center",
-            gap: "12px",
-            borderBottom: "1px solid rgba(10,14,26,0.06)"
+            gap: "12px"
           }}
         >
           <div
@@ -291,7 +401,7 @@ function CrmCard({ active }: { active: boolean }) {
               color: "#fff"
             }}
           >
-            BB
+            OB
           </div>
           <div>
             <div
@@ -302,18 +412,18 @@ function CrmCard({ active }: { active: boolean }) {
                 lineHeight: 1.2
               }}
             >
-              Bettina Brown
+              Otto&apos;s Bakehouse
             </div>
             <div
               style={{
                 fontSize: "12px",
                 fontWeight: 500,
-                color: INK,
-                opacity: 0.45,
+                color: "#267FE5",
+                opacity: 0.9,
                 marginTop: "1px"
               }}
             >
-              Otto&apos;s Bakehouse
+              1 of 100 Yaven sourced
             </div>
           </div>
         </div>
@@ -324,17 +434,17 @@ function CrmCard({ active }: { active: boolean }) {
             padding: "12px clamp(18px, 2.5vw, 28px) clamp(18px, 2.5vw, 28px)"
           }}
         >
-          {CRM_ROWS.map((row, i) => (
+          {CRM_ROWS.map(row => (
             <CrmRow
               key={row.field}
               field={row.field}
               value={row.value}
-              delay={i * 750}
-              active={active}
+              animated={animated}
             />
           ))}
         </div>
       </GlassCard>
+      </div>
     </div>
   )
 }
@@ -410,7 +520,8 @@ function FinaleContent({
       <ToolGrid />
 
       <p style={{ ...bodyStyle, margin: 0, textAlign: "center", maxWidth: "480px" }}>
-        It handles the repeatable. You handle the irreplaceable.
+        Yaven connects to all of your tools, handling repetitive tasks, and
+        leaving you with less admin; more flow.
       </p>
     </div>
   )
@@ -420,7 +531,7 @@ function FinaleContent({
 // with a hover tilt effect.
 const GREEN = "#3BA55C"
 
-function ConferenceCard() {
+function ConferenceCard({ animated }: { animated: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null)
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -553,36 +664,105 @@ function ConferenceCard() {
             ))}
           </div>
 
-          {/* Follow-up status */}
+          {/* Follow-up status — flips from "needs follow-up" to "drafted"
+              as a Gmail bubble passes through (driven by the timeline). */}
           <div
             style={{
+              position: "relative",
               marginTop: "16px",
-              padding: "10px 14px",
-              borderRadius: "12px",
-              background: "rgba(59,165,92,0.08)",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px"
+              minHeight: "40px"
             }}
           >
-            <span
+            {/* Before: needs follow-up (amber) */}
+            <div
+              data-fu-before
               style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                background: GREEN,
-                flexShrink: 0
-              }}
-            />
-            <span
-              style={{
-                fontSize: "13px",
-                fontWeight: 600,
-                color: GREEN
+                position: "absolute",
+                inset: 0,
+                padding: "10px 14px",
+                borderRadius: "12px",
+                background: "#F8D2CC",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                opacity: animated ? 1 : 0
               }}
             >
-              Follow-up drafted
-            </span>
+              <span
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  background: "#df4f3e",
+                  flexShrink: 0
+                }}
+              />
+              <span style={{ fontSize: "13px", fontWeight: 600, color: "#df4f3e" }}>
+                Needs follow-up
+              </span>
+            </div>
+
+            {/* After: follow-up drafted (green) */}
+            <div
+              data-fu-after
+              style={{
+                position: "absolute",
+                inset: 0,
+                padding: "10px 14px",
+                borderRadius: "12px",
+                background: "rgba(59,165,92,0.08)",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                opacity: animated ? 0 : 1
+              }}
+            >
+              <span
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  background: GREEN,
+                  flexShrink: 0
+                }}
+              />
+              <span style={{ fontSize: "13px", fontWeight: 600, color: GREEN }}>
+                Follow-up drafted with Yaven
+              </span>
+            </div>
+
+            {/* Gmail bubble that flies across as the status flips */}
+            {animated && (
+              <div
+                data-fu-bubble
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  marginTop: "-19px",
+                  width: "38px",
+                  height: "38px",
+                  borderRadius: "11px",
+                  background: "#fff",
+                  border: "1px solid rgba(38,127,229,0.18)",
+                  boxShadow: "0 6px 18px rgba(38,127,229,0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  opacity: 0,
+                  zIndex: 2
+                }}
+              >
+                <Image
+                  src="/logos/gmail.png"
+                  alt=""
+                  width={22}
+                  height={22}
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </GlassCard>
@@ -601,7 +781,6 @@ export function ProposalsCrmSection() {
   const finaleHeadRef = useRef<HTMLHeadingElement>(null)
   const headerWrapRef = useRef<HTMLDivElement>(null)
   const fragRefs = useRef<(HTMLDivElement | null)[]>([])
-  const [crmActive, setCrmActive] = useState(false)
   const staticLayout = usePrefersReducedMotion()
 
   useEffect(() => {
@@ -665,7 +844,51 @@ export function ProposalsCrmSection() {
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       "<0.3"
     )
-    tl.to({}, { duration: 3.6 }) // dwell while the card types itself
+
+    // Signals converge into the card and the rows fill — all on the scrubbed
+    // timeline so it reverses smoothly on backscroll.
+    const crm = crmRef.current
+    if (crm) {
+      const pills = Array.from(
+        crm.querySelectorAll<HTMLElement>("[data-signal-pill]")
+      )
+      const blobs = Array.from(
+        crm.querySelectorAll<HTMLElement>("[data-signal-blob]")
+      )
+      const rowVals = Array.from(
+        crm.querySelectorAll<HTMLElement>("[data-crm-value]")
+      )
+
+      tl.addLabel("crmIn")
+
+      SIGNALS.forEach((s, i) => {
+        const targets = [pills[i], blobs[i]].filter(Boolean)
+        if (!targets.length) return
+        gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
+        // appear in place
+        tl.to(
+          targets,
+          { opacity: 1, duration: 0.5, ease: "power2.out" },
+          `crmIn+=${0.2 + i * 0.35}`
+        )
+        // fly into the card and dissolve
+        tl.to(
+          targets,
+          { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in" },
+          `crmIn+=${0.8 + i * 0.35}`
+        )
+      })
+
+      // rows reveal as the signals land
+      gsap.set(rowVals, { opacity: 0, x: -6 })
+      tl.to(
+        rowVals,
+        { opacity: 1, x: 0, duration: 0.6, stagger: 0.5, ease: "power2.out" },
+        "crmIn+=1.4"
+      )
+    }
+
+    tl.to({}, { duration: 1.4 }) // dwell on the filled card
 
     // Phase 3 — the conference follow-up takes the stage
     tl.to(
@@ -678,6 +901,28 @@ export function ProposalsCrmSection() {
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       "<0.3"
     )
+
+    // Follow-up status flips needs-follow-up → drafted as a Gmail bubble
+    // passes through. Scrubbed so it reverses on backscroll.
+    const conf = confRef.current
+    if (conf) {
+      const before = conf.querySelector<HTMLElement>("[data-fu-before]")
+      const after = conf.querySelector<HTMLElement>("[data-fu-after]")
+      const bubble = conf.querySelector<HTMLElement>("[data-fu-bubble]")
+      if (before && after && bubble) {
+        gsap.set(after, { opacity: 0 })
+        gsap.set(bubble, { opacity: 0, x: 60, scale: 0.6 })
+        tl.addLabel("confIn")
+        // gmail bubble flies in over the status
+        tl.to(bubble, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out" }, "confIn+=0.5")
+        // status swaps as it lands
+        tl.to(before, { opacity: 0, duration: 0.4, ease: "power2.in" }, "confIn+=1.1")
+        tl.to(after, { opacity: 1, duration: 0.4, ease: "power2.out" }, "confIn+=1.2")
+        // bubble dissolves into the card
+        tl.to(bubble, { opacity: 0, scale: 0.4, duration: 0.4, ease: "power2.in" }, "confIn+=1.3")
+      }
+    }
+
     tl.to({}, { duration: 1.4 }) // dwell
 
     // Phase 4 — the zoom-out; the header leaves so the line stands alone
@@ -718,16 +963,7 @@ export function ProposalsCrmSection() {
 
     tl.to({}, { duration: 1.4 }) // dwell before unpinning
 
-    // Mount the typewriters only when phase 2 actually lands
-    const gate = ScrollTrigger.create({
-      trigger: wrapperRef.current,
-      start: "36% top",
-      once: true,
-      onEnter: () => setCrmActive(true)
-    })
-
     return () => {
-      gate.kill()
       tl.scrollTrigger?.kill()
       tl.kill()
       splitInstance?.revert?.()
@@ -778,11 +1014,11 @@ export function ProposalsCrmSection() {
               "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
           }}
         >
-          <CrmCard active />
+          <CrmCard animated={false} />
           <div>
-            <h2 style={headlineStyle}>A CRM that fills itself in.</h2>
+            <h2 style={headlineStyle}>A CRM that runs itself.</h2>
             <p style={bodyStyle}>
-              Every call, email, and promise: logged. No need to type.
+              It sources clients that fit, drafts the outreach, and logs every reply. No need to type.
             </p>
           </div>
         </div>
@@ -803,7 +1039,7 @@ export function ProposalsCrmSection() {
               follow-up that has your context and tone.
             </p>
           </div>
-          <ConferenceCard />
+          <ConferenceCard animated={false} />
         </div>
         <div
           style={{
@@ -862,11 +1098,11 @@ export function ProposalsCrmSection() {
 
           {/* Phase 2 — CRM */}
           <div ref={crmRef} style={phaseGridStyle}>
-            <CrmCard active={crmActive} />
+            <CrmCard animated />
             <div>
-              <h2 style={headlineStyle}>A CRM that fills itself in.</h2>
+              <h2 style={headlineStyle}>A CRM that runs itself.</h2>
               <p style={bodyStyle}>
-                Every call, email, and promise: logged. No need to type.
+                It sources clients that fit, drafts the outreach, and logs every reply. No need to type.
               </p>
             </div>
           </div>
@@ -880,7 +1116,7 @@ export function ProposalsCrmSection() {
                 follow-up that has your context and tone.
               </p>
             </div>
-            <ConferenceCard />
+            <ConferenceCard animated />
           </div>
 
           {/* Phase 4 — the zoom-out */}

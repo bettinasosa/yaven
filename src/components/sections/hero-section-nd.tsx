@@ -72,8 +72,7 @@ function HeroVariantB() {
           href="https://calendly.com/nickprice2000/yaven-support"
           target="_blank"
           rel="noopener noreferrer"
-          className="font-[var(--font-space-mono)] text-[11px] font-medium tracking-[0.08em] text-white/65 underline underline-offset-4"
-          style={{ textDecorationThickness: "1.5px" }}
+          className="u-hover-underline font-[var(--font-space-mono)] text-[11px] font-medium tracking-[0.08em] text-white/65 no-underline"
         >
           Book a call ↗
         </a>
