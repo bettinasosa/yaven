@@ -531,9 +531,16 @@ export function CommandsSection() {
   const sideText = (
     <div className="flex flex-col gap-6">
       <ScrollCutReveal className="text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0" style={{ fontFamily: "var(--font-instrument-serif)" }}>
-        Yaven works anywhere.
+        Yaven works{" "}
+        <span
+          className="triage-underline"
+          style={{ backgroundImage: "linear-gradient(#fff, #fff)" }}
+        >
+          anywhere
+        </span>
+        .
       </ScrollCutReveal>
-      <p className="text-[clamp(17px,1.9vw,20px)] text-white/80 leading-[1.55] mr-60 mt-24">
+      <p className="text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] mr-60 mt-24">
         Draft a reply, explain a contract, answer a question, all without
         leaving the app you&apos;re in. Press{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">

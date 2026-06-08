@@ -25,6 +25,18 @@ const headlineStyle: React.CSSProperties = {
   margin: 0
 }
 
+// Slide sub-headers use Satoshi bold so they don't clash with the serif
+// "and streamlines your workflows" section header above them.
+const subHeadingStyle: React.CSSProperties = {
+  fontFamily: "var(--font-dm-sans), sans-serif",
+  fontSize: "clamp(26px, 3.6vw, 46px)",
+  fontWeight: 700,
+  letterSpacing: "-0.03em",
+  lineHeight: 1.12,
+  color: INK,
+  margin: 0
+}
+
 const bodyStyle: React.CSSProperties = {
   fontSize: "clamp(16px, 1.9vw, 22px)",
   fontWeight: 500,
@@ -531,7 +543,7 @@ function FinaleContent({
       }}
     >
       <h2 style={{ ...headlineStyle, textAlign: "left", width: "100%" }}>
-        so you can focus on the work{" "}
+        …so you focus on the work{" "}
         <span
           className={`triage-underline${underlineDrawn ? " is-visible" : ""}`}
           style={{ backgroundImage: "linear-gradient(#df4f3e, #df4f3e)" }}
@@ -653,7 +665,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 lineHeight: 1.2
               }}
             >
-              Sarah Chen
+              Ariel Thomas
             </div>
             <div
               style={{
@@ -663,7 +675,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 marginTop: "2px"
               }}
             >
-              Lattice Design
+              The Design Co.
             </div>
           </div>
         </div>
@@ -680,8 +692,8 @@ function ConferenceCard({ animated }: { animated: boolean }) {
           >
             {[
               { label: "Spoke at", value: "Config '26" },
-              { label: "Mutual", value: "Maya Rivera" },
-              { label: "Talked about", value: "Brand systems" }
+              { label: "Mutual", value: "Oliver Normand" },
+              { label: "Talked about", value: "Brand optimisation" }
             ].map(row => (
               <div
                 key={row.label}
@@ -733,7 +745,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 inset: 0,
                 padding: "10px 14px",
                 borderRadius: "12px",
-                background: "#F8D2CC",
+                background: "#df4f3e",
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
@@ -745,11 +757,11 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                   width: "8px",
                   height: "8px",
                   borderRadius: "50%",
-                  background: "#df4f3e",
+                  background: "#fff",
                   flexShrink: 0
                 }}
               />
-              <span style={{ fontSize: "13px", fontWeight: 600, color: "#df4f3e" }}>
+              <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>
                 Needs follow-up
               </span>
             </div>
@@ -762,7 +774,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 inset: 0,
                 padding: "10px 14px",
                 borderRadius: "12px",
-                background: "rgba(59,165,92,0.08)",
+                background: GREEN,
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
@@ -774,11 +786,11 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                   width: "8px",
                   height: "8px",
                   borderRadius: "50%",
-                  background: GREEN,
+                  background: "#fff",
                   flexShrink: 0
                 }}
               />
-              <span style={{ fontSize: "13px", fontWeight: 600, color: GREEN }}>
+              <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>
                 Follow-up drafted with Yaven
               </span>
             </div>
@@ -1098,7 +1110,7 @@ export function ProposalsCrmSection() {
           }}
         >
           <div>
-            <h2 style={headlineStyle}>Call ended. Proposal ready.</h2>
+            <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
             <p style={bodyStyle}>
               Built from your notes while the conversation is still warm.
             </p>
@@ -1115,7 +1127,7 @@ export function ProposalsCrmSection() {
           }}
         >
           <div>
-            <h2 style={headlineStyle}>A CRM that runs itself.</h2>
+            <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
             <p style={bodyStyle}>
               It sources clients that fit, drafts the outreach, and logs every reply. No need to type.
             </p>
@@ -1132,7 +1144,7 @@ export function ProposalsCrmSection() {
           }}
         >
           <div>
-            <h2 style={headlineStyle}>
+            <h2 style={subHeadingStyle}>
               Conference networking? Yaven handles it.
             </h2>
             <p style={bodyStyle}>
@@ -1199,7 +1211,7 @@ export function ProposalsCrmSection() {
           {/* Phase 1 — Proposals */}
           <div ref={proposalsRef} style={phaseGridStyle}>
             <div>
-              <h2 style={headlineStyle}>Call ended. Proposal ready.</h2>
+              <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
               <p style={bodyStyle}>
                 Built from your notes, client profile and context while the
                 conversation is still warm.
@@ -1212,7 +1224,7 @@ export function ProposalsCrmSection() {
           <div ref={crmRef} style={phaseGridStyle}>
             <CrmCard animated />
             <div>
-              <h2 style={headlineStyle}>A CRM that runs itself.</h2>
+              <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
               <p style={bodyStyle}>
                 It sources clients that fit, drafts the outreach, and logs every reply. No need to type.
               </p>
@@ -1222,7 +1234,7 @@ export function ProposalsCrmSection() {
           {/* Phase 3 — Conference follow-up */}
           <div ref={confRef} style={phaseGridStyle}>
             <div>
-              <h2 style={headlineStyle}>Conference networking</h2>
+              <h2 style={subHeadingStyle}>Conference networking</h2>
               <p style={bodyStyle}>
                 It finds their work, your mutual connections, and drafts a
                 follow-up that has your context and tone.

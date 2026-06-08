@@ -8,7 +8,7 @@ import { SplitText } from "gsap/SplitText"
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 interface Props {
-  children: string
+  children: React.ReactNode
   className?: string
   style?: React.CSSProperties
   /** Tag to render. Defaults to h2. */
@@ -41,12 +41,24 @@ export function ScrollCutReveal({
     const split = new SplitText(el, { type: "lines", mask: "lines" })
     gsap.set(split.lines, { yPercent: 100 })
 
+    // Any .triage-underline inside draws in after the reveal. Query AFTER the
+    // split (SplitText rebuilds the DOM), and un-clip the line masks on
+    // complete so the underline — which sits just below the text — isn't
+    // cropped by the mask's overflow:hidden.
+    const underlines = el.querySelectorAll<HTMLElement>(".triage-underline")
+
     const tween = gsap.to(split.lines, {
       yPercent: 0,
       duration: 1,
       stagger,
       ease: "power3.out",
-      scrollTrigger: { trigger: el, start, once: true }
+      scrollTrigger: { trigger: el, start, once: true },
+      onComplete: () => {
+        split.lines.forEach(l => {
+          if (l.parentElement) l.parentElement.style.overflow = "visible"
+        })
+        underlines.forEach(u => u.classList.add("is-visible"))
+      }
     })
 
     return () => {

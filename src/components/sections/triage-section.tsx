@@ -104,9 +104,10 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
       <div style={{ marginBottom: dark ? "20px" : "auto" }}>
         <div
           style={{
-            fontFamily: "var(--font-instrument-serif)",
-            fontSize: "clamp(20px, 2.2vw, 26px)",
-            fontWeight: 500,
+            fontFamily: "var(--font-dm-sans), sans-serif",
+            fontSize: "clamp(19px, 2.1vw, 24px)",
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
             lineHeight: 1.15,
             color: textColor
           }}
