@@ -332,37 +332,31 @@ export function MeetYavenSection() {
       1.4
     )
 
-    // P2 — label chips fly out from center
+    // P2 — pill proxies + glass chips fly out from center together
     tl.to(
       paraRefs.current[1],
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       3.2
     )
     SATELLITES.forEach((sat, i) => {
+      const s = satRefs.current[i]
       const l = labelRefs.current[i]
-      if (!l) return
-      const labelY = sat.y < 0 ? sat.y - sat.h / 2 - 16 : sat.y + sat.h / 2 + 16
-      tl.to(
-        l,
-        { x: sat.x, y: labelY, opacity: 1, scale: 1, ease: "back.out(1.5)", duration: 1.3 },
-        3.4 + i * 0.2
-      )
+      const labelY = sat.y < 0 ? sat.y - sat.ph / 2 - 4 : sat.y + sat.ph / 2 + 4
+      if (s) tl.to(s, { x: sat.x, y: labelY, opacity: 1, scale: 1, ease: "back.out(1.5)", duration: 1.3 }, 3.4 + i * 0.2)
+      if (l) tl.to(l, { x: sat.x, y: labelY, opacity: 1, scale: 1, ease: "back.out(1.5)", duration: 1.3 }, 3.4 + i * 0.2)
     })
 
-    // P3 — label chips retract back to center
+    // P3 — both retract back to center and goo-merge with the core
     tl.to(
       paraRefs.current[2],
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       5.8
     )
     SATELLITES.forEach((sat, i) => {
+      const s = satRefs.current[i]
       const l = labelRefs.current[i]
-      if (!l) return
-      tl.to(
-        l,
-        { x: 0, y: 0, opacity: 0, scale: 0.7, ease: "power2.in", duration: 1.0 },
-        6.0 + i * 0.12
-      )
+      if (s) tl.to(s, { x: 0, y: 0, opacity: 0, scale: 0.7, ease: "power2.in", duration: 1.0 }, 6.0 + i * 0.12)
+      if (l) tl.to(l, { x: 0, y: 0, opacity: 0, scale: 0.7, ease: "power2.in", duration: 1.0 }, 6.0 + i * 0.12)
     })
     tl.to(
       [proxyRef.current, glassRef.current],
@@ -411,6 +405,7 @@ export function MeetYavenSection() {
 
       <PresenceStage
         proxyRef={proxyRef}
+        satRefs={satRefs}
         labelRefs={labelRefs}
         glassRef={glassRef}
         settled={!!staticLayout}
