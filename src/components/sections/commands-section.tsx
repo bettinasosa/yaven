@@ -386,11 +386,13 @@ export function CommandsSection() {
   // Keyboard listeners
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      // Use e.code (physical key) — on macOS, Option+D types "∂" so e.key
+      // would never match "d".
       if (e.altKey) {
-        if (e.key.toLowerCase() === "d") {
+        if (e.code === "KeyD") {
           e.preventDefault()
           triggerDraft()
-        } else if (e.key.toLowerCase() === "a") {
+        } else if (e.code === "KeyA") {
           e.preventDefault()
           triggerAsk()
         }

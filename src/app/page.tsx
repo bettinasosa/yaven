@@ -62,9 +62,13 @@ export default function Home() {
       <CardWrap z={3}>
         <TriageSection />
       </CardWrap>
-      <CardWrap z={4}>
-        <ProposalsCrmSection />
-      </CardWrap>
+      {/* Cream backdrop so the card's rounded-corner notches reveal cream
+          (the section it slides over) instead of the blue page background. */}
+      <div style={{ position: "relative", background: "var(--cream)" }}>
+        <CardWrap z={4}>
+          <ProposalsCrmSection />
+        </CardWrap>
+      </div>
       <div
         style={{
           position: "relative",

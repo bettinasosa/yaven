@@ -22,7 +22,7 @@ const CARDS = [
   {
     label: "Already handled",
     bg: "#df4f3e",
-    desc: "Replied, filed, or followed up. Using your tone, your context, your rules.",
+    desc: "Replied, filed, or followed up using your tone, context, and rules.",
     items: [
       { text: "Re: proposal timeline?", tag: "✓ replied" },
       { text: "Invoice #214 overdue", tag: "✓ nudged" },
@@ -34,7 +34,7 @@ const CARDS = [
     label: "Can wait",
     bg: "#ebc1ff",
     textDark: true,
-    desc: "Not noise, just not now. Queued for when you have the headspace.",
+    desc: "Queued for when you have the headspace.",
     items: [
       { text: "AI Weekly digest", tag: "Friday" },
       { text: "Webinar invite: Q3 outlook", tag: "Next week" }
@@ -204,7 +204,7 @@ export function TriageSection() {
         className="text-[clamp(36px,5.5vw,76px)] font-medium tracking-[-0.02em] leading-[1.05] m-0"
         style={{ color: "#0a0e1a", fontFamily: "var(--font-instrument-serif)" }}
       >
-        It knows what matters to you.
+        Yaven knows what matters.
       </ScrollCutReveal>
       <p
         className="text-[clamp(15px,1.6vw,18px)] leading-[1.5] max-w-[480px]"
