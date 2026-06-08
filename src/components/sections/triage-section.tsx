@@ -201,8 +201,8 @@ export function TriageSection() {
   const sideText = (
     <div className="flex flex-col gap-6">
       <ScrollCutReveal
-        className="font-[var(--font-instrument-serif)] text-[clamp(36px,5.5vw,76px)] font-medium tracking-[-0.02em] leading-[1.05] m-0"
-        style={{ color: "#0a0e1a" }}
+        className="text-[clamp(36px,5.5vw,76px)] font-medium tracking-[-0.02em] leading-[1.05] m-0"
+        style={{ color: "#0a0e1a", fontFamily: "var(--font-instrument-serif)" }}
       >
         It knows what matters to you.
       </ScrollCutReveal>
