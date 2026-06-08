@@ -164,6 +164,41 @@ export function FooterSection() {
           </div>
         </div>
 
+        {/* Legal column */}
+        <div>
+          <p
+            style={{
+              fontFamily: "var(--font-space-mono)",
+              fontSize: "10px",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "var(--cream)",
+              opacity: 0.38,
+              fontWeight: 700,
+              marginBottom: "14px"
+            }}
+          >
+            Legal
+          </p>
+          <div className="flex flex-col gap-[10px]">
+            {[
+              { label: "Privacy Policy", href: "/privacy" },
+              { label: "Terms of Service", href: "/terms" }
+            ].map(s => (
+              <a
+                key={s.label}
+                href={s.href}
+                className="u-hover-underline"
+                style={colLinkStyle}
+                onMouseEnter={e => (e.currentTarget.style.opacity = "1")}
+                onMouseLeave={e => (e.currentTarget.style.opacity = "0.7")}
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
       </div>
 
       {/* ── Bottom: giant wordmark + copyright ── */}
