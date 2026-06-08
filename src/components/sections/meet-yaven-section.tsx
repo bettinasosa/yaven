@@ -9,8 +9,8 @@ gsap.registerPlugin(ScrollTrigger)
 
 const BODY = [
   "An AI that already knows your work.",
-  "Yaven lives in your menu bar, watching what you're working on. It drafts replies, preps for calls, and handles follow-ups before you think to ask.",
-  "No prompting. No context-switching. Just less on your plate."
+  "Yaven lives in your menu bar, ready whenever you need. It drafts replies, preps for calls, and handles follow-ups before you think to ask. No new tabs, apps, or chat boxes.",
+  "Allowing you to focus on work that actually needs you."
 ]
 
 const SATELLITES = [

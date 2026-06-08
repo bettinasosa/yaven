@@ -263,7 +263,7 @@ function CrmCard({ active }: { active: boolean }) {
 const GREEN = "#3BA55C"
 const CONFERENCE_ROWS = [
   { field: "Met", value: "Sarah Chen, Lattice Design", done: false },
-  { field: "Found", value: "Spoke at Config '25, knows Maya", done: false },
+  { field: "Found", value: "Spoke at Config '26, knows Maya", done: false },
   { field: "Context", value: "You both discussed brand systems", done: false },
   { field: "Follow-up", value: "Drafted ✓", done: true }
 ]
@@ -510,7 +510,7 @@ export function ProposalsCrmSection() {
           <div>
             <h2 style={headlineStyle}>A CRM that fills itself in.</h2>
             <p style={bodyStyle}>
-              Every call, email, and promise: logged. You never typed a field.
+              Every call, email, and promise: logged. No need to type.
             </p>
           </div>
         </div>
@@ -527,7 +527,7 @@ export function ProposalsCrmSection() {
             </h2>
             <p style={bodyStyle}>
               It finds their work, your mutual connections, and drafts a
-              follow-up that doesn&apos;t sound like a template.
+              follow-up that has your context and tone.
             </p>
           </div>
           <ConferenceCard />
@@ -543,7 +543,7 @@ export function ProposalsCrmSection() {
           }}
         >
           <h2 ref={finaleHeadRef} style={headlineStyle}>
-            And that&apos;s just a few examples
+            And that&apos;s just a few examples…
           </h2>
         </div>
       </section>
@@ -591,7 +591,7 @@ export function ProposalsCrmSection() {
             <div>
               <h2 style={headlineStyle}>A CRM that fills itself in.</h2>
               <p style={bodyStyle}>
-                Every call, email, and promise: logged. You never typed a field.
+                Every call, email, and promise: logged. No need to type.
               </p>
             </div>
           </div>
@@ -602,7 +602,7 @@ export function ProposalsCrmSection() {
               <h2 style={headlineStyle}>Conference networking</h2>
               <p style={bodyStyle}>
                 It finds their work, your mutual connections, and drafts a
-                follow-up that doesn&apos;t sound like a template.
+                follow-up that has your context and tone.
               </p>
             </div>
             <ConferenceCard />
@@ -623,7 +623,7 @@ export function ProposalsCrmSection() {
           }}
         >
           <h2 ref={finaleHeadRef} style={headlineStyle}>
-            And that&apos;s just a few examples
+            And that&apos;s just a few examples…
           </h2>
         </div>
       </section>

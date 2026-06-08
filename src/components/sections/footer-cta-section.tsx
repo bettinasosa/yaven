@@ -63,7 +63,7 @@ export function FooterCTASection() {
               maxWidth: "900px"
             }}
           >
-            Get the boring half handled.
+            Focus on the work only you can do.
           </ScrollCutReveal>
 
           <div

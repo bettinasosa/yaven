@@ -113,15 +113,14 @@ function HeroVariantB() {
           href="https://calendly.com/nickprice2000/yaven-support"
           target="_blank"
           rel="noopener noreferrer"
+          className="u-hover-underline"
           style={{
             fontFamily: "var(--font-space-mono)",
             fontSize: "11px",
             fontWeight: 500,
             letterSpacing: "0.08em",
             color: "rgba(255,255,255,0.65)",
-            textDecoration: "underline",
-            textDecorationThickness: "1.5px",
-            textUnderlineOffset: "4px"
+            textDecoration: "none"
           }}
         >
           Book a call ↗
@@ -195,7 +194,7 @@ function HeroVariantB() {
           >
             AI that handles the busywork
             <br />
-            while you do more of what you love.
+            letting you focus on what you love.
           </p>
 
           <div ref={ctaRef}>
