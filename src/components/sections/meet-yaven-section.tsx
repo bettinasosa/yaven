@@ -8,17 +8,17 @@ import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduce
 gsap.registerPlugin(ScrollTrigger)
 
 const BODY = [
-  "An AI that already knows your work.",
-  "Yaven lives in your menu bar, ready whenever you need. It drafts replies, preps for calls, and handles follow-ups before you think to ask. No new tabs, apps, or chat boxes.",
-  "Allowing you to focus on work that actually needs you."
+  "Built for founders, freelancers, and solo operators who run everything themselves.",
+  "Yaven learns your clients, your tone, your open loops — then acts on them. After calls it drafts proposals. Before meetings it pulls context. In between it clears the backlog. No new apps, no new habits.",
+  "So you can spend your time on the work only you can do."
 ]
 
 const SATELLITES = [
-  { x: -125, y: -95, w: 58, h: 58, round: true },
-  { x: 130, y: -70, w: 72, h: 46, round: false },
-  { x: -140, y: 65, w: 48, h: 48, round: true },
-  { x: 105, y: 110, w: 80, h: 50, round: false },
-  { x: -25, y: -150, w: 40, h: 40, round: true }
+  { x: -125, y: -95,  label: "proposal drafted", pw: 118, ph: 32 },
+  { x: 130,  y: -70,  label: "follow-up sent",   pw: 104, ph: 32 },
+  { x: -140, y: 65,   label: "CRM updated",      pw: 90,  ph: 32 },
+  { x: 105,  y: 110,  label: "meeting prepped",  pw: 112, ph: 32 },
+  { x: -25,  y: -150, label: "reply drafted",    pw: 96,  ph: 32 },
 ]
 
 const CORE_SIZE = 120
@@ -34,7 +34,7 @@ const headingStyle: React.CSSProperties = {
 }
 
 const bodyTextStyle: React.CSSProperties = {
-  fontSize: "clamp(18px, 2vw, 24px)",
+  fontSize: "clamp(20px, 2.2vw, 26px)",
   fontWeight: 500,
   lineHeight: 1.5,
   color: "var(--cream)"
@@ -165,11 +165,13 @@ function GlassGooFilter() {
 function PresenceStage({
   proxyRef,
   satRefs,
+  labelRefs,
   glassRef,
   settled
 }: {
   proxyRef: React.RefObject<HTMLDivElement | null>
   satRefs: React.RefObject<(HTMLDivElement | null)[]>
+  labelRefs: React.RefObject<(HTMLDivElement | null)[]>
   glassRef: React.RefObject<HTMLDivElement | null>
   settled: boolean
 }) {
@@ -186,16 +188,15 @@ function PresenceStage({
       aria-hidden="true"
       style={{
         position: "relative",
-        width: "min(380px, 80vw)",
-        height: "min(380px, 80vw)",
+        width: "min(460px, 92vw)",
+        height: "min(460px, 92vw)",
         margin: "0 auto"
       }}
     >
       <GlassGooFilter />
 
-      {/* Layer 1: gooey filter — proxy core + satellites (all solid white for threshold) */}
+      {/* Layer 1: gooey filter — proxy core + pill proxies for label chips */}
       <div style={{ ...stageStyle, filter: "url(#yv-glass-goo)" }}>
-        {/* Proxy core: same size as the glass core, merged with satellites via goo */}
         <div ref={proxyRef}>
           <div
             style={{
@@ -206,28 +207,45 @@ function PresenceStage({
             }}
           />
         </div>
-
         {SATELLITES.map((s, i) => (
           <div
             key={i}
-            ref={el => {
-              satRefs.current[i] = el
-            }}
+            ref={el => { satRefs.current[i] = el }}
             style={{
               position: "absolute",
-              width: `${s.w}px`,
-              height: `${s.h}px`,
-              borderRadius: s.round ? "50%" : "14px",
+              width: `${s.pw}px`,
+              height: `${s.ph}px`,
+              borderRadius: "999px",
               background: "#fff",
-              transform: settled
-                ? "translate(0,0) scale(0.4)"
-                : `translate(${s.x}px,${s.y}px)`
+              opacity: 0
             }}
           />
         ))}
       </div>
 
-      {/* Layer 2: real glass core using .glass-btn — sits on top of the proxy */}
+      {/* Layer 2: glass label chips — fly out from center */}
+      <div style={{ ...stageStyle, pointerEvents: "none" }}>
+        {SATELLITES.map((s, i) => (
+          <div
+            key={i}
+            ref={el => { labelRefs.current[i] = el }}
+            className="glass-btn glass-btn-sm"
+            style={{
+              position: "absolute",
+              fontSize: "14px",
+              cursor: "default",
+              opacity: 0,
+              whiteSpace: "nowrap"
+            }}
+          >
+            <span style={{ paddingBlock: "0.5em", paddingInline: "1em" }}>
+              {s.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Layer 3: real glass core using .glass-btn — sits on top of the proxy */}
       <div style={{ ...stageStyle, pointerEvents: "none" }}>
         <div
           ref={glassRef}
@@ -273,7 +291,8 @@ export function MeetYavenSection() {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const paraRefs = useRef<(HTMLParagraphElement | null)[]>([])
   const proxyRef = useRef<HTMLDivElement>(null) // gooey proxy core
-  const satRefs = useRef<(HTMLDivElement | null)[]>([])
+  const satRefs = useRef<(HTMLDivElement | null)[]>([])   // pill proxies inside goo filter
+  const labelRefs = useRef<(HTMLDivElement | null)[]>([]) // glass chips above filter
   const glassRef = useRef<HTMLDivElement>(null) // glass-btn core
   const staticLayout = usePrefersReducedMotion()
 
@@ -283,9 +302,8 @@ export function MeetYavenSection() {
     gsap.set(headingRef.current, { y: 50, opacity: 0 })
     paraRefs.current.forEach(p => p && gsap.set(p, { y: 36, opacity: 0 }))
     gsap.set([proxyRef.current, glassRef.current], { scale: 0 })
-    satRefs.current.forEach(
-      s => s && gsap.set(s, { x: 0, y: 0, scale: 0.4, opacity: 0 })
-    )
+    satRefs.current.forEach(s => s && gsap.set(s, { x: 0, y: 0, opacity: 0, scale: 0.7 }))
+    labelRefs.current.forEach(l => l && gsap.set(l, { x: 0, y: 0, opacity: 0, scale: 0.7 }))
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -314,36 +332,31 @@ export function MeetYavenSection() {
       1.4
     )
 
-    // P2 — satellites split out
+    // P2 — pill proxies + glass chips fly out from center together
     tl.to(
       paraRefs.current[1],
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       3.2
     )
-    satRefs.current.forEach((s, i) => {
-      if (!s) return
-      const sat = SATELLITES[i]
-      tl.to(s, { opacity: 1, duration: 0.1 }, 3.4 + i * 0.25)
-      tl.to(
-        s,
-        { x: sat.x, y: sat.y, scale: 1, ease: "power2.inOut", duration: 1.3 },
-        3.45 + i * 0.25
-      )
+    SATELLITES.forEach((sat, i) => {
+      const s = satRefs.current[i]
+      const l = labelRefs.current[i]
+      const labelY = sat.y < 0 ? sat.y - sat.ph / 2 - 4 : sat.y + sat.ph / 2 + 4
+      if (s) tl.to(s, { x: sat.x, y: labelY, opacity: 1, scale: 1, ease: "back.out(1.5)", duration: 1.3 }, 3.4 + i * 0.2)
+      if (l) tl.to(l, { x: sat.x, y: labelY, opacity: 1, scale: 1, ease: "back.out(1.5)", duration: 1.3 }, 3.4 + i * 0.2)
     })
 
-    // P3 — everything melts back
+    // P3 — both retract back to center and goo-merge with the core
     tl.to(
       paraRefs.current[2],
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       5.8
     )
-    satRefs.current.forEach((s, i) => {
-      if (!s) return
-      tl.to(
-        s,
-        { x: 0, y: 0, scale: 0.4, ease: "power2.inOut", duration: 1.3 },
-        6.1 + i * 0.15
-      )
+    SATELLITES.forEach((sat, i) => {
+      const s = satRefs.current[i]
+      const l = labelRefs.current[i]
+      if (s) tl.to(s, { x: 0, y: 0, opacity: 0, scale: 0.7, ease: "power2.in", duration: 1.0 }, 6.0 + i * 0.12)
+      if (l) tl.to(l, { x: 0, y: 0, opacity: 0, scale: 0.7, ease: "power2.in", duration: 1.0 }, 6.0 + i * 0.12)
     })
     tl.to(
       [proxyRef.current, glassRef.current],
@@ -393,6 +406,7 @@ export function MeetYavenSection() {
       <PresenceStage
         proxyRef={proxyRef}
         satRefs={satRefs}
+        labelRefs={labelRefs}
         glassRef={glassRef}
         settled={!!staticLayout}
       />

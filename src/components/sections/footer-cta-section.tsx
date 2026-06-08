@@ -29,7 +29,7 @@ export function FooterCTASection() {
         <LiquidGradientBg />
 
         <div className="relative text-center z-2">
-          <ScrollCutReveal className="font-instrument-serif text-[clamp(44px,7vw,110px)] font-medium tracking-[-0.02em] leading-[1.05] text-white mx-auto max-w-[900px]">
+          <ScrollCutReveal className="text-[clamp(44px,7vw,110px)] font-medium tracking-[-0.02em] leading-[1.05] text-white mx-auto max-w-[900px]" style={{ fontFamily: "var(--font-instrument-serif)" }}>
             Focus on the work only you can do.
           </ScrollCutReveal>
 

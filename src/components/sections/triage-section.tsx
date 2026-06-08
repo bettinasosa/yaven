@@ -1,12 +1,49 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 
 gsap.registerPlugin(ScrollTrigger)
+
+function AppIcon({ name, tilt }: { name: string; tilt: number }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <span
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "26px",
+        height: "26px",
+        borderRadius: "7px",
+        background: "rgba(10,14,26,0.07)",
+        border: "1px solid rgba(10,14,26,0.08)",
+        verticalAlign: "middle",
+        margin: "0 3px",
+        flexShrink: 0,
+        position: "relative",
+        top: "-1px",
+        transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
+        transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        cursor: "default"
+      }}
+    >
+      <Image
+        src={`/logos/${name}.png`}
+        alt={name}
+        width={16}
+        height={16}
+        style={{ objectFit: "contain" }}
+      />
+    </span>
+  )
+}
 
 const CARDS = [
   {
@@ -42,11 +79,7 @@ const CARDS = [
   }
 ]
 
-function TriageCard({
-  card
-}: {
-  card: (typeof CARDS)[number]
-}) {
+function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
   const dark = "textDark" in card && card.textDark
   const textColor = dark ? "#0a0e1a" : "#fff"
   const chipBg = dark ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.15)"
@@ -57,15 +90,15 @@ function TriageCard({
       style={{
         background: card.bg,
         borderRadius: "28px",
-        padding: "clamp(22px, 2.8vw, 32px)",
+        padding: "clamp(28px, 3.5vw, 40px)",
         display: "flex",
         flexDirection: "column",
-        gap: "14px",
+        gap: "2px",
         minHeight: "340px",
         boxShadow: "0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)"
       }}
     >
-      <div style={{ marginBottom: "4px" }}>
+      <div style={{ marginBottom: "auto" }}>
         <div
           style={{
             fontFamily: "var(--font-instrument-serif)",
@@ -117,12 +150,16 @@ function TriageCard({
           </span>
           <span
             style={{
-              fontSize: "11px",
-              fontWeight: 600,
-              letterSpacing: "0.03em",
-              color: tagColor,
+              fontSize: "10px",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: dark ? "#0a0e1a" : "#fff",
               whiteSpace: "nowrap",
-              flexShrink: 0
+              flexShrink: 0,
+              padding: "3px 8px",
+              borderRadius: "6px",
+              background: dark ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.2)"
             }}
           >
             {item.tag}
@@ -198,22 +235,67 @@ export function TriageSection() {
     return () => triggers.forEach(t => t.kill())
   }, [staticLayout])
 
+  // Animate underlines when they scroll into view
+  const textWrapRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!textWrapRef.current) return
+    const els = textWrapRef.current.querySelectorAll(".triage-underline")
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) e.target.classList.add("is-visible")
+        })
+      },
+      { threshold: 0.5 }
+    )
+    els.forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+
+  const appIcon = (name: string, tilt = 0) => (
+    <AppIcon name={name} tilt={tilt} />
+  )
+
+  const underline = (text: string) => (
+    <span className="triage-underline">{text}</span>
+  )
+
+  const bodyStyle: React.CSSProperties = {
+    fontSize: "clamp(15px, 1.6vw, 18px)",
+    lineHeight: 1.55,
+    color: "#0a0e1a",
+    opacity: 0.75,
+    margin: 0
+  }
+
   const sideText = (
-    <div className="flex flex-col gap-6">
+    <div ref={textWrapRef} className="flex flex-col gap-6">
       <ScrollCutReveal
         className="text-[clamp(36px,5.5vw,76px)] font-medium tracking-[-0.02em] leading-[1.05] m-0"
         style={{ color: "#0a0e1a", fontFamily: "var(--font-instrument-serif)" }}
       >
         Yaven knows what matters.
       </ScrollCutReveal>
-      <p
-        className="text-[clamp(15px,1.6vw,18px)] leading-[1.5] max-w-[480px]"
-        style={{ color: "#0a0e1a", opacity: 0.7 }}
-      >
-        Five inboxes, one queue. Yaven understands the different versions of
-        you, what to prioritize, when, and what actually needs your attention
-        right now.
-      </p>
+
+      <div className="flex flex-col gap-7 max-w-[480px]">
+        <p style={bodyStyle}>
+          Your {appIcon("gmail", -3)} email, {appIcon("linkedin", 2)} messages,{" "}
+          {appIcon("google", -2)} calendar, {appIcon("hubspot", 3)} CRM,{" "}
+          {appIcon("notion", -1)} docs, all flowing into {underline("one queue")}
+          .
+        </p>
+
+        <p style={bodyStyle}>
+          It knows the difference between {underline("work and personal")},
+          reads your context, and prioritizes what actually needs your attention
+          right now.
+        </p>
+
+        <p style={bodyStyle}>
+          Yaven handles what it can, drafts what it can&apos;t, and{" "}
+          {underline("never sends anything without your approval")}.
+        </p>
+      </div>
     </div>
   )
 
