@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { HeroSectionND } from "@/components/sections/hero-section-nd"
@@ -54,16 +54,96 @@ function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
   )
 }
 
+function StickyGetYaven() {
+  const btnRef = useRef<HTMLDivElement>(null)
+  const onCream = useRef(false)
+
+  const checkOverlap = useCallback(() => {
+    if (!btnRef.current) return
+    const btnRect = btnRef.current.getBoundingClientRect()
+    const btnMid = btnRect.top + btnRect.height / 2
+    const creamEls = document.querySelectorAll("[data-cream]")
+    let hit = false
+    creamEls.forEach(el => {
+      const r = el.getBoundingClientRect()
+      if (btnMid >= r.top && btnMid <= r.bottom) hit = true
+    })
+    if (hit !== onCream.current) {
+      onCream.current = hit
+      btnRef.current.classList.toggle("get-yaven-cream", hit)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!btnRef.current) return
+
+    gsap.set(btnRef.current, { x: 120, opacity: 0 })
+
+    const trigger = ScrollTrigger.create({
+      trigger: document.body,
+      start: "100vh top",
+      onEnter: () => {
+        gsap.to(btnRef.current, {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power3.out"
+        })
+      },
+      onLeaveBack: () => {
+        gsap.to(btnRef.current, {
+          x: 120,
+          opacity: 0,
+          duration: 0.35,
+          ease: "power2.in"
+        })
+      }
+    })
+
+    window.addEventListener("scroll", checkOverlap, { passive: true })
+    checkOverlap()
+
+    return () => {
+      trigger.kill()
+      window.removeEventListener("scroll", checkOverlap)
+    }
+  }, [checkOverlap])
+
+  return (
+    <div
+      ref={btnRef}
+      style={{
+        position: "fixed",
+        top: "clamp(16px, 2.5vh, 28px)",
+        right: "clamp(28px, 4vw, 48px)",
+        zIndex: 999
+      }}
+    >
+      <div className="glass-wrap">
+        <div className="glass-shadow" />
+        <a
+          href="#waitlist"
+          className="glass-btn"
+          style={{ whiteSpace: "nowrap" }}
+        >
+          <span>Get Yaven</span>
+        </a>
+      </div>
+    </div>
+  )
+}
+
 export default function Home() {
   return (
     <>
+      <StickyGetYaven />
       <HeroSectionND />
       <MeetYavenSection />
       <CardWrap z={3}>
-        <TriageSection />
-      </CardWrap>
-      <CardWrap z={4}>
-        <ProposalsCrmSection />
+        <div data-cream>
+          <TriageSection />
+          <ProposalsCrmSection />
+        </div>
       </CardWrap>
       <div
         style={{

@@ -150,12 +150,16 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
           </span>
           <span
             style={{
-              fontSize: "11px",
-              fontWeight: 600,
-              letterSpacing: "0.03em",
-              color: tagColor,
+              fontSize: "10px",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: dark ? "#0a0e1a" : "#fff",
               whiteSpace: "nowrap",
-              flexShrink: 0
+              flexShrink: 0,
+              padding: "3px 8px",
+              borderRadius: "6px",
+              background: dark ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.2)"
             }}
           >
             {item.tag}

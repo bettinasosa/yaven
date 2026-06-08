@@ -282,6 +282,24 @@
   text-shadow: 0.025em 0.1em 0.05em #00000014;
 }
 
+/* Sticky button — light blue tint when over cream backgrounds */
+.get-yaven-cream .glass-btn {
+  background: linear-gradient(-75deg, rgba(38,127,229,0.04), rgba(38,127,229,0.12), rgba(38,127,229,0.04));
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(38,127,229,0.03),
+    inset 0 -0.125em 0.125em rgba(255,255,255,0.5),
+    0 0.25em 0.125em -0.125em rgba(0,0,0,0.1),
+    inset 0 0 0.1em 0.25em rgba(38,127,229,0.03),
+    0 0 #fff;
+}
+.get-yaven-cream .glass-btn > span {
+  color: var(--primary);
+  text-shadow: none;
+}
+.get-yaven-cream .glass-shadow::after {
+  background: linear-gradient(rgba(38,127,229,0.08), rgba(38,127,229,0.03));
+}
+
 /* Bubble button */
 .bubble-btn {
   -webkit-appearance: none;
