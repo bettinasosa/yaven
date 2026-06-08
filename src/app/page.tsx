@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { HeroSectionND } from "@/components/sections/hero-section-nd"
 import { MeetYavenSection } from "@/components/sections/meet-yaven-section"
 import { ProposalsCrmSection } from "@/components/sections/proposals-crm-section"
+import { TriageSection } from "@/components/sections/triage-section"
 import { CommandsSection } from "@/components/sections/commands-section"
 import { FooterCTASection } from "@/components/sections/footer-cta-section"
 import { FooterSection } from "@/components/sections/footer-section"
@@ -59,12 +60,15 @@ export default function Home() {
       <HeroSectionND />
       <MeetYavenSection />
       <CardWrap z={3}>
+        <TriageSection />
+      </CardWrap>
+      <CardWrap z={4}>
         <ProposalsCrmSection />
       </CardWrap>
       <div
         style={{
           position: "relative",
-          zIndex: 4,
+          zIndex: 5,
           background: "var(--cream)",
           paddingTop: "80px"
         }}
