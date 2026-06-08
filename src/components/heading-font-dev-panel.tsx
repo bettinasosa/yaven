@@ -13,9 +13,6 @@ const FONTS = [
     stack: "'Clash Display'",
     weight: "600"
   },
-  { id: "zodiak", label: "Zodiak", stack: "'Zodiak'", weight: "400" },
-  { id: "gambetta", label: "Gambetta", stack: "'Gambetta'", weight: "400" },
-  { id: "fraunces", label: "Fraunces", stack: "'Fraunces'", weight: "400" },
   { id: "outfit", label: "Outfit", stack: "'Outfit'", weight: "600" },
   {
     id: "bricolage",

@@ -5,7 +5,6 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { HeroSectionND } from "@/components/sections/hero-section-nd"
 import { MeetYavenSection } from "@/components/sections/meet-yaven-section"
-import { TriageSection } from "@/components/sections/triage-section"
 import { ProposalsCrmSection } from "@/components/sections/proposals-crm-section"
 import { CommandsSection } from "@/components/sections/commands-section"
 import { FooterCTASection } from "@/components/sections/footer-cta-section"
@@ -66,21 +65,12 @@ export default function Home() {
         style={{
           position: "relative",
           zIndex: 4,
-          background: "#fff",
+          background: "var(--cream)",
           paddingTop: "80px"
         }}
       >
-        <div
-          style={{
-            borderRadius: "48px 48px 0 0",
-            overflow: "clip",
-            boxShadow: "0 -16px 64px rgba(0,0,0,0.18)"
-          }}
-        >
-          <CommandsSection />
-        </div>
+        <CommandsSection />
       </div>
-      {/* <TriageSection /> */}
       <FooterCTASection />
 
       {/* ── Sticky footer ── */}

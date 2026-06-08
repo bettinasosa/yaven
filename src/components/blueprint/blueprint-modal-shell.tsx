@@ -37,7 +37,7 @@ export function BlueprintModalShell({
       <div
         className={`flex w-[calc(100vw-2rem)] max-w-[58rem] flex-col overflow-hidden md:h-[88vh] ${expanded ? "h-[90vh]" : "h-[80vh]"} ${isClosing ? "animate-puff-out" : ""}`}
         style={{
-          background: "#fff",
+          background: "var(--cream)",
           border: "1px solid rgba(0,0,0,0.08)",
           borderRadius: "22px",
           boxShadow: "0 24px 80px rgba(0,0,0,0.16), 0 6px 24px rgba(0,0,0,0.08)",

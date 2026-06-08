@@ -11,7 +11,7 @@ is a running tease that pays off only when they install.
 
 **Copy**
 
-> **yaven**
+> **Yaven**
 >
 > Less admin. More flow.
 > Sub:

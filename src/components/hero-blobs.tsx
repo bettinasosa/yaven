@@ -18,6 +18,51 @@ export function HeroBlobs() {
     <div
       className="blob-layer absolute inset-0 pointer-events-none"
       style={{ zIndex: 1 }}
-    />
+    >
+      {/* Main blob — cream/blue/orange/gold */}
+      <div
+        className="yv-orb-drift-1"
+        style={{
+          position: "absolute",
+          top: "5%",
+          left: "-8%",
+          width: "65%",
+          height: "70%",
+          borderRadius: "42% 58% 64% 36% / 38% 52% 48% 62%"
+        }}
+      >
+        <div className="hero-blob-glass-main" style={{ width: "100%", height: "100%", borderRadius: "inherit" }} />
+      </div>
+
+      {/* Accent blob — cream/red/blue/orange */}
+      <div
+        className="yv-orb-drift-2"
+        style={{
+          position: "absolute",
+          bottom: "0%",
+          right: "-10%",
+          width: "60%",
+          height: "65%",
+          borderRadius: "58% 42% 36% 64% / 52% 38% 62% 48%"
+        }}
+      >
+        <div className="hero-blob-glass-accent" style={{ width: "100%", height: "100%", borderRadius: "inherit" }} />
+      </div>
+
+      {/* Third blob — lighter blend */}
+      <div
+        className="yv-orb-drift-3"
+        style={{
+          position: "absolute",
+          top: "-8%",
+          left: "25%",
+          width: "50%",
+          height: "55%",
+          borderRadius: "64% 36% 48% 52% / 42% 58% 36% 64%"
+        }}
+      >
+        <div className="hero-blob-glass-main" style={{ width: "100%", height: "100%", borderRadius: "inherit", opacity: 0.6 }} />
+      </div>
+    </div>
   )
 }

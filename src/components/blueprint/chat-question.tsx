@@ -91,7 +91,7 @@ export function ChatQuestion({
                     padding: "8px 18px",
                     borderRadius: "999px",
                     border: selected ? "1px solid #267FE5" : "1px solid rgba(0,0,0,0.12)",
-                    background: selected ? "#267FE5" : "#fff",
+                    background: selected ? "#267FE5" : "var(--cream)",
                     color: selected ? "#fff" : "var(--ink)",
                     boxShadow: selected
                       ? "0 2px 10px rgba(38,127,229,0.28)"
@@ -122,7 +122,7 @@ export function ChatQuestion({
                 style={{
                   border: "var(--bd)",
                   borderRadius: "14px",
-                  background: "#fff",
+                  background: "var(--cream)",
                   padding: "12px 16px",
                   color: "var(--ink)",
                   boxShadow: "var(--shadow-sm)",
@@ -139,7 +139,7 @@ export function ChatQuestion({
                 style={{
                   border: "var(--bd)",
                   borderRadius: "40px",
-                  background: "#fff",
+                  background: "var(--cream)",
                   padding: "10px 20px",
                   color: "var(--ink)",
                   boxShadow: "var(--shadow-sm)",
@@ -171,7 +171,7 @@ export function ChatQuestion({
                   style={{
                     border: "var(--bd)",
                     borderRadius: "14px",
-                    background: "#fff",
+                    background: "var(--cream)",
                     padding: "12px 16px",
                     color: "var(--ink)",
                     boxShadow: "var(--shadow-sm)",

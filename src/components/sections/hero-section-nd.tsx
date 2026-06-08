@@ -6,19 +6,6 @@ import { gsap } from "gsap"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { LiquidGradientBg } from "@/components/effects/liquid-gradient-bg"
 
-// Track whether the loader event has already fired so late-mounting variants
-// (e.g. switching A→B after page load) can animate in immediately.
-let _loaderFired = false
-if (typeof window !== "undefined") {
-  window.addEventListener(
-    "yaven:loader:done",
-    () => {
-      _loaderFired = true
-    },
-    { once: true }
-  )
-}
-
 function YavenMark({ height }: { height: number }) {
   return (
     <Image
@@ -26,7 +13,7 @@ function YavenMark({ height }: { height: number }) {
       alt="yaven"
       width={height}
       height={height}
-      style={{ display: "block", objectFit: "contain" }}
+      style={{ mixBlendMode: "multiply" }}
       priority
     />
   )
@@ -45,51 +32,32 @@ function HeroVariantB() {
     gsap.set(contentRef.current, { opacity: 0, y: 40 })
     gsap.set(ctaRef.current, { opacity: 0, y: 22 })
 
-    const onLoaderDone = () => {
-      gsap.to(navRef.current, {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.75,
-        ease: "power3.out"
-      })
-      gsap.to(contentRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        delay: 0.1
-      })
-      gsap.to(ctaRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.75,
-        ease: "power3.out",
-        delay: 0.3
-      })
-    }
-
-    if (_loaderFired) {
-      onLoaderDone()
-    } else {
-      window.addEventListener("yaven:loader:done", onLoaderDone, { once: true })
-    }
-
-    return () => {
-      window.removeEventListener("yaven:loader:done", onLoaderDone)
-    }
+    gsap.to(navRef.current, {
+      yPercent: 0,
+      opacity: 1,
+      duration: 0.75,
+      ease: "power3.out"
+    })
+    gsap.to(contentRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.9,
+      ease: "power3.out",
+      delay: 0.1
+    })
+    gsap.to(ctaRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.75,
+      ease: "power3.out",
+      delay: 0.3
+    })
   }, [])
 
   return (
     <section
       ref={sectionRef}
-      style={{
-        background: "#267FE5",
-        position: "relative",
-        minHeight: "100vh",
-        overflow: "hidden",
-        zIndex: 50,
-        display: "flex"
-      }}
+      className="relative min-h-screen overflow-hidden flex bg-[var(--primary)] z-50"
     >
       {/* Liquid gradient background */}
       <LiquidGradientBg />
@@ -97,101 +65,40 @@ function HeroVariantB() {
       {/* Nav — logo top left, book a call top right */}
       <div
         ref={navRef}
-        style={{
-          position: "absolute",
-          top: "clamp(16px, 2.5vh, 28px)",
-          left: "clamp(28px, 4vw, 48px)",
-          right: "clamp(28px, 4vw, 48px)",
-          zIndex: 10,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between"
-        }}
+        className="absolute top-[clamp(16px,2.5vh,28px)] left-[clamp(28px,4vw,48px)] right-[clamp(28px,4vw,48px)] z-10 flex items-center justify-between"
       >
         <YavenMark height={72} />
         <a
           href="https://calendly.com/nickprice2000/yaven-support"
           target="_blank"
           rel="noopener noreferrer"
-          className="u-hover-underline"
-          style={{
-            fontFamily: "var(--font-space-mono)",
-            fontSize: "11px",
-            fontWeight: 500,
-            letterSpacing: "0.08em",
-            color: "rgba(255,255,255,0.65)",
-            textDecoration: "none"
-          }}
+          className="font-[var(--font-space-mono)] text-[11px] font-medium tracking-[0.08em] text-white/65 underline underline-offset-4"
+          style={{ textDecorationThickness: "1.5px" }}
         >
           Book a call ↗
         </a>
       </div>
 
       {/* Right-aligned content block — vertically centred */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 5,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          width: "100%",
-          minHeight: "100vh",
-          padding: "clamp(100px, 14vh, 160px) clamp(32px, 5vw, 80px)"
-        }}
-      >
+      <div className="relative z-5 flex items-center justify-start md:justify-end w-full min-h-screen p-[clamp(80px,14vh,160px)_clamp(24px,5vw,80px)]">
         <div
           ref={contentRef}
-          style={{
-            maxWidth: "580px",
-            textAlign: "left"
-          }}
+          className="max-w-[580px] text-left md:mr-[clamp(50px,8vh,100px)] md:ml-0 ml-[clamp(28px,4vw,48px)]"
         >
           <span
-            data-heading-font
-            style={{
-              fontFamily: "var(--font-instrument-serif)",
-              fontSize: "clamp(72px, 12vw, 180px)",
-              fontWeight: 400,
-              color: "#fff",
-              letterSpacing: "-0.03em",
-              lineHeight: 0.88,
-              display: "block",
-              textTransform: "lowercase",
-              marginBottom: "clamp(64px, 10vh, 120px)"
-            }}
+            style={{ fontFamily: "var(--font-instrument-serif)" }}
+            className="block text-[clamp(80px,14vw,180px)] md:text-[clamp(72px,12vw,180px)] font-medium text-white lowercase leading-[0.88] tracking-[-0.03em] mb-[clamp(20px,3vh,36px)] mt-[clamp(60px,12vh,200px)] md:mt-[clamp(100px,16vh,200px)]"
           >
-            yaven
+            Yaven
           </span>
 
-          <p
-            style={{
-              fontFamily: "var(--font-dm-sans), sans-serif",
-              fontSize: "clamp(20px, 3vw, 42px)",
-              fontWeight: 500,
-              color: "#fff",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              margin: 0,
-              opacity: 0.92,
-              marginBottom: "clamp(2px, 1vh, 12px)"
-            }}
-          >
+          <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(28px,6vw,42px)] md:text-[clamp(20px,3vw,42px)] font-medium text-white leading-[1.1] tracking-[-0.02em] m-0 opacity-92 mt-[clamp(60px,10vh,200px)] md:mt-[clamp(100px,16vh,200px)] mb-[clamp(2px,1vh,12px)]">
             Less admin.
             <br />
             More flow.
           </p>
 
-          <p
-            style={{
-              fontFamily: "var(--font-dm-sans), sans-serif",
-              fontSize: "clamp(15px, 1.8vw, 20px)",
-              fontWeight: 400,
-              color: "rgba(255,255,255,0.7)",
-              lineHeight: 1.5,
-              margin: "0 0 clamp(24px, 4vh, 40px)"
-            }}
-          >
+          <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(16px,3.5vw,20px)] md:text-[clamp(15px,1.8vw,20px)] font-normal text-white/70 leading-[1.5] mt-0 mr-0 mb-[clamp(24px,4vh,40px)] ml-0">
             AI that handles the busywork
             <br />
             letting you focus on what you love.
@@ -207,16 +114,9 @@ function HeroVariantB() {
           there's no hard line between hero and the next section */}
       <div
         aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 h-[clamp(120px,20vh,240px)] pointer-events-none z-[6]"
         style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "clamp(120px, 20vh, 240px)",
-          background:
-            "linear-gradient(to bottom, transparent 0%, #267FE5 100%)",
-          pointerEvents: "none",
-          zIndex: 6
+          background: "linear-gradient(to bottom, transparent 0%, #267FE5 100%)"
         }}
       />
     </section>

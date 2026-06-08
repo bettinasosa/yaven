@@ -258,64 +258,167 @@ function CrmCard({ active }: { active: boolean }) {
   )
 }
 
-// The conference follow-up card — shows Yaven researching a new connection
-// and drafting a contextual follow-up in real time.
+// The conference follow-up card — styled as an identity/badge card
+// with a hover tilt effect.
 const GREEN = "#3BA55C"
-const CONFERENCE_ROWS = [
-  { field: "Met", value: "Sarah Chen, Lattice Design", done: false },
-  { field: "Found", value: "Spoke at Config '26, knows Maya", done: false },
-  { field: "Context", value: "You both discussed brand systems", done: false },
-  { field: "Follow-up", value: "Drafted ✓", done: true }
-]
 
 function ConferenceCard() {
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const card = cardRef.current
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    card.style.transform = `perspective(600px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg) scale(1.02)`
+  }
+
+  function handleMouseLeave() {
+    const card = cardRef.current
+    if (!card) return
+    card.style.transform = "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)"
+  }
+
   return (
-    <GlassCard borderRadius="34px" style={{ maxWidth: "460px" }}>
-      <div style={{ padding: "clamp(18px, 2.5vw, 28px)" }}>
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        maxWidth: "460px",
+        transition: "transform 0.35s cubic-bezier(0.25,1,0.5,1)",
+        transformStyle: "preserve-3d",
+        willChange: "transform",
+        cursor: "default"
+      }}
+    >
+      <GlassCard borderRadius="24px" style={{ overflow: "hidden", background: "rgba(200,220,255,0.18)" }}>
+        {/* Badge top strip */}
         <div
           style={{
-            fontFamily: "var(--font-instrument-serif)",
-            fontSize: "clamp(18px, 2vw, 22px)",
-            lineHeight: 1,
-            color: INK,
-            opacity: 0.55,
-            padding: "0 14px 14px"
+            background: "linear-gradient(135deg, var(--primary), #4a9af5)",
+            padding: "clamp(20px, 3vw, 32px) clamp(20px, 3vw, 28px) clamp(16px, 2vw, 22px)",
+            display: "flex",
+            alignItems: "center",
+            gap: "16px"
           }}
         >
-          New connection
-        </div>
-        {CONFERENCE_ROWS.map(row => (
+          {/* Avatar circle */}
           <div
-            key={row.field}
-            style={{ display: "flex", gap: "14px", padding: "10px 14px" }}
+            style={{
+              width: "52px",
+              height: "52px",
+              borderRadius: "50%",
+              background: "linear-gradient(145deg, #f0c27f, #fc5c7d)",
+              border: "2.5px solid rgba(255,255,255,0.5)",
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "20px",
+              fontWeight: 700,
+              color: "#fff"
+            }}
+          >
+            SC
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: "clamp(17px, 1.8vw, 20px)",
+                fontWeight: 600,
+                color: "#fff",
+                lineHeight: 1.2
+              }}
+            >
+              Sarah Chen
+            </div>
+            <div
+              style={{
+                fontSize: "13px",
+                fontWeight: 500,
+                color: "rgba(255,255,255,0.7)",
+                marginTop: "2px"
+              }}
+            >
+              Lattice Design
+            </div>
+          </div>
+        </div>
+
+        {/* Badge body */}
+        <div style={{ padding: "clamp(16px, 2vw, 22px) clamp(20px, 3vw, 28px) clamp(20px, 3vw, 28px)" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {[
+              { label: "Spoke at", value: "Config '26" },
+              { label: "Mutual", value: "Maya Rivera" },
+              { label: "Talked about", value: "Brand systems" }
+            ].map(row => (
+              <div key={row.label} style={{ display: "flex", gap: "12px", alignItems: "baseline" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-dm-sans), sans-serif",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                    letterSpacing: "0.04em",
+                    textTransform: "uppercase",
+                    color: INK,
+                    opacity: 0.4,
+                    width: "100px",
+                    flexShrink: 0
+                  }}
+                >
+                  {row.label}
+                </span>
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: INK,
+                    opacity: 0.85
+                  }}
+                >
+                  {row.value}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Follow-up status */}
+          <div
+            style={{
+              marginTop: "16px",
+              padding: "10px 14px",
+              borderRadius: "12px",
+              background: "rgba(59,165,92,0.08)",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px"
+            }}
           >
             <span
               style={{
-                fontFamily: "var(--font-dm-sans), sans-serif",
-                fontSize: "13px",
-                letterSpacing: "0.02em",
-                color: INK,
-                opacity: 0.5,
-                width: "110px",
-                flexShrink: 0,
-                paddingTop: "2px"
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                background: GREEN,
+                flexShrink: 0
               }}
-            >
-              {row.field}
-            </span>
+            />
             <span
               style={{
-                fontSize: "15px",
-                fontWeight: row.done ? 700 : 500,
-                color: row.done ? GREEN : INK
+                fontSize: "13px",
+                fontWeight: 600,
+                color: GREEN
               }}
             >
-              {row.value}
+              Follow-up drafted
             </span>
           </div>
-        ))}
-      </div>
-    </GlassCard>
+        </div>
+      </GlassCard>
+    </div>
   )
 }
 
@@ -476,19 +579,19 @@ export function ProposalsCrmSection() {
         textAlign: "center"
       }}
     >
-      Yaven creates workflows.
+      Yaven creates your workflows.
     </ScrollCutReveal>
   )
 
   if (staticLayout) {
     return (
-      <section style={{ background: "#fff", overflow: "hidden" }}>
+      <section style={{ background: "var(--cream)", overflow: "hidden" }}>
         <div style={{ paddingTop: "clamp(80px, 12vh, 140px)" }}>{header}</div>
         <div
           style={{
             ...phaseGridStyle,
             position: "relative",
-            padding: "clamp(60px, 9vh, 110px) 24px"
+            padding: "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px)"
           }}
         >
           <div>
@@ -503,7 +606,8 @@ export function ProposalsCrmSection() {
           style={{
             ...phaseGridStyle,
             position: "relative",
-            padding: "clamp(60px, 9vh, 110px) 24px clamp(100px, 15vh, 180px)"
+            padding:
+              "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
           }}
         >
           <CrmCard active />
@@ -518,7 +622,8 @@ export function ProposalsCrmSection() {
           style={{
             ...phaseGridStyle,
             position: "relative",
-            padding: "clamp(60px, 9vh, 110px) 24px clamp(100px, 15vh, 180px)"
+            padding:
+              "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
           }}
         >
           <div>
@@ -553,7 +658,11 @@ export function ProposalsCrmSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "900vh", background: "#fff" }}
+      style={{
+        position: "relative",
+        height: "1050vh",
+        background: "var(--cream)"
+      }}
     >
       <section
         style={{

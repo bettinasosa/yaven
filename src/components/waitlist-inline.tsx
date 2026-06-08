@@ -62,18 +62,12 @@ export function WaitlistInline() {
       )}
       <form
         onSubmit={handleSubmit}
-        className="waitlist-input-row"
+        className="waitlist-input-row flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[28px] sm:rounded-full p-[5px]"
         style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "0",
-          borderRadius: "999px",
           border: "1px solid rgba(255,255,255,0.3)",
           background: "rgba(255,255,255,0.1)",
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
-          padding: "5px",
-          alignItems: "center",
           boxShadow: "0 20px 60px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3)"
         }}
       >
@@ -83,25 +77,14 @@ export function WaitlistInline() {
           placeholder="you@example.com"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          style={{
-            flex: 1,
-            minWidth: 0,
-            padding: "12px 18px",
-            borderRadius: "999px",
-            border: "none",
-            background: "transparent",
-            color: "#fff",
-            fontSize: "15px",
-            fontFamily: "var(--font-dm-sans), sans-serif",
-            outline: "none"
-          }}
+          className="flex-1 min-w-0 py-3 px-5 rounded-full border-none bg-transparent text-white text-[15px] font-[var(--font-dm-sans),sans-serif] outline-none"
         />
-        <div className="glass-wrap waitlist-btn-wrap" style={{ flexShrink: 0 }}>
+        <div className="glass-wrap waitlist-btn-wrap shrink-0 w-full sm:w-auto">
           <div className="glass-shadow" />
           <button
             type="submit"
             disabled={loading}
-            className="glass-btn"
+            className="glass-btn w-full sm:w-auto"
             style={{
               opacity: loading ? 0.6 : 1,
               cursor: loading ? "not-allowed" : "pointer",
@@ -109,8 +92,8 @@ export function WaitlistInline() {
             }}
           >
             {loading ? (
-              <span className="text-white" style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
-                <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} />
+              <span className="text-white inline-flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
               </span>
             ) : (
               <span className="text-white">Get Yaven</span>

@@ -47,7 +47,12 @@ const bodyTextStyle: React.CSSProperties = {
 // The real glass core is a separate .glass-btn element layered on top.
 function GlassGooFilter() {
   return (
-    <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+    <svg
+      width="0"
+      height="0"
+      style={{ position: "absolute" }}
+      aria-hidden="true"
+    >
       <defs>
         <filter
           id="yv-glass-goo"
@@ -66,40 +71,83 @@ function GlassGooFilter() {
             result="goo-mask"
           />
           {/* Glass body: translucent white fill — matches glass-btn background */}
-          <feFlood floodColor="white" floodOpacity="0.28" result="body-fill" />
-          <feComposite in="body-fill" in2="goo-mask" operator="in" result="glass-body" />
+          <feFlood floodColor="white" floodOpacity="0.35" result="body-fill" />
+          <feComposite
+            in="body-fill"
+            in2="goo-mask"
+            operator="in"
+            result="glass-body"
+          />
           {/* Inner glow: soft white core for depth */}
-          <feGaussianBlur in="goo-mask" stdDeviation="6" result="inner-glow-blur" />
+          <feGaussianBlur
+            in="goo-mask"
+            stdDeviation="6"
+            result="inner-glow-blur"
+          />
           <feFlood floodColor="white" floodOpacity="0.2" result="glow-fill" />
-          <feComposite in="glow-fill" in2="inner-glow-blur" operator="in" result="inner-glow" />
+          <feComposite
+            in="glow-fill"
+            in2="inner-glow-blur"
+            operator="in"
+            result="inner-glow"
+          />
           {/* Specular sweep: angled light for glass reflection */}
           <feSpecularLighting
             in="goo-mask"
-            surfaceScale="4"
-            specularConstant="1.4"
-            specularExponent="24"
+            surfaceScale="5"
+            specularConstant="1.8"
+            specularExponent="20"
             lightingColor="white"
             result="specular"
           >
             <feDistantLight azimuth="305" elevation="50" />
           </feSpecularLighting>
-          <feComposite in="specular" in2="goo-mask" operator="in" result="specular-clipped" />
+          <feComposite
+            in="specular"
+            in2="goo-mask"
+            operator="in"
+            result="specular-clipped"
+          />
           <feColorMatrix
             in="specular-clipped"
             type="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.45 0"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.55 0"
             result="specular-dimmed"
           />
           {/* Rim highlight: bright edge ring — thicker for glass feel */}
-          <feMorphology in="goo-mask" operator="erode" radius="2" result="inner-mask" />
-          <feComposite in="goo-mask" in2="inner-mask" operator="out" result="rim-mask" />
-          <feFlood floodColor="white" floodOpacity="0.65" result="rim-fill" />
-          <feComposite in="rim-fill" in2="rim-mask" operator="in" result="glass-rim" />
+          <feMorphology
+            in="goo-mask"
+            operator="erode"
+            radius="2"
+            result="inner-mask"
+          />
+          <feComposite
+            in="goo-mask"
+            in2="inner-mask"
+            operator="out"
+            result="rim-mask"
+          />
+          <feFlood floodColor="white" floodOpacity="0.75" result="rim-fill" />
+          <feComposite
+            in="rim-fill"
+            in2="rim-mask"
+            operator="in"
+            result="glass-rim"
+          />
           {/* Shadow beneath for depth */}
           <feGaussianBlur in="goo-mask" stdDeviation="8" result="shadow-blur" />
           <feOffset in="shadow-blur" dx="0" dy="4" result="shadow-offset" />
-          <feFlood floodColor="black" floodOpacity="0.12" result="shadow-fill" />
-          <feComposite in="shadow-fill" in2="shadow-offset" operator="in" result="shadow" />
+          <feFlood
+            floodColor="black"
+            floodOpacity="0.12"
+            result="shadow-fill"
+          />
+          <feComposite
+            in="shadow-fill"
+            in2="shadow-offset"
+            operator="in"
+            result="shadow"
+          />
           {/* Merge: shadow + body + inner glow + specular + rim */}
           <feMerge>
             <feMergeNode in="shadow" />
@@ -162,7 +210,9 @@ function PresenceStage({
         {SATELLITES.map((s, i) => (
           <div
             key={i}
-            ref={el => { satRefs.current[i] = el }}
+            ref={el => {
+              satRefs.current[i] = el
+            }}
             style={{
               position: "absolute",
               width: `${s.w}px`,
@@ -187,7 +237,7 @@ function PresenceStage({
             width: `${CORE_SIZE}px`,
             height: `${CORE_SIZE}px`,
             borderRadius: "50%",
-            fontSize: "14px",   // em base for the glass-btn box-shadow values
+            fontSize: "14px", // em base for the glass-btn box-shadow values
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -222,9 +272,9 @@ export function MeetYavenSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const paraRefs = useRef<(HTMLParagraphElement | null)[]>([])
-  const proxyRef = useRef<HTMLDivElement>(null)   // gooey proxy core
+  const proxyRef = useRef<HTMLDivElement>(null) // gooey proxy core
   const satRefs = useRef<(HTMLDivElement | null)[]>([])
-  const glassRef = useRef<HTMLDivElement>(null)   // glass-btn core
+  const glassRef = useRef<HTMLDivElement>(null) // glass-btn core
   const staticLayout = usePrefersReducedMotion()
 
   useEffect(() => {
@@ -233,7 +283,9 @@ export function MeetYavenSection() {
     gsap.set(headingRef.current, { y: 50, opacity: 0 })
     paraRefs.current.forEach(p => p && gsap.set(p, { y: 36, opacity: 0 }))
     gsap.set([proxyRef.current, glassRef.current], { scale: 0 })
-    satRefs.current.forEach(s => s && gsap.set(s, { x: 0, y: 0, scale: 0.4, opacity: 0 }))
+    satRefs.current.forEach(
+      s => s && gsap.set(s, { x: 0, y: 0, scale: 0.4, opacity: 0 })
+    )
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -244,28 +296,60 @@ export function MeetYavenSection() {
       }
     })
 
-    tl.to(headingRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1 }, 0)
+    tl.to(
+      headingRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1 },
+      0
+    )
 
     // P1 — core appears (both layers in sync)
-    tl.to(paraRefs.current[0], { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, 1.2)
-    tl.to([proxyRef.current, glassRef.current], { scale: 1, ease: "back.out(1.6)", duration: 1.2 }, 1.4)
+    tl.to(
+      paraRefs.current[0],
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
+      1.2
+    )
+    tl.to(
+      [proxyRef.current, glassRef.current],
+      { scale: 1, ease: "back.out(1.6)", duration: 1.2 },
+      1.4
+    )
 
     // P2 — satellites split out
-    tl.to(paraRefs.current[1], { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, 3.2)
+    tl.to(
+      paraRefs.current[1],
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
+      3.2
+    )
     satRefs.current.forEach((s, i) => {
       if (!s) return
       const sat = SATELLITES[i]
       tl.to(s, { opacity: 1, duration: 0.1 }, 3.4 + i * 0.25)
-      tl.to(s, { x: sat.x, y: sat.y, scale: 1, ease: "power2.inOut", duration: 1.3 }, 3.45 + i * 0.25)
+      tl.to(
+        s,
+        { x: sat.x, y: sat.y, scale: 1, ease: "power2.inOut", duration: 1.3 },
+        3.45 + i * 0.25
+      )
     })
 
     // P3 — everything melts back
-    tl.to(paraRefs.current[2], { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, 5.8)
+    tl.to(
+      paraRefs.current[2],
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
+      5.8
+    )
     satRefs.current.forEach((s, i) => {
       if (!s) return
-      tl.to(s, { x: 0, y: 0, scale: 0.4, ease: "power2.inOut", duration: 1.3 }, 6.1 + i * 0.15)
+      tl.to(
+        s,
+        { x: 0, y: 0, scale: 0.4, ease: "power2.inOut", duration: 1.3 },
+        6.1 + i * 0.15
+      )
     })
-    tl.to([proxyRef.current, glassRef.current], { scale: 1.12, ease: "power2.out", duration: 0.9 }, 7.2)
+    tl.to(
+      [proxyRef.current, glassRef.current],
+      { scale: 1.12, ease: "power2.out", duration: 0.9 },
+      7.2
+    )
 
     tl.to({}, { duration: 1.4 })
 
@@ -295,7 +379,9 @@ export function MeetYavenSection() {
           {BODY.map((para, pi) => (
             <p
               key={pi}
-              ref={el => { paraRefs.current[pi] = el }}
+              ref={el => {
+                paraRefs.current[pi] = el
+              }}
               style={{ margin: pi === 0 ? 0 : "1.1em 0 0" }}
             >
               {para}
@@ -319,7 +405,7 @@ export function MeetYavenSection() {
         style={{
           position: "relative",
           background: "var(--primary)",
-          padding: "clamp(220px, 30vh, 360px) 24px clamp(120px, 18vh, 220px)",
+          padding: "clamp(220px, 30vh, 360px) clamp(28px, 5vw, 48px) clamp(120px, 18vh, 220px)",
           overflow: "hidden"
         }}
       >
@@ -331,7 +417,11 @@ export function MeetYavenSection() {
   return (
     <div
       ref={wrapperRef}
-      style={{ position: "relative", height: "350vh", background: "var(--primary)" }}
+      style={{
+        position: "relative",
+        height: "350vh",
+        background: "var(--primary)"
+      }}
     >
       <section
         style={{
@@ -341,7 +431,7 @@ export function MeetYavenSection() {
           overflow: "hidden",
           display: "flex",
           alignItems: "center",
-          padding: "0 24px"
+          padding: "0 clamp(28px, 5vw, 48px)"
         }}
       >
         {content}

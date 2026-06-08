@@ -1,451 +1,396 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Typewriter } from "@/components/effects/typewriter"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
-import { GlassCard } from "@/components/effects/glass-card"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const INK = "#0a0e1a"
+const DRAFT_RESPONSE =
+  "Thanks so much for reaching out, Priya! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
 
-// Shared gooey filter for the Draft avatar and Ask bubbles
-function GooFilterDefs() {
-  return (
-    <svg
-      width="0"
-      height="0"
-      style={{ position: "absolute" }}
-      aria-hidden="true"
-    >
-      <defs>
-        <filter id="yv-goo-cmd">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
-          <feColorMatrix
-            in="blur"
-            mode="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
-            result="goo"
-          />
-          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-        </filter>
-      </defs>
-    </svg>
-  )
-}
+const ASK_RESPONSE =
+  "They extended payment from 30 to 60 days and removed the kill fee entirely. The rest of the scope is unchanged."
 
-const panelContentStyle: React.CSSProperties = {
-  padding: "clamp(28px, 4vw, 44px) clamp(28px, 4vw, 48px)",
-  display: "flex",
-  flexDirection: "column",
-  gap: "16px",
-  height: "100%"
-}
-
-const panelGlassProps = {
-  borderRadius: "34px",
-  style: {
-    willChange: "transform" as const,
-    backfaceVisibility: "hidden" as const,
-    background: "linear-gradient(-75deg, rgba(255,255,255,0.12), rgba(255,255,255,0.3), rgba(255,255,255,0.12))",
-    backdropFilter: "blur(24px) saturate(1.2)",
-    WebkitBackdropFilter: "blur(24px) saturate(1.2)"
-  }
-}
-
-// Grainy gradient avatar
-function GradientAvatar({
-  size = 30,
-  gradient = "linear-gradient(135deg, #6CB4EE 0%, #267FE5 40%, #1B4F9E 100%)",
-  children
+function KeyBadge({
+  children,
+  small
 }: {
-  size?: number
-  gradient?: string
-  children?: React.ReactNode
+  children: React.ReactNode
+  small?: boolean
 }) {
   return (
     <span
-      aria-hidden="true"
+      className="inline-flex items-center justify-center font-bold"
       style={{
-        position: "relative",
-        width: size,
-        height: size,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-        borderRadius: "50%",
-        background: gradient,
-        overflow: "hidden"
+        fontFamily: "var(--font-dm-sans), sans-serif",
+        fontSize: small ? "11px" : "13px",
+        minWidth: small ? "22px" : "26px",
+        height: small ? "22px" : "26px",
+        padding: "0 6px",
+        borderRadius: "6px",
+        background: "rgba(255,255,255,0.9)",
+        color: "#0a0e1a",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.12), inset 0 -1px 0 rgba(0,0,0,0.08)"
       }}
     >
-      {/* Grain overlay via CSS noise */}
-      <span
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: "inherit",
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          backgroundSize: "128px 128px",
-          opacity: 0.35,
-          mixBlendMode: "overlay"
-        }}
-      />
-      {children && (
-        <span style={{ position: "relative", zIndex: 1 }}>{children}</span>
-      )}
+      {children}
     </span>
   )
 }
 
-
-const emailCardStyle: React.CSSProperties = {
-  background: "rgba(255,255,255,0.35)",
-  borderRadius: "16px",
-  border: "1px solid rgba(255,255,255,0.4)",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.5)",
-  padding: "18px 24px"
-}
-
-const emailMetaStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  marginBottom: "8px"
-}
-
-function DraftPanel({ active }: { active: boolean }) {
+function ShortcutBadge({ keys }: { keys: string[] }) {
   return (
-    <>
-      <span
-        style={{
-          fontFamily: "var(--font-instrument-serif)",
-          fontSize: "clamp(20px, 2.2vw, 26px)",
-          lineHeight: 1,
-          color: "var(--secondary)"
-        }}
-      >
-        Draft
-      </span>
-      <p
-        style={{
-          fontSize: "clamp(17px, 1.9vw, 23px)",
-          fontWeight: 500,
-          lineHeight: 1.45,
-          color: INK,
-          margin: 0,
-          maxWidth: "560px"
-        }}
-      >
-        It writes where your cursor is - with the thread, the client, and the
-        way <em style={{ paddingRight: "0.12em" }}>you</em> write already in its
-        head.
-      </p>
-
-      {/* Email thread — typing picks up mid-sentence */}
-      <div
-        style={{
-          background: "rgba(255,255,255,0.18)",
-          borderRadius: "18px",
-          border: "1px solid rgba(255,255,255,0.3)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)",
-          padding: "clamp(20px, 3vw, 28px)",
-          fontSize: "clamp(13px, 1.4vw, 15px)",
-          lineHeight: 1.55,
-          color: INK,
-          flex: 1,
-          minHeight: 0,
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px"
-        }}
-      >
-        {/* Thread subject bar */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-            gap: "12px",
-            padding: "0 4px 4px"
-          }}
-        >
-          <span
-            style={{ fontWeight: 700, fontSize: "clamp(13px, 1.4vw, 15px)" }}
-          >
-            Re: Otto&apos;s Bakehouse proposal
-          </span>
-          <span
-            style={{
-              fontSize: "11px",
-              opacity: 0.45,
-              whiteSpace: "nowrap"
-            }}
-          >
-            2 messages
-          </span>
-        </div>
-
-        {/* Received message */}
-        <div style={emailCardStyle}>
-          <div style={emailMetaStyle}>
-            <GradientAvatar
-              size={30}
-              gradient="linear-gradient(135deg, #A8D8EA 0%, #6CB4EE 50%, #4A90D9 100%)"
-            >
-              <span style={{ fontWeight: 700, fontSize: "12px", color: "#fff" }}>B</span>
-            </GradientAvatar>
-            <span style={{ fontWeight: 700 }}>Bettina</span>
-            <span
-              style={{
-                fontSize: "11px",
-                opacity: 0.45,
-                marginLeft: "auto"
-              }}
-            >
-              10:42
-            </span>
-          </div>
-          <div style={{ opacity: 0.75 }}>
-            Could you send over the revised numbers when you get a chance?
-            We&apos;d like to move before the end of the month.
-          </div>
-        </div>
-
-        {/* Your reply — Yaven picks up where the cursor stopped */}
-        <div
-          style={{
-            ...emailCardStyle,
-            border: "1px solid rgba(38,127,229,0.35)"
-          }}
-        >
-          <div style={emailMetaStyle}>
-            <GradientAvatar
-              size={30}
-              gradient="linear-gradient(135deg, #5BC0EB 0%, #267FE5 45%, #1B2F6E 100%)"
-            >
-              <span style={{
-                width: "7px",
-                height: "7px",
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.9)",
-                display: "block"
-              }} />
-            </GradientAvatar>
-            <span style={{ fontWeight: 700 }}>You</span>
-            <span
-              style={{
-                fontSize: "11px",
-                color: "var(--primary)",
-                marginLeft: "auto"
-              }}
-            >
-              drafting…
-            </span>
-          </div>
-          <div>
-            {/* Unmounted until the panel lands, so it resets on backscroll */}
-            {active ? (
-              <Typewriter
-                startText="Hi Bettina, good speaking earlier. "
-                text="The revised numbers are attached, same scope we walked through but with the onboarding fee folded in. If it all looks right I can have the contract over to you by Thursday."
-                speed={5}
-              />
-            ) : (
-              <span>Hi Bettina, good speaking earlier. </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </>
+    <span className="inline-flex items-center gap-[3px]">
+      {keys.map((k, i) => (
+        <KeyBadge key={i} small>
+          {k}
+        </KeyBadge>
+      ))}
+    </span>
   )
 }
 
-// Remounted via `key` when the scroll gate flips, so the demo rewinds
-// on backscroll.
-function AskPanel({ active }: { active: boolean }) {
-  const [answered, setAnswered] = useState(false)
+// ── Draft card (LinkedIn DM) ────────────────────────────────────────────────
 
+function LinkedInCard({
+  drafting,
+  active,
+  onTrigger
+}: {
+  drafting: boolean
+  active: boolean
+  onTrigger: () => void
+}) {
   return (
-    <>
-      <span
-        style={{
-          fontFamily: "var(--font-instrument-serif)",
-          fontSize: "clamp(20px, 2.2vw, 26px)",
-          lineHeight: 1,
-          color: "var(--primary)"
-        }}
-      >
-        Ask
-      </span>
-      <p
-        style={{
-          fontSize: "clamp(17px, 1.9vw, 23px)",
-          fontWeight: 500,
-          lineHeight: 1.45,
-          color: INK,
-          margin: 0,
-          maxWidth: "560px"
-        }}
-      >
-        Question anything on your screen, without leaving it.
-      </p>
-
-      {/* The page you're reading, with the Ask popup over it */}
-      <div
-        style={{
-          position: "relative",
-          background: "rgba(255,255,255,0.18)",
-          borderRadius: "18px",
-          border: "1px solid rgba(255,255,255,0.3)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)",
-          padding: "clamp(22px, 3vw, 30px)",
-          flex: 1,
-          minHeight: "250px",
-          overflow: "hidden"
-        }}
-      >
-        {/* The redlined contract you're reading — visibly never changes */}
+    <div
+      style={{
+        width: "100%",
+        height: "500px",
+        borderRadius: "28px",
+        background: "var(--cream)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)",
+        overflow: "hidden"
+      }}
+    >
+      <div className="flex flex-col h-full">
+        {/* Header bar — LinkedIn blue */}
         <div
+          className="flex items-center justify-between px-5 py-6"
           style={{
-            opacity: 0.5,
-            fontSize: "clamp(13px, 1.4vw, 15px)",
-            lineHeight: 1.55,
-            color: INK,
-            paddingBottom: "140px"
+            background: "linear-gradient(135deg, #0A66C2, #0d79d9)"
           }}
         >
-          <div
-            style={{
-              fontSize: "12px",
-              opacity: 0.7,
-              marginBottom: "10px"
-            }}
-          >
-            Ottos_Bakehouse_Agreement_v3.pdf, returned with edits
+          <div className="flex items-center gap-2.5">
+            <span
+              className="inline-flex items-center justify-center rounded-lg"
+              style={{
+                width: "32px",
+                height: "32px",
+                background: "rgba(255,255,255,0.2)",
+                border: "1px solid rgba(255,255,255,0.25)"
+              }}
+            >
+              <span className="font-bold text-white text-[14px] leading-none">
+                in
+              </span>
+            </span>
+            <span className="font-bold text-white text-[16px]">Messaging</span>
           </div>
-          <div style={{ marginBottom: "6px" }}>
-            4.2 Payment due within <s style={{ opacity: 0.6 }}>thirty (30)</s>{" "}
-            <strong>sixty (60)</strong> days of invoice date.
-          </div>
-          <div>
-            4.3{" "}
-            <s style={{ opacity: 0.6 }}>
-              A kill fee of 25% applies to work cancelled after commencement.
-            </s>
-          </div>
+          <ShortcutBadge keys={["⌘", "⇧", "D"]} />
         </div>
 
-        {/* Ask popup — question + answer */}
-        <div
-          style={{
-            position: "absolute",
-            left: "clamp(18px, 2.5vw, 26px)",
-            right: "clamp(18px, 2.5vw, 26px)",
-            bottom: "clamp(18px, 2.5vw, 26px)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px"
-          }}
-        >
-          {/* Question bubble with "Ask" tag overlapping its top edge */}
-          <div style={{ position: "relative" }}>
+        {/* Message content */}
+        <div className="px-5 py-5 flex flex-col gap-4 flex-1">
+          <div className="flex items-center gap-3">
             <span
+              className="inline-flex items-center justify-center rounded-full shrink-0"
               style={{
-                position: "absolute",
-                top: "-10px",
-                left: "14px",
-                zIndex: 1,
-                fontFamily: "var(--font-instrument-serif)",
-                fontSize: "13px",
-                lineHeight: 1,
-                padding: "4px 10px",
-                borderRadius: "999px",
-                background: "rgba(255,255,255,0.6)",
-                border: "1px solid rgba(255,255,255,0.45)",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                color: "var(--primary)"
+                width: "38px",
+                height: "38px",
+                background:
+                  "linear-gradient(135deg, #FEC20C, #FF6B6B, #2563EB)",
+                boxShadow: "0 2px 10px rgba(124,58,237,0.3)"
               }}
-            >
-              Ask
-            </span>
-            <div
-              style={{
-                height: "46px",
-                display: "flex",
-                alignItems: "center",
-                padding: "0 20px",
-                borderRadius: "23px",
-                background: "var(--primary)",
-                fontSize: "clamp(13px, 1.4vw, 15px)",
-                fontWeight: 700,
-                color: "#fff"
-              }}
-            >
-            {active && (
-              <Typewriter
-                text="What changed from the version I sent?"
-                speed={6}
-                delay={200}
-                onComplete={() => setAnswered(true)}
-              />
-            )}
+            />
+            <div>
+              <div className="font-bold text-[#0a0e1a] text-[15px]">
+                Priya Nair
+              </div>
+              <div className="text-[#0a0e1a]/50 text-[13px]">
+                Recruiter · Founding Designer role
+              </div>
             </div>
           </div>
 
-          {/* Answer bubble */}
+          <p className="text-[#0a0e1a] text-[15px] leading-[1.55] font-medium mx-4">
+            Hi Bettina! Your work is stunning, we&apos;re hiring a founding
+            designer. Open to a quick chat this week?
+          </p>
+
           <div
+            className="rounded-2xl p-4 flex flex-col gap-3 mt-auto"
             style={{
-              height: "46px",
-              display: "flex",
-              alignItems: "center",
-              padding: "0 20px",
-              borderRadius: "23px",
-              background: "rgba(255,255,255,0.55)",
-              border: "1px solid rgba(255,255,255,0.35)",
-              fontSize: "clamp(13px, 1.4vw, 15px)",
-              lineHeight: 1.4,
-              color: INK,
-              opacity: answered ? 1 : 0,
-              transform: answered ? "scaleY(1)" : "scaleY(0)",
-              transformOrigin: "top",
-              transition: "transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) 0.2s, opacity 0.3s ease 0.2s"
+              background: "rgba(0,0,0,0.04)",
+              border: "1.5px solid rgba(0,0,0,0.08)"
             }}
           >
-            Payment terms: 30 → 60 days. The kill fee in §4 is gone.
+            {!drafting ? (
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-1.5">
+                    You type
+                  </div>
+                  <div className="text-[#0a0e1a] font-medium text-[15px]">
+                    politely decline, but warm
+                  </div>
+                </div>
+                <div className="glass-wrap">
+                  <button
+                    type="button"
+                    className="glass-btn glass-btn-sm"
+                    style={{ fontSize: "14px" }}
+                    onClick={onTrigger}
+                  >
+                    <span className="text-white">
+                      <span className="inline-flex items-center gap-[3px]">
+                        <KeyBadge>⌘</KeyBadge>
+                        <KeyBadge>⇧</KeyBadge>
+                        <KeyBadge>D</KeyBadge>
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-2">
+                  Yaven drafts
+                </div>
+                <div className="text-[#0a0e1a] text-[14px] leading-[1.55] font-medium">
+                  {active ? (
+                    <Typewriter text={DRAFT_RESPONSE} speed={12} delay={300} />
+                  ) : (
+                    <span className="opacity-0">.</span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      <p
-        style={{
-          fontSize: "clamp(14px, 1.5vw, 17px)",
-          fontWeight: 500,
-          color: INK,
-          opacity: 0.55,
-          margin: 0,
-          marginTop: "auto",
-          paddingTop: "8px"
-        }}
-      >
-        Read the redlines before your coffee cooled.
-      </p>
-    </>
+    </div>
   )
 }
 
-// Script §3 — Two commands (Draft + Ask). Set piece: stacking panels.
+// ── Ask card (document with macOS-style bg) ────────────────────────────────
+
+function AskCard({
+  asking,
+  active,
+  onTrigger
+}: {
+  asking: boolean
+  active: boolean
+  onTrigger: () => void
+}) {
+  return (
+    <div style={{ width: "100%", position: "relative" }}>
+      <div
+        style={{
+          width: "100%",
+          minHeight: "480px",
+          borderRadius: "28px",
+          position: "relative",
+          overflow: "hidden",
+          background: "var(--red)",
+          boxShadow: "0 12px 48px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08)"
+        }}
+      >
+        {/* Doc name bubble — positioned on the right of the white area */}
+        <div
+          style={{
+            position: "absolute",
+            top: "14%",
+            left: "72%",
+            zIndex: 2,
+            transform: "translateY(-50%)"
+          }}
+        >
+          <div
+            className="text-[11px] font-medium text-[#0a0e1a]/50 whitespace-nowrap"
+            style={{
+              background: "rgba(255,255,255,0.85)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              padding: "6px 14px",
+              borderRadius: "20px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+            }}
+          >
+            Ottos_Bakehouse_v3.pdf
+          </div>
+        </div>
+
+        {/* Cream document panel — cropped from left/bottom */}
+        <div
+          style={{
+            position: "absolute",
+            top: "14%",
+            left: "-4%",
+            width: "90%",
+            bottom: "-4%",
+            background: "var(--cream)",
+            borderRadius: "0 22px 0",
+            padding: "52px 28px 40px 40px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+            zIndex: 1,
+            boxShadow: "4px -4px 20px rgba(0,0,0,0.1), 2px -2px 6px rgba(0,0,0,0.05)"
+          }}
+        >
+          <div className="text-[16px] leading-[1.75] text-[#0a0e1a]/70 mt-4">
+            <div className="mb-3">
+              <span className="text-[#0a0e1a]/30 text-[13px]">4.1</span> All
+              deliverables remain the sole property of the Client upon full
+              payment.
+            </div>
+            <div className="mb-3">
+              <span className="text-[#0a0e1a]/30 text-[13px]">4.2</span> Payment
+              due within <s style={{ opacity: 0.35 }}>thirty (30)</s>{" "}
+              <strong
+                style={{
+                  color: "#0a0e1a",
+                  background: "rgba(223,79,62,0.12)",
+                  padding: "1px 4px",
+                  borderRadius: "3px"
+                }}
+              >
+                sixty (60)
+              </strong>{" "}
+              days of invoice date.
+            </div>
+          </div>
+
+          {/* Trigger button */}
+          {!asking && (
+            <div className="flex items-center justify-between mt-auto">
+              <div className="text-[13px] font-medium text-[#0a0e1a]/35">
+                Ask about this document
+              </div>
+              <div className="glass-wrap">
+                <button
+                  type="button"
+                  className="glass-btn glass-btn-sm"
+                  style={{ fontSize: "14px" }}
+                  onClick={onTrigger}
+                >
+                  <span className="text-white">
+                    <span className="inline-flex items-center gap-[3px]">
+                      <KeyBadge>⌘</KeyBadge>
+                      <KeyBadge>⇧</KeyBadge>
+                      <KeyBadge>A</KeyBadge>
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Floating glass bubble (outside clipped card) ── */}
+      {asking && (
+        <div
+          style={{
+            position: "absolute",
+            top: "65%",
+            left: "calc(100% - 140px)",
+            transform: "translateY(-50%)",
+            width: "300px",
+            background: "rgba(255,255,255,0.45)",
+            backdropFilter: "blur(40px) saturate(1.4)",
+            WebkitBackdropFilter: "blur(40px) saturate(1.4)",
+            borderRadius: "22px",
+            border: "1px solid rgba(255,255,255,0.5)",
+            padding: "18px 22px",
+            boxShadow:
+              "0 12px 40px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4)",
+            zIndex: 10
+          }}
+        >
+          <div
+            className="text-[13px] font-semibold mb-2"
+            style={{ color: "rgba(0,0,0,0.4)" }}
+          >
+            What changed from my version?
+          </div>
+          <div
+            className="text-[14px] leading-[1.6] font-medium"
+            style={{ color: "rgba(0,0,0,0.75)" }}
+          >
+            {active ? (
+              <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
+            ) : (
+              <span className="opacity-0">.</span>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Main section ────────────────────────────────────────────────────────────
+
 export function CommandsSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const draftRef = useRef<HTMLDivElement>(null)
-  const askRef = useRef<HTMLDivElement>(null)
-  const [draftActive, setDraftActive] = useState(false)
-  const [askActive, setAskActive] = useState(false)
+
+  const draftCardRef = useRef<HTMLDivElement>(null)
+  const askCardRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  const [drafting, setDrafting] = useState(false)
+  const [draftTyping, setDraftTyping] = useState(false)
+  const [asking, setAsking] = useState(false)
+  const [askTyping, setAskTyping] = useState(false)
+
   const staticLayout = usePrefersReducedMotion()
+  const draftInView = useRef(false)
+  const askInView = useRef(false)
+
+  const triggerDraft = useCallback(() => {
+    if (drafting || !draftInView.current) return
+    setDrafting(true)
+    setTimeout(() => setDraftTyping(true), 100)
+  }, [drafting])
+
+  const triggerAsk = useCallback(() => {
+    if (asking || !askInView.current) return
+    setAsking(true)
+    setTimeout(() => setAskTyping(true), 100)
+  }, [asking])
+
+  // Keyboard listeners
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.metaKey && e.shiftKey) {
+        if (e.key.toLowerCase() === "d") {
+          e.preventDefault()
+          triggerDraft()
+        } else if (e.key.toLowerCase() === "a") {
+          e.preventDefault()
+          triggerAsk()
+        }
+      }
+    }
+    window.addEventListener("keydown", handler)
+    return () => window.removeEventListener("keydown", handler)
+  }, [triggerDraft, triggerAsk])
 
   useEffect(() => {
     if (staticLayout || !wrapperRef.current) return
@@ -453,115 +398,131 @@ export function CommandsSection() {
     const wrapper = wrapperRef.current
     const triggers: ScrollTrigger[] = []
 
-    // Draft card — scrub in smoothly
-    const draftTl = gsap.timeline({
+    // Show content immediately (cards animate in independently)
+    gsap.set(contentRef.current, { opacity: 1 })
+
+    // Draft card slides up from bottom with rotation
+    const draftEnterTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
-        start: "5% top",
-        end: "20% top",
-        scrub: 1
+        start: "3% top",
+        end: "16% top",
+        scrub: true
       }
     })
-    draftTl.fromTo(
-      draftRef.current,
-      { y: 60, opacity: 0 },
-      { y: 0, opacity: 1, ease: "none", force3D: true }
+    draftEnterTl.fromTo(
+      draftCardRef.current,
+      { y: "100vh", rotation: 6 },
+      { y: 0, rotation: 0, ease: "none", force3D: true }
     )
-    triggers.push(draftTl.scrollTrigger!)
+    triggers.push(draftEnterTl.scrollTrigger!)
 
-    // Activate draft typewriter
+    // Draft in-view tracking
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "15% top",
-        onEnter: () => setDraftActive(true),
-        onLeaveBack: () => setDraftActive(false)
+        start: "3% top",
+        end: "30% top",
+        onEnter: () => {
+          draftInView.current = true
+        },
+        onLeave: () => {
+          draftInView.current = false
+        },
+        onEnterBack: () => {
+          draftInView.current = true
+        },
+        onLeaveBack: () => {
+          draftInView.current = false
+          setDrafting(false)
+          setDraftTyping(false)
+        }
       })
     )
 
-    // Ask card stacks — push start much later so draft stays solo longer
-    const askTl = gsap.timeline({
+    // Ask card slides up with alternate rotation
+    const stackTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
-        start: "60% top",
-        end: "78% top",
-        scrub: 1
+        start: "38% top",
+        end: "54% top",
+        scrub: true
       }
     })
-    askTl.to(
-      draftRef.current,
-      { y: -16, scale: 0.96, ease: "none", force3D: true },
+    stackTl.fromTo(
+      askCardRef.current,
+      { y: "100vh", rotation: -6 },
+      { y: 0, rotation: 0, ease: "none", force3D: true },
       0
     )
-    askTl.fromTo(
-      askRef.current,
-      { y: 60, opacity: 0 },
-      { y: 0, opacity: 1, ease: "none", force3D: true },
-      0
-    )
-    triggers.push(askTl.scrollTrigger!)
+    triggers.push(stackTl.scrollTrigger!)
 
-    // Activate ask typewriter
+    // Ask in-view tracking
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "68% top",
-        onEnter: () => setAskActive(true),
-        onLeaveBack: () => setAskActive(false)
+        start: "54% top",
+        end: "90% top",
+        onEnter: () => {
+          askInView.current = true
+        },
+        onLeave: () => {
+          askInView.current = false
+        },
+        onEnterBack: () => {
+          askInView.current = true
+        },
+        onLeaveBack: () => {
+          askInView.current = false
+          setAsking(false)
+          setAskTyping(false)
+        }
       })
     )
 
     return () => triggers.forEach(t => t.kill())
   }, [staticLayout])
 
-  const header = (
-    <ScrollCutReveal
-      className=""
-      style={{
-        fontFamily: "var(--font-instrument-serif)",
-        fontSize: "clamp(40px, 6vw, 84px)",
-        fontWeight: 500,
-        letterSpacing: "-0.02em",
-        lineHeight: 1,
-        color: "#fff",
-        margin: 0,
-        textAlign: "center"
-      }}
-    >
-      Yaven drafts anywhere.
-    </ScrollCutReveal>
+  const sideText = (
+    <div className="flex flex-col gap-6">
+      <ScrollCutReveal className="font-instrument-serif text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0">
+        Yaven works anywhere.
+      </ScrollCutReveal>
+      <p className="text-[clamp(15px,1.6vw,17px)] text-white/80 leading-[1.55] mr-60 mt-24">
+        Draft a reply, explain a contract, answer a question, all without
+        leaving the app you&apos;re in. Press{" "}
+        <span className="inline-flex items-center gap-[3px] align-middle">
+          <KeyBadge small>⌘</KeyBadge>
+          <KeyBadge small>⇧</KeyBadge>
+          <KeyBadge small>D</KeyBadge>
+        </span>{" "}
+        to draft or{" "}
+        <span className="inline-flex items-center gap-[3px] align-middle">
+          <KeyBadge small>⌘</KeyBadge>
+          <KeyBadge small>⇧</KeyBadge>
+          <KeyBadge small>A</KeyBadge>
+        </span>{" "}
+        to ask.
+      </p>
+    </div>
   )
 
-  // Reduced motion: plain stacked layout, no scrub theatre
   if (staticLayout) {
     return (
-      <section
-        style={{
-          background: "#267FE5",
-          padding: "clamp(80px, 12vh, 140px) 24px"
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "960px",
-            margin: "0 auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: "40px"
-          }}
-        >
-          <GooFilterDefs />
-          {header}
-          <GlassCard {...panelGlassProps}>
-            <div style={panelContentStyle}>
-              <DraftPanel active />
+      <section className="bg-[var(--primary)] p-[clamp(80px,12vh,140px)_clamp(28px,5vw,48px)]">
+        <div className="max-w-[1100px] mx-auto">
+          <div
+            className="w-full grid items-start gap-[clamp(40px,6vw,80px)]"
+            style={{
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))"
+            }}
+          >
+            {sideText}
+            <div className="flex flex-col gap-6" style={{ maxWidth: "440px" }}>
+              <LinkedInCard drafting active onTrigger={() => {}} />
+              <AskCard asking active onTrigger={() => {}} />
             </div>
-          </GlassCard>
-          <GlassCard {...panelGlassProps}>
-            <div style={panelContentStyle}>
-              <AskPanel active />
-            </div>
-          </GlassCard>
+          </div>
         </div>
       </section>
     )
@@ -570,88 +531,89 @@ export function CommandsSection() {
   return (
     <div
       ref={wrapperRef}
-      className="hero-grain"
-      style={{ position: "relative", height: "450vh", background: "#267FE5", ["--grain-opacity" as string]: 0.1 }}
+      className="relative h-[550vh] bg-[var(--primary)]"
+      style={{ borderRadius: "48px 48px 0 0", boxShadow: "0 -16px 64px rgba(0,0,0,0.18)" }}
     >
-      {/* Bottom blur fade-out into next section */}
+      {/* Bottom fade */}
       <div
         aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 h-[200px] z-[1] pointer-events-none"
         style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "200px",
-          background: "linear-gradient(to bottom, transparent 0%, rgba(38,127,229,0.95) 100%)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
+          background:
+            "linear-gradient(to bottom, transparent 0%, var(--primary) 100%)",
           maskImage: "linear-gradient(to bottom, transparent 0%, black 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 100%)",
-          zIndex: 1,
-          pointerEvents: "none"
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 100%)"
         }}
       />
 
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "clamp(48px, 8vh, 90px) 24px 24px",
-          zIndex: 2
-        }}
-      >
-        <GooFilterDefs />
-        {header}
-
-        {/* Panel stage */}
+      <div className="sticky top-0 h-screen overflow-visible flex items-center z-2 p-[clamp(28px,4vh,60px)_clamp(28px,5vw,48px)]">
+        {/* Content: text (left) + card stack (right) */}
         <div
+          ref={contentRef}
+          className="w-full max-w-[1100px] mx-auto grid items-start gap-[clamp(40px,6vw,80px)]"
           style={{
-            position: "relative",
-            width: "min(960px, 100%)",
-            flex: 1,
-            marginTop: "clamp(32px, 6vh, 64px)"
+            gridTemplateColumns: "1.4fr 1fr",
+            opacity: 0
           }}
         >
-          <GlassCard
-            {...panelGlassProps}
-            ref={draftRef}
-            style={{
-              ...panelGlassProps.style,
-              position: "absolute",
-              inset: 0,
-              maxHeight: "min(560px, 72vh)",
-              opacity: 0
-            }}
-          >
-            <div style={panelContentStyle}>
-              <DraftPanel active={draftActive} />
-            </div>
-          </GlassCard>
+          {/* Text column — static */}
+          <div>{sideText}</div>
 
-          <GlassCard
-            {...panelGlassProps}
-            ref={askRef}
+          {/* Card column — stacking */}
+          <div
+            className="relative"
             style={{
-              ...panelGlassProps.style,
-              position: "absolute",
-              top: "44px",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              maxHeight: "min(560px, 72vh)",
-              transform: "translateY(120px)",
-              opacity: 0
+              width: "100%",
+              maxWidth: "460px",
+              justifySelf: "end",
+              height: "540px"
             }}
           >
-            <div style={panelContentStyle}>
-              <AskPanel active={askActive} />
+            {/* Draft card — slides up from bottom of screen */}
+            <div
+              ref={draftCardRef}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 1,
+                willChange: "transform",
+                backfaceVisibility: "hidden",
+                transformOrigin: "center bottom",
+                transform: "translateZ(0) translateY(100vh) rotate(6deg)"
+              }}
+            >
+              <LinkedInCard
+                drafting={drafting}
+                active={draftTyping}
+                onTrigger={triggerDraft}
+              />
             </div>
-          </GlassCard>
+
+            {/* Ask card — slides up on top, 40px lower */}
+            <div
+              ref={askCardRef}
+              style={{
+                position: "absolute",
+                top: "70px",
+                left: 0,
+                right: 0,
+                zIndex: 2,
+                willChange: "transform",
+                backfaceVisibility: "hidden",
+                transformOrigin: "center bottom",
+                transform: "translateZ(0) translateY(100vh) rotate(-6deg)"
+              }}
+            >
+              <AskCard
+                asking={asking}
+                active={askTyping}
+                onTrigger={triggerAsk}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

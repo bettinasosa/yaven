@@ -62,8 +62,8 @@ export function BlueprintPreview({
         {opportunities.map(opportunity => (
           <div
             key={opportunity.id}
-            className="flex gap-4 rounded-[16px] bg-white p-4"
-            style={{ border: "var(--bd)", boxShadow: "var(--shadow-sm)" }}
+            className="flex gap-4 rounded-[16px] p-4"
+            style={{ background: "var(--cream)", border: "var(--bd)", boxShadow: "var(--shadow-sm)" }}
           >
             <span
               className="mt-0.5 shrink-0 font-bold text-base"
@@ -88,7 +88,7 @@ export function BlueprintPreview({
       </p>
 
       {/* Sticky CTA */}
-      <div className="sticky bottom-0 pt-0 pb-1" style={{ background: "linear-gradient(to top, #fff 70%, transparent)" }}>
+      <div className="sticky bottom-0 pt-0 pb-1" style={{ background: "linear-gradient(to top, var(--cream) 70%, transparent)" }}>
         <form
           onSubmit={handleInlineSubmit}
           className="relative hidden sm:flex flex-row items-center gap-3"

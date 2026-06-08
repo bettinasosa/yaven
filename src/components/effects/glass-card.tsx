@@ -30,8 +30,6 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
 
     const glassStyle: React.CSSProperties = {
       position: "relative",
-      backdropFilter: "blur(4px)",
-      WebkitBackdropFilter: "blur(4px)",
       background: "linear-gradient(-75deg, rgba(255,255,255,0.05), rgba(255,255,255,0.2), rgba(255,255,255,0.05))",
       borderRadius: radius,
       boxShadow: [

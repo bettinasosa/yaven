@@ -372,7 +372,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-instrument-serif: "Boxing", var(--font-dm-sans), sans-serif;
+  --font-instrument-serif: "Bricolage Grotesque", var(--font-dm-sans), sans-serif;
   --font-inter: var(--font-helvetica);
   --font-sans: var(--font-helvetica);
   --font-mono: var(--font-space-mono), monospace;
@@ -439,21 +439,46 @@
 }
 
 @keyframes yv-orb-drift-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(30px, -20px) scale(1.05); }
-  50% { transform: translate(-15px, 25px) scale(0.97); }
-  75% { transform: translate(20px, 15px) scale(1.03); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  50% {
+    transform: translate(-15px, 25px) scale(0.97);
+  }
+  75% {
+    transform: translate(20px, 15px) scale(1.03);
+  }
 }
 @keyframes yv-orb-drift-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(-25px, 18px) scale(1.04); }
-  50% { transform: translate(20px, -22px) scale(0.96); }
-  75% { transform: translate(-18px, -12px) scale(1.06); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-25px, 18px) scale(1.04);
+  }
+  50% {
+    transform: translate(20px, -22px) scale(0.96);
+  }
+  75% {
+    transform: translate(-18px, -12px) scale(1.06);
+  }
 }
 @keyframes yv-orb-drift-3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(22px, 20px) scale(1.05); }
-  66% { transform: translate(-20px, -18px) scale(0.98); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(22px, 20px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, -18px) scale(0.98);
+  }
 }
 .yv-orb-drift-1 {
   animation: yv-orb-drift-1 8s ease-in-out infinite;
@@ -513,7 +538,9 @@
 
 /* Glass card — hover sweep + press */
 .glass-card {
-  transition: box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transition:
+    box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .glass-card:hover {
   box-shadow:
@@ -548,14 +575,7 @@
   }
 }
 
-/* ── Boxing (Fontshare) — heading font. Single Regular weight;
-   bold/italic are browser-synthesized. */
-@font-face {
-  font-family: "Boxing";
-  src: url("/fonts/Boxing-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-display: swap;
-}
+/* Bricolage Grotesque — heading font. Loaded from Google Fonts in layout.tsx. */
 
 :root {
   --font-dm-sans: "Satoshi", sans-serif;
@@ -567,10 +587,12 @@
   --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.05);
 
   /* 4-colour palette */
-  --primary: #267fe5; /* primary blue  */
-  --secondary: #df4f3e; /* secondary red */
-  --cream: #fff; /* light         */
-  --dark: #07348b; /* dark navy     */
+  --white: #ffffff;
+  --primary: #267fe5;
+  --secondary: #df4f3e;
+  --accent: #ebc1ff;
+  --cream: #f5f1e4; /* light         */
+  --dark: #07348b;
 
   /* Aliases kept for backwards compat */
   --primary-blue: #267fe5;
@@ -578,14 +600,14 @@
   --red: #df4f3e;
 
   --font-helvetica: var(--font-dm-sans), sans-serif;
-  --background: #e3d5bb;
+  --background: #f5f1e4;
   --foreground: #07348b;
-  --card: #e3d5bb;
+  --card: #f5f1e4;
   --card-foreground: #07348b;
-  --popover: #e3d5bb;
+  --popover: #f5f1e4;
   --popover-foreground: #07348b;
   --primary: #267fe5;
-  --primary-foreground: #e3d5bb;
+  --primary-foreground: #f5f1e4;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -1434,64 +1456,59 @@
     backdrop-filter: blur(16px) !important;
   }
 
-  /* Glass — specular refraction, liquid-light feel (visionOS style) */
+  /* Glass — matches liquid gradient hero colours */
   .hero-blob-glass-main {
     background:
       radial-gradient(
         ellipse at 32% 30%,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(227, 213, 187, 0.82) 22%,
-        transparent 48%
+        rgba(77, 163, 240, 0.55) 0%,
+        rgba(38, 127, 229, 0.3) 30%,
+        transparent 55%
       ),
       radial-gradient(
         ellipse at 68% 62%,
-        rgba(38, 127, 229, 0.55) 0%,
-        rgba(38, 127, 229, 0.32) 36%,
+        rgba(123, 143, 212, 0.5) 0%,
+        rgba(123, 143, 212, 0.25) 35%,
         transparent 58%
       ),
       radial-gradient(
         ellipse at 22% 72%,
-        rgba(215, 130, 73, 0.5) 0%,
+        rgba(200, 137, 122, 0.45) 0%,
         transparent 46%
       ),
       radial-gradient(
         ellipse at 76% 24%,
-        rgba(190, 167, 34, 0.42) 0%,
+        rgba(158, 142, 200, 0.4) 0%,
         transparent 44%
-      ),
-      radial-gradient(
-        ellipse at 50% 50%,
-        rgba(227, 213, 187, 0.28) 0%,
-        transparent 76%
       );
-    opacity: 0.8;
-    filter: blur(14px);
+    opacity: 0.85;
+    filter: blur(28px);
   }
   .hero-blob-glass-accent {
     background:
       radial-gradient(
         ellipse at 48% 40%,
-        rgba(255, 255, 255, 0.95) 0%,
-        rgba(227, 213, 187, 0.72) 28%,
-        transparent 52%
+        rgba(158, 142, 200, 0.5) 0%,
+        rgba(123, 143, 212, 0.3) 30%,
+        transparent 55%
       ),
       radial-gradient(
         ellipse at 68% 32%,
-        rgba(223, 79, 62, 0.45) 0%,
+        rgba(200, 137, 122, 0.45) 0%,
         transparent 46%
       ),
       radial-gradient(
         ellipse at 30% 68%,
-        rgba(38, 127, 229, 0.5) 0%,
+        rgba(77, 163, 240, 0.5) 0%,
         transparent 44%
       ),
       radial-gradient(
         ellipse at 62% 70%,
-        rgba(215, 130, 73, 0.42) 0%,
+        rgba(38, 127, 229, 0.35) 0%,
         transparent 40%
       );
-    opacity: 0.78;
-    filter: blur(18px);
+    opacity: 0.8;
+    filter: blur(32px);
   }
 
   /* ── Blob layer grain — applied on top of blobs with overlay blend ── */
@@ -1726,12 +1743,17 @@ video::-webkit-media-controls {
   }
   .waitlist-input-row input {
     width: 100% !important;
-    text-align: center;
+    text-align: left;
   }
   .waitlist-btn-wrap {
     width: 100% !important;
+    display: block !important;
   }
   .waitlist-btn-wrap .glass-btn {
     width: 100% !important;
+    display: flex !important;
+  }
+  .waitlist-btn-wrap .glass-shadow {
+    display: none !important;
   }
 }

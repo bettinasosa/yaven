@@ -59,7 +59,7 @@ export function ScrollCutReveal({
     <Tag
       ref={ref as React.Ref<never>}
       className={className}
-      style={{ ...style, overflow: "hidden" }}
+      style={{ ...style, overflow: "hidden", paddingBottom: "0.15em" }}
     >
       {children}
     </Tag>
