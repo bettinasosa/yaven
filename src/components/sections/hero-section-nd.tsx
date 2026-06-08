@@ -65,9 +65,9 @@ function HeroVariantB() {
       {/* Nav — logo top left, book a call top right */}
       <div
         ref={navRef}
-        className="absolute top-[clamp(16px,2.5vh,28px)] left-[clamp(28px,4vw,48px)] right-[clamp(28px,4vw,48px)] z-10 flex items-center justify-between"
+        className="absolute top-[clamp(42px,2.5vh,28px)] left-[clamp(28px,4vw,48px)] right-[clamp(28px,4vw,48px)] z-10 flex items-center justify-between"
       >
-        <YavenMark height={72} />
+        <YavenMark height={52} />
         <a
           href="https://calendly.com/nickprice2000/yaven-support"
           target="_blank"

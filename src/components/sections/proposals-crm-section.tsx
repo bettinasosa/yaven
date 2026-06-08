@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { SplitText } from "gsap/SplitText"
@@ -164,8 +165,6 @@ function GooeyStage({
 
 // CRM contact card that fills itself in
 const CRM_ROWS = [
-  { field: "Name", value: "Bettina Brown" },
-  { field: "Company", value: "Otto's Bakehouse" },
   { field: "Last call", value: "Tue: pricing, onboarding" },
   { field: "Promised", value: "Contract by Thursday" },
   { field: "Next step", value: "Send revised proposal" }
@@ -191,7 +190,7 @@ function CrmRow({
         gap: "14px",
         padding: "10px 14px",
         borderRadius: "10px",
-        background: flash ? "rgba(38, 127, 229, 0.12)" : "transparent",
+        background: flash ? "rgba(38, 127, 229, 0.08)" : "transparent",
         transition: "background 0.8s ease",
         minHeight: "42px"
       }}
@@ -203,7 +202,7 @@ function CrmRow({
           letterSpacing: "0.02em",
           color: INK,
           opacity: 0.5,
-          width: "84px",
+          width: "90px",
           flexShrink: 0,
           paddingTop: "2px"
         }}
@@ -211,7 +210,6 @@ function CrmRow({
         {field}
       </span>
       <span style={{ fontSize: "15px", fontWeight: 500, color: INK }}>
-        {/* Mounted only once phase 2 lands, so typing starts on cue */}
         {active && (
           <Typewriter
             text={value}
@@ -229,32 +227,192 @@ function CrmRow({
 }
 
 function CrmCard({ active }: { active: boolean }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const card = cardRef.current
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    card.style.transform = `perspective(600px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`
+  }
+
+  function handleMouseLeave() {
+    const card = cardRef.current
+    if (!card) return
+    card.style.transform =
+      "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)"
+  }
+
   return (
-    <GlassCard borderRadius="34px" style={{ maxWidth: "460px" }}>
-      <div style={{ padding: "clamp(18px, 2.5vw, 28px)" }}>
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        maxWidth: "520px",
+        transition: "transform 0.35s cubic-bezier(0.25,1,0.5,1)",
+        transformStyle: "preserve-3d",
+        willChange: "transform",
+        cursor: "default"
+      }}
+    >
+      <GlassCard
+        borderRadius="28px"
+        style={{
+          maxWidth: "520px",
+          background: "rgba(200,220,255,0.18)",
+          overflow: "hidden"
+        }}
+      >
+        {/* Header with avatar */}
         <div
           style={{
-            fontFamily: "var(--font-instrument-serif)",
-            fontSize: "clamp(18px, 2vw, 22px)",
-            lineHeight: 1,
-            color: INK,
-            opacity: 0.55,
-            padding: "0 14px 14px"
+            padding: "18px clamp(18px, 2.5vw, 28px) 14px",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            borderBottom: "1px solid rgba(10,14,26,0.06)"
           }}
         >
-          Contact
+          <div
+            style={{
+              width: "38px",
+              height: "38px",
+              borderRadius: "50%",
+              background: "linear-gradient(145deg, #267FE5, #4da3f0, #9e8ec8)",
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "14px",
+              fontWeight: 600,
+              color: "#fff"
+            }}
+          >
+            BB
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: "15px",
+                fontWeight: 600,
+                color: INK,
+                lineHeight: 1.2
+              }}
+            >
+              Bettina Brown
+            </div>
+            <div
+              style={{
+                fontSize: "12px",
+                fontWeight: 500,
+                color: INK,
+                opacity: 0.45,
+                marginTop: "1px"
+              }}
+            >
+              Otto&apos;s Bakehouse
+            </div>
+          </div>
         </div>
-        {CRM_ROWS.map((row, i) => (
-          <CrmRow
-            key={row.field}
-            field={row.field}
-            value={row.value}
-            delay={i * 750}
-            active={active}
+
+        {/* Rows */}
+        <div
+          style={{
+            padding: "12px clamp(18px, 2.5vw, 28px) clamp(18px, 2.5vw, 28px)"
+          }}
+        >
+          {CRM_ROWS.map((row, i) => (
+            <CrmRow
+              key={row.field}
+              field={row.field}
+              value={row.value}
+              delay={i * 750}
+              active={active}
+            />
+          ))}
+        </div>
+      </GlassCard>
+    </div>
+  )
+}
+
+// All tool logos — 4×3 grid
+const TOOL_LOGOS = [
+  "gmail", "notion", "linkedin", "hubspot",
+  "salesforce", "google", "asana", "excel",
+  "googleads", "googleanalytics", "granola", "monday"
+]
+
+function ToolGrid() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 52px)",
+        gap: "10px",
+        justifyContent: "center"
+      }}
+    >
+      {TOOL_LOGOS.map(logo => (
+        <div
+          key={logo}
+          style={{
+            width: "52px",
+            height: "52px",
+            borderRadius: "14px",
+            background: "rgba(10,14,26,0.05)",
+            border: "1px solid rgba(10,14,26,0.07)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <Image
+            src={`/logos/${logo}.png`}
+            alt={logo}
+            width={28}
+            height={28}
+            style={{ objectFit: "contain" }}
           />
-        ))}
-      </div>
-    </GlassCard>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function FinaleContent({
+  headRef
+}: {
+  headRef?: React.RefObject<HTMLHeadingElement | null>
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        gap: "clamp(28px, 4vh, 44px)",
+        maxWidth: "640px",
+        margin: "0 auto"
+      }}
+    >
+      <h2
+        ref={headRef}
+        style={{ ...headlineStyle, textAlign: "center" }}
+      >
+        And that&apos;s just a few examples
+      </h2>
+
+      <ToolGrid />
+
+      <p style={{ ...bodyStyle, margin: 0, textAlign: "center", maxWidth: "480px" }}>
+        It handles the repeatable. You handle the irreplaceable.
+      </p>
+    </div>
   )
 }
 
@@ -277,7 +435,8 @@ function ConferenceCard() {
   function handleMouseLeave() {
     const card = cardRef.current
     if (!card) return
-    card.style.transform = "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)"
+    card.style.transform =
+      "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)"
   }
 
   return (
@@ -286,43 +445,42 @@ function ConferenceCard() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        maxWidth: "460px",
+        maxWidth: "520px",
         transition: "transform 0.35s cubic-bezier(0.25,1,0.5,1)",
         transformStyle: "preserve-3d",
         willChange: "transform",
         cursor: "default"
       }}
     >
-      <GlassCard borderRadius="24px" style={{ overflow: "hidden", background: "rgba(200,220,255,0.18)" }}>
+      <GlassCard
+        borderRadius="24px"
+        style={{ overflow: "hidden", background: "rgba(200,220,255,0.18)" }}
+      >
         {/* Badge top strip */}
         <div
           style={{
-            background: "linear-gradient(135deg, var(--primary), #4a9af5)",
-            padding: "clamp(20px, 3vw, 32px) clamp(20px, 3vw, 28px) clamp(16px, 2vw, 22px)",
+            background: "linear-gradient(135deg, #057BD5, #4da3f0, #00AFF9)",
+            padding: "14px clamp(20px, 3vw, 28px)",
             display: "flex",
             alignItems: "center",
-            gap: "16px"
+            gap: "14px",
+            position: "relative",
+            overflow: "hidden"
           }}
         >
-          {/* Avatar circle */}
+          {/* Grain overlay */}
           <div
+            aria-hidden="true"
             style={{
-              width: "52px",
-              height: "52px",
-              borderRadius: "50%",
-              background: "linear-gradient(145deg, #f0c27f, #fc5c7d)",
-              border: "2.5px solid rgba(255,255,255,0.5)",
-              flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "20px",
-              fontWeight: 700,
-              color: "#fff"
+              position: "absolute",
+              inset: 0,
+              opacity: 0.15,
+              mixBlendMode: "overlay",
+              pointerEvents: "none",
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`,
+              backgroundRepeat: "repeat"
             }}
-          >
-            SC
-          </div>
+          />
           <div>
             <div
               style={{
@@ -348,14 +506,24 @@ function ConferenceCard() {
         </div>
 
         {/* Badge body */}
-        <div style={{ padding: "clamp(16px, 2vw, 22px) clamp(20px, 3vw, 28px) clamp(20px, 3vw, 28px)" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div
+          style={{
+            padding:
+              "clamp(16px, 2vw, 22px) clamp(20px, 3vw, 28px) clamp(20px, 3vw, 28px)"
+          }}
+        >
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
             {[
               { label: "Spoke at", value: "Config '26" },
               { label: "Mutual", value: "Maya Rivera" },
               { label: "Talked about", value: "Brand systems" }
             ].map(row => (
-              <div key={row.label} style={{ display: "flex", gap: "12px", alignItems: "baseline" }}>
+              <div
+                key={row.label}
+                style={{ display: "flex", gap: "12px", alignItems: "baseline" }}
+              >
                 <span
                   style={{
                     fontFamily: "var(--font-dm-sans), sans-serif",
@@ -642,14 +810,12 @@ export function ProposalsCrmSection() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            textAlign: "center",
             minHeight: "100vh",
-            padding: "0 24px"
+            padding: "0 clamp(28px, 5vw, 48px)",
+            width: "100%"
           }}
         >
-          <h2 ref={finaleHeadRef} style={headlineStyle}>
-            And that&apos;s just a few examples…
-          </h2>
+          <FinaleContent headRef={finaleHeadRef} />
         </div>
       </section>
     )
@@ -727,13 +893,11 @@ export function ProposalsCrmSection() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "0 24px",
-            textAlign: "center"
+            padding: "0 clamp(28px, 5vw, 48px)",
+            width: "100%"
           }}
         >
-          <h2 ref={finaleHeadRef} style={headlineStyle}>
-            And that&apos;s just a few examples…
-          </h2>
+          <FinaleContent headRef={finaleHeadRef} />
         </div>
       </section>
     </div>

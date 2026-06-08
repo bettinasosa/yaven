@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Typewriter } from "@/components/effects/typewriter"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
+import Image from "next/image"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -13,7 +14,7 @@ const DRAFT_RESPONSE =
   "Thanks so much for reaching out, Priya! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
 
 const ASK_RESPONSE =
-  "They extended payment from 30 to 60 days and removed the kill fee entirely. The rest of the scope is unchanged."
+  "his team updated the payment window from 30 to 60 days. He mentioned cash-flow timing on their end. The rest of the scope is unchanged from your v2 redline."
 
 function KeyBadge({
   children,
@@ -100,7 +101,7 @@ function LinkedInCard({
             </span>
             <span className="font-bold text-white text-[16px]">Messaging</span>
           </div>
-          <ShortcutBadge keys={["⌘", "⇧", "D"]} />
+          <ShortcutBadge keys={["⌥", "D"]} />
         </div>
 
         {/* Message content */}
@@ -109,10 +110,9 @@ function LinkedInCard({
             <span
               className="inline-flex items-center justify-center rounded-full shrink-0"
               style={{
-                width: "38px",
-                height: "38px",
-                background:
-                  "linear-gradient(135deg, #FEC20C, #FF6B6B, #2563EB)",
+                width: "30px",
+                height: "30px",
+                background: "linear-gradient(135deg, #00AFF9, #2563EB)",
                 boxShadow: "0 2px 10px rgba(124,58,237,0.3)"
               }}
             />
@@ -157,8 +157,7 @@ function LinkedInCard({
                   >
                     <span className="text-white">
                       <span className="inline-flex items-center gap-[3px]">
-                        <KeyBadge>⌘</KeyBadge>
-                        <KeyBadge>⇧</KeyBadge>
+                        <KeyBadge>⌥</KeyBadge>
                         <KeyBadge>D</KeyBadge>
                       </span>
                     </span>
@@ -210,31 +209,6 @@ function AskCard({
           boxShadow: "0 12px 48px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08)"
         }}
       >
-        {/* Doc name bubble — positioned on the right of the white area */}
-        <div
-          style={{
-            position: "absolute",
-            top: "14%",
-            left: "72%",
-            zIndex: 2,
-            transform: "translateY(-50%)"
-          }}
-        >
-          <div
-            className="text-[11px] font-medium text-[#0a0e1a]/50 whitespace-nowrap"
-            style={{
-              background: "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              padding: "6px 14px",
-              borderRadius: "20px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
-            }}
-          >
-            Ottos_Bakehouse_v3.pdf
-          </div>
-        </div>
-
         {/* Cream document panel — cropped from left/bottom */}
         <div
           style={{
@@ -250,10 +224,26 @@ function AskCard({
             flexDirection: "column",
             gap: "16px",
             zIndex: 1,
-            boxShadow: "4px -4px 20px rgba(0,0,0,0.1), 2px -2px 6px rgba(0,0,0,0.05)"
+            boxShadow:
+              "6px -6px 28px rgba(0,0,0,0.16), 3px -3px 10px rgba(0,0,0,0.08), 1px -1px 3px rgba(0,0,0,0.05)"
           }}
         >
-          <div className="text-[16px] leading-[1.75] text-[#0a0e1a]/70 mt-4">
+          {/* Doc name bubble */}
+          <div className="flex justify-end" style={{ marginRight: "10px" }}>
+            <div
+              className="text-[11px] font-medium text-[#0a0e1a]/50"
+              style={{
+                background: "rgba(0,0,0,0.04)",
+                border: "1px solid rgba(0,0,0,0.06)",
+                padding: "5px 12px",
+                borderRadius: "20px"
+              }}
+            >
+              Ottos_Bakehouse_v3.pdf
+            </div>
+          </div>
+
+          <div className="text-[16px] leading-[1.75] text-[#0a0e1a]/70 mt-2">
             <div className="mb-3">
               <span className="text-[#0a0e1a]/30 text-[13px]">4.1</span> All
               deliverables remain the sole property of the Client upon full
@@ -261,13 +251,11 @@ function AskCard({
             </div>
             <div className="mb-3">
               <span className="text-[#0a0e1a]/30 text-[13px]">4.2</span> Payment
-              due within <s style={{ opacity: 0.35 }}>thirty (30)</s>{" "}
+              due within{" "}
               <strong
                 style={{
                   color: "#0a0e1a",
-                  background: "rgba(223,79,62,0.12)",
-                  padding: "1px 4px",
-                  borderRadius: "3px"
+                  fontWeight: 600
                 }}
               >
                 sixty (60)
@@ -291,8 +279,7 @@ function AskCard({
                 >
                   <span className="text-white">
                     <span className="inline-flex items-center gap-[3px]">
-                      <KeyBadge>⌘</KeyBadge>
-                      <KeyBadge>⇧</KeyBadge>
+                      <KeyBadge>⌥</KeyBadge>
                       <KeyBadge>A</KeyBadge>
                     </span>
                   </span>
@@ -327,14 +314,35 @@ function AskCard({
             className="text-[13px] font-semibold mb-2"
             style={{ color: "rgba(0,0,0,0.4)" }}
           >
-            What changed from my version?
+            I thought this was 30 days? Why did it change?
           </div>
           <div
             className="text-[14px] leading-[1.6] font-medium"
             style={{ color: "rgba(0,0,0,0.75)" }}
           >
             {active ? (
-              <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
+              <>
+                <span>Since your last </span>
+                <span
+                  className="inline-flex items-center gap-1 align-middle"
+                  style={{
+                    background: "rgba(0,0,0,0.06)",
+                    borderRadius: "10px",
+                    fontSize: "12px"
+                  }}
+                >
+                  <Image
+                    src="/logos/granola.png"
+                    alt="Granola"
+                    width={14}
+                    height={14}
+                    className="rounded-[3px]"
+                    style={{ flexShrink: 0 }}
+                  />
+                </span>
+                <span> call with Pablo on May 12, </span>
+                <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
+              </>
             ) : (
               <span className="opacity-0">.</span>
             )}
@@ -378,7 +386,7 @@ export function CommandsSection() {
   // Keyboard listeners
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.metaKey && e.shiftKey) {
+      if (e.altKey) {
         if (e.key.toLowerCase() === "d") {
           e.preventDefault()
           triggerDraft()
@@ -405,8 +413,8 @@ export function CommandsSection() {
     const draftEnterTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
-        start: "3% top",
-        end: "16% top",
+        start: "0% top",
+        end: "10% top",
         scrub: true
       }
     })
@@ -421,7 +429,7 @@ export function CommandsSection() {
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "3% top",
+        start: "0% top",
         end: "30% top",
         onEnter: () => {
           draftInView.current = true
@@ -492,14 +500,12 @@ export function CommandsSection() {
         Draft a reply, explain a contract, answer a question, all without
         leaving the app you&apos;re in. Press{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">
-          <KeyBadge small>⌘</KeyBadge>
-          <KeyBadge small>⇧</KeyBadge>
+          <KeyBadge small>⌥</KeyBadge>
           <KeyBadge small>D</KeyBadge>
         </span>{" "}
         to draft or{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">
-          <KeyBadge small>⌘</KeyBadge>
-          <KeyBadge small>⇧</KeyBadge>
+          <KeyBadge small>⌥</KeyBadge>
           <KeyBadge small>A</KeyBadge>
         </span>{" "}
         to ask.
@@ -532,7 +538,10 @@ export function CommandsSection() {
     <div
       ref={wrapperRef}
       className="relative h-[550vh] bg-[var(--primary)]"
-      style={{ borderRadius: "48px 48px 0 0", boxShadow: "0 -16px 64px rgba(0,0,0,0.18)" }}
+      style={{
+        borderRadius: "48px 48px 0 0",
+        boxShadow: "0 -16px 64px rgba(0,0,0,0.18)"
+      }}
     >
       {/* Bottom fade */}
       <div
