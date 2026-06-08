@@ -449,79 +449,127 @@ function CrmCard({ animated }: { animated: boolean }) {
   )
 }
 
-// All tool logos — 4×3 grid
-const TOOL_LOGOS = [
-  "gmail", "notion", "linkedin", "hubspot",
-  "salesforce", "google", "asana", "excel",
-  "googleads", "googleanalytics", "granola", "monday"
-]
-
-function ToolGrid() {
+// Bold italic word in DM Sans (Grotesk) for the finale paragraph
+function Em({ children }: { children: React.ReactNode }) {
   return (
-    <div
+    <i
       style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 52px)",
-        gap: "10px",
-        justifyContent: "center"
+        fontFamily: "var(--font-instrument-serif)",
+        fontWeight: 500,
+        fontStyle: "italic"
       }}
     >
-      {TOOL_LOGOS.map(logo => (
-        <div
-          key={logo}
-          style={{
-            width: "52px",
-            height: "52px",
-            borderRadius: "14px",
-            background: "rgba(10,14,26,0.05)",
-            border: "1px solid rgba(10,14,26,0.07)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <Image
-            src={`/logos/${logo}.png`}
-            alt={logo}
-            width={28}
-            height={28}
-            style={{ objectFit: "contain" }}
-          />
-        </div>
-      ))}
-    </div>
+      {children}
+    </i>
+  )
+}
+
+// Inline app icon chip — sits in-flow with text like an emoji, tilted + hover lift
+function AppIcon({ name, tilt }: { name: string; tilt: number }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <span
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "26px",
+        height: "26px",
+        borderRadius: "7px",
+        background: "rgba(10,14,26,0.07)",
+        border: "1px solid rgba(10,14,26,0.08)",
+        verticalAlign: "middle",
+        margin: "0 3px",
+        flexShrink: 0,
+        position: "relative",
+        top: "-1px",
+        transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
+        transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        cursor: "default"
+      }}
+    >
+      <Image
+        src={`/logos/${name}.png`}
+        alt={name}
+        width={16}
+        height={16}
+        style={{ objectFit: "contain" }}
+      />
+    </span>
   )
 }
 
 function FinaleContent({
-  headRef
+  headRef,
+  paraRef,
+  taglineRef
 }: {
   headRef?: React.RefObject<HTMLHeadingElement | null>
+  paraRef?: React.RefObject<HTMLParagraphElement | null>
+  taglineRef?: React.RefObject<HTMLParagraphElement | null>
 }) {
+  const paraStyle: React.CSSProperties = {
+    ...bodyStyle,
+    margin: 0,
+    opacity: 1,
+    lineHeight: 1.85,
+    textAlign: "left",
+    width: "100%"
+  }
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-        gap: "clamp(28px, 4vh, 44px)",
-        maxWidth: "640px",
+        alignItems: "flex-start",
+        gap: "clamp(20px, 3vh, 32px)",
+        width: "min(420px, 90%)",
         margin: "0 auto"
       }}
     >
       <h2
         ref={headRef}
-        style={{ ...headlineStyle, textAlign: "center" }}
+        style={{ ...headlineStyle, textAlign: "left", width: "100%" }}
       >
         And that&apos;s just a few examples
       </h2>
 
-      <ToolGrid />
+      <p ref={paraRef} style={paraStyle}>
+        <Em>Triages</Em> your inbox
+        <AppIcon name="gmail" tilt={-8} />
+        <Em>clears</Em> your docs
+        <AppIcon name="notion" tilt={6} />
+        <AppIcon name="excel" tilt={-5} />
+        <Em>logs</Em> your calls
+        <AppIcon name="granola" tilt={9} />
+        <Em>updates</Em> your CRM
+        <AppIcon name="hubspot" tilt={-7} />
+        <AppIcon name="salesforce" tilt={5} />
+        <Em>tracks</Em> your projects
+        <AppIcon name="asana" tilt={7} />
+        <AppIcon name="monday" tilt={-6} />
+        <Em>monitors</Em> your ads
+        <AppIcon name="googleads" tilt={8} />
+        <AppIcon name="googleanalytics" tilt={-5} />
+        and <Em>grows</Em> your network
+        <AppIcon name="linkedin" tilt={7} />
+        <AppIcon name="google" tilt={-8} />
+      </p>
 
-      <p style={{ ...bodyStyle, margin: 0, textAlign: "center", maxWidth: "480px" }}>
-        Yaven connects to all of your tools, handling repetitive tasks, and
-        leaving you with less admin; more flow.
+      <p
+        ref={taglineRef}
+        style={{
+          ...bodyStyle,
+          margin: 0,
+          opacity: 0.6,
+          textAlign: "left",
+          width: "100%"
+        }}
+      >
+        Yaven handles the noise. You handle the rest.
       </p>
     </div>
   )
@@ -779,6 +827,8 @@ export function ProposalsCrmSection() {
   const confRef = useRef<HTMLDivElement>(null)
   const finaleRef = useRef<HTMLDivElement>(null)
   const finaleHeadRef = useRef<HTMLHeadingElement>(null)
+  const finaleParaRef = useRef<HTMLParagraphElement>(null)
+  const finaleTaglineRef = useRef<HTMLParagraphElement>(null)
   const headerWrapRef = useRef<HTMLDivElement>(null)
   const fragRefs = useRef<(HTMLDivElement | null)[]>([])
   const staticLayout = usePrefersReducedMotion()
@@ -942,31 +992,73 @@ export function ProposalsCrmSection() {
       "<0.3"
     )
 
-    // SplitText char animation on the finale heading
+    // Oliver Larose line-mask reveal on the finale heading
     if (finaleHeadRef.current) {
-      const split = new SplitText(finaleHeadRef.current, {
-        type: "chars,words"
+      const splitHead = new SplitText(finaleHeadRef.current, {
+        type: "lines",
+        mask: "lines"
       })
       tl.from(
-        split.chars,
+        splitHead.lines,
         {
-          yPercent: 130,
-          opacity: 0,
-          stagger: 0.035,
-          duration: 0.9,
-          ease: "back.out(1.7)"
+          yPercent: 100,
+          stagger: 0.18,
+          duration: 1.6,
+          ease: "power2.out"
         },
-        "<0.1"
+        "<0.15"
       )
-      splitInstance = split
+      splitInstance = splitHead
     }
 
-    tl.to({}, { duration: 1.4 }) // dwell before unpinning
+    // Line-mask reveal on the body paragraph
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let splitPara: any = null
+    if (finaleParaRef.current) {
+      splitPara = new SplitText(finaleParaRef.current, {
+        type: "lines",
+        mask: "lines"
+      })
+      tl.from(
+        splitPara.lines,
+        {
+          yPercent: 100,
+          stagger: 0.18,
+          duration: 1.6,
+          ease: "power2.out"
+        },
+        "<0.2"
+      )
+    }
+
+    // Line-mask reveal on the tagline
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let splitTagline: any = null
+    if (finaleTaglineRef.current) {
+      splitTagline = new SplitText(finaleTaglineRef.current, {
+        type: "lines",
+        mask: "lines"
+      })
+      tl.from(
+        splitTagline.lines,
+        {
+          yPercent: 100,
+          stagger: 0.18,
+          duration: 1.6,
+          ease: "power2.out"
+        },
+        "<0.2"
+      )
+    }
+
+    tl.to({}, { duration: 3.0 }) // dwell before unpinning
 
     return () => {
       tl.scrollTrigger?.kill()
       tl.kill()
       splitInstance?.revert?.()
+      splitPara?.revert?.()
+      splitTagline?.revert?.()
     }
   }, [staticLayout])
 
@@ -1051,7 +1143,11 @@ export function ProposalsCrmSection() {
             width: "100%"
           }}
         >
-          <FinaleContent headRef={finaleHeadRef} />
+          <FinaleContent
+            headRef={finaleHeadRef}
+            paraRef={finaleParaRef}
+            taglineRef={finaleTaglineRef}
+          />
         </div>
       </section>
     )
@@ -1133,7 +1229,11 @@ export function ProposalsCrmSection() {
             width: "100%"
           }}
         >
-          <FinaleContent headRef={finaleHeadRef} />
+          <FinaleContent
+            headRef={finaleHeadRef}
+            paraRef={finaleParaRef}
+            taglineRef={finaleTaglineRef}
+          />
         </div>
       </section>
     </div>
