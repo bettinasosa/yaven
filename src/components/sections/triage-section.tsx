@@ -6,6 +6,7 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
+import { useIsMobile } from "@/components/effects/use-is-mobile"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -49,7 +50,7 @@ const CARDS = [
   {
     label: "Needs you now",
     bg: "var(--primary)",
-    desc: "Things only you can handle. Yaven knows the difference between urgent and just loud.",
+    desc: "Things only you can handle. Yaven knows what is and isn't urgent.",
     items: [
       { text: "Can we move Thursday's call?", tag: "Client" },
       { text: "Intro: Maya ↔ you", tag: "Warm lead" },
@@ -59,7 +60,7 @@ const CARDS = [
   {
     label: "Already handled",
     bg: "#df4f3e",
-    desc: "Replied, filed, or followed up using your tone, context, and rules.",
+    desc: "Drafted using your tone, context, and rules.",
     items: [
       { text: "Re: proposal timeline?", tag: "✓ replied" },
       { text: "Invoice #214 overdue", tag: "✓ nudged" },
@@ -98,7 +99,9 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
         boxShadow: "0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)"
       }}
     >
-      <div style={{ marginBottom: "auto" }}>
+      {/* Can wait (the always-top card) keeps its pills near the header;
+          the others push items to the bottom so only headers peek in the stack. */}
+      <div style={{ marginBottom: dark ? "20px" : "auto" }}>
         <div
           style={{
             fontFamily: "var(--font-instrument-serif)",
@@ -175,6 +178,7 @@ export function TriageSection() {
   const contentRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
   const staticLayout = usePrefersReducedMotion()
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     if (staticLayout || !wrapperRef.current) return
@@ -184,56 +188,41 @@ export function TriageSection() {
 
     gsap.set(contentRef.current, { opacity: 1 })
 
-    // Card 1 — slides up
-    const tl1 = gsap.timeline({
-      scrollTrigger: {
-        trigger: wrapper,
-        start: "0% top",
-        end: "12% top",
-        scrub: true
-      }
-    })
-    tl1.fromTo(
-      cardRefs.current[0],
-      { y: "100vh", rotation: 5 },
-      { y: 0, rotation: 0, ease: "none", force3D: true }
-    )
-    triggers.push(tl1.scrollTrigger!)
+    // Mobile starts card 1 during the section's entrance (so the pinned view
+    // isn't empty cream while you wait) and packs the three closer together so
+    // there's less dead scroll. Desktop keeps its roomier cadence.
+    const timing = isMobile
+      ? [
+          { start: "top 70%", end: "top top" },
+          { start: "4% top", end: "26% top" },
+          { start: "32% top", end: "54% top" }
+        ]
+      : [
+          { start: "0% top", end: "12% top" },
+          { start: "30% top", end: "46% top" },
+          { start: "60% top", end: "76% top" }
+        ]
+    const rotations = [5, -4, 3]
 
-    // Card 2 — stacks on top
-    const tl2 = gsap.timeline({
-      scrollTrigger: {
-        trigger: wrapper,
-        start: "30% top",
-        end: "46% top",
-        scrub: true
-      }
+    rotations.forEach((rotation, i) => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapper,
+          start: timing[i].start,
+          end: timing[i].end,
+          scrub: true
+        }
+      })
+      tl.fromTo(
+        cardRefs.current[i],
+        { y: "100vh", rotation },
+        { y: 0, rotation: 0, ease: "none", force3D: true }
+      )
+      triggers.push(tl.scrollTrigger!)
     })
-    tl2.fromTo(
-      cardRefs.current[1],
-      { y: "100vh", rotation: -4 },
-      { y: 0, rotation: 0, ease: "none", force3D: true }
-    )
-    triggers.push(tl2.scrollTrigger!)
-
-    // Card 3 — stacks on top
-    const tl3 = gsap.timeline({
-      scrollTrigger: {
-        trigger: wrapper,
-        start: "60% top",
-        end: "76% top",
-        scrub: true
-      }
-    })
-    tl3.fromTo(
-      cardRefs.current[2],
-      { y: "100vh", rotation: 3 },
-      { y: 0, rotation: 0, ease: "none", force3D: true }
-    )
-    triggers.push(tl3.scrollTrigger!)
 
     return () => triggers.forEach(t => t.kill())
-  }, [staticLayout])
+  }, [staticLayout, isMobile])
 
   // Animate underlines when they scroll into view
   const textWrapRef = useRef<HTMLDivElement>(null)
@@ -264,7 +253,7 @@ export function TriageSection() {
     fontSize: "clamp(15px, 1.6vw, 18px)",
     lineHeight: 1.55,
     color: "#0a0e1a",
-    opacity: 0.75,
+    opacity: 1,
     margin: 0
   }
 
@@ -274,15 +263,14 @@ export function TriageSection() {
         className="text-[clamp(36px,5.5vw,76px)] font-medium tracking-[-0.02em] leading-[1.05] m-0"
         style={{ color: "#0a0e1a", fontFamily: "var(--font-instrument-serif)" }}
       >
-        Yaven knows what matters.
+        Yaven knows what matters…
       </ScrollCutReveal>
 
       <div className="flex flex-col gap-7 max-w-[480px]">
         <p style={bodyStyle}>
           Your {appIcon("gmail", -3)} email, {appIcon("linkedin", 2)} messages,{" "}
           {appIcon("google", -2)} calendar, {appIcon("hubspot", 3)} CRM,{" "}
-          {appIcon("notion", -1)} docs, all flowing into {underline("one queue")}
-          .
+          {appIcon("notion", -1)} docs, all in {underline("one queue")}.
         </p>
 
         <p style={bodyStyle}>
@@ -298,6 +286,63 @@ export function TriageSection() {
       </div>
     </div>
   )
+
+  // Mobile: read the text first (normal scroll), then a pinned stacking-card
+  // pile below — same animation as desktop, just full phone-width and on its
+  // own so it doesn't fight the text for vertical space.
+  if (isMobile) {
+    return (
+      <>
+        <section
+          style={{
+            background: "var(--cream)",
+            padding: "clamp(60px, 10vh, 100px) clamp(20px, 6vw, 32px) clamp(24px, 5vh, 48px)"
+          }}
+        >
+          <div className="max-w-[520px] mx-auto">{sideText}</div>
+        </section>
+
+        <div
+          ref={wrapperRef}
+          className="relative"
+          style={{ height: "240vh", background: "var(--cream)" }}
+        >
+          <div
+            className="sticky top-0 h-screen overflow-visible flex items-center justify-center"
+            style={{ padding: "0 clamp(20px, 6vw, 32px)" }}
+          >
+            <div
+              ref={contentRef}
+              className="relative"
+              style={{ width: "100%", maxWidth: "440px", height: "540px", opacity: 0 }}
+            >
+              {CARDS.map((card, i) => (
+                <div
+                  key={card.label}
+                  ref={el => {
+                    cardRefs.current[i] = el
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: `${i * 76}px`,
+                    left: 0,
+                    right: 0,
+                    zIndex: i + 1,
+                    willChange: "transform",
+                    backfaceVisibility: "hidden",
+                    transformOrigin: "center bottom",
+                    transform: "translateZ(0) translateY(100vh)"
+                  }}
+                >
+                  <TriageCard card={card} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   if (staticLayout) {
     return (
@@ -359,7 +404,7 @@ export function TriageSection() {
                 }}
                 style={{
                   position: "absolute",
-                  top: `${i * 60}px`,
+                  top: `${i * 76}px`,
                   left: 0,
                   right: 0,
                   zIndex: i + 1,

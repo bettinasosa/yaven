@@ -609,6 +609,23 @@
 .triage-underline.is-visible {
   background-size: 100% 3.5px;
 }
+/* Shake — invalid waitlist submit (replaces native validation bubble) */
+@keyframes yv-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-9px); }
+  30% { transform: translateX(8px); }
+  45% { transform: translateX(-6px); }
+  60% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}
+.yv-shake {
+  animation: yv-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+/* Cream variant for use on the blue Meet Yaven background */
+.triage-underline.u-cream {
+  background-image: linear-gradient(var(--cream), var(--cream));
+}
 .triage-underline.is-visible:hover {
   background-position: right bottom 0px;
   background-size: 100% 3.5px;

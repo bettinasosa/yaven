@@ -10,6 +10,8 @@ import { TriageSection } from "@/components/sections/triage-section"
 import { CommandsSection } from "@/components/sections/commands-section"
 import { FooterCTASection } from "@/components/sections/footer-cta-section"
 import { FooterSection } from "@/components/sections/footer-section"
+import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
+import { useIsMobile } from "@/components/effects/use-is-mobile"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -55,6 +57,7 @@ function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
 }
 
 function StickyGetYaven() {
+  const isMobile = useIsMobile()
   const btnRef = useRef<HTMLDivElement>(null)
   const onCream = useRef(false)
 
@@ -74,40 +77,70 @@ function StickyGetYaven() {
     }
   }, [])
 
+  const pastHero = useRef(false)
+  const beforeCta = useRef(true)
+
   useEffect(() => {
     if (!btnRef.current) return
 
     gsap.set(btnRef.current, { x: 120, opacity: 0 })
 
-    const trigger = ScrollTrigger.create({
-      trigger: document.body,
-      start: "100vh top",
+    // Visible only once past the hero AND before the final CTA section.
+    const apply = () => {
+      const visible = pastHero.current && beforeCta.current
+      gsap.to(btnRef.current, {
+        x: visible ? 0 : 120,
+        opacity: visible ? 1 : 0,
+        duration: visible ? 0.5 : 0.35,
+        ease: visible ? "power3.out" : "power2.in"
+      })
+    }
+
+    // Appear as the first Meet Yaven slide scrolls in (not just after one
+    // viewport of hero scroll).
+    const meetYaven = document.querySelector<HTMLElement>("[data-meet-yaven]")
+    const heroTrigger = ScrollTrigger.create({
+      trigger: meetYaven ?? document.body,
+      start: meetYaven ? "top 70%" : "100vh top",
       onEnter: () => {
-        gsap.to(btnRef.current, {
-          x: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: "power3.out"
-        })
+        pastHero.current = true
+        apply()
       },
       onLeaveBack: () => {
-        gsap.to(btnRef.current, {
-          x: 120,
-          opacity: 0,
-          duration: 0.35,
-          ease: "power2.in"
-        })
+        pastHero.current = false
+        apply()
       }
     })
+
+    // Hide from the "Focus on the work only you can do." CTA onward.
+    const cta = document.querySelector<HTMLElement>("[data-hide-getyaven]")
+    const ctaTrigger = cta
+      ? ScrollTrigger.create({
+          trigger: cta,
+          start: "top 70%",
+          onEnter: () => {
+            beforeCta.current = false
+            apply()
+          },
+          onLeaveBack: () => {
+            beforeCta.current = true
+            apply()
+          }
+        })
+      : null
 
     window.addEventListener("scroll", checkOverlap, { passive: true })
     checkOverlap()
 
     return () => {
-      trigger.kill()
+      heroTrigger.kill()
+      ctaTrigger?.kill()
       window.removeEventListener("scroll", checkOverlap)
     }
   }, [checkOverlap])
+
+  // The floating "Show me" button doesn't follow the page on mobile.
+  if (isMobile) return null
 
   return (
     <div
@@ -119,21 +152,23 @@ function StickyGetYaven() {
         zIndex: 999
       }}
     >
-      <div className="glass-wrap">
-        <div className="glass-shadow" />
-        <a
-          href="#waitlist"
-          className="glass-btn"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          <span>Get Yaven</span>
-        </a>
-      </div>
+      <BlueprintPanel />
     </div>
   )
 }
 
 export default function Home() {
+  const isMobile = useIsMobile()
+
+  // Mobile and desktop layouts have very different heights. When the layout
+  // switches (incl. the post-hydration mobile collapse), recompute all
+  // ScrollTrigger positions so scroll-driven reveals (e.g. the footer CTA
+  // "Less admin. More flow.") fire at the right spot instead of staying hidden.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => ScrollTrigger.refresh())
+    return () => cancelAnimationFrame(id)
+  }, [isMobile])
+
   return (
     <>
       <StickyGetYaven />
@@ -145,16 +180,20 @@ export default function Home() {
           <ProposalsCrmSection />
         </div>
       </CardWrap>
-      <div
-        style={{
-          position: "relative",
-          zIndex: 5,
-          background: "var(--cream)",
-          paddingTop: "80px"
-        }}
-      >
-        <CommandsSection />
-      </div>
+      {/* "Yaven works anywhere" is hidden on mobile — its in-app overlay
+          demo doesn't translate to small screens. */}
+      {!isMobile && (
+        <div
+          style={{
+            position: "relative",
+            zIndex: 5,
+            background: "var(--cream)",
+            paddingTop: "80px"
+          }}
+        >
+          <CommandsSection />
+        </div>
+      )}
       <FooterCTASection />
 
       {/* ── Sticky footer ── */}

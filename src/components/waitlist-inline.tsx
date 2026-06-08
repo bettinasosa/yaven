@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Loader2 } from "lucide-react"
 
 // Inline email capture for the closing sections. Posts to the same
@@ -10,10 +10,23 @@ export function WaitlistInline() {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState("")
+  const formRef = useRef<HTMLFormElement>(null)
+
+  function shake() {
+    const el = formRef.current
+    if (!el) return
+    el.classList.remove("yv-shake")
+    void el.offsetWidth // restart the animation
+    el.classList.add("yv-shake")
+  }
 
   async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault()
-    if (!email) return
+    // Invalid/empty → shake instead of the native validation bubble
+    if (!email.trim() || !email.includes("@")) {
+      shake()
+      return
+    }
     setLoading(true)
     setError("")
     try {
@@ -61,7 +74,9 @@ export function WaitlistInline() {
         </p>
       )}
       <form
+        ref={formRef}
         onSubmit={handleSubmit}
+        noValidate
         className="waitlist-input-row flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[28px] sm:rounded-full p-[5px]"
         style={{
           border: "1px solid rgba(255,255,255,0.3)",

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { Loader2 } from "lucide-react"
 
@@ -10,9 +10,22 @@ export function BlueprintPanel() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState("")
+  const rowRef = useRef<HTMLDivElement>(null)
+
+  function shake() {
+    const el = rowRef.current
+    if (!el) return
+    el.classList.remove("yv-shake")
+    void el.offsetWidth
+    el.classList.add("yv-shake")
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!email.trim() || !email.includes("@")) {
+      shake()
+      return
+    }
     setLoading(true)
     setError("")
 
@@ -100,7 +113,7 @@ export function BlueprintPanel() {
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             <h3
               style={{
                 fontFamily: "var(--font-dm-sans), sans-serif",
@@ -146,6 +159,7 @@ export function BlueprintPanel() {
                 alignItems: "center"
               }}
               className="waitlist-input-row"
+              ref={rowRef}
             >
               <input
                 type="email"

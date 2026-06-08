@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 
 const colLinkStyle: React.CSSProperties = {
   color: "var(--cream)",
@@ -202,7 +203,10 @@ export function FooterSection() {
       </div>
 
       {/* ── Bottom: giant wordmark + copyright ── */}
-      <div className="flex-1 flex items-end relative px-4 pb-2">
+      <div
+        className="flex-1 flex items-end relative pr-4 pb-2"
+        style={{ paddingLeft: "clamp(20px, 2vw, 44px)" }}
+      >
         <span
           className="font-medium select-none"
           style={{
@@ -216,21 +220,37 @@ export function FooterSection() {
           Yaven
         </span>
 
-        <p
+        <div
           style={{
             position: "absolute",
             right: "28px",
             bottom: "20px",
-            fontFamily: "var(--font-space-mono)",
-            fontSize: "11px",
-            fontWeight: 700,
-            color: "var(--cream)",
-            opacity: 0.35,
-            letterSpacing: "0.06em"
+            display: "flex",
+            alignItems: "center",
+            gap: "10px"
           }}
         >
-          © 2026 Yaven
-        </p>
+          <Image
+            src="/yaven-logo.svg"
+            alt="Yaven"
+            width={16}
+            height={28}
+            style={{ display: "block", width: "auto", height: "22px", opacity: 0.7 }}
+          />
+          <p
+            style={{
+              fontFamily: "var(--font-space-mono)",
+              fontSize: "11px",
+              fontWeight: 700,
+              color: "var(--cream)",
+              opacity: 0.35,
+              letterSpacing: "0.06em",
+              margin: 0
+            }}
+          >
+            © 2026 Yaven
+          </p>
+        </div>
       </div>
     </footer>
   )

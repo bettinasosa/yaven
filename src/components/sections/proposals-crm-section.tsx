@@ -8,6 +8,7 @@ import { SplitText } from "gsap/SplitText"
 import { Typewriter } from "@/components/effects/typewriter"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
+import { useIsMobile } from "@/components/effects/use-is-mobile"
 import { GlassCard } from "@/components/effects/glass-card"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
@@ -502,13 +503,11 @@ function AppIcon({ name, tilt }: { name: string; tilt: number }) {
 }
 
 function FinaleContent({
-  headRef,
-  paraRef,
-  taglineRef
+  underlineDrawn = false
 }: {
-  headRef?: React.RefObject<HTMLHeadingElement | null>
-  paraRef?: React.RefObject<HTMLParagraphElement | null>
-  taglineRef?: React.RefObject<HTMLParagraphElement | null>
+  // When true (reduced motion), the underline renders already drawn since the
+  // scroll-driven draw-in won't run.
+  underlineDrawn?: boolean
 }) {
   const paraStyle: React.CSSProperties = {
     ...bodyStyle,
@@ -516,7 +515,8 @@ function FinaleContent({
     opacity: 1,
     lineHeight: 1.85,
     textAlign: "left",
-    width: "100%"
+    width: "100%",
+    maxWidth: "none"
   }
 
   return (
@@ -526,19 +526,23 @@ function FinaleContent({
         flexDirection: "column",
         alignItems: "flex-start",
         gap: "clamp(20px, 3vh, 32px)",
-        width: "min(420px, 90%)",
+        width: "min(820px, 92%)",
         margin: "0 auto"
       }}
     >
-      <h2
-        ref={headRef}
-        style={{ ...headlineStyle, textAlign: "left", width: "100%" }}
-      >
-        And that&apos;s just a few examples
+      <h2 style={{ ...headlineStyle, textAlign: "left", width: "100%" }}>
+        so you can focus on the work{" "}
+        <span
+          className={`triage-underline${underlineDrawn ? " is-visible" : ""}`}
+          style={{ backgroundImage: "linear-gradient(#df4f3e, #df4f3e)" }}
+        >
+          only you can do
+        </span>
+        .
       </h2>
 
-      <p ref={paraRef} style={paraStyle}>
-        <Em>Triages</Em> your inbox
+      <p style={paraStyle}>
+        That was just a few examples. Yaven <Em>triages</Em> your inbox
         <AppIcon name="gmail" tilt={-8} />
         <Em>clears</Em> your docs
         <AppIcon name="notion" tilt={6} />
@@ -560,16 +564,16 @@ function FinaleContent({
       </p>
 
       <p
-        ref={taglineRef}
         style={{
           ...bodyStyle,
           margin: 0,
           opacity: 0.6,
           textAlign: "left",
-          width: "100%"
+          width: "100%",
+          maxWidth: "none"
         }}
       >
-        Yaven handles the noise. You handle the rest.
+        Let Yaven handle the noise, while you handle the rest.
       </p>
     </div>
   )
@@ -825,13 +829,39 @@ export function ProposalsCrmSection() {
   const proposalsRef = useRef<HTMLDivElement>(null)
   const crmRef = useRef<HTMLDivElement>(null)
   const confRef = useRef<HTMLDivElement>(null)
-  const finaleRef = useRef<HTMLDivElement>(null)
-  const finaleHeadRef = useRef<HTMLHeadingElement>(null)
-  const finaleParaRef = useRef<HTMLParagraphElement>(null)
-  const finaleTaglineRef = useRef<HTMLParagraphElement>(null)
   const headerWrapRef = useRef<HTMLDivElement>(null)
   const fragRefs = useRef<(HTMLDivElement | null)[]>([])
+  const finaleWrapRef = useRef<HTMLDivElement>(null)
+  const finaleInnerRef = useRef<HTMLDivElement>(null)
+  const mobileStackRef = useRef<HTMLElement>(null)
   const staticLayout = usePrefersReducedMotion()
+  const isMobile = useIsMobile()
+
+  // Mobile: the slides use the stacked static layout, but each one fades up as
+  // it scrolls into view (reduced motion gets no animation).
+  useEffect(() => {
+    if (!isMobile || staticLayout || !mobileStackRef.current) return
+    const blocks =
+      mobileStackRef.current.querySelectorAll<HTMLElement>("[data-reveal]")
+    const anims = Array.from(blocks).map(b =>
+      gsap.from(b, {
+        y: 50,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: b,
+          start: "top 82%",
+          toggleActions: "play none none reverse"
+        }
+      })
+    )
+    return () =>
+      anims.forEach(a => {
+        a.scrollTrigger?.kill()
+        a.kill()
+      })
+  }, [isMobile, staticLayout])
 
   useEffect(() => {
     if (staticLayout || !wrapperRef.current) return
@@ -839,9 +869,6 @@ export function ProposalsCrmSection() {
     gsap.set(proposalsRef.current, { y: 60, opacity: 0 })
     gsap.set(crmRef.current, { y: "100vh", opacity: 0 })
     gsap.set(confRef.current, { y: "100vh", opacity: 0 })
-    gsap.set(finaleRef.current, { y: "100vh", opacity: 0 })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let splitInstance: any = null
     fragRefs.current.forEach((f, i) => {
       if (f)
         gsap.set(f, {
@@ -860,11 +887,16 @@ export function ProposalsCrmSection() {
       }
     })
 
+    // The intro header stays pinned at the top as a persistent header over
+    // all three example phases; it leaves with the section when the pin
+    // releases into the finale.
+    tl.addLabel("p1", 0)
+
     // Phase 1 — proposals enter, fragments melt into the document
     tl.to(
       proposalsRef.current,
       { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 },
-      0
+      "p1"
     )
     fragRefs.current.forEach((f, i) => {
       if (!f) return
@@ -878,7 +910,7 @@ export function ProposalsCrmSection() {
           ease: "power2.inOut",
           duration: 1.6
         },
-        0.8 + i * 0.12
+        `p1+=${0.8 + i * 0.12}`
       )
     })
     tl.to({}, { duration: 0.8 }) // dwell on the finished document
@@ -910,32 +942,49 @@ export function ProposalsCrmSection() {
       )
 
       tl.addLabel("crmIn")
+      gsap.set(rowVals, { opacity: 0, x: -6 })
 
       SIGNALS.forEach((s, i) => {
-        const targets = [pills[i], blobs[i]].filter(Boolean)
+        const pill = pills[i]
+        const blob = blobs[i]
+        const row = rowVals[i]
+        const targets = [pill, blob].filter(Boolean)
         if (!targets.length) return
         gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
+
+        // Land at the matching row's height (not the card centre). The card is
+        // transformed during measurement, but both rects share that transform
+        // so their difference is invariant. Subtract the start translate to get
+        // the pill's resting centre.
+        let toY = 0
+        if (pill && row) {
+          const pr = pill.getBoundingClientRect()
+          const rr = row.getBoundingClientRect()
+          const pillRestCenterY = pr.top + pr.height / 2 - s.y
+          toY = rr.top + rr.height / 2 - pillRestCenterY
+        }
+
         // appear in place
         tl.to(
           targets,
           { opacity: 1, duration: 0.5, ease: "power2.out" },
           `crmIn+=${0.2 + i * 0.35}`
         )
-        // fly into the card and dissolve
+        // glide to the row's height and dissolve into it
         tl.to(
           targets,
-          { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in" },
+          { x: 0, y: toY, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in" },
           `crmIn+=${0.8 + i * 0.35}`
         )
+        // the row it fed reveals as it lands
+        if (row) {
+          tl.to(
+            row,
+            { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },
+            `crmIn+=${1.5 + i * 0.35}`
+          )
+        }
       })
-
-      // rows reveal as the signals land
-      gsap.set(rowVals, { opacity: 0, x: -6 })
-      tl.to(
-        rowVals,
-        { opacity: 1, x: 0, duration: 0.6, stagger: 0.5, ease: "power2.out" },
-        "crmIn+=1.4"
-      )
     }
 
     tl.to({}, { duration: 1.4 }) // dwell on the filled card
@@ -973,94 +1022,45 @@ export function ProposalsCrmSection() {
       }
     }
 
-    tl.to({}, { duration: 1.4 }) // dwell
+    tl.to({}, { duration: 1.5 }) // hold the conference card before the pin releases
 
-    // Phase 4 — the zoom-out; the header leaves so the line stands alone
-    tl.to(
-      confRef.current,
-      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
-      ">"
-    )
-    tl.to(
-      headerWrapRef.current,
-      { y: -40, opacity: 0, ease: "power2.in", duration: 0.8 },
-      "<"
-    )
-    tl.to(
-      finaleRef.current,
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      "<0.3"
-    )
-
-    // Oliver Larose line-mask reveal on the finale heading
-    if (finaleHeadRef.current) {
-      const splitHead = new SplitText(finaleHeadRef.current, {
-        type: "lines",
-        mask: "lines"
-      })
-      tl.from(
-        splitHead.lines,
-        {
-          yPercent: 100,
-          stagger: 0.18,
-          duration: 1.6,
-          ease: "power2.out"
-        },
-        "<0.15"
-      )
-      splitInstance = splitHead
-    }
-
-    // Line-mask reveal on the body paragraph
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let splitPara: any = null
-    if (finaleParaRef.current) {
-      splitPara = new SplitText(finaleParaRef.current, {
-        type: "lines",
-        mask: "lines"
-      })
-      tl.from(
-        splitPara.lines,
-        {
-          yPercent: 100,
-          stagger: 0.18,
-          duration: 1.6,
-          ease: "power2.out"
-        },
-        "<0.2"
-      )
-    }
-
-    // Line-mask reveal on the tagline
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let splitTagline: any = null
-    if (finaleTaglineRef.current) {
-      splitTagline = new SplitText(finaleTaglineRef.current, {
-        type: "lines",
-        mask: "lines"
-      })
-      tl.from(
-        splitTagline.lines,
-        {
-          yPercent: 100,
-          stagger: 0.18,
-          duration: 1.6,
-          ease: "power2.out"
-        },
-        "<0.2"
-      )
-    }
-
-    tl.to({}, { duration: 3.0 }) // dwell before unpinning
+    // No Phase 4 — the finale lives below in normal flow, so the pin simply
+    // releases on the conference card and you scroll down into the finale.
 
     return () => {
       tl.scrollTrigger?.kill()
       tl.kill()
-      splitInstance?.revert?.()
-      splitPara?.revert?.()
-      splitTagline?.revert?.()
     }
-  }, [staticLayout])
+  }, [staticLayout, isMobile])
+
+  // Finale — falls into the screen as it scrolls into view (played once, so
+  // it's actually visible on entry), then the sticky wrapper holds it for a
+  // brief dwell before the commands section takes over.
+  useEffect(() => {
+    if (staticLayout || !finaleInnerRef.current) return
+
+    const inner = finaleInnerRef.current
+    gsap.set(inner, { y: 60, opacity: 0 })
+
+    const underlines = inner.querySelectorAll(".triage-underline")
+    const st = ScrollTrigger.create({
+      trigger: inner,
+      start: "top 78%",
+      onEnter: () => {
+        gsap.to(inner, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" })
+        // draw the underline in once the text has begun to settle
+        gsap.delayedCall(0.45, () =>
+          underlines.forEach(el => el.classList.add("is-visible"))
+        )
+      },
+      onLeaveBack: () => {
+        gsap.to(inner, { y: 60, opacity: 0, duration: 0.45, ease: "power2.in" })
+        underlines.forEach(el => el.classList.remove("is-visible"))
+      }
+    })
+
+    return () => st.kill()
+  }, [staticLayout, isMobile])
 
   const header = (
     <ScrollCutReveal
@@ -1075,15 +1075,22 @@ export function ProposalsCrmSection() {
         textAlign: "center"
       }}
     >
-      Yaven creates your workflows.
+      and streamlines your workflows…
     </ScrollCutReveal>
   )
 
-  if (staticLayout) {
+  // Mobile uses the stacked, non-pinned layout too: the header reads as a
+  // normal block above the slides (no overlay collision) and each slide is
+  // text-then-card.
+  if (staticLayout || isMobile) {
     return (
-      <section style={{ background: "var(--cream)", overflow: "hidden" }}>
+      <section
+        ref={mobileStackRef}
+        style={{ background: "var(--cream)", overflow: "hidden" }}
+      >
         <div style={{ paddingTop: "clamp(80px, 12vh, 140px)" }}>{header}</div>
         <div
+          data-reveal
           style={{
             ...phaseGridStyle,
             position: "relative",
@@ -1099,6 +1106,7 @@ export function ProposalsCrmSection() {
           <GooeyStage fragRefs={fragRefs} merged />
         </div>
         <div
+          data-reveal
           style={{
             ...phaseGridStyle,
             position: "relative",
@@ -1106,15 +1114,16 @@ export function ProposalsCrmSection() {
               "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
           }}
         >
-          <CrmCard animated={false} />
           <div>
             <h2 style={headlineStyle}>A CRM that runs itself.</h2>
             <p style={bodyStyle}>
               It sources clients that fit, drafts the outreach, and logs every reply. No need to type.
             </p>
           </div>
+          <CrmCard animated={false} />
         </div>
         <div
+          data-reveal
           style={{
             ...phaseGridStyle,
             position: "relative",
@@ -1134,6 +1143,7 @@ export function ProposalsCrmSection() {
           <ConferenceCard animated={false} />
         </div>
         <div
+          data-reveal
           style={{
             display: "flex",
             alignItems: "center",
@@ -1143,22 +1153,19 @@ export function ProposalsCrmSection() {
             width: "100%"
           }}
         >
-          <FinaleContent
-            headRef={finaleHeadRef}
-            paraRef={finaleParaRef}
-            taglineRef={finaleTaglineRef}
-          />
+          <FinaleContent underlineDrawn />
         </div>
       </section>
     )
   }
 
   return (
+    <>
     <div
       ref={wrapperRef}
       style={{
         position: "relative",
-        height: "1050vh",
+        height: "800vh",
         background: "var(--cream)"
       }}
     >
@@ -1172,9 +1179,18 @@ export function ProposalsCrmSection() {
           flexDirection: "column"
         }}
       >
+        {/* Intro header — overlays the top, slides away as examples begin */}
         <div
           ref={headerWrapRef}
-          style={{ paddingTop: "clamp(48px, 8vh, 90px)" }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 5,
+            paddingTop: "clamp(48px, 8vh, 90px)",
+            pointerEvents: "none"
+          }}
         >
           {header}
         </div>
@@ -1215,27 +1231,36 @@ export function ProposalsCrmSection() {
             <ConferenceCard animated />
           </div>
 
-          {/* Phase 4 — the zoom-out */}
-        </div>
-        <div
-          ref={finaleRef}
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "0 clamp(28px, 5vw, 48px)",
-            width: "100%"
-          }}
-        >
-          <FinaleContent
-            headRef={finaleHeadRef}
-            paraRef={finaleParaRef}
-            taglineRef={finaleTaglineRef}
-          />
         </div>
       </section>
     </div>
+
+    {/* Finale — sits below the pin. Falls in as it scrolls up, then dwells
+        briefly (held by the sticky inner) before the commands section. */}
+    <div
+      ref={finaleWrapRef}
+      style={{
+        position: "relative",
+        height: "170vh",
+        background: "var(--cream)"
+      }}
+    >
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          display: "grid",
+          placeItems: "center",
+          overflow: "hidden",
+          padding: "clamp(80px, 14vh, 160px) clamp(28px, 5vw, 48px)"
+        }}
+      >
+        <div ref={finaleInnerRef}>
+          <FinaleContent />
+        </div>
+      </div>
+    </div>
+    </>
   )
 }

@@ -11,7 +11,7 @@ import Image from "next/image"
 gsap.registerPlugin(ScrollTrigger)
 
 const DRAFT_RESPONSE =
-  "Thanks so much for reaching out, Priya! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
+  "Thanks so much for reaching out, Lola! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
 
 const ASK_RESPONSE =
   "his team updated the payment window from 30 to 60 days. He mentioned cash-flow timing on their end. The rest of the scope is unchanged from your v2 redline."
@@ -80,7 +80,7 @@ function LinkedInCard({
       <div className="flex flex-col h-full">
         {/* Header bar — LinkedIn blue */}
         <div
-          className="flex items-center justify-between px-5 py-6"
+          className="flex items-center justify-between px-5 py-9"
           style={{
             background: "linear-gradient(135deg, #0A66C2, #0d79d9)"
           }}
@@ -99,7 +99,7 @@ function LinkedInCard({
                 in
               </span>
             </span>
-            <span className="font-bold text-white text-[16px]">Messaging</span>
+            <span className="font-bold text-white text-[16px]">Draft</span>
           </div>
           <ShortcutBadge keys={["⌥", "D"]} />
         </div>
@@ -118,7 +118,7 @@ function LinkedInCard({
             />
             <div>
               <div className="font-bold text-[#0a0e1a] text-[15px]">
-                Priya Nair
+                Lola H.
               </div>
               <div className="text-[#0a0e1a]/50 text-[13px]">
                 Recruiter · Founding Designer role
@@ -209,6 +209,41 @@ function AskCard({
           boxShadow: "0 12px 48px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08)"
         }}
       >
+        {/* Header bar — Ask command (doc icon + ⌥A), on the red strip */}
+        <div
+          className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 z-[2]"
+          style={{ height: "14%" }}
+        >
+          <div className="flex items-center gap-2.5">
+            <span
+              className="inline-flex items-center justify-center rounded-lg"
+              style={{
+                width: "32px",
+                height: "32px",
+                background: "rgba(255,255,255,0.2)",
+                border: "1px solid rgba(255,255,255,0.25)"
+              }}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                <path d="M14 3v5h5" />
+                <path d="M9 13h6M9 17h6" />
+              </svg>
+            </span>
+            <span className="font-bold text-white text-[16px]">Ask</span>
+          </div>
+          <ShortcutBadge keys={["⌥", "A"]} />
+        </div>
+
         {/* Cream document panel — cropped from left/bottom */}
         <div
           style={{
@@ -498,7 +533,7 @@ export function CommandsSection() {
       <ScrollCutReveal className="text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0" style={{ fontFamily: "var(--font-instrument-serif)" }}>
         Yaven works anywhere.
       </ScrollCutReveal>
-      <p className="text-[clamp(15px,1.6vw,17px)] text-white/80 leading-[1.55] mr-60 mt-24">
+      <p className="text-[clamp(17px,1.9vw,20px)] text-white/80 leading-[1.55] mr-60 mt-24">
         Draft a reply, explain a contract, answer a question, all without
         leaving the app you&apos;re in. Press{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">
@@ -603,12 +638,13 @@ export function CommandsSection() {
               />
             </div>
 
-            {/* Ask card — slides up on top, 40px lower */}
+            {/* Ask card — slides up on top, offset so its rounded top
+                corners sit within the Draft card's header (no cream peek). */}
             <div
               ref={askCardRef}
               style={{
                 position: "absolute",
-                top: "70px",
+                top: "72px",
                 left: 0,
                 right: 0,
                 zIndex: 2,

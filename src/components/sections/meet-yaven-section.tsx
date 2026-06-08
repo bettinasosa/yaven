@@ -1,16 +1,37 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
+import { useIsMobile } from "@/components/effects/use-is-mobile"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const BODY = [
-  "Built for founders, freelancers, and solo operators who run everything themselves.",
-  "Yaven learns your clients, your tone, your open loops — then acts on them. After calls it drafts proposals. Before meetings it pulls context. In between it clears the backlog. No new apps, no new habits.",
-  "So you can spend your time on the work only you can do."
+// Cream draw-on underline (matches the triage section's treatment)
+function U({ children }: { children: React.ReactNode }) {
+  // transition:none so the timeline (GSAP) drives the draw frame-by-frame
+  // without the CSS transition fighting it.
+  return (
+    <span className="triage-underline u-cream" style={{ transition: "none" }}>
+      {children}
+    </span>
+  )
+}
+
+const BODY: React.ReactNode[] = [
+  <>
+    Built for founders, freelancers, and solo operators who{" "}
+    <U>run everything themselves</U>.
+  </>,
+  <>
+    Yaven understands your context, tone and open tasks, then acts on them{" "}
+    <U>with you kept in the loop</U>. No new apps, tabs or empty chat boxes.
+  </>,
+  <>
+    So you can spend your time on <U>the work only you can do</U>.
+  </>
 ]
 
 const SATELLITES = [
@@ -21,7 +42,7 @@ const SATELLITES = [
   { x: -25,  y: -150, label: "reply drafted",    pw: 96,  ph: 32 },
 ]
 
-const CORE_SIZE = 120
+const CORE_SIZE = 180
 
 const headingStyle: React.CSSProperties = {
   fontFamily: "var(--font-instrument-serif)",
@@ -195,7 +216,8 @@ function PresenceStage({
     >
       <GlassGooFilter />
 
-      {/* Layer 1: gooey filter — proxy core + pill proxies for label chips */}
+      {/* Layer 1: gooey filter — proxy core only (label chips stand alone
+          as glass pills; a goo blob behind each read as disconnected). */}
       <div style={{ ...stageStyle, filter: "url(#yv-glass-goo)" }}>
         <div ref={proxyRef}>
           <div
@@ -207,20 +229,6 @@ function PresenceStage({
             }}
           />
         </div>
-        {SATELLITES.map((s, i) => (
-          <div
-            key={i}
-            ref={el => { satRefs.current[i] = el }}
-            style={{
-              position: "absolute",
-              width: `${s.pw}px`,
-              height: `${s.ph}px`,
-              borderRadius: "999px",
-              background: "#fff",
-              opacity: 0
-            }}
-          />
-        ))}
       </div>
 
       {/* Layer 2: glass label chips — fly out from center */}
@@ -245,41 +253,52 @@ function PresenceStage({
         ))}
       </div>
 
-      {/* Layer 3: real glass core using .glass-btn — sits on top of the proxy */}
+      {/* Layer 3: glass bubble (backdrop) with the Yaven mark in FRONT */}
       <div style={{ ...stageStyle, pointerEvents: "none" }}>
         <div
           ref={glassRef}
-          className="glass-btn"
           style={{
-            // override pill defaults to be a fixed circle
+            position: "relative",
             width: `${CORE_SIZE}px`,
             height: `${CORE_SIZE}px`,
-            borderRadius: "50%",
-            fontSize: "14px", // em base for the glass-btn box-shadow values
+            fontSize: "16px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            gap: "9px",
-            flexDirection: "row"
+            justifyContent: "center"
           }}
         >
-          {/* Three white dots — the menu-bar presence indicator */}
-          {[0, 1, 2].map(i => (
-            <span
-              key={i}
-              className="yv-chip-float"
+          {/* Frosted glass disc — sits behind the mark (no hover dependency) */}
+          <span
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.14)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.35)",
+              boxShadow:
+                "inset 0 2px 10px rgba(255,255,255,0.4), inset 0 -2px 8px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.18)"
+            }}
+          />
+          {/* Yaven mark — on top of the glass */}
+          <span
+            className="yv-chip-float"
+            style={{ position: "relative", zIndex: 2, display: "block", padding: 0 }}
+          >
+            <Image
+              src="/yaven-logo.svg"
+              alt="Yaven"
+              width={56}
+              height={97}
               style={{
                 display: "block",
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                background: "#fff",
-                boxShadow: "0 0 6px rgba(255,255,255,0.6)",
-                padding: 0,
-                animationDelay: `${i * 0.45}s`
+                width: "auto",
+                height: `${CORE_SIZE * 0.72}px`,
+                filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.22))"
               }}
             />
-          ))}
+          </span>
         </div>
       </div>
     </div>
@@ -294,25 +313,51 @@ export function MeetYavenSection() {
   const satRefs = useRef<(HTMLDivElement | null)[]>([])   // pill proxies inside goo filter
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]) // glass chips above filter
   const glassRef = useRef<HTMLDivElement>(null) // glass-btn core
+  const bodyWrapRef = useRef<HTMLDivElement>(null)
   const staticLayout = usePrefersReducedMotion()
+  const isMobile = useIsMobile()
+
+  // Underlines: the animated path (desktop pinned + mobile non-pinned) draws
+  // each one via the timeline as its paragraph reveals. Reduced motion has no
+  // timeline, so just show them.
+  useEffect(() => {
+    if (!staticLayout || !bodyWrapRef.current) return
+    bodyWrapRef.current
+      .querySelectorAll(".triage-underline")
+      .forEach(el => el.classList.add("is-visible"))
+  }, [staticLayout])
 
   useEffect(() => {
     if (staticLayout || !wrapperRef.current) return
 
     gsap.set(headingRef.current, { y: 50, opacity: 0 })
     paraRefs.current.forEach(p => p && gsap.set(p, { y: 36, opacity: 0 }))
+    // One draw-on underline per paragraph; start them undrawn.
+    const underlines = paraRefs.current.map(
+      p => p?.querySelector<HTMLElement>(".triage-underline") ?? null
+    )
+    underlines.forEach(u => u && gsap.set(u, { backgroundSize: "0% 3.5px" }))
     gsap.set([proxyRef.current, glassRef.current], { scale: 0 })
     satRefs.current.forEach(s => s && gsap.set(s, { x: 0, y: 0, opacity: 0, scale: 0.7 }))
     labelRefs.current.forEach(l => l && gsap.set(l, { x: 0, y: 0, opacity: 0, scale: 0.7 }))
 
+    // Desktop pins and scrubs the timeline; mobile plays it once when the
+    // (non-pinned) section scrolls into view, so nothing overflows the screen.
     const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: wrapperRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1.2
-      }
+      scrollTrigger: isMobile
+        ? {
+            trigger: wrapperRef.current,
+            start: "top 75%",
+            toggleActions: "play none none reverse"
+          }
+        : {
+            trigger: wrapperRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1.2
+          }
     })
+    if (isMobile) tl.timeScale(1.8)
 
     tl.to(
       headingRef.current,
@@ -326,6 +371,12 @@ export function MeetYavenSection() {
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       1.2
     )
+    if (underlines[0])
+      tl.to(
+        underlines[0],
+        { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
+        1.8
+      )
     tl.to(
       [proxyRef.current, glassRef.current],
       { scale: 1, ease: "back.out(1.6)", duration: 1.2 },
@@ -338,6 +389,12 @@ export function MeetYavenSection() {
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       3.2
     )
+    if (underlines[1])
+      tl.to(
+        underlines[1],
+        { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
+        3.8
+      )
     SATELLITES.forEach((sat, i) => {
       const s = satRefs.current[i]
       const l = labelRefs.current[i]
@@ -352,6 +409,12 @@ export function MeetYavenSection() {
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       5.8
     )
+    if (underlines[2])
+      tl.to(
+        underlines[2],
+        { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
+        6.4
+      )
     SATELLITES.forEach((sat, i) => {
       const s = satRefs.current[i]
       const l = labelRefs.current[i]
@@ -370,7 +433,7 @@ export function MeetYavenSection() {
       tl.scrollTrigger?.kill()
       tl.kill()
     }
-  }, [staticLayout])
+  }, [staticLayout, isMobile])
 
   const content = (
     <div
@@ -388,7 +451,7 @@ export function MeetYavenSection() {
         <h2 ref={headingRef} style={headingStyle}>
           Meet Yaven.
         </h2>
-        <div style={bodyTextStyle}>
+        <div ref={bodyWrapRef} style={bodyTextStyle}>
           {BODY.map((para, pi) => (
             <p
               key={pi}
@@ -408,18 +471,21 @@ export function MeetYavenSection() {
         satRefs={satRefs}
         labelRefs={labelRefs}
         glassRef={glassRef}
-        settled={!!staticLayout}
+        settled={staticLayout}
       />
     </div>
   )
 
+  // Reduced motion: non-pinned, settled, no animation.
   if (staticLayout) {
     return (
       <section
+        data-meet-yaven
         style={{
           position: "relative",
           background: "var(--primary)",
-          padding: "clamp(220px, 30vh, 360px) clamp(28px, 5vw, 48px) clamp(120px, 18vh, 220px)",
+          padding:
+            "clamp(120px, 20vh, 360px) clamp(28px, 6vw, 48px) clamp(100px, 16vh, 220px)",
           overflow: "hidden"
         }}
       >
@@ -428,9 +494,30 @@ export function MeetYavenSection() {
     )
   }
 
+  // Mobile: non-pinned so it can't overflow/clip, but the orb still animates
+  // (played once when scrolled into view).
+  if (isMobile) {
+    return (
+      <div
+        ref={wrapperRef}
+        data-meet-yaven
+        style={{
+          position: "relative",
+          background: "var(--primary)",
+          padding:
+            "clamp(90px, 14vh, 160px) clamp(28px, 6vw, 48px) clamp(100px, 16vh, 200px)",
+          overflow: "hidden"
+        }}
+      >
+        {content}
+      </div>
+    )
+  }
+
   return (
     <div
       ref={wrapperRef}
+      data-meet-yaven
       style={{
         position: "relative",
         height: "350vh",

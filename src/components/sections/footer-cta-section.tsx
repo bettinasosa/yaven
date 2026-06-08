@@ -9,7 +9,7 @@ export function FooterCTASection() {
   return (
     // Pinned for a full extra viewport so the CTA reads as its own page
     // rather than a transition into the footer.
-    <div className="relative h-[200vh] bg-[var(--primary)]">
+    <div data-hide-getyaven className="relative h-[200vh] bg-[var(--primary)]">
       {/* Blur-in from previous section */}
       <div
         aria-hidden="true"
@@ -30,7 +30,7 @@ export function FooterCTASection() {
 
         <div className="relative text-center z-2">
           <ScrollCutReveal className="text-[clamp(44px,7vw,110px)] font-medium tracking-[-0.02em] leading-[1.05] text-white mx-auto max-w-[900px]" style={{ fontFamily: "var(--font-instrument-serif)" }}>
-            Focus on the work only you can do.
+            Less admin. More flow.
           </ScrollCutReveal>
 
           <div className="mt-[clamp(40px,7vh,64px)] flex justify-center">
