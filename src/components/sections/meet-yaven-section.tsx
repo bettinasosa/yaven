@@ -65,35 +65,46 @@ function GlassGooFilter() {
             values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"
             result="goo-mask"
           />
-          {/* Glass body: semi-transparent white fill within the goo shape */}
-          <feFlood floodColor="white" floodOpacity="0.18" result="body-fill" />
+          {/* Glass body: translucent white fill — matches glass-btn background */}
+          <feFlood floodColor="white" floodOpacity="0.28" result="body-fill" />
           <feComposite in="body-fill" in2="goo-mask" operator="in" result="glass-body" />
-          {/* Specular sweep: distant light at ~-75deg angle, like glass-btn's gradient */}
+          {/* Inner glow: soft white core for depth */}
+          <feGaussianBlur in="goo-mask" stdDeviation="6" result="inner-glow-blur" />
+          <feFlood floodColor="white" floodOpacity="0.2" result="glow-fill" />
+          <feComposite in="glow-fill" in2="inner-glow-blur" operator="in" result="inner-glow" />
+          {/* Specular sweep: angled light for glass reflection */}
           <feSpecularLighting
             in="goo-mask"
-            surfaceScale="3"
-            specularConstant="1"
-            specularExponent="30"
+            surfaceScale="4"
+            specularConstant="1.4"
+            specularExponent="24"
             lightingColor="white"
             result="specular"
           >
-            <feDistantLight azimuth="305" elevation="55" />
+            <feDistantLight azimuth="305" elevation="50" />
           </feSpecularLighting>
           <feComposite in="specular" in2="goo-mask" operator="in" result="specular-clipped" />
           <feColorMatrix
             in="specular-clipped"
             type="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.35 0"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.45 0"
             result="specular-dimmed"
           />
-          {/* Rim highlight: thin bright edge ring */}
-          <feMorphology in="goo-mask" operator="erode" radius="3" result="inner-mask" />
+          {/* Rim highlight: bright edge ring — thicker for glass feel */}
+          <feMorphology in="goo-mask" operator="erode" radius="2" result="inner-mask" />
           <feComposite in="goo-mask" in2="inner-mask" operator="out" result="rim-mask" />
-          <feFlood floodColor="white" floodOpacity="0.5" result="rim-fill" />
+          <feFlood floodColor="white" floodOpacity="0.65" result="rim-fill" />
           <feComposite in="rim-fill" in2="rim-mask" operator="in" result="glass-rim" />
-          {/* Merge: body + specular sweep + rim */}
+          {/* Shadow beneath for depth */}
+          <feGaussianBlur in="goo-mask" stdDeviation="8" result="shadow-blur" />
+          <feOffset in="shadow-blur" dx="0" dy="4" result="shadow-offset" />
+          <feFlood floodColor="black" floodOpacity="0.12" result="shadow-fill" />
+          <feComposite in="shadow-fill" in2="shadow-offset" operator="in" result="shadow" />
+          {/* Merge: shadow + body + inner glow + specular + rim */}
           <feMerge>
+            <feMergeNode in="shadow" />
             <feMergeNode in="glass-body" />
+            <feMergeNode in="inner-glow" />
             <feMergeNode in="specular-dimmed" />
             <feMergeNode in="glass-rim" />
           </feMerge>

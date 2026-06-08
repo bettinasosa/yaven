@@ -453,55 +453,61 @@ export function CommandsSection() {
     const wrapper = wrapperRef.current
     const triggers: ScrollTrigger[] = []
 
-    // Draft card enters / exits
-    const draftTl = gsap.timeline({ paused: true })
+    // Draft card — scrub in smoothly
+    const draftTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "5% top",
+        end: "20% top",
+        scrub: 1
+      }
+    })
     draftTl.fromTo(
       draftRef.current,
       { y: 60, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1.4, ease: "power3.out", force3D: true }
+      { y: 0, opacity: 1, ease: "none", force3D: true }
     )
+    triggers.push(draftTl.scrollTrigger!)
 
+    // Activate draft typewriter
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "8% top",
-        onEnter: () => {
-          draftTl.play()
-          setDraftActive(true)
-        },
-        onLeaveBack: () => {
-          draftTl.reverse()
-          setDraftActive(false)
-        }
+        start: "15% top",
+        onEnter: () => setDraftActive(true),
+        onLeaveBack: () => setDraftActive(false)
       })
     )
 
-    // Ask card stacks / unstacks
-    const askTl = gsap.timeline({ paused: true })
+    // Ask card stacks — push start much later so draft stays solo longer
+    const askTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "60% top",
+        end: "78% top",
+        scrub: 1
+      }
+    })
     askTl.to(
       draftRef.current,
-      { y: -16, scale: 0.96, duration: 1.2, ease: "power3.out", force3D: true },
+      { y: -16, scale: 0.96, ease: "none", force3D: true },
       0
     )
     askTl.fromTo(
       askRef.current,
       { y: 60, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1.4, ease: "power3.out", force3D: true },
+      { y: 0, opacity: 1, ease: "none", force3D: true },
       0
     )
+    triggers.push(askTl.scrollTrigger!)
 
+    // Activate ask typewriter
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "50% top",
-        onEnter: () => {
-          askTl.play()
-          setAskActive(true)
-        },
-        onLeaveBack: () => {
-          askTl.reverse()
-          setAskActive(false)
-        }
+        start: "68% top",
+        onEnter: () => setAskActive(true),
+        onLeaveBack: () => setAskActive(false)
       })
     )
 
@@ -581,7 +587,7 @@ export function CommandsSection() {
           WebkitBackdropFilter: "blur(8px)",
           maskImage: "linear-gradient(to bottom, transparent 0%, black 100%)",
           WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 100%)",
-          zIndex: 10,
+          zIndex: 1,
           pointerEvents: "none"
         }}
       />
@@ -595,7 +601,8 @@ export function CommandsSection() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "clamp(48px, 8vh, 90px) 24px 24px"
+          padding: "clamp(48px, 8vh, 90px) 24px 24px",
+          zIndex: 2
         }}
       >
         <GooFilterDefs />

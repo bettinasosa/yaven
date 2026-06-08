@@ -159,7 +159,7 @@ function HeroVariantB() {
               lineHeight: 0.88,
               display: "block",
               textTransform: "lowercase",
-              marginBottom: "clamp(20px, 3vh, 36px)"
+              marginBottom: "clamp(64px, 10vh, 120px)"
             }}
           >
             yaven
@@ -175,7 +175,7 @@ function HeroVariantB() {
               letterSpacing: "-0.02em",
               margin: 0,
               opacity: 0.92,
-              marginBottom: "clamp(12px, 2vh, 24px)"
+              marginBottom: "clamp(2px, 1vh, 12px)"
             }}
           >
             Less admin.
