@@ -575,6 +575,35 @@
   }
 }
 
+/* Animated underline that draws in */
+.triage-underline {
+  text-decoration: none !important;
+  background-image: linear-gradient(var(--primary), var(--primary));
+  background-size: 0% 3.5px;
+  background-position: left bottom 0px;
+  background-repeat: no-repeat;
+  padding-bottom: 3px;
+  transition:
+    background-size 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    background-position 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  cursor: default;
+}
+.triage-underline.is-visible {
+  background-size: 100% 3.5px;
+}
+.triage-underline.is-visible:hover {
+  background-position: right bottom 0px;
+  background-size: 100% 3.5px;
+  animation: underline-wiggle 0.5s ease;
+}
+@keyframes underline-wiggle {
+  0% { background-position: left bottom 0px; }
+  25% { background-position: left bottom 2px; }
+  50% { background-position: left bottom -1px; }
+  75% { background-position: left bottom 1px; }
+  100% { background-position: left bottom 0px; }
+}
+
 /* Bricolage Grotesque — heading font. Loaded from Google Fonts in layout.tsx. */
 
 :root {

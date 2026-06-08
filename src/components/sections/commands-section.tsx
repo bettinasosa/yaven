@@ -493,7 +493,7 @@ export function CommandsSection() {
 
   const sideText = (
     <div className="flex flex-col gap-6">
-      <ScrollCutReveal className="font-instrument-serif text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0">
+      <ScrollCutReveal className="text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0" style={{ fontFamily: "var(--font-instrument-serif)" }}>
         Yaven works anywhere.
       </ScrollCutReveal>
       <p className="text-[clamp(15px,1.6vw,17px)] text-white/80 leading-[1.55] mr-60 mt-24">
