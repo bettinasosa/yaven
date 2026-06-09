@@ -20,26 +20,46 @@ function U({ children }: { children: React.ReactNode }) {
   )
 }
 
+// Serif italic with shiny light-blue gradient
+function BI({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        fontFamily: "var(--font-dm-sans), sans-serif",
+        fontWeight: 700,
+        fontStyle: "italic",
+        background:
+          "linear-gradient(125deg, #9dd4ff 0%, #7ec8ff 22%, #e0f2ff 46%, #6ab8f8 70%, #8cc8ff 100%)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text"
+      }}
+    >
+      {children}
+    </span>
+  )
+}
+
 const BODY: React.ReactNode[] = [
   <>
     Built for founders, freelancers, and solo operators who{" "}
-    <U>run everything themselves</U>.
+    <BI>run everything themselves</BI>.
   </>,
   <>
     Yaven understands your context, tone and open tasks, then acts on them{" "}
     <U>with you kept in the loop</U>. No new apps, tabs or empty chat boxes.
   </>,
   <>
-    So you can spend your time on <U>the work only you can do</U>.
+    So you can spend your time on <BI>the work only you can do</BI>.
   </>
 ]
 
 const SATELLITES = [
-  { x: -125, y: -95,  label: "proposal drafted", pw: 118, ph: 32 },
-  { x: 130,  y: -70,  label: "follow-up sent",   pw: 104, ph: 32 },
-  { x: -140, y: 65,   label: "CRM updated",      pw: 90,  ph: 32 },
-  { x: 105,  y: 110,  label: "meeting prepped",  pw: 112, ph: 32 },
-  { x: -25,  y: -150, label: "reply drafted",    pw: 96,  ph: 32 },
+  { x: -125, y: -95, label: "proposal drafted", pw: 118, ph: 32 },
+  { x: 130, y: -70, label: "follow-up sent", pw: 104, ph: 32 },
+  { x: -140, y: 65, label: "CRM updated", pw: 90, ph: 32 },
+  { x: 105, y: 110, label: "meeting prepped", pw: 112, ph: 32 },
+  { x: -25, y: -150, label: "reply drafted", pw: 96, ph: 32 }
 ]
 
 const CORE_SIZE = 180
@@ -219,16 +239,7 @@ function PresenceStage({
       {/* Layer 1: gooey filter — proxy core only (label chips stand alone
           as glass pills; a goo blob behind each read as disconnected). */}
       <div style={{ ...stageStyle, filter: "url(#yv-glass-goo)" }}>
-        <div ref={proxyRef}>
-          <div
-            style={{
-              width: `${CORE_SIZE}px`,
-              height: `${CORE_SIZE}px`,
-              borderRadius: "50%",
-              background: "#fff"
-            }}
-          />
-        </div>
+        <div ref={proxyRef} />
       </div>
 
       {/* Layer 2: glass label chips — fly out from center */}
@@ -236,17 +247,19 @@ function PresenceStage({
         {SATELLITES.map((s, i) => (
           <div
             key={i}
-            ref={el => { labelRefs.current[i] = el }}
+            ref={el => {
+              labelRefs.current[i] = el
+            }}
             className="glass-btn glass-btn-sm"
             style={{
               position: "absolute",
-              fontSize: "14px",
+              fontSize: "22px",
               cursor: "default",
               opacity: 0,
               whiteSpace: "nowrap"
             }}
           >
-            <span style={{ paddingBlock: "0.5em", paddingInline: "1em" }}>
+            <span style={{ paddingBlock: "0.75em", paddingInline: "1.5em" }}>
               {s.label}
             </span>
           </div>
@@ -267,24 +280,15 @@ function PresenceStage({
             justifyContent: "center"
           }}
         >
-          {/* Frosted glass disc — sits behind the mark (no hover dependency) */}
-          <span
-            style={{
-              position: "absolute",
-              inset: 0,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.14)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.35)",
-              boxShadow:
-                "inset 0 2px 10px rgba(255,255,255,0.4), inset 0 -2px 8px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.18)"
-            }}
-          />
-          {/* Yaven mark — on top of the glass */}
+          {/* Yaven mark */}
           <span
             className="yv-chip-float"
-            style={{ position: "relative", zIndex: 2, display: "block", padding: 0 }}
+            style={{
+              position: "relative",
+              zIndex: 2,
+              display: "block",
+              padding: 0
+            }}
           >
             <Image
               src="/yaven-logo.svg"
@@ -294,7 +298,7 @@ function PresenceStage({
               style={{
                 display: "block",
                 width: "auto",
-                height: `${CORE_SIZE * 0.72}px`,
+                height: `${CORE_SIZE * 2.1}px`,
                 filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.22))"
               }}
             />
@@ -310,7 +314,7 @@ export function MeetYavenSection() {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const paraRefs = useRef<(HTMLParagraphElement | null)[]>([])
   const proxyRef = useRef<HTMLDivElement>(null) // gooey proxy core
-  const satRefs = useRef<(HTMLDivElement | null)[]>([])   // pill proxies inside goo filter
+  const satRefs = useRef<(HTMLDivElement | null)[]>([]) // pill proxies inside goo filter
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]) // glass chips above filter
   const glassRef = useRef<HTMLDivElement>(null) // glass-btn core
   const bodyWrapRef = useRef<HTMLDivElement>(null)
@@ -338,8 +342,12 @@ export function MeetYavenSection() {
     )
     underlines.forEach(u => u && gsap.set(u, { backgroundSize: "0% 3.5px" }))
     gsap.set([proxyRef.current, glassRef.current], { scale: 0 })
-    satRefs.current.forEach(s => s && gsap.set(s, { x: 0, y: 0, opacity: 0, scale: 0.7 }))
-    labelRefs.current.forEach(l => l && gsap.set(l, { x: 0, y: 0, opacity: 0, scale: 0.7 }))
+    satRefs.current.forEach(
+      s => s && gsap.set(s, { x: 0, y: 0, opacity: 0, scale: 0.7 })
+    )
+    labelRefs.current.forEach(
+      l => l && gsap.set(l, { x: 0, y: 0, opacity: 0, scale: 0.7 })
+    )
 
     // Desktop pins and scrubs the timeline; mobile plays it once when the
     // (non-pinned) section scrolls into view, so nothing overflows the screen.
@@ -379,7 +387,7 @@ export function MeetYavenSection() {
       )
     tl.to(
       [proxyRef.current, glassRef.current],
-      { scale: 1, ease: "back.out(1.6)", duration: 1.2 },
+      { scale: 1, ease: "back.out(1.6)", duration: 1.9 },
       1.4
     )
 
@@ -399,8 +407,32 @@ export function MeetYavenSection() {
       const s = satRefs.current[i]
       const l = labelRefs.current[i]
       const labelY = sat.y < 0 ? sat.y - sat.ph / 2 - 4 : sat.y + sat.ph / 2 + 4
-      if (s) tl.to(s, { x: sat.x, y: labelY, opacity: 1, scale: 1, ease: "back.out(1.5)", duration: 1.3 }, 3.4 + i * 0.2)
-      if (l) tl.to(l, { x: sat.x, y: labelY, opacity: 1, scale: 1, ease: "back.out(1.5)", duration: 1.3 }, 3.4 + i * 0.2)
+      if (s)
+        tl.to(
+          s,
+          {
+            x: sat.x,
+            y: labelY,
+            opacity: 1,
+            scale: 1,
+            ease: "back.out(1.5)",
+            duration: 1.3
+          },
+          3.4 + i * 0.2
+        )
+      if (l)
+        tl.to(
+          l,
+          {
+            x: sat.x,
+            y: labelY,
+            opacity: 1,
+            scale: 1,
+            ease: "back.out(1.5)",
+            duration: 1.3
+          },
+          3.4 + i * 0.2
+        )
     })
 
     // P3 — both retract back to center and goo-merge with the core
@@ -418,8 +450,32 @@ export function MeetYavenSection() {
     SATELLITES.forEach((sat, i) => {
       const s = satRefs.current[i]
       const l = labelRefs.current[i]
-      if (s) tl.to(s, { x: 0, y: 0, opacity: 0, scale: 0.7, ease: "power2.in", duration: 1.0 }, 6.0 + i * 0.12)
-      if (l) tl.to(l, { x: 0, y: 0, opacity: 0, scale: 0.7, ease: "power2.in", duration: 1.0 }, 6.0 + i * 0.12)
+      if (s)
+        tl.to(
+          s,
+          {
+            x: 0,
+            y: 0,
+            opacity: 0,
+            scale: 0.7,
+            ease: "power2.in",
+            duration: 1.0
+          },
+          6.0 + i * 0.12
+        )
+      if (l)
+        tl.to(
+          l,
+          {
+            x: 0,
+            y: 0,
+            opacity: 0,
+            scale: 0.7,
+            ease: "power2.in",
+            duration: 1.0
+          },
+          6.0 + i * 0.12
+        )
     })
     tl.to(
       [proxyRef.current, glassRef.current],

@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Typewriter } from "@/components/effects/typewriter"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
+import { useIsMobile } from "@/components/effects/use-is-mobile"
 import Image from "next/image"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -70,115 +71,119 @@ function LinkedInCard({
     <div
       style={{
         width: "100%",
-        height: "500px",
-        borderRadius: "28px",
-        background: "var(--cream)",
-        boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)",
-        overflow: "hidden"
+        minHeight: "480px",
+        borderRadius: "48px",
+        background: "linear-gradient(160deg, #0958b0, #0A66C2)",
+        boxShadow: "0 16px 56px rgba(0,0,0,0.28), 0 4px 14px rgba(0,0,0,0.12)",
+        display: "flex",
+        flexDirection: "column",
+        padding: "38px 35px 35px"
       }}
     >
-      <div className="flex flex-col h-full">
-        {/* Header bar — LinkedIn blue */}
-        <div
-          className="flex items-center justify-between px-5 py-9"
+      {/* Header label */}
+      <div className="flex items-center gap-2.5 px-[22px] pb-5">
+        <Image
+          src="/logos/linkedin.png"
+          alt="LinkedIn"
+          width={26}
+          height={26}
           style={{
-            background: "linear-gradient(135deg, #0A66C2, #0d79d9)"
+            objectFit: "contain",
+            borderRadius: "5px",
+            filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.12))"
           }}
-        >
-          <div className="flex items-center gap-2.5">
-            <span
-              className="inline-flex items-center justify-center rounded-lg"
-              style={{
-                width: "32px",
-                height: "32px",
-                background: "rgba(255,255,255,0.2)",
-                border: "1px solid rgba(255,255,255,0.25)"
-              }}
-            >
-              <span className="font-bold text-white text-[14px] leading-none">
-                in
-              </span>
-            </span>
-            <span className="font-bold text-white text-[16px]">Draft</span>
-          </div>
-          <ShortcutBadge keys={["⌥", "D"]} />
-        </div>
+        />
+        <span className="font-bold text-white text-[16px]">Draft</span>
+      </div>
 
-        {/* Message content */}
-        <div className="px-5 py-5 flex flex-col gap-4 flex-1">
-          <div className="flex items-center gap-3">
-            <span
-              className="inline-flex items-center justify-center rounded-full shrink-0"
-              style={{
-                width: "30px",
-                height: "30px",
-                background: "linear-gradient(135deg, #00AFF9, #2563EB)",
-                boxShadow: "0 2px 10px rgba(124,58,237,0.3)"
-              }}
-            />
-            <div>
-              <div className="font-bold text-[#0a0e1a] text-[15px]">
-                Lola H.
-              </div>
-              <div className="text-[#0a0e1a]/50 text-[13px]">
-                Recruiter · Founding Designer role
-              </div>
+      {/* Inner white card */}
+      <div
+        style={{
+          flex: 1,
+          background: "var(--cream)",
+          borderRadius: "28px",
+          padding: "clamp(20px,3vw,28px)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.1)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden"
+        }}
+      >
+        {/* Avatar + sender + subtitle */}
+        <div className="flex items-center gap-3 mb-3">
+          <span
+            style={{
+              width: "32px",
+              height: "32px",
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #00AFF9, #2563EB)",
+              flexShrink: 0,
+              display: "inline-block",
+              boxShadow: "0 2px 10px rgba(124,58,237,0.3)"
+            }}
+          />
+          <div>
+            <div className="font-bold text-[#0a0e1a] text-[14px]">Lola H.</div>
+            <div className="text-[#0a0e1a]/50 text-[12px]">
+              Recruiter · Founding Designer role
             </div>
           </div>
+        </div>
 
-          <p className="text-[#0a0e1a] text-[15px] leading-[1.55] font-medium mx-4">
-            Hi Bettina! Your work is stunning, we&apos;re hiring a founding
-            designer. Open to a quick chat this week?
-          </p>
+        {/* Incoming message */}
+        <p className="text-[#0a0e1a] text-[14px] leading-[1.55] font-medium mb-4 mx-1">
+          Hi Bettina! Your work is stunning, we&apos;re hiring a founding
+          designer. Open to a quick chat?
+        </p>
 
-          <div
-            className="rounded-2xl p-4 flex flex-col gap-3 mt-auto"
-            style={{
-              background: "rgba(0,0,0,0.04)",
-              border: "1.5px solid rgba(0,0,0,0.08)"
-            }}
-          >
-            {!drafting ? (
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-1.5">
-                    You type
-                  </div>
-                  <div className="text-[#0a0e1a] font-medium text-[15px]">
-                    politely decline, but warm
-                  </div>
-                </div>
-                <div className="glass-wrap">
-                  <button
-                    type="button"
-                    className="glass-btn glass-btn-sm"
-                    style={{ fontSize: "14px" }}
-                    onClick={onTrigger}
-                  >
-                    <span className="text-white">
-                      <span className="inline-flex items-center gap-[3px]">
-                        <KeyBadge>⌥</KeyBadge>
-                        <KeyBadge>D</KeyBadge>
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            ) : (
+        {/* Draft box */}
+        <div
+          className="rounded-[28px] p-5 flex flex-col gap-3 mt-auto"
+          style={{
+            background: "rgba(0,0,0,0.04)",
+            border: "1.5px solid rgba(0,0,0,0.08)"
+          }}
+        >
+          {!drafting ? (
+            <div className="flex items-center justify-between">
               <div>
-                <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-2">
-                  Yaven drafts
+                <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-1.5">
+                  You type
                 </div>
-                <div className="text-[#0a0e1a] text-[14px] leading-[1.55] font-medium">
-                  {active ? (
-                    <Typewriter text={DRAFT_RESPONSE} speed={12} delay={300} />
-                  ) : (
-                    <span className="opacity-0">.</span>
-                  )}
+                <div className="text-[#0a0e1a] font-medium text-[15px]">
+                  politely decline, but warm
                 </div>
               </div>
-            )}
-          </div>
+              <div className="glass-wrap">
+                <button
+                  type="button"
+                  className="glass-btn glass-btn-sm"
+                  style={{ fontSize: "14px" }}
+                  onClick={onTrigger}
+                >
+                  <span className="text-white">
+                    <span className="inline-flex items-center gap-[3px]">
+                      <KeyBadge>⌥</KeyBadge>
+                      <KeyBadge>D</KeyBadge>
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-2">
+                Yaven drafts
+              </div>
+              <div className="text-[#0a0e1a] text-[14px] leading-[1.55] font-medium">
+                {active ? (
+                  <Typewriter text={DRAFT_RESPONSE} speed={12} delay={300} />
+                ) : (
+                  <span className="opacity-0">.</span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -202,59 +207,41 @@ function AskCard({
         style={{
           width: "100%",
           minHeight: "480px",
-          borderRadius: "28px",
+          borderRadius: "52px",
           position: "relative",
           overflow: "hidden",
-          background: "var(--red)",
-          boxShadow: "0 12px 48px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08)"
+          background: "#ebc1ff",
+          boxShadow: "0 20px 64px rgba(0,0,0,0.28), 0 6px 18px rgba(0,0,0,0.12)"
         }}
       >
         {/* Header bar — Ask command (doc icon + ⌥A), on the red strip */}
         <div
-          className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 z-[2]"
-          style={{ height: "14%" }}
+          className="absolute top-0 left-0 right-0 flex items-end justify-between px-10 pt-14 pb-8 z-[2]"
+          style={{ height: "18%" }}
         >
           <div className="flex items-center gap-2.5">
-            <span
-              className="inline-flex items-center justify-center rounded-lg"
-              style={{
-                width: "32px",
-                height: "32px",
-                background: "rgba(255,255,255,0.2)",
-                border: "1px solid rgba(255,255,255,0.25)"
-              }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#fff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
-                <path d="M14 3v5h5" />
-                <path d="M9 13h6M9 17h6" />
-              </svg>
-            </span>
+            <Image
+              src="/logos/google.png"
+              alt="Google"
+              width={26}
+              height={26}
+              style={{ objectFit: "contain", borderRadius: "8px" }}
+            />
             <span className="font-bold text-white text-[16px]">Ask</span>
           </div>
-          <ShortcutBadge keys={["⌥", "A"]} />
         </div>
 
         {/* Cream document panel — cropped from left/bottom */}
         <div
           style={{
             position: "absolute",
-            top: "14%",
+            top: "18%",
             left: "-4%",
             width: "90%",
             bottom: "-4%",
             background: "var(--cream)",
-            borderRadius: "0 22px 0",
-            padding: "52px 28px 40px 40px",
+            borderRadius: "0 32px 0",
+            padding: "52px 28px 40px 56px",
             display: "flex",
             flexDirection: "column",
             gap: "16px",
@@ -337,7 +324,7 @@ function AskCard({
             background: "rgba(255,255,255,0.45)",
             backdropFilter: "blur(40px) saturate(1.4)",
             WebkitBackdropFilter: "blur(40px) saturate(1.4)",
-            borderRadius: "22px",
+            borderRadius: "32px",
             border: "1px solid rgba(255,255,255,0.5)",
             padding: "18px 22px",
             boxShadow:
@@ -403,6 +390,7 @@ export function CommandsSection() {
   const [askTyping, setAskTyping] = useState(false)
 
   const staticLayout = usePrefersReducedMotion()
+  const isMobile = useIsMobile()
   const draftInView = useRef(false)
   const askInView = useRef(false)
 
@@ -530,17 +518,13 @@ export function CommandsSection() {
 
   const sideText = (
     <div className="flex flex-col gap-6">
-      <ScrollCutReveal className="text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0" style={{ fontFamily: "var(--font-instrument-serif)" }}>
-        Yaven works{" "}
-        <span
-          className="triage-underline"
-          style={{ backgroundImage: "linear-gradient(#fff, #fff)" }}
-        >
-          anywhere
-        </span>
-        .
+      <ScrollCutReveal
+        className="text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0"
+        style={{ fontFamily: "var(--font-instrument-serif)" }}
+      >
+        Yaven works <span>anywhere</span>.
       </ScrollCutReveal>
-      <p className="text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] mr-60 mt-24">
+      <p className={`text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-4" : "mr-60 mt-24"}`}>
         Draft a reply, explain a contract, answer a question, all without
         leaving the app you&apos;re in. Press{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">
@@ -557,9 +541,12 @@ export function CommandsSection() {
     </div>
   )
 
-  if (staticLayout) {
+  if (staticLayout || isMobile) {
     return (
-      <section className="bg-[var(--primary)] p-[clamp(80px,12vh,140px)_clamp(28px,5vw,48px)]">
+      <section
+        className="bg-[var(--primary)] p-[clamp(80px,12vh,140px)_clamp(28px,5vw,48px)]"
+        style={{ borderRadius: "48px 48px 0 0", boxShadow: "0 -16px 64px rgba(0,0,0,0.18)" }}
+      >
         <div className="max-w-[1100px] mx-auto">
           <div
             className="w-full grid items-start gap-[clamp(40px,6vw,80px)]"
@@ -641,7 +628,11 @@ export function CommandsSection() {
               <LinkedInCard
                 drafting={drafting}
                 active={draftTyping}
-                onTrigger={triggerDraft}
+                onTrigger={() => {
+                  if (drafting) return
+                  setDrafting(true)
+                  setTimeout(() => setDraftTyping(true), 100)
+                }}
               />
             </div>
 
@@ -651,7 +642,7 @@ export function CommandsSection() {
               ref={askCardRef}
               style={{
                 position: "absolute",
-                top: "72px",
+                top: "48px",
                 left: 0,
                 right: 0,
                 zIndex: 2,
