@@ -1098,9 +1098,46 @@ export function ProposalsCrmSection() {
     return (
       <section
         ref={mobileStackRef}
-        style={{ background: "var(--cream)", overflow: "hidden" }}
+        style={{ background: "var(--cream)", overflow: "clip" }}
       >
-        <div style={{ paddingTop: "clamp(80px, 12vh, 140px)" }}>{header}</div>
+        {/* Header + the three slides share a group so the sticky header
+            sticks over the slides but releases before the finale (which then
+            becomes its own header, uncovered). */}
+        <div>
+          {/* On mobile the header sticks at the top (solid cream so the slides
+              scroll behind it without overlapping). overflow:clip on the
+              section keeps sticky working — overflow:hidden would break it. */}
+          <div
+            style={
+              isMobile
+                ? {
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                    background: "var(--cream)",
+                    paddingTop: "clamp(40px, 7vh, 80px)",
+                    paddingBottom: "clamp(14px, 3vh, 24px)"
+                  }
+                : { paddingTop: "clamp(80px, 12vh, 140px)" }
+            }
+          >
+            {header}
+            {/* soft fade at the scroll cutoff under the sticky header */}
+            {isMobile && (
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  right: 0,
+                  height: "34px",
+                  background: "linear-gradient(var(--cream), transparent)",
+                  pointerEvents: "none"
+                }}
+              />
+            )}
+          </div>
         <div
           data-reveal
           style={{
@@ -1153,6 +1190,7 @@ export function ProposalsCrmSection() {
             </p>
           </div>
           <ConferenceCard animated={false} />
+        </div>
         </div>
         <div
           data-reveal
