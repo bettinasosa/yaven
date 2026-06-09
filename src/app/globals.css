@@ -284,12 +284,17 @@
 
 /* Sticky button — light blue tint when over cream backgrounds */
 .get-yaven-cream .glass-btn {
-  background: linear-gradient(-75deg, rgba(38,127,229,0.04), rgba(38,127,229,0.12), rgba(38,127,229,0.04));
+  background: linear-gradient(
+    -75deg,
+    rgba(38, 127, 229, 0.04),
+    rgba(38, 127, 229, 0.12),
+    rgba(38, 127, 229, 0.04)
+  );
   box-shadow:
-    inset 0 0.125em 0.125em rgba(38,127,229,0.03),
-    inset 0 -0.125em 0.125em rgba(255,255,255,0.5),
-    0 0.25em 0.125em -0.125em rgba(0,0,0,0.1),
-    inset 0 0 0.1em 0.25em rgba(38,127,229,0.03),
+    inset 0 0.125em 0.125em rgba(38, 127, 229, 0.03),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.1),
+    inset 0 0 0.1em 0.25em rgba(38, 127, 229, 0.03),
     0 0 #fff;
 }
 .get-yaven-cream .glass-btn > span {
@@ -297,7 +302,10 @@
   text-shadow: none;
 }
 .get-yaven-cream .glass-shadow::after {
-  background: linear-gradient(rgba(38,127,229,0.08), rgba(38,127,229,0.03));
+  background: linear-gradient(
+    rgba(38, 127, 229, 0.08),
+    rgba(38, 127, 229, 0.03)
+  );
 }
 
 /* Bubble button */
@@ -390,7 +398,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-instrument-serif: "Bricolage Grotesque", var(--font-dm-sans), sans-serif;
+  --font-instrument-serif:
+    "Bricolage Grotesque", var(--font-dm-sans), sans-serif;
   --font-inter: var(--font-helvetica);
   --font-sans: var(--font-helvetica);
   --font-mono: var(--font-space-mono), monospace;
@@ -618,14 +627,50 @@
 .triage-underline-lg.is-visible {
   background-size: 100% 5.5px;
 }
+/* Invite pulse — draws attention to pressable glass shortcut buttons */
+@keyframes glass-btn-invite {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+.glass-btn-invite {
+  animation: glass-btn-invite 2.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+.glass-btn-invite:has(.glass-btn:hover),
+.glass-btn-invite:has(.glass-btn:active) {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-btn-invite {
+    animation: none;
+  }
+}
+
 /* Shake — invalid waitlist submit (replaces native validation bubble) */
 @keyframes yv-shake {
-  0%, 100% { transform: translateX(0); }
-  15% { transform: translateX(-9px); }
-  30% { transform: translateX(8px); }
-  45% { transform: translateX(-6px); }
-  60% { transform: translateX(4px); }
-  75% { transform: translateX(-2px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-9px);
+  }
+  30% {
+    transform: translateX(8px);
+  }
+  45% {
+    transform: translateX(-6px);
+  }
+  60% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
 }
 .yv-shake {
   animation: yv-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
@@ -641,11 +686,21 @@
   animation: underline-wiggle 0.5s ease;
 }
 @keyframes underline-wiggle {
-  0% { background-position: left bottom 0px; }
-  25% { background-position: left bottom 2px; }
-  50% { background-position: left bottom -1px; }
-  75% { background-position: left bottom 1px; }
-  100% { background-position: left bottom 0px; }
+  0% {
+    background-position: left bottom 0px;
+  }
+  25% {
+    background-position: left bottom 2px;
+  }
+  50% {
+    background-position: left bottom -1px;
+  }
+  75% {
+    background-position: left bottom 1px;
+  }
+  100% {
+    background-position: left bottom 0px;
+  }
 }
 
 /* Bricolage Grotesque — heading font. Loaded from Google Fonts in layout.tsx. */
@@ -1112,7 +1167,7 @@
 
   /* Dark / ink CTA — used in forms + modals */
   .btn-press-dark {
-    background: var(--ink);
+    background: black;
     color: var(--cream);
   }
 

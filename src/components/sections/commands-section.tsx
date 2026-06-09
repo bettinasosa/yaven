@@ -154,7 +154,7 @@ function LinkedInCard({
                   politely decline, warm
                 </div>
               </div>
-              <div className="glass-wrap">
+              <div className="glass-wrap glass-btn-invite">
                 <button
                   type="button"
                   className="glass-btn glass-btn-sm"
@@ -294,7 +294,7 @@ function AskCard({
               <div className="text-[13px] font-medium text-[#0a0e1a]/35">
                 Ask about this document
               </div>
-              <div className="glass-wrap">
+              <div className="glass-wrap glass-btn-invite">
                 <button
                   type="button"
                   className="glass-btn glass-btn-sm"
