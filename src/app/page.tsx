@@ -57,7 +57,6 @@ function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
 }
 
 function StickyGetYaven() {
-  const isMobile = useIsMobile()
   const btnRef = useRef<HTMLDivElement>(null)
   const onCream = useRef(false)
 
@@ -139,9 +138,6 @@ function StickyGetYaven() {
     }
   }, [checkOverlap])
 
-  // The floating "Show me" button doesn't follow the page on mobile.
-  if (isMobile) return null
-
   return (
     <div
       ref={btnRef}
@@ -180,20 +176,17 @@ export default function Home() {
           <ProposalsCrmSection />
         </div>
       </CardWrap>
-      {/* "Yaven works anywhere" is hidden on mobile — its in-app overlay
-          demo doesn't translate to small screens. */}
-      {!isMobile && (
-        <div
-          style={{
-            position: "relative",
-            zIndex: 5,
-            background: "var(--cream)",
-            paddingTop: "80px"
-          }}
-        >
-          <CommandsSection />
-        </div>
-      )}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 5,
+          background: "var(--cream)",
+          paddingTop: "80px",
+          marginTop: "-2px"
+        }}
+      >
+        <CommandsSection />
+      </div>
       <FooterCTASection />
 
       {/* ── Sticky footer ── */}

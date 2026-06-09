@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { SplitText } from "gsap/SplitText"
@@ -10,6 +9,11 @@ import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
 import { GlassCard } from "@/components/effects/glass-card"
+import Image from "next/image"
+import {
+  FinaleContent,
+  ProposalsFinaleSection
+} from "./proposals-finale-section"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -277,7 +281,12 @@ function CrmCard({ animated }: { animated: boolean }) {
   return (
     <div style={{ position: "relative", maxWidth: "520px", margin: "0 auto" }}>
       {/* Goo blob layer behind the pills — melts as they converge */}
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+      <svg
+        width="0"
+        height="0"
+        style={{ position: "absolute" }}
+        aria-hidden="true"
+      >
         <defs>
           <filter id="yv-goo-signal">
             <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
@@ -382,211 +391,83 @@ function CrmCard({ animated }: { animated: boolean }) {
           cursor: "default"
         }}
       >
-      <GlassCard
-        borderRadius="28px"
-        style={{
-          maxWidth: "520px",
-          background: "rgba(200,220,255,0.18)",
-          overflow: "hidden"
-        }}
-      >
-        {/* Header with avatar */}
-        <div
+        <GlassCard
+          borderRadius="28px"
           style={{
-            padding: "18px clamp(18px, 2.5vw, 28px) 14px",
-            display: "flex",
-            alignItems: "center",
-            gap: "12px"
+            maxWidth: "520px",
+            background: "#E7F1FD",
+            overflow: "hidden"
           }}
         >
+          {/* Header with avatar */}
           <div
             style={{
-              width: "38px",
-              height: "38px",
-              borderRadius: "50%",
-              background: "linear-gradient(145deg, #267FE5, #4da3f0, #9e8ec8)",
-              flexShrink: 0,
+              padding: "clamp(28px, 4vw, 40px) clamp(18px, 2.5vw, 28px) 14px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              fontSize: "14px",
-              fontWeight: 600,
-              color: "#fff"
+              gap: "12px"
             }}
           >
-            OB
-          </div>
-          <div>
             <div
               style={{
-                fontSize: "15px",
+                width: "38px",
+                height: "38px",
+                borderRadius: "50%",
+                background:
+                  "linear-gradient(145deg, #267FE5, #4da3f0, #9e8ec8)",
+                flexShrink: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "14px",
                 fontWeight: 600,
-                color: INK,
-                lineHeight: 1.2
+                color: "#fff"
               }}
             >
-              Otto&apos;s Bakehouse
+              OB
             </div>
-            <div
-              style={{
-                fontSize: "12px",
-                fontWeight: 500,
-                color: "#267FE5",
-                opacity: 0.9,
-                marginTop: "1px"
-              }}
-            >
-              1 of 100 Yaven sourced
+            <div>
+              <div
+                style={{
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  color: INK,
+                  lineHeight: 1.2
+                }}
+              >
+                Otto&apos;s Bakehouse
+              </div>
+              <div
+                style={{
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  color: "#267FE5",
+                  opacity: 0.9,
+                  marginTop: "1px"
+                }}
+              >
+                1 of 100 Yaven sourced
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Rows */}
-        <div
-          style={{
-            padding: "12px clamp(18px, 2.5vw, 28px) clamp(18px, 2.5vw, 28px)"
-          }}
-        >
-          {CRM_ROWS.map(row => (
-            <CrmRow
-              key={row.field}
-              field={row.field}
-              value={row.value}
-              animated={animated}
-            />
-          ))}
-        </div>
-      </GlassCard>
+          {/* Rows */}
+          <div
+            style={{
+              padding: "12px clamp(18px, 2.5vw, 28px) clamp(18px, 2.5vw, 28px)"
+            }}
+          >
+            {CRM_ROWS.map(row => (
+              <CrmRow
+                key={row.field}
+                field={row.field}
+                value={row.value}
+                animated={animated}
+              />
+            ))}
+          </div>
+        </GlassCard>
       </div>
-    </div>
-  )
-}
-
-// Bold italic word in DM Sans (Grotesk) for the finale paragraph
-function Em({ children }: { children: React.ReactNode }) {
-  return (
-    <i
-      style={{
-        fontFamily: "var(--font-instrument-serif)",
-        fontWeight: 500,
-        fontStyle: "italic"
-      }}
-    >
-      {children}
-    </i>
-  )
-}
-
-// Inline app icon chip — sits in-flow with text like an emoji, tilted + hover lift
-function AppIcon({ name, tilt }: { name: string; tilt: number }) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <span
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "26px",
-        height: "26px",
-        borderRadius: "7px",
-        background: "rgba(10,14,26,0.07)",
-        border: "1px solid rgba(10,14,26,0.08)",
-        verticalAlign: "middle",
-        margin: "0 3px",
-        flexShrink: 0,
-        position: "relative",
-        top: "-1px",
-        transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
-        transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        cursor: "default"
-      }}
-    >
-      <Image
-        src={`/logos/${name}.png`}
-        alt={name}
-        width={16}
-        height={16}
-        style={{ objectFit: "contain" }}
-      />
-    </span>
-  )
-}
-
-function FinaleContent({
-  underlineDrawn = false
-}: {
-  // When true (reduced motion), the underline renders already drawn since the
-  // scroll-driven draw-in won't run.
-  underlineDrawn?: boolean
-}) {
-  const paraStyle: React.CSSProperties = {
-    ...bodyStyle,
-    margin: 0,
-    opacity: 1,
-    lineHeight: 1.85,
-    textAlign: "left",
-    width: "100%",
-    maxWidth: "none"
-  }
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        gap: "clamp(20px, 3vh, 32px)",
-        width: "min(820px, 92%)",
-        margin: "0 auto"
-      }}
-    >
-      <h2 style={{ ...headlineStyle, textAlign: "left", width: "100%" }}>
-        …so you focus on the work{" "}
-        <span
-          className={`triage-underline${underlineDrawn ? " is-visible" : ""}`}
-          style={{ backgroundImage: "linear-gradient(#df4f3e, #df4f3e)" }}
-        >
-          only you can do
-        </span>
-        .
-      </h2>
-
-      <p style={paraStyle}>
-        That was just a few examples. Yaven <Em>triages</Em> your inbox
-        <AppIcon name="gmail" tilt={-8} />
-        <Em>clears</Em> your docs
-        <AppIcon name="notion" tilt={6} />
-        <AppIcon name="excel" tilt={-5} />
-        <Em>logs</Em> your calls
-        <AppIcon name="granola" tilt={9} />
-        <Em>updates</Em> your CRM
-        <AppIcon name="hubspot" tilt={-7} />
-        <AppIcon name="salesforce" tilt={5} />
-        <Em>tracks</Em> your projects
-        <AppIcon name="asana" tilt={7} />
-        <AppIcon name="monday" tilt={-6} />
-        <Em>monitors</Em> your ads
-        <AppIcon name="googleads" tilt={8} />
-        <AppIcon name="googleanalytics" tilt={-5} />
-        and <Em>grows</Em> your network
-        <AppIcon name="linkedin" tilt={7} />
-        <AppIcon name="google" tilt={-8} />
-      </p>
-
-      <p
-        style={{
-          ...bodyStyle,
-          margin: 0,
-          opacity: 0.6,
-          textAlign: "left",
-          width: "100%",
-          maxWidth: "none"
-        }}
-      >
-        Let Yaven handle the noise, while you handle the rest.
-      </p>
     </div>
   )
 }
@@ -629,13 +510,13 @@ function ConferenceCard({ animated }: { animated: boolean }) {
     >
       <GlassCard
         borderRadius="24px"
-        style={{ overflow: "hidden", background: "rgba(200,220,255,0.18)" }}
+        style={{ overflow: "hidden", background: "#E7F1FD" }}
       >
         {/* Badge top strip */}
         <div
           style={{
             background: "linear-gradient(135deg, #057BD5, #4da3f0, #00AFF9)",
-            padding: "14px clamp(20px, 3vw, 28px)",
+            padding: "clamp(22px, 3vw, 32px) clamp(20px, 3vw, 28px)",
             display: "flex",
             alignItems: "center",
             gap: "14px",
@@ -684,7 +565,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
         <div
           style={{
             padding:
-              "clamp(16px, 2vw, 22px) clamp(20px, 3vw, 28px) clamp(20px, 3vw, 28px)"
+              "clamp(24px, 3.5vw, 36px) clamp(20px, 3vw, 28px) clamp(20px, 3vw, 28px)"
           }}
         >
           <div
@@ -737,7 +618,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
               minHeight: "40px"
             }}
           >
-            {/* Before: needs follow-up (amber) */}
+            {/* Before: needs follow-up */}
             <div
               data-fu-before
               style={{
@@ -745,7 +626,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 inset: 0,
                 padding: "10px 14px",
                 borderRadius: "12px",
-                background: "#df4f3e",
+                background: "var(--red)",
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
@@ -761,7 +642,9 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                   flexShrink: 0
                 }}
               />
-              <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>
+              <span
+                style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}
+              >
                 Needs follow-up
               </span>
             </div>
@@ -790,7 +673,9 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                   flexShrink: 0
                 }}
               />
-              <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>
+              <span
+                style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}
+              >
                 Follow-up drafted with Yaven
               </span>
             </div>
@@ -802,12 +687,12 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 aria-hidden="true"
                 style={{
                   position: "absolute",
-                  right: "10px",
+                  right: "5px",
                   top: "50%",
-                  marginTop: "-19px",
-                  width: "38px",
-                  height: "38px",
-                  borderRadius: "11px",
+                  marginTop: "-16px",
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "9px",
                   background: "#fff",
                   border: "1px solid rgba(38,127,229,0.18)",
                   boxShadow: "0 6px 18px rgba(38,127,229,0.2)",
@@ -821,8 +706,8 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 <Image
                   src="/logos/gmail.png"
                   alt=""
-                  width={22}
-                  height={22}
+                  width={16}
+                  height={18}
                   style={{ objectFit: "contain" }}
                 />
               </div>
@@ -843,8 +728,6 @@ export function ProposalsCrmSection() {
   const confRef = useRef<HTMLDivElement>(null)
   const headerWrapRef = useRef<HTMLDivElement>(null)
   const fragRefs = useRef<(HTMLDivElement | null)[]>([])
-  const finaleWrapRef = useRef<HTMLDivElement>(null)
-  const finaleInnerRef = useRef<HTMLDivElement>(null)
   const mobileStackRef = useRef<HTMLElement>(null)
   const staticLayout = usePrefersReducedMotion()
   const isMobile = useIsMobile()
@@ -853,6 +736,7 @@ export function ProposalsCrmSection() {
   // it scrolls into view (reduced motion gets no animation).
   useEffect(() => {
     if (!isMobile || staticLayout || !mobileStackRef.current) return
+    ScrollTrigger.refresh()
     const blocks =
       mobileStackRef.current.querySelectorAll<HTMLElement>("[data-reveal]")
     const anims = Array.from(blocks).map(b =>
@@ -878,18 +762,42 @@ export function ProposalsCrmSection() {
   useEffect(() => {
     if (staticLayout || !wrapperRef.current) return
 
+    // ── Initial state ───────────────────────────────────────────────────────
     gsap.set(proposalsRef.current, { y: 60, opacity: 0 })
     gsap.set(crmRef.current, { y: "100vh", opacity: 0 })
     gsap.set(confRef.current, { y: "100vh", opacity: 0 })
     fragRefs.current.forEach((f, i) => {
-      if (f)
-        gsap.set(f, {
-          x: FRAGMENTS[i].x,
-          y: FRAGMENTS[i].y,
-          rotation: FRAGMENTS[i].r
-        })
+      if (f) gsap.set(f, { x: FRAGMENTS[i].x, y: FRAGMENTS[i].y, rotation: FRAGMENTS[i].r })
     })
 
+    const p2Shell = crmRef.current?.querySelector<HTMLElement>('[data-card-shell="p2"]')
+    const p3Shell = confRef.current?.querySelector<HTMLElement>('[data-card-shell="p3"]')
+    if (p2Shell) gsap.set(p2Shell, { y: "75vh", scale: 0.08, transformOrigin: "center center" })
+    if (p3Shell) gsap.set(p3Shell, { y: "75vh", scale: 0.08, transformOrigin: "center center" })
+    const p2Inner = crmRef.current?.querySelector<HTMLElement>('[data-card-inner="p2"]')
+    const p3Inner = confRef.current?.querySelector<HTMLElement>('[data-card-inner="p3"]')
+    if (p2Inner) gsap.set(p2Inner, { scale: 0.08, transformOrigin: "center center", backgroundColor: "#fff" })
+    if (p3Inner) gsap.set(p3Inner, { scale: 0.08, transformOrigin: "center center", backgroundColor: "#fff" })
+
+    // Gather elements used in auto-play animations and set initial state
+    const crm = crmRef.current
+    const pills = crm ? Array.from(crm.querySelectorAll<HTMLElement>("[data-signal-pill]")) : []
+    const blobs = crm ? Array.from(crm.querySelectorAll<HTMLElement>("[data-signal-blob]")) : []
+    const rowVals = crm ? Array.from(crm.querySelectorAll<HTMLElement>("[data-crm-value]")) : []
+    gsap.set(rowVals, { opacity: 0, x: -6 })
+    SIGNALS.forEach((s, i) => {
+      const targets = [pills[i], blobs[i]].filter(Boolean)
+      if (targets.length) gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
+    })
+
+    const conf = confRef.current
+    const fuBefore = conf?.querySelector<HTMLElement>("[data-fu-before]")
+    const fuAfter  = conf?.querySelector<HTMLElement>("[data-fu-after]")
+    const fuBubble = conf?.querySelector<HTMLElement>("[data-fu-bubble]")
+    if (fuAfter)  gsap.set(fuAfter,  { opacity: 0 })
+    if (fuBubble) gsap.set(fuBubble, { opacity: 0, x: 60, scale: 0.6 })
+
+    // ── Scrubbed timeline — phase transitions only ──────────────────────────
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapperRef.current,
@@ -899,179 +807,138 @@ export function ProposalsCrmSection() {
       }
     })
 
-    // The intro header stays pinned at the top as a persistent header over
-    // all three example phases; it leaves with the section when the pin
-    // releases into the finale.
     tl.addLabel("p1", 0)
-
-    // Phase 1 — proposals enter, fragments melt into the document
-    tl.to(
-      proposalsRef.current,
-      { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 },
-      "p1"
-    )
+    tl.to(proposalsRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 }, "p1")
     fragRefs.current.forEach((f, i) => {
       if (!f) return
-      tl.to(
-        f,
-        {
-          x: 0,
-          y: 0,
-          rotation: 0,
-          scale: 0.6,
-          ease: "power2.inOut",
-          duration: 1.6
-        },
-        `p1+=${0.8 + i * 0.12}`
-      )
+      tl.to(f, { x: 0, y: 0, rotation: 0, scale: 0.6, ease: "power2.inOut", duration: 1.6 }, `p1+=${0.8 + i * 0.12}`)
     })
-    tl.to({}, { duration: 0.8 }) // dwell on the finished document
+    tl.to({}, { duration: 0.8 })
 
-    // Phase 2 — proposals give way, CRM card slides up and fills in
-    tl.to(
-      proposalsRef.current,
-      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
-      ">"
-    )
-    tl.to(
-      crmRef.current,
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      "<0.3"
-    )
+    tl.to(proposalsRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
+    tl.to(crmRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
+    tl.addLabel("crmIn")
+    tl.to({}, { duration: 4.5 }) // dwell long enough for auto-play signals to finish
 
-    // Signals converge into the card and the rows fill — all on the scrubbed
-    // timeline so it reverses smoothly on backscroll.
-    const crm = crmRef.current
-    if (crm) {
-      const pills = Array.from(
-        crm.querySelectorAll<HTMLElement>("[data-signal-pill]")
-      )
-      const blobs = Array.from(
-        crm.querySelectorAll<HTMLElement>("[data-signal-blob]")
-      )
-      const rowVals = Array.from(
-        crm.querySelectorAll<HTMLElement>("[data-crm-value]")
-      )
+    tl.to(crmRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
+    tl.to(confRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
+    tl.addLabel("confIn")
+    tl.to({}, { duration: 2.5 }) // dwell for bubble animation
 
-      tl.addLabel("crmIn")
-      gsap.set(rowVals, { opacity: 0, x: -6 })
+    // ── Auto-play card-reveal + content animations ──────────────────────────
+    const tlDur   = tl.duration()
+    const wrapperH = wrapperRef.current.scrollHeight
 
-      SIGNALS.forEach((s, i) => {
-        const pill = pills[i]
-        const blob = blobs[i]
-        const row = rowVals[i]
-        const targets = [pill, blob].filter(Boolean)
-        if (!targets.length) return
-        gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
+    // Convert a label position (minus an offset so we fire slightly early,
+    // as the card starts sliding in rather than after it lands).
+    const scrollPx = (label: string, offsetUnits = 0) =>
+      Math.round((((tl.labels[label] ?? 0) + offsetUnits) / tlDur) * wrapperH)
 
-        // Land at the matching row's height (not the card centre). The card is
-        // transformed during measurement, but both rects share that transform
-        // so their difference is invariant. Subtract the start translate to get
-        // the pill's resting centre.
-        let toY = 0
-        if (pill && row) {
-          const pr = pill.getBoundingClientRect()
-          const rr = row.getBoundingClientRect()
-          const pillRestCenterY = pr.top + pr.height / 2 - s.y
-          toY = rr.top + rr.height / 2 - pillRestCenterY
-        }
-
-        // appear in place
-        tl.to(
-          targets,
-          { opacity: 1, duration: 0.5, ease: "power2.out" },
-          `crmIn+=${0.2 + i * 0.35}`
-        )
-        // glide to the row's height and dissolve into it
-        tl.to(
-          targets,
-          { x: 0, y: toY, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in" },
-          `crmIn+=${0.8 + i * 0.35}`
-        )
-        // the row it fed reveals as it lands
-        if (row) {
-          tl.to(
-            row,
-            { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },
-            `crmIn+=${1.5 + i * 0.35}`
-          )
-        }
-      })
+    // Prevent/restore scroll-wheel & touch during a card animation so the user
+    // must wait for the sequence to finish before continuing down.
+    const noop = (e: Event) => e.preventDefault()
+    const lockScroll   = () => {
+      window.addEventListener("wheel",     noop, { passive: false })
+      window.addEventListener("touchmove", noop, { passive: false })
+    }
+    const unlockScroll = () => {
+      window.removeEventListener("wheel",     noop)
+      window.removeEventListener("touchmove", noop)
     }
 
-    tl.to({}, { duration: 1.4 }) // dwell on the filled card
-
-    // Phase 3 — the conference follow-up takes the stage
-    tl.to(
-      crmRef.current,
-      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
-      ">"
-    )
-    tl.to(
-      confRef.current,
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      "<0.3"
-    )
-
-    // Follow-up status flips needs-follow-up → drafted as a Gmail bubble
-    // passes through. Scrubbed so it reverses on backscroll.
-    const conf = confRef.current
-    if (conf) {
-      const before = conf.querySelector<HTMLElement>("[data-fu-before]")
-      const after = conf.querySelector<HTMLElement>("[data-fu-after]")
-      const bubble = conf.querySelector<HTMLElement>("[data-fu-bubble]")
-      if (before && after && bubble) {
-        gsap.set(after, { opacity: 0 })
-        gsap.set(bubble, { opacity: 0, x: 60, scale: 0.6 })
-        tl.addLabel("confIn")
-        // gmail bubble flies in over the status
-        tl.to(bubble, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out" }, "confIn+=0.5")
-        // status swaps as it lands
-        tl.to(before, { opacity: 0, duration: 0.4, ease: "power2.in" }, "confIn+=1.1")
-        tl.to(after, { opacity: 1, duration: 0.4, ease: "power2.out" }, "confIn+=1.2")
-        // bubble dissolves into the card
-        tl.to(bubble, { opacity: 0, scale: 0.4, duration: 0.4, ease: "power2.in" }, "confIn+=1.3")
-      }
+    // Blue rises → white covers → E7F1FD.  Fast — timed to land as the card
+    // text finishes sliding in.
+    const buildReveal = (shell: HTMLElement, inner: HTMLElement) => {
+      const t = gsap.timeline({ paused: true })
+      t.to(shell, { y: 0, scale: 1, ease: "back.out(1.4)", duration: 0.45 }, 0)
+      t.to(inner, { scale: 1, ease: "power3.out", duration: 0.22 },          0.25)
+      t.set(shell, { backgroundColor: "rgba(0,0,0,0)" },                     0.47)
+      t.to(inner,  { backgroundColor: "#E7F1FD", duration: 0.18, ease: "power2.inOut" }, 0.47)
+      return t
     }
 
-    tl.to({}, { duration: 1.5 }) // hold the conference card before the pin releases
+    let crmRevealTl: gsap.core.Timeline | null = null
+    let confRevealTl: gsap.core.Timeline | null = null
 
-    // No Phase 4 — the finale lives below in normal flow, so the pin simply
-    // releases on the conference card and you scroll down into the finale.
+    const crmSt = (p2Shell && p2Inner)
+      ? ScrollTrigger.create({
+          trigger: wrapperRef.current,
+          // Fire when the CRM card starts sliding in (-1.0 units before crmIn)
+          start: `top+=${scrollPx("crmIn", -1.0)}px top`,
+          once: true,
+          onEnter: () => {
+            lockScroll()
+            crmRevealTl = buildReveal(p2Shell, p2Inner)
+
+            // At 1.0s the inner is at full scale — measure accurately then
+            // kick off the signal animations as plain gsap.to calls.
+            crmRevealTl.call(() => {
+              SIGNALS.forEach((s, i) => {
+                const pill = pills[i]
+                const blob = blobs[i]
+                const row  = rowVals[i]
+                const targets = [pill, blob].filter(Boolean)
+                if (!targets.length) return
+                gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
+
+                let toY = 0
+                if (pill && row) {
+                  const pr = pill.getBoundingClientRect()
+                  const rr = row.getBoundingClientRect()
+                  toY = rr.top + rr.height / 2 - (pr.top + pr.height / 2 - s.y)
+                }
+
+                const d = 0.15 + i * 0.35
+                gsap.to(targets, { opacity: 1, duration: 0.5, ease: "power2.out", delay: d })
+                gsap.to(targets, { x: 0, y: toY, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in", delay: d + 0.6 })
+                if (row) gsap.to(row, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out", delay: d + 1.3 })
+              })
+            }, [], 1.0)
+
+            // Unlock well after all signal animations have finished
+            crmRevealTl.call(unlockScroll, [], 11.0)
+
+            crmRevealTl.play()
+          }
+        })
+      : null
+
+    const confSt = (p3Shell && p3Inner)
+      ? ScrollTrigger.create({
+          trigger: wrapperRef.current,
+          start: `top+=${scrollPx("confIn", -1.0)}px top`,
+          once: true,
+          onEnter: () => {
+            lockScroll()
+            confRevealTl = buildReveal(p3Shell, p3Inner)
+
+            // Bubble + status flip after card settles at 1.0s
+            confRevealTl.call(() => {
+              if (fuBefore && fuAfter && fuBubble) {
+                gsap.to(fuBubble, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out", delay: 0.3 })
+                gsap.to(fuBefore, { opacity: 0, duration: 0.4, ease: "power2.in",  delay: 0.9 })
+                gsap.to(fuAfter,  { opacity: 1, duration: 0.4, ease: "power2.out", delay: 1.0 })
+                gsap.to(fuBubble, { opacity: 0, scale: 0.4, duration: 0.4, ease: "power2.in", delay: 1.1 })
+              }
+            }, [], 1.0)
+
+            // Way stickier — hold long after the bubble sequence settles
+            confRevealTl.call(unlockScroll, [], 16.0)
+
+            confRevealTl.play()
+          }
+        })
+      : null
 
     return () => {
+      unlockScroll()
       tl.scrollTrigger?.kill()
       tl.kill()
+      crmRevealTl?.kill()
+      confRevealTl?.kill()
+      crmSt?.kill()
+      confSt?.kill()
     }
-  }, [staticLayout, isMobile])
-
-  // Finale — falls into the screen as it scrolls into view (played once, so
-  // it's actually visible on entry), then the sticky wrapper holds it for a
-  // brief dwell before the commands section takes over.
-  useEffect(() => {
-    if (staticLayout || !finaleInnerRef.current) return
-
-    const inner = finaleInnerRef.current
-    gsap.set(inner, { y: 60, opacity: 0 })
-
-    const underlines = inner.querySelectorAll(".triage-underline")
-    const st = ScrollTrigger.create({
-      trigger: inner,
-      start: "top 78%",
-      onEnter: () => {
-        gsap.to(inner, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" })
-        // draw the underline in once the text has begun to settle
-        gsap.delayedCall(0.45, () =>
-          underlines.forEach(el => el.classList.add("is-visible"))
-        )
-      },
-      onLeaveBack: () => {
-        gsap.to(inner, { y: 60, opacity: 0, duration: 0.45, ease: "power2.in" })
-        underlines.forEach(el => el.classList.remove("is-visible"))
-      }
-    })
-
-    return () => st.kill()
   }, [staticLayout, isMobile])
 
   const header = (
@@ -1138,59 +1005,60 @@ export function ProposalsCrmSection() {
               />
             )}
           </div>
-        <div
-          data-reveal
-          style={{
-            ...phaseGridStyle,
-            position: "relative",
-            padding: "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px)"
-          }}
-        >
-          <div>
-            <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
-            <p style={bodyStyle}>
-              Built from your notes while the conversation is still warm.
-            </p>
+          <div
+            data-reveal
+            style={{
+              ...phaseGridStyle,
+              position: "relative",
+              padding: "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px)"
+            }}
+          >
+            <div>
+              <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
+              <p style={bodyStyle}>
+                Built from your notes while the conversation is still warm.
+              </p>
+            </div>
+            <GooeyStage fragRefs={fragRefs} merged />
           </div>
-          <GooeyStage fragRefs={fragRefs} merged />
-        </div>
-        <div
-          data-reveal
-          style={{
-            ...phaseGridStyle,
-            position: "relative",
-            padding:
-              "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
-          }}
-        >
-          <div>
-            <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
-            <p style={bodyStyle}>
-              It sources clients that fit, drafts the outreach, and logs every reply. No need to type.
-            </p>
+          <div
+            data-reveal
+            style={{
+              ...phaseGridStyle,
+              position: "relative",
+              padding:
+                "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
+            }}
+          >
+            <div>
+              <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
+              <p style={bodyStyle}>
+                It sources clients that fit, drafts the outreach, and logs every
+                reply. No need to type.
+              </p>
+            </div>
+            <CrmCard animated={false} />
           </div>
-          <CrmCard animated={false} />
-        </div>
-        <div
-          data-reveal
-          style={{
-            ...phaseGridStyle,
-            position: "relative",
-            padding:
-              "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
-          }}
-        >
-          <div>
-            <h2 style={subHeadingStyle}>
-              Conference networking? Yaven handles it.
-            </h2>
-            <p style={bodyStyle}>
-              It finds their work, your mutual connections, and drafts a
-              follow-up that has your context and tone.
-            </p>
+          <div
+            data-reveal
+            style={{
+              ...phaseGridStyle,
+              position: "relative",
+              padding:
+                "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
+            }}
+          >
+            <div>
+              <h2 style={subHeadingStyle}>
+                Conference networking? Yaven handles it.
+              </h2>
+              <p style={bodyStyle}>
+                It finds their work, your mutual connections, and drafts a
+                follow-up that has your context and tone.
+              </p>
+            </div>
+            <ConferenceCard animated={false} />
           </div>
-          <ConferenceCard animated={false} />
-        </div>
         </div>
         <div
           data-reveal
@@ -1211,106 +1079,103 @@ export function ProposalsCrmSection() {
 
   return (
     <>
-    <div
-      ref={wrapperRef}
-      style={{
-        position: "relative",
-        height: "800vh",
-        background: "var(--cream)"
-      }}
-    >
-      <section
+      <div
+        ref={wrapperRef}
         style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column"
+          position: "relative",
+          height: "800vh",
+          background: "var(--cream)"
         }}
       >
-        {/* Intro header — overlays the top, slides away as examples begin */}
-        <div
-          ref={headerWrapRef}
+        <section
           style={{
-            position: "absolute",
+            position: "sticky",
             top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 5,
-            paddingTop: "clamp(48px, 8vh, 90px)",
-            pointerEvents: "none"
+            height: "100vh",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column"
           }}
         >
-          {header}
-        </div>
-
-        <div style={{ position: "relative", flex: 1 }}>
-          {/* Phase 1 — Proposals */}
-          <div ref={proposalsRef} style={phaseGridStyle}>
-            <div>
-              <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
-              <p style={bodyStyle}>
-                Built from your notes, client profile and context while the
-                conversation is still warm.
-              </p>
-            </div>
-            <GooeyStage fragRefs={fragRefs} merged={false} />
+          {/* Intro header — overlays the top, slides away as examples begin */}
+          <div
+            ref={headerWrapRef}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 5,
+              paddingTop: "clamp(48px, 8vh, 90px)",
+              pointerEvents: "none"
+            }}
+          >
+            {header}
           </div>
 
-          {/* Phase 2 — CRM */}
-          <div ref={crmRef} style={phaseGridStyle}>
-            <CrmCard animated />
-            <div>
-              <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
-              <p style={bodyStyle}>
-                It sources clients that fit, drafts the outreach, and logs every reply. No need to type.
-              </p>
+          <div style={{ position: "relative", flex: 1 }}>
+            {/* Phase 1 — Proposals */}
+            <div ref={proposalsRef} style={phaseGridStyle}>
+              <div>
+                <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
+                <p style={bodyStyle}>
+                  Built from your notes, client profile and context while the
+                  conversation is still warm.
+                </p>
+              </div>
+              <GooeyStage fragRefs={fragRefs} merged={false} />
+            </div>
+
+            {/* Phase 2 — CRM */}
+            <div ref={crmRef} style={phaseGridStyle}>
+              <div
+                data-card-shell="p2"
+                style={{
+                  position: "relative",
+                  background: "#267FE5",
+                  borderRadius: "32px"
+                }}
+              >
+                <div data-card-inner="p2" style={{ background: "#fff", borderRadius: "32px" }}>
+                  <CrmCard animated />
+                </div>
+              </div>
+              <div>
+                <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
+                <p style={bodyStyle}>
+                  It sources clients that fit, drafts the outreach, and logs
+                  every reply. No need to type.
+                </p>
+              </div>
+            </div>
+
+            {/* Phase 3 — Conference follow-up */}
+            <div ref={confRef} style={phaseGridStyle}>
+              <div>
+                <h2 style={subHeadingStyle}>Conference networking</h2>
+                <p style={bodyStyle}>
+                  It finds their work, your mutual connections, and drafts a
+                  follow-up that has your context and tone.
+                </p>
+              </div>
+              <div
+                data-card-shell="p3"
+                style={{
+                  position: "relative",
+                  background: "#267FE5",
+                  borderRadius: "32px"
+                }}
+              >
+                <div data-card-inner="p3" style={{ background: "#fff", borderRadius: "32px" }}>
+                  <ConferenceCard animated />
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Phase 3 — Conference follow-up */}
-          <div ref={confRef} style={phaseGridStyle}>
-            <div>
-              <h2 style={subHeadingStyle}>Conference networking</h2>
-              <p style={bodyStyle}>
-                It finds their work, your mutual connections, and drafts a
-                follow-up that has your context and tone.
-              </p>
-            </div>
-            <ConferenceCard animated />
-          </div>
-
-        </div>
-      </section>
-    </div>
-
-    {/* Finale — sits below the pin. Falls in as it scrolls up, then dwells
-        briefly (held by the sticky inner) before the commands section. */}
-    <div
-      ref={finaleWrapRef}
-      style={{
-        position: "relative",
-        height: "170vh",
-        background: "var(--cream)"
-      }}
-    >
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          display: "grid",
-          placeItems: "center",
-          overflow: "hidden",
-          padding: "clamp(80px, 14vh, 160px) clamp(28px, 5vw, 48px)"
-        }}
-      >
-        <div ref={finaleInnerRef}>
-          <FinaleContent />
-        </div>
+        </section>
       </div>
-    </div>
+
+      <ProposalsFinaleSection />
     </>
   )
 }

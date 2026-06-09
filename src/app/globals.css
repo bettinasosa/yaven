@@ -293,7 +293,7 @@
     0 0 #fff;
 }
 .get-yaven-cream .glass-btn > span {
-  color: var(--primary);
+  color: var(--ink);
   text-shadow: none;
 }
 .get-yaven-cream .glass-shadow::after {
@@ -1104,7 +1104,7 @@
       box-shadow 0.18s ease;
   }
 
-  /* Blue "Show me" CTA */
+  /* Blue "Get Yaven" CTA */
   .btn-press {
     background: #267fe5;
     color: #fff;
@@ -1825,6 +1825,11 @@ video::-webkit-media-controls {
   .waitlist-btn-wrap .glass-btn {
     width: 100% !important;
     display: flex !important;
+  }
+  .waitlist-btn-wrap .glass-btn > span {
+    width: 100% !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
   }
   .waitlist-btn-wrap .glass-shadow {
     display: none !important;

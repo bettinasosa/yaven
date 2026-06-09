@@ -3,7 +3,7 @@
 import React from "react"
 
 /**
- * Reusable glass effect matching the "Show me" button language.
+ * Reusable glass effect matching the "Get Yaven" button language.
  * Renders the three-layer stack: .glass-wrap > .glass-shadow + .glass-btn.
  * Pass `borderRadius` to override the default pill shape (999vw).
  * Pass `as` to change the inner element ("button" | "div", default "div").
@@ -37,7 +37,10 @@ export function GlassPanel({
   const Inner = as
 
   return (
-    <div className={`glass-wrap ${className ?? ""}`} style={{ ...wrapStyle, ...style }}>
+    <div
+      className={`glass-wrap ${className ?? ""}`}
+      style={{ ...wrapStyle, ...style }}
+    >
       <div className="glass-shadow" style={shadowOverride} />
       <Inner
         className="glass-btn"

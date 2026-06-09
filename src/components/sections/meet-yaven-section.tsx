@@ -332,7 +332,7 @@ export function MeetYavenSection() {
         ? {
             trigger: wrapperRef.current,
             start: "top 75%",
-            toggleActions: "play none none reverse"
+            toggleActions: "play none none none"
           }
         : {
             trigger: wrapperRef.current,

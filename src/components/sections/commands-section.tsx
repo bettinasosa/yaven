@@ -145,13 +145,13 @@ function LinkedInCard({
           }}
         >
           {!drafting ? (
-            <div className="flex items-center justify-between">
+            <div className="flex items-end justify-between">
               <div>
                 <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-1.5">
                   You type
                 </div>
                 <div className="text-[#0a0e1a] font-medium text-[15px]">
-                  politely decline, but warm
+                  politely decline, warm
                 </div>
               </div>
               <div className="glass-wrap">
@@ -195,11 +195,13 @@ function LinkedInCard({
 function AskCard({
   asking,
   active,
-  onTrigger
+  onTrigger,
+  inline = false
 }: {
   asking: boolean
   active: boolean
   onTrigger: () => void
+  inline?: boolean
 }) {
   return (
     <div style={{ width: "100%", position: "relative" }}>
@@ -309,11 +311,58 @@ function AskCard({
               </div>
             </div>
           )}
+
+          {/* Inline response — used on mobile/static instead of the floating bubble */}
+          {inline && asking && (
+            <div
+              className="mt-auto"
+              style={{
+                borderTop: "1px solid rgba(0,0,0,0.08)",
+                paddingTop: "12px"
+              }}
+            >
+              <div
+                className="text-[13px] font-semibold mb-2"
+                style={{ color: "rgba(0,0,0,0.4)" }}
+              >
+                I thought this was 30 days? Why did it change?
+              </div>
+              <div
+                className="text-[14px] leading-[1.6] font-medium"
+                style={{ color: "rgba(0,0,0,0.75)" }}
+              >
+                {active ? (
+                  <>
+                    <span>Since your last </span>
+                    <span
+                      className="inline-flex items-center gap-1 align-middle"
+                      style={{
+                        background: "rgba(0,0,0,0.06)",
+                        borderRadius: "10px",
+                        fontSize: "12px"
+                      }}
+                    >
+                      <Image
+                        src="/logos/granola.png"
+                        alt="Granola"
+                        width={14}
+                        height={14}
+                        className="rounded-[3px]"
+                        style={{ flexShrink: 0 }}
+                      />
+                    </span>
+                    <span> call with Pablo on May 12, </span>
+                    <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
+                  </>
+                ) : null}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ── Floating glass bubble (outside clipped card) ── */}
-      {asking && (
+      {/* ── Floating glass bubble (outside clipped card) — desktop/animated only ── */}
+      {!inline && asking && (
         <div
           style={{
             position: "absolute",
@@ -409,8 +458,6 @@ export function CommandsSection() {
   // Keyboard listeners
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      // Use e.code (physical key) — on macOS, Option+D types "∂" so e.key
-      // would never match "d".
       if (e.altKey) {
         if (e.code === "KeyD") {
           e.preventDefault()
@@ -425,16 +472,15 @@ export function CommandsSection() {
     return () => window.removeEventListener("keydown", handler)
   }, [triggerDraft, triggerAsk])
 
+  // Desktop scroll animation — killed when mobile takes over
   useEffect(() => {
-    if (staticLayout || !wrapperRef.current) return
+    if (staticLayout || isMobile || !wrapperRef.current) return
 
     const wrapper = wrapperRef.current
     const triggers: ScrollTrigger[] = []
 
-    // Show content immediately (cards animate in independently)
     gsap.set(contentRef.current, { opacity: 1 })
 
-    // Draft card slides up from bottom with rotation
     const draftEnterTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
@@ -450,7 +496,6 @@ export function CommandsSection() {
     )
     triggers.push(draftEnterTl.scrollTrigger!)
 
-    // Draft in-view tracking
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
@@ -473,7 +518,6 @@ export function CommandsSection() {
       })
     )
 
-    // Ask card slides up with alternate rotation
     const stackTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
@@ -490,7 +534,6 @@ export function CommandsSection() {
     )
     triggers.push(stackTl.scrollTrigger!)
 
-    // Ask in-view tracking
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
@@ -514,7 +557,96 @@ export function CommandsSection() {
     )
 
     return () => triggers.forEach(t => t.kill())
-  }, [staticLayout])
+  }, [staticLayout, isMobile])
+
+  // Mobile scroll animation — stacking cards like triage
+  useEffect(() => {
+    if (!isMobile || staticLayout || !wrapperRef.current) return
+
+    const wrapper = wrapperRef.current
+    const triggers: ScrollTrigger[] = []
+
+    gsap.set(contentRef.current, { opacity: 1 })
+
+    // Draft card slides up as the wrapper enters the viewport (no blank gap)
+    const draftTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "top 75%",
+        end: "top top",
+        scrub: true
+      }
+    })
+    draftTl.fromTo(
+      draftCardRef.current,
+      { y: "100vh", rotation: 6 },
+      { y: 0, rotation: 0, ease: "none", force3D: true }
+    )
+    triggers.push(draftTl.scrollTrigger!)
+
+    // Draft button active when card is settled
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "top top",
+        end: "36% top",
+        onEnter: () => {
+          draftInView.current = true
+        },
+        onLeave: () => {
+          draftInView.current = false
+        },
+        onEnterBack: () => {
+          draftInView.current = true
+        },
+        onLeaveBack: () => {
+          draftInView.current = false
+          setDrafting(false)
+          setDraftTyping(false)
+        }
+      })
+    )
+
+    // Ask card slides up on top
+    const askTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "20% top",
+        end: "38% top",
+        scrub: true
+      }
+    })
+    askTl.fromTo(
+      askCardRef.current,
+      { y: "100vh", rotation: -6 },
+      { y: 0, rotation: 0, ease: "none", force3D: true }
+    )
+    triggers.push(askTl.scrollTrigger!)
+
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "36% top",
+        end: "85% top",
+        onEnter: () => {
+          askInView.current = true
+        },
+        onLeave: () => {
+          askInView.current = false
+        },
+        onEnterBack: () => {
+          askInView.current = true
+        },
+        onLeaveBack: () => {
+          askInView.current = false
+          setAsking(false)
+          setAskTyping(false)
+        }
+      })
+    )
+
+    return () => triggers.forEach(t => t.kill())
+  }, [isMobile, staticLayout])
 
   const sideText = (
     <div className="flex flex-col gap-6">
@@ -524,7 +656,9 @@ export function CommandsSection() {
       >
         Yaven works <span>anywhere</span>.
       </ScrollCutReveal>
-      <p className={`text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-4" : "mr-60 mt-24"}`}>
+      <p
+        className={`text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-4" : "mr-60 mt-24"}`}
+      >
         Draft a reply, explain a contract, answer a question, all without
         leaving the app you&apos;re in. Press{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">
@@ -541,11 +675,15 @@ export function CommandsSection() {
     </div>
   )
 
-  if (staticLayout || isMobile) {
+  // Reduced motion — static pre-activated cards, no animation
+  if (staticLayout) {
     return (
       <section
         className="bg-[var(--primary)] p-[clamp(80px,12vh,140px)_clamp(28px,5vw,48px)]"
-        style={{ borderRadius: "48px 48px 0 0", boxShadow: "0 -16px 64px rgba(0,0,0,0.18)" }}
+        style={{
+          borderRadius: "48px 48px 0 0",
+          boxShadow: "0 -16px 64px rgba(0,0,0,0.18)"
+        }}
       >
         <div className="max-w-[1100px] mx-auto">
           <div
@@ -557,7 +695,7 @@ export function CommandsSection() {
             {sideText}
             <div className="flex flex-col gap-6" style={{ maxWidth: "440px" }}>
               <LinkedInCard drafting active onTrigger={() => {}} />
-              <AskCard asking active onTrigger={() => {}} />
+              <AskCard asking active inline onTrigger={() => {}} />
             </div>
           </div>
         </div>
@@ -565,6 +703,90 @@ export function CommandsSection() {
     )
   }
 
+  // Mobile — text block + stacking card animation (like triage)
+  if (isMobile) {
+    return (
+      <>
+        <section
+          className="bg-[var(--primary)]"
+          style={{
+            borderRadius: "48px 48px 0 0",
+            boxShadow: "0 -16px 64px rgba(0,0,0,0.18)",
+            padding: "clamp(60px,10vh,100px) clamp(24px,5vw,40px) 16px"
+          }}
+        >
+          {sideText}
+        </section>
+
+        <div
+          ref={wrapperRef}
+          className="relative bg-[var(--primary)]"
+          style={{ height: "180vh", marginTop: "-1px" }}
+        >
+          <div
+            className="sticky top-0 h-screen overflow-visible flex items-center justify-center"
+            style={{ padding: "0 clamp(20px,5vw,32px)" }}
+          >
+            <div
+              ref={contentRef}
+              className="relative"
+              style={{
+                width: "100%",
+                maxWidth: "440px",
+                height: "600px",
+                opacity: 0
+              }}
+            >
+              <div
+                ref={draftCardRef}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  zIndex: 1,
+                  willChange: "transform",
+                  backfaceVisibility: "hidden",
+                  transformOrigin: "center bottom",
+                  transform: "translateZ(0) translateY(100vh) rotate(6deg)"
+                }}
+              >
+                <LinkedInCard
+                  drafting={drafting}
+                  active={draftTyping}
+                  onTrigger={triggerDraft}
+                />
+              </div>
+
+              <div
+                ref={askCardRef}
+                style={{
+                  position: "absolute",
+                  top: "48px",
+                  left: 0,
+                  right: 0,
+                  zIndex: 2,
+                  willChange: "transform",
+                  backfaceVisibility: "hidden",
+                  transformOrigin: "center bottom",
+                  transform: "translateZ(0) translateY(100vh) rotate(-6deg)"
+                }}
+              >
+                <AskCard
+                  asking={asking}
+                  active={askTyping}
+                  inline
+                  onTrigger={triggerAsk}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  // Desktop — full scroll-pinned animation
   return (
     <div
       ref={wrapperRef}
@@ -636,8 +858,7 @@ export function CommandsSection() {
               />
             </div>
 
-            {/* Ask card — slides up on top, offset so its rounded top
-                corners sit within the Draft card's header (no cream peek). */}
+            {/* Ask card — slides up on top */}
             <div
               ref={askCardRef}
               style={{

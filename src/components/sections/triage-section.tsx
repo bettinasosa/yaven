@@ -194,9 +194,9 @@ export function TriageSection() {
     // there's less dead scroll. Desktop keeps its roomier cadence.
     const timing = isMobile
       ? [
-          { start: "top 70%", end: "top top" },
-          { start: "4% top", end: "26% top" },
-          { start: "32% top", end: "54% top" }
+          { start: "top 80%", end: "top top" },
+          { start: "0% top", end: "16% top" },
+          { start: "22% top", end: "38% top" }
         ]
       : [
           { start: "0% top", end: "12% top" },
@@ -297,7 +297,7 @@ export function TriageSection() {
         <section
           style={{
             background: "var(--cream)",
-            padding: "clamp(60px, 10vh, 100px) clamp(20px, 6vw, 32px) clamp(24px, 5vh, 48px)"
+            padding: "clamp(60px, 10vh, 100px) clamp(20px, 6vw, 32px) 16px"
           }}
         >
           <div className="max-w-[520px] mx-auto">{sideText}</div>
@@ -306,7 +306,7 @@ export function TriageSection() {
         <div
           ref={wrapperRef}
           className="relative"
-          style={{ height: "240vh", background: "var(--cream)" }}
+          style={{ height: "200vh", background: "var(--cream)", marginTop: "-1px" }}
         >
           <div
             className="sticky top-0 h-screen overflow-visible flex items-center justify-center"
