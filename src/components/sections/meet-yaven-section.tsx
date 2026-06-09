@@ -229,8 +229,8 @@ function PresenceStage({
       aria-hidden="true"
       style={{
         position: "relative",
-        width: "min(460px, 92vw)",
-        height: "min(460px, 92vw)",
+        width: "min(600px, 92vw)",
+        height: "min(600px, 92vw)",
         margin: "0 auto"
       }}
     >
@@ -242,31 +242,7 @@ function PresenceStage({
         <div ref={proxyRef} />
       </div>
 
-      {/* Layer 2: glass label chips — fly out from center */}
-      <div style={{ ...stageStyle, pointerEvents: "none" }}>
-        {SATELLITES.map((s, i) => (
-          <div
-            key={i}
-            ref={el => {
-              labelRefs.current[i] = el
-            }}
-            className="glass-btn glass-btn-sm"
-            style={{
-              position: "absolute",
-              fontSize: "22px",
-              cursor: "default",
-              opacity: 0,
-              whiteSpace: "nowrap"
-            }}
-          >
-            <span style={{ paddingBlock: "0.75em", paddingInline: "1.5em" }}>
-              {s.label}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Layer 3: glass bubble (backdrop) with the Yaven mark in FRONT */}
+      {/* Layer 2: Yaven mark */}
       <div style={{ ...stageStyle, pointerEvents: "none" }}>
         <div
           ref={glassRef}
@@ -282,7 +258,7 @@ function PresenceStage({
         >
           {/* Yaven mark */}
           <span
-            className="yv-chip-float"
+            className=""
             style={{
               position: "relative",
               zIndex: 2,
@@ -298,7 +274,7 @@ function PresenceStage({
               style={{
                 display: "block",
                 width: "auto",
-                height: `${CORE_SIZE * 2.1}px`,
+                height: `clamp(280px, 35vw, ${CORE_SIZE * 3.2}px)`,
                 filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.22))"
               }}
             />
@@ -341,7 +317,7 @@ export function MeetYavenSection() {
       p => p?.querySelector<HTMLElement>(".triage-underline") ?? null
     )
     underlines.forEach(u => u && gsap.set(u, { backgroundSize: "0% 3.5px" }))
-    gsap.set([proxyRef.current, glassRef.current], { scale: 0 })
+    gsap.set([proxyRef.current, glassRef.current], { scale: 0, y: 0 })
     satRefs.current.forEach(
       s => s && gsap.set(s, { x: 0, y: 0, opacity: 0, scale: 0.7 })
     )
@@ -367,6 +343,9 @@ export function MeetYavenSection() {
     })
     if (isMobile) tl.timeScale(1.8)
 
+    // Mobile: compress paragraph timings so text arrives sooner
+    const p = isMobile ? 0.6 : 1
+
     tl.to(
       headingRef.current,
       { y: 0, opacity: 1, ease: "power3.out", duration: 1 },
@@ -377,31 +356,31 @@ export function MeetYavenSection() {
     tl.to(
       paraRefs.current[0],
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      1.2
+      1.2 * p
     )
     if (underlines[0])
       tl.to(
         underlines[0],
         { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
-        1.8
+        1.8 * p
       )
     tl.to(
       [proxyRef.current, glassRef.current],
       { scale: 1, ease: "back.out(1.6)", duration: 1.9 },
-      1.4
+      0
     )
 
     // P2 — pill proxies + glass chips fly out from center together
     tl.to(
       paraRefs.current[1],
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      3.2
+      3.2 * p
     )
     if (underlines[1])
       tl.to(
         underlines[1],
         { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
-        3.8
+        3.8 * p
       )
     SATELLITES.forEach((sat, i) => {
       const s = satRefs.current[i]
@@ -439,13 +418,13 @@ export function MeetYavenSection() {
     tl.to(
       paraRefs.current[2],
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      5.8
+      5.8 * p
     )
     if (underlines[2])
       tl.to(
         underlines[2],
         { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
-        6.4
+        6.4 * p
       )
     SATELLITES.forEach((sat, i) => {
       const s = satRefs.current[i]
@@ -479,8 +458,8 @@ export function MeetYavenSection() {
     })
     tl.to(
       [proxyRef.current, glassRef.current],
-      { scale: 1.12, ease: "power2.out", duration: 0.9 },
-      7.2
+      { y: -120, opacity: 0, ease: "power2.in", duration: 2.2 },
+      9.5
     )
 
     tl.to({}, { duration: 1.4 })

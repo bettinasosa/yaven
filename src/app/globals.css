@@ -508,16 +508,18 @@
   animation: yv-orb-drift-3 7s ease-in-out infinite;
 }
 @keyframes yv-chip-float {
-  0%,
-  100% {
-    transform: translateY(0);
+  0% {
+    transform: translateY(18px);
   }
   50% {
-    transform: translateY(-7px);
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(18px);
   }
 }
 .yv-chip-float {
-  animation: yv-chip-float 3.2s ease-in-out infinite;
+  animation: yv-chip-float 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 @media (prefers-reduced-motion: reduce) {
   .yv-orb-breathe,
@@ -608,6 +610,13 @@
 }
 .triage-underline.is-visible {
   background-size: 100% 3.5px;
+}
+.triage-underline-lg {
+  background-size: 0% 5.5px;
+  padding-bottom: 5px;
+}
+.triage-underline-lg.is-visible {
+  background-size: 100% 5.5px;
 }
 /* Shake — invalid waitlist submit (replaces native validation bubble) */
 @keyframes yv-shake {

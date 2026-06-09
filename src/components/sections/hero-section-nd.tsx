@@ -9,7 +9,7 @@ import { LiquidGradientBg } from "@/components/effects/liquid-gradient-bg"
 function YavenMark({ height }: { height: number }) {
   return (
     <Image
-      src="/logo.png"
+      src="/yaven-logo.svg"
       alt="yaven"
       width={height}
       height={height}
