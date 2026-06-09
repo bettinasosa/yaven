@@ -297,18 +297,19 @@ export function MeetYavenSection() {
   const staticLayout = usePrefersReducedMotion()
   const isMobile = useIsMobile()
 
-  // Underlines: the animated path (desktop pinned + mobile non-pinned) draws
-  // each one via the timeline as its paragraph reveals. Reduced motion has no
-  // timeline, so just show them.
+  // Underlines: the desktop pinned timeline draws each one as its paragraph
+  // reveals. Reduced motion AND mobile are static, so just show them.
   useEffect(() => {
-    if (!staticLayout || !bodyWrapRef.current) return
+    if (!(staticLayout || isMobile) || !bodyWrapRef.current) return
     bodyWrapRef.current
       .querySelectorAll(".triage-underline")
       .forEach(el => el.classList.add("is-visible"))
-  }, [staticLayout])
+  }, [staticLayout, isMobile])
 
   useEffect(() => {
-    if (staticLayout || !wrapperRef.current) return
+    // Desktop only — mobile renders the section static (orb settled, no
+    // animation) so the Yaven logo stays put instead of animating away.
+    if (staticLayout || isMobile || !wrapperRef.current) return
 
     gsap.set(headingRef.current, { y: 50, opacity: 0 })
     paraRefs.current.forEach(p => p && gsap.set(p, { y: 36, opacity: 0 }))
@@ -506,7 +507,7 @@ export function MeetYavenSection() {
         satRefs={satRefs}
         labelRefs={labelRefs}
         glassRef={glassRef}
-        settled={staticLayout}
+        settled={staticLayout || isMobile}
       />
     </div>
   )
@@ -529,12 +530,11 @@ export function MeetYavenSection() {
     )
   }
 
-  // Mobile: non-pinned so it can't overflow/clip, but the orb still animates
-  // (played once when scrolled into view).
+  // Mobile: non-pinned and fully static (orb settled, no animation) so the
+  // Yaven logo stays put rather than animating away.
   if (isMobile) {
     return (
       <div
-        ref={wrapperRef}
         data-meet-yaven
         style={{
           position: "relative",
