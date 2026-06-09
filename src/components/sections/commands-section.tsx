@@ -662,7 +662,7 @@ export function CommandsSection() {
         className={`text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-4" : "mr-60 mt-24"}`}
       >
         Draft a reply, explain a contract, answer a question, all without
-        leaving the app you&apos;re in. Press{" "}
+        leaving the app or site you&apos;re in. Press{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">
           <KeyBadge small>⌥</KeyBadge>
           <KeyBadge small>D</KeyBadge>
