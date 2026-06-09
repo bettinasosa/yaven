@@ -500,7 +500,7 @@ export function CommandsSection() {
       ScrollTrigger.create({
         trigger: wrapper,
         start: "0% top",
-        end: "30% top",
+        end: "46% top",
         onEnter: () => {
           draftInView.current = true
         },
@@ -537,8 +537,8 @@ export function CommandsSection() {
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "54% top",
-        end: "90% top",
+        start: "46% top",
+        end: "98% top",
         onEnter: () => {
           askInView.current = true
         },

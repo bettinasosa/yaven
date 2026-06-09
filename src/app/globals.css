@@ -1807,6 +1807,21 @@ video::-webkit-media-controls {
   }
 }
 
+/* Beta-tester fields: gentle fade + height expand so the email row below
+   slides down smoothly rather than jumping. */
+@keyframes beta-fields-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 260px;
+  }
+}
+
 @media (max-width: 480px) {
   .waitlist-input-row {
     flex-direction: column !important;

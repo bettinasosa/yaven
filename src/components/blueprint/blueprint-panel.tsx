@@ -2,13 +2,14 @@
 
 import { useRef, useState } from "react"
 import { createPortal } from "react-dom"
-import { Loader2 } from "lucide-react"
+import { Loader2, ArrowLeft } from "lucide-react"
 
 export function BlueprintPanel() {
   const [open, setOpen] = useState(false)
   const [onCream, setOnCream] = useState(false)
   const [betaMode, setBetaMode] = useState(false)
   const [email, setEmail] = useState("")
+  const [name, setName] = useState("")
   const [role, setRole] = useState("")
   const [hasMac, setHasMac] = useState<boolean | null>(null)
   const [loading, setLoading] = useState(false)
@@ -37,15 +38,35 @@ export function BlueprintPanel() {
     setRole("")
     setHasMac(null)
     setEmail("")
+    setName("")
     setError("")
+  }
+
+  function exitBeta() {
+    setBetaMode(false)
+    setRole("")
+    setHasMac(null)
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (!email.trim() || !email.includes("@")) {
+    // All fields required (name + email always; role + Mac in beta).
+    if (!name.trim()) {
+      setError("Please enter your name.")
       shake()
       return
     }
+    if (!email.trim() || !email.includes("@")) {
+      setError("Please enter a valid email.")
+      shake()
+      return
+    }
+    if (betaMode && (!role.trim() || hasMac === null)) {
+      setError("Please complete all fields.")
+      shake()
+      return
+    }
+    setError("")
     setLoading(true)
     setError("")
 
@@ -55,6 +76,7 @@ export function BlueprintPanel() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
+          name,
           ...(betaMode && { role, hasMac, betaTester: true })
         })
       })
@@ -169,61 +191,157 @@ export function BlueprintPanel() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} noValidate>
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-dm-sans), sans-serif",
-                      fontSize: "clamp(22px, 4vw, 28px)",
-                      fontWeight: 600,
-                      color: c.heading,
-                      margin: "0 0 8px",
-                      lineHeight: 1.2
-                    }}
-                  >
-                    Join the waitlist
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-dm-sans), sans-serif",
-                      fontSize: "14px",
-                      color: c.body,
-                      margin: "0 0 24px",
-                      lineHeight: 1.6
-                    }}
-                  >
-                    Be first to get access when we launch. Or become a{" "}
-                    <button
-                      type="button"
-                      onClick={() => setBetaMode(true)}
-                      style={{
-                        fontFamily: "inherit",
-                        fontSize: "inherit",
-                        fontWeight: 700,
-                        color: c.link,
-                        textDecoration: "underline",
-                        textUnderlineOffset: "3px",
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                        cursor: betaMode ? "default" : "pointer",
-                        opacity: betaMode ? 0.5 : 1
-                      }}
-                    >
-                      beta tester
-                    </button>
-                    .
-                  </p>
-
-                  {/* Beta tester extra fields */}
-                  {betaMode && (
+                  {betaMode ? (
                     <div
                       style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "14px",
                         marginBottom: "20px",
-                        animation: "popup-in 0.25s ease"
+                        animation:
+                          "beta-fields-in 0.4s cubic-bezier(0.22, 1, 0.36, 1)"
                       }}
                     >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          margin: "0 0 8px"
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={exitBeta}
+                          aria-label="Back to waitlist"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "999px",
+                            border: `1px solid ${c.rowBorder}`,
+                            background: c.rowBg,
+                            color: c.heading,
+                            cursor: "pointer",
+                            flexShrink: 0
+                          }}
+                        >
+                          <ArrowLeft style={{ width: "16px", height: "16px" }} />
+                        </button>
+                        <h3
+                          style={{
+                            fontFamily: "var(--font-dm-sans), sans-serif",
+                            fontSize: "clamp(22px, 4vw, 28px)",
+                            fontWeight: 600,
+                            color: c.heading,
+                            margin: 0,
+                            lineHeight: 1.2
+                          }}
+                        >
+                          Become a tester
+                        </h3>
+                      </div>
+                      <p
+                        style={{
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          fontSize: "14px",
+                          color: c.body,
+                          margin: 0,
+                          lineHeight: 1.6
+                        }}
+                      >
+                        Help shape Yaven before launch. A few quick details and
+                        we&apos;ll reach out about early access.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <h3
+                        style={{
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          fontSize: "clamp(22px, 4vw, 28px)",
+                          fontWeight: 600,
+                          color: c.heading,
+                          margin: "0 0 8px",
+                          lineHeight: 1.2
+                        }}
+                      >
+                        Join the waitlist
+                      </h3>
+                      <p
+                        style={{
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          fontSize: "14px",
+                          color: c.body,
+                          margin: "0 0 24px",
+                          lineHeight: 1.6
+                        }}
+                      >
+                        Be first to get access when we launch. Or become a{" "}
+                        <button
+                          type="button"
+                          onClick={() => setBetaMode(true)}
+                          style={{
+                            fontFamily: "inherit",
+                            fontSize: "inherit",
+                            fontWeight: 700,
+                            color: c.link,
+                            textDecoration: "underline",
+                            textUnderlineOffset: "3px",
+                            background: "none",
+                            border: "none",
+                            padding: 0,
+                            cursor: "pointer"
+                          }}
+                        >
+                          beta tester
+                        </button>
+                        .
+                      </p>
+                    </>
+                  )}
+
+                  {error && (
+                    <p style={{ color: "#ff6b6b", fontSize: "13px", margin: "0 0 12px" }}>
+                      {error}
+                    </p>
+                  )}
+
+                  {/* Name (waitlist + beta) */}
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    placeholder="Your name"
+                    style={{
+                      width: "100%",
+                      padding: "13px 18px",
+                      marginBottom: "10px",
+                      borderRadius: "999px",
+                      border: `1px solid ${c.rowBorder}`,
+                      background: c.rowBg,
+                      color: c.inputColor,
+                      fontSize: "15px",
+                      fontFamily: "var(--font-dm-sans), sans-serif",
+                      outline: "none"
+                    }}
+                  />
+
+                  {/* Beta tester extra fields — role then Mac, after name.
+                      Always mounted so it can animate open AND closed. */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "14px",
+                      overflow: "hidden",
+                      maxHeight: betaMode ? "280px" : "0px",
+                      opacity: betaMode ? 1 : 0,
+                      marginBottom: betaMode ? "10px" : "0px",
+                      pointerEvents: betaMode ? "auto" : "none",
+                      transition:
+                        "max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, margin-bottom 0.4s cubic-bezier(0.22, 1, 0.36, 1)"
+                    }}
+                  >
                       <div>
                         <label
                           style={{
@@ -302,14 +420,6 @@ export function BlueprintPanel() {
                         </div>
                       </div>
                     </div>
-                  )}
-
-                  {error && (
-                    <p style={{ color: "#ff6b6b", fontSize: "13px", margin: "0 0 12px" }}>
-                      {error}
-                    </p>
-                  )}
-
                   {/* Email + submit row */}
                   <div
                     style={{

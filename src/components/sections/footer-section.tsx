@@ -9,7 +9,10 @@ const colLinkStyle: React.CSSProperties = {
   opacity: 0.7,
   textDecoration: "none",
   transition: "opacity 0.15s ease",
-  display: "block"
+  // inline-block + fit-content so the hover underline only spans the text,
+  // not the full (stretched) flex-column width.
+  display: "inline-block",
+  width: "fit-content"
 }
 
 export function FooterSection() {
