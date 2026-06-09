@@ -908,7 +908,7 @@ export function ProposalsCrmSection() {
           onEnter: () => {
             lockScroll()
             confRevealTl = buildReveal(p3Shell, p3Inner)
-            confRevealTl.call(unlockScroll, [], 16.0)
+            confRevealTl.call(unlockScroll, [], 5.5)
             confRevealTl.play()
           }
         })
