@@ -57,6 +57,7 @@ function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
 }
 
 function StickyGetYaven() {
+  const isMobile = useIsMobile()
   const btnRef = useRef<HTMLDivElement>(null)
   const onCream = useRef(false)
 
@@ -137,6 +138,9 @@ function StickyGetYaven() {
       window.removeEventListener("scroll", checkOverlap)
     }
   }, [checkOverlap])
+
+  // The floating "Get Yaven" button doesn't follow the page on mobile.
+  if (isMobile) return null
 
   return (
     <div

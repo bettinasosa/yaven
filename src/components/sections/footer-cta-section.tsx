@@ -25,7 +25,7 @@ export function FooterCTASection() {
         }}
       />
 
-      <section className="sticky top-0 h-screen flex flex-col items-center justify-center px-[clamp(28px,5vw,48px)] py-6 overflow-hidden">
+      <section className="sticky top-0 h-screen flex flex-col items-center justify-center px-[clamp(28px,5vw,48px)] py-6 overflow-hidden bg-[var(--primary)]">
         <LiquidGradientBg />
 
         <div className="relative text-center z-2">
