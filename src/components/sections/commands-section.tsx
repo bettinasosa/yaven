@@ -218,7 +218,7 @@ function AskCard({
       >
         {/* Header bar — Ask command (doc icon + ⌥A), on the red strip */}
         <div
-          className="absolute top-0 left-0 right-0 flex items-end justify-between px-10 pt-14 pb-8 z-[2]"
+          className="absolute top-0 left-0 right-0 flex items-end justify-between pl-[57px] pr-10 pt-14 pb-8 z-[2]"
           style={{ height: "18%" }}
         >
           <div className="flex items-center gap-2.5">
@@ -529,7 +529,9 @@ export function CommandsSection() {
     stackTl.fromTo(
       askCardRef.current,
       { y: "100vh", rotation: -6 },
-      { y: 0, rotation: 0, ease: "none", force3D: true },
+      // Stop a touch low so the card's top lands just below the Draft header,
+      // covering the draft card's cream rather than climbing over the header.
+      { y: 36, rotation: 0, ease: "none", force3D: true },
       0
     )
     triggers.push(stackTl.scrollTrigger!)
