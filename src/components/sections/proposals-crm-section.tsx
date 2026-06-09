@@ -842,10 +842,10 @@ export function ProposalsCrmSection() {
 
     // Gmail bubble + follow-up status flip — scrubbed
     if (fuBefore && fuAfter && fuBubble) {
-      tl.to(fuBubble, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out" }, "confIn+=0.4")
-      tl.to(fuBefore, { opacity: 0, duration: 0.4, ease: "power2.in" },                  "confIn+=1.0")
-      tl.to(fuAfter,  { opacity: 1, duration: 0.4, ease: "power2.out" },                 "confIn+=1.1")
-      tl.to(fuBubble, { opacity: 0, scale: 0.4, duration: 0.4, ease: "power2.in" },      "confIn+=1.2")
+      tl.to(fuBubble, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "power2.out" }, "confIn+=0.9")
+      tl.to(fuBefore, { opacity: 0, duration: 0.6, ease: "power2.in" },                  "confIn+=1.7")
+      tl.to(fuAfter,  { opacity: 1, duration: 0.6, ease: "power2.out" },                 "confIn+=1.9")
+      tl.to(fuBubble, { opacity: 0, scale: 0.4, duration: 0.5, ease: "power2.in" },      "confIn+=2.1")
     }
 
     tl.to({}, { duration: 3.5 }) // dwell on conf card — hold on green state
@@ -875,10 +875,10 @@ export function ProposalsCrmSection() {
     // text finishes sliding in.
     const buildReveal = (shell: HTMLElement, inner: HTMLElement) => {
       const t = gsap.timeline({ paused: true })
-      t.to(shell, { y: 0, scale: 1, ease: "back.out(1.4)", duration: 0.6 }, 0)
-      t.to(inner, { scale: 1, ease: "back.out(1.7)", duration: 0.42 },       0.32)
-      t.set(shell, { backgroundColor: "rgba(0,0,0,0)" },                    0.8)
-      t.to(inner,  { backgroundColor: "#E7F1FD", duration: 0.25, ease: "power2.inOut" }, 0.8)
+      t.to(shell, { y: 0, scale: 1, ease: "back.out(1.4)", duration: 0.48 }, 0)
+      t.to(inner, { scale: 1, ease: "back.out(1.7)", duration: 0.38 },       0.26)
+      t.set(shell, { backgroundColor: "rgba(0,0,0,0)" },                    0.64)
+      t.to(inner,  { backgroundColor: "#E7F1FD", duration: 0.22, ease: "power2.inOut" }, 0.64)
       return t
     }
 
