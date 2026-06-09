@@ -90,7 +90,7 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
     <div
       style={{
         background: card.bg,
-        borderRadius: "28px",
+        borderRadius: "40px",
         padding: "clamp(28px, 3.5vw, 40px)",
         display: "flex",
         flexDirection: "column",
