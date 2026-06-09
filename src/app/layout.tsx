@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.yaven.us"),
-  title: "Yaven | Focus on the tasks only you can do.",
+  title: "Yaven | Less admin. More flow.",
   description:
     "The boring half of your day, handled. Yaven automates the admin, drafts the emails, and keeps you in the loop, so you can focus on the work only you can do.",
   openGraph: {
