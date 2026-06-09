@@ -870,7 +870,7 @@ export function ProposalsCrmSection() {
             lockScroll()
             crmRevealTl = buildReveal(p2Shell, p2Inner)
 
-            // At 1.0s the inner is at full scale — measure accurately then
+            // At 0.65s the inner is at full scale — measure accurately then
             // kick off the signal animations as plain gsap.to calls.
             crmRevealTl.call(() => {
               SIGNALS.forEach((s, i) => {
