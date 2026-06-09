@@ -818,12 +818,37 @@ export function ProposalsCrmSection() {
     tl.to(proposalsRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
     tl.to(crmRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
     tl.addLabel("crmIn")
-    tl.to({}, { duration: 4.5 }) // dwell long enough for auto-play signals to finish
+
+    // Signal pills converge into the card — scrubbed so they respond to scroll pace
+    gsap.set(rowVals, { opacity: 0, x: -6 })
+    SIGNALS.forEach((s, i) => {
+      const pill = pills[i]
+      const blob = blobs[i]
+      const row  = rowVals[i]
+      const targets = [pill, blob].filter(Boolean)
+      if (!targets.length) return
+      gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
+      const base = 0.3
+      tl.to(targets, { opacity: 1, duration: 0.5, ease: "power2.out" },                         `crmIn+=${base + i * 0.35}`)
+      tl.to(targets, { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in" },    `crmIn+=${base + 0.6 + i * 0.35}`)
+      if (row) tl.to(row, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },              `crmIn+=${base + 1.3 + i * 0.35}`)
+    })
+
+    tl.to({}, { duration: 1.5 }) // dwell on filled card
 
     tl.to(crmRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
     tl.to(confRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
     tl.addLabel("confIn")
-    tl.to({}, { duration: 2.5 }) // dwell for bubble animation
+
+    // Gmail bubble + follow-up status flip — scrubbed
+    if (fuBefore && fuAfter && fuBubble) {
+      tl.to(fuBubble, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out" }, "confIn+=0.4")
+      tl.to(fuBefore, { opacity: 0, duration: 0.4, ease: "power2.in" },                  "confIn+=1.0")
+      tl.to(fuAfter,  { opacity: 1, duration: 0.4, ease: "power2.out" },                 "confIn+=1.1")
+      tl.to(fuBubble, { opacity: 0, scale: 0.4, duration: 0.4, ease: "power2.in" },      "confIn+=1.2")
+    }
+
+    tl.to({}, { duration: 3.5 }) // dwell on conf card — hold on green state
 
     // ── Auto-play card-reveal + content animations ──────────────────────────
     const tlDur   = tl.duration()
@@ -850,10 +875,10 @@ export function ProposalsCrmSection() {
     // text finishes sliding in.
     const buildReveal = (shell: HTMLElement, inner: HTMLElement) => {
       const t = gsap.timeline({ paused: true })
-      t.to(shell, { y: 0, scale: 1, ease: "back.out(1.4)", duration: 0.45 }, 0)
-      t.to(inner, { scale: 1, ease: "power3.out", duration: 0.22 },          0.25)
-      t.set(shell, { backgroundColor: "rgba(0,0,0,0)" },                     0.47)
-      t.to(inner,  { backgroundColor: "#E7F1FD", duration: 0.18, ease: "power2.inOut" }, 0.47)
+      t.to(shell, { y: 0, scale: 1, ease: "back.out(1.4)", duration: 0.6 }, 0)
+      t.to(inner, { scale: 1, ease: "back.out(1.7)", duration: 0.42 },       0.32)
+      t.set(shell, { backgroundColor: "rgba(0,0,0,0)" },                    0.8)
+      t.to(inner,  { backgroundColor: "#E7F1FD", duration: 0.25, ease: "power2.inOut" }, 0.8)
       return t
     }
 
@@ -869,35 +894,7 @@ export function ProposalsCrmSection() {
           onEnter: () => {
             lockScroll()
             crmRevealTl = buildReveal(p2Shell, p2Inner)
-
-            // At 0.65s the inner is at full scale — measure accurately then
-            // kick off the signal animations as plain gsap.to calls.
-            crmRevealTl.call(() => {
-              SIGNALS.forEach((s, i) => {
-                const pill = pills[i]
-                const blob = blobs[i]
-                const row  = rowVals[i]
-                const targets = [pill, blob].filter(Boolean)
-                if (!targets.length) return
-                gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
-
-                let toY = 0
-                if (pill && row) {
-                  const pr = pill.getBoundingClientRect()
-                  const rr = row.getBoundingClientRect()
-                  toY = rr.top + rr.height / 2 - (pr.top + pr.height / 2 - s.y)
-                }
-
-                const d = 0.15 + i * 0.35
-                gsap.to(targets, { opacity: 1, duration: 0.5, ease: "power2.out", delay: d })
-                gsap.to(targets, { x: 0, y: toY, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in", delay: d + 0.6 })
-                if (row) gsap.to(row, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out", delay: d + 1.3 })
-              })
-            }, [], 1.0)
-
-            // Unlock well after all signal animations have finished
             crmRevealTl.call(unlockScroll, [], 11.0)
-
             crmRevealTl.play()
           }
         })
@@ -911,20 +908,7 @@ export function ProposalsCrmSection() {
           onEnter: () => {
             lockScroll()
             confRevealTl = buildReveal(p3Shell, p3Inner)
-
-            // Bubble + status flip after card settles at 1.0s
-            confRevealTl.call(() => {
-              if (fuBefore && fuAfter && fuBubble) {
-                gsap.to(fuBubble, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out", delay: 0.3 })
-                gsap.to(fuBefore, { opacity: 0, duration: 0.4, ease: "power2.in",  delay: 0.9 })
-                gsap.to(fuAfter,  { opacity: 1, duration: 0.4, ease: "power2.out", delay: 1.0 })
-                gsap.to(fuBubble, { opacity: 0, scale: 0.4, duration: 0.4, ease: "power2.in", delay: 1.1 })
-              }
-            }, [], 1.0)
-
-            // Way stickier — hold long after the bubble sequence settles
             confRevealTl.call(unlockScroll, [], 16.0)
-
             confRevealTl.play()
           }
         })
