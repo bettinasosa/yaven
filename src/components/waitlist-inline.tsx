@@ -111,7 +111,7 @@ export function WaitlistInline() {
                 <Loader2 className="w-4 h-4 animate-spin" />
               </span>
             ) : (
-              <span className="text-white">Get Yaven</span>
+              <span className="text-white">Get early access</span>
             )}
           </button>
         </div>

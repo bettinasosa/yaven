@@ -306,7 +306,11 @@ export function TriageSection() {
         <div
           ref={wrapperRef}
           className="relative"
-          style={{ height: "200vh", background: "var(--cream)", marginTop: "-1px" }}
+          style={{
+            height: "200vh",
+            background: "var(--cream)",
+            marginTop: "-1px"
+          }}
         >
           <div
             className="sticky top-0 h-screen overflow-visible flex items-center justify-center"
@@ -315,7 +319,12 @@ export function TriageSection() {
             <div
               ref={contentRef}
               className="relative"
-              style={{ width: "100%", maxWidth: "440px", height: "540px", opacity: 0 }}
+              style={{
+                width: "100%",
+                maxWidth: "440px",
+                height: "540px",
+                opacity: 0
+              }}
             >
               {CARDS.map((card, i) => (
                 <div

@@ -9,11 +9,12 @@ export function BlueprintPanel() {
   const [onCream, setOnCream] = useState(false)
   const [betaMode, setBetaMode] = useState(false)
   const [email, setEmail] = useState("")
-  const [name, setName] = useState("")
+  const [betaName, setBetaName] = useState("")
   const [role, setRole] = useState("")
   const [hasMac, setHasMac] = useState<boolean | null>(null)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [betaSuccess, setBetaSuccess] = useState(false)
   const [error, setError] = useState("")
   const rowRef = useRef<HTMLDivElement>(null)
   const btnWrapRef = useRef<HTMLDivElement>(null)
@@ -35,27 +36,23 @@ export function BlueprintPanel() {
     if (loading) return
     setOpen(false)
     setBetaMode(false)
+    setBetaName("")
     setRole("")
     setHasMac(null)
     setEmail("")
-    setName("")
     setError("")
+    setBetaSuccess(false)
   }
 
   function exitBeta() {
     setBetaMode(false)
+    setBetaName("")
     setRole("")
     setHasMac(null)
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    // All fields required (name + email always; role + Mac in beta).
-    if (!name.trim()) {
-      setError("Please enter your name.")
-      shake()
-      return
-    }
     if (!email.trim() || !email.includes("@")) {
       setError("Please enter a valid email.")
       shake()
@@ -68,7 +65,9 @@ export function BlueprintPanel() {
     }
     setError("")
     setLoading(true)
-    setError("")
+
+    // Mac "No" → submit as waitlist signup instead of beta application
+    const isBetaSubmit = betaMode && hasMac !== false
 
     try {
       const response = await fetch("/api/waitlist", {
@@ -76,16 +75,19 @@ export function BlueprintPanel() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          name,
-          ...(betaMode && { role, hasMac, betaTester: true })
+          ...(isBetaSubmit && { name: betaName, role, hasMac, betaTester: true })
         })
       })
       if (!response.ok) throw new Error("Failed")
       setSuccess(true)
-      setTimeout(() => {
-        handleClose()
-        setSuccess(false)
-      }, 2200)
+      if (isBetaSubmit) {
+        setBetaSuccess(true)
+      } else {
+        setTimeout(() => {
+          handleClose()
+          setSuccess(false)
+        }, 2200)
+      }
     } catch {
       setError("Something went wrong. Please try again.")
     } finally {
@@ -176,18 +178,55 @@ export function BlueprintPanel() {
                       color: c.heading
                     }}
                   >
-                    You&apos;re in.
+                    {betaSuccess ? "Application in." : "You\u2019re in."}
                   </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-dm-sans), sans-serif",
-                      fontSize: "15px",
-                      color: c.body,
-                      marginTop: "8px"
-                    }}
-                  >
-                    We&apos;ll reach out soon.
-                  </p>
+                  {betaSuccess ? (
+                    <>
+                      <p
+                        style={{
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          fontSize: "15px",
+                          color: c.body,
+                          marginTop: "8px",
+                          lineHeight: 1.5
+                        }}
+                      >
+                        We onboard testers personally. Grab a slot and skip the
+                        email back-and-forth.
+                      </p>
+                      <a
+                        href="https://calendly.com/yaven/onboarding"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: "inline-block",
+                          marginTop: "20px",
+                          padding: "13px 28px",
+                          borderRadius: "999px",
+                          background: "#267fe5",
+                          color: "#fff",
+                          fontSize: "15px",
+                          fontWeight: 600,
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          textDecoration: "none",
+                          transition: "transform 0.15s ease"
+                        }}
+                      >
+                        Book your 15-min onboarding
+                      </a>
+                    </>
+                  ) : (
+                    <p
+                      style={{
+                        fontFamily: "var(--font-dm-sans), sans-serif",
+                        fontSize: "15px",
+                        color: c.body,
+                        marginTop: "8px"
+                      }}
+                    >
+                      We&apos;ll reach out soon.
+                    </p>
+                  )}
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} noValidate>
@@ -237,7 +276,7 @@ export function BlueprintPanel() {
                             lineHeight: 1.2
                           }}
                         >
-                          Become a tester
+                          Become a beta tester
                         </h3>
                       </div>
                       <p
@@ -249,8 +288,8 @@ export function BlueprintPanel() {
                           lineHeight: 1.6
                         }}
                       >
-                        Help shape Yaven before launch. A few quick details and
-                        we&apos;ll reach out about early access.
+                        Help shape Yaven before launch. We onboard a small group
+                        each week, personally, on a call.
                       </p>
                     </div>
                   ) : (
@@ -276,7 +315,7 @@ export function BlueprintPanel() {
                           lineHeight: 1.6
                         }}
                       >
-                        Be first to get access when we launch. Or become a{" "}
+                        Be first in when we launch. Or skip the line and{" "}
                         <button
                           type="button"
                           onClick={() => setBetaMode(true)}
@@ -293,7 +332,7 @@ export function BlueprintPanel() {
                             cursor: "pointer"
                           }}
                         >
-                          beta tester
+                          become a beta tester
                         </button>
                         .
                       </p>
@@ -306,27 +345,7 @@ export function BlueprintPanel() {
                     </p>
                   )}
 
-                  {/* Name (waitlist + beta) */}
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="Your name"
-                    style={{
-                      width: "100%",
-                      padding: "13px 18px",
-                      marginBottom: "10px",
-                      borderRadius: "999px",
-                      border: `1px solid ${c.rowBorder}`,
-                      background: c.rowBg,
-                      color: c.inputColor,
-                      fontSize: "15px",
-                      fontFamily: "var(--font-dm-sans), sans-serif",
-                      outline: "none"
-                    }}
-                  />
-
-                  {/* Beta tester extra fields — role then Mac, after name.
+                  {/* Beta tester extra fields.
                       Always mounted so it can animate open AND closed. */}
                   <div
                     style={{
@@ -334,7 +353,7 @@ export function BlueprintPanel() {
                       flexDirection: "column",
                       gap: "14px",
                       overflow: "hidden",
-                      maxHeight: betaMode ? "280px" : "0px",
+                      maxHeight: betaMode ? "400px" : "0px",
                       opacity: betaMode ? 1 : 0,
                       marginBottom: betaMode ? "10px" : "0px",
                       pointerEvents: betaMode ? "auto" : "none",
@@ -342,6 +361,26 @@ export function BlueprintPanel() {
                         "max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, margin-bottom 0.4s cubic-bezier(0.22, 1, 0.36, 1)"
                     }}
                   >
+                      {/* Name (beta only) */}
+                      <input
+                        type="text"
+                        value={betaName}
+                        onChange={e => setBetaName(e.target.value)}
+                        placeholder="Your name"
+                        style={{
+                          width: "100%",
+                          padding: "13px 18px",
+                          borderRadius: "999px",
+                          border: `1px solid ${c.rowBorder}`,
+                          background: c.rowBg,
+                          color: c.inputColor,
+                          fontSize: "15px",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          outline: "none"
+                        }}
+                      />
+
+                      {/* Role chips */}
                       <div>
                         <label
                           style={{
@@ -355,25 +394,36 @@ export function BlueprintPanel() {
                         >
                           Your role
                         </label>
-                        <input
-                          type="text"
-                          value={role}
-                          onChange={e => setRole(e.target.value)}
-                          placeholder="e.g. Freelance designer, founder, consultant…"
-                          style={{
-                            width: "100%",
-                            padding: "11px 16px",
-                            borderRadius: "12px",
-                            border: `1px solid ${c.inputBorder}`,
-                            background: c.inputBg,
-                            color: c.inputColor,
-                            fontSize: "15px",
-                            fontFamily: "var(--font-dm-sans), sans-serif",
-                            outline: "none"
-                          }}
-                        />
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                          {["Founder", "Freelancer", "Consultant", "Other"].map(r => {
+                            const selected = role === r
+                            const colors = selected ? c.optSelected : c.optDefault
+                            return (
+                              <button
+                                key={r}
+                                type="button"
+                                onClick={() => setRole(r)}
+                                style={{
+                                  padding: "8px 16px",
+                                  borderRadius: "999px",
+                                  border: `1px solid ${colors.border}`,
+                                  background: colors.bg,
+                                  color: colors.color,
+                                  fontSize: "14px",
+                                  fontWeight: 600,
+                                  fontFamily: "var(--font-dm-sans), sans-serif",
+                                  cursor: "pointer",
+                                  transition: "all 0.15s ease"
+                                }}
+                              >
+                                {r}
+                              </button>
+                            )
+                          })}
+                        </div>
                       </div>
 
+                      {/* Mac question */}
                       <div>
                         <label
                           style={{
@@ -418,6 +468,20 @@ export function BlueprintPanel() {
                             )
                           })}
                         </div>
+                        {hasMac === false && (
+                          <p
+                            style={{
+                              fontFamily: "var(--font-dm-sans), sans-serif",
+                              fontSize: "13px",
+                              color: c.body,
+                              margin: "10px 0 0",
+                              lineHeight: 1.5
+                            }}
+                          >
+                            Yaven is macOS-first. Join the waitlist and
+                            you&apos;re top of the list for Windows.
+                          </p>
+                        )}
                       </div>
                     </div>
                   {/* Email + submit row */}
@@ -477,12 +541,29 @@ export function BlueprintPanel() {
                           </span>
                         ) : (
                           <span className="text-white">
-                            {betaMode ? "Apply →" : "Get Yaven"}
+                            {betaMode
+                              ? hasMac === false
+                                ? "Join the waitlist"
+                                : "Apply →"
+                              : "Get early access"}
                           </span>
                         )}
                       </button>
                     </div>
                   </div>
+                  {!betaMode && (
+                    <p
+                      style={{
+                        fontFamily: "var(--font-dm-sans), sans-serif",
+                        fontSize: "12px",
+                        color: c.body,
+                        margin: "12px 0 0",
+                        textAlign: "center"
+                      }}
+                    >
+                      One email when your access opens. Nothing else.
+                    </p>
+                  )}
                 </form>
               )}
             </div>

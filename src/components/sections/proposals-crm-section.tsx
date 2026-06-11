@@ -767,34 +767,74 @@ export function ProposalsCrmSection() {
     gsap.set(crmRef.current, { y: "100vh", opacity: 0 })
     gsap.set(confRef.current, { y: "100vh", opacity: 0 })
     fragRefs.current.forEach((f, i) => {
-      if (f) gsap.set(f, { x: FRAGMENTS[i].x, y: FRAGMENTS[i].y, rotation: FRAGMENTS[i].r })
+      if (f)
+        gsap.set(f, {
+          x: FRAGMENTS[i].x,
+          y: FRAGMENTS[i].y,
+          rotation: FRAGMENTS[i].r
+        })
     })
 
-    const p2Shell = crmRef.current?.querySelector<HTMLElement>('[data-card-shell="p2"]')
-    const p3Shell = confRef.current?.querySelector<HTMLElement>('[data-card-shell="p3"]')
-    if (p2Shell) gsap.set(p2Shell, { y: "75vh", scale: 0.08, transformOrigin: "center center" })
-    if (p3Shell) gsap.set(p3Shell, { y: "75vh", scale: 0.08, transformOrigin: "center center" })
-    const p2Inner = crmRef.current?.querySelector<HTMLElement>('[data-card-inner="p2"]')
-    const p3Inner = confRef.current?.querySelector<HTMLElement>('[data-card-inner="p3"]')
-    if (p2Inner) gsap.set(p2Inner, { scale: 0.08, transformOrigin: "center center", backgroundColor: "#fff" })
-    if (p3Inner) gsap.set(p3Inner, { scale: 0.08, transformOrigin: "center center", backgroundColor: "#fff" })
+    const p2Shell = crmRef.current?.querySelector<HTMLElement>(
+      '[data-card-shell="p2"]'
+    )
+    const p3Shell = confRef.current?.querySelector<HTMLElement>(
+      '[data-card-shell="p3"]'
+    )
+    if (p2Shell)
+      gsap.set(p2Shell, {
+        y: "75vh",
+        scale: 0.08,
+        transformOrigin: "center center"
+      })
+    if (p3Shell)
+      gsap.set(p3Shell, {
+        y: "75vh",
+        scale: 0.08,
+        transformOrigin: "center center"
+      })
+    const p2Inner = crmRef.current?.querySelector<HTMLElement>(
+      '[data-card-inner="p2"]'
+    )
+    const p3Inner = confRef.current?.querySelector<HTMLElement>(
+      '[data-card-inner="p3"]'
+    )
+    if (p2Inner)
+      gsap.set(p2Inner, {
+        scale: 0.08,
+        transformOrigin: "center center",
+        backgroundColor: "#fff"
+      })
+    if (p3Inner)
+      gsap.set(p3Inner, {
+        scale: 0.08,
+        transformOrigin: "center center",
+        backgroundColor: "#fff"
+      })
 
     // Gather elements used in auto-play animations and set initial state
     const crm = crmRef.current
-    const pills = crm ? Array.from(crm.querySelectorAll<HTMLElement>("[data-signal-pill]")) : []
-    const blobs = crm ? Array.from(crm.querySelectorAll<HTMLElement>("[data-signal-blob]")) : []
-    const rowVals = crm ? Array.from(crm.querySelectorAll<HTMLElement>("[data-crm-value]")) : []
+    const pills = crm
+      ? Array.from(crm.querySelectorAll<HTMLElement>("[data-signal-pill]"))
+      : []
+    const blobs = crm
+      ? Array.from(crm.querySelectorAll<HTMLElement>("[data-signal-blob]"))
+      : []
+    const rowVals = crm
+      ? Array.from(crm.querySelectorAll<HTMLElement>("[data-crm-value]"))
+      : []
     gsap.set(rowVals, { opacity: 0, x: -6 })
     SIGNALS.forEach((s, i) => {
       const targets = [pills[i], blobs[i]].filter(Boolean)
-      if (targets.length) gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
+      if (targets.length)
+        gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
     })
 
     const conf = confRef.current
     const fuBefore = conf?.querySelector<HTMLElement>("[data-fu-before]")
-    const fuAfter  = conf?.querySelector<HTMLElement>("[data-fu-after]")
+    const fuAfter = conf?.querySelector<HTMLElement>("[data-fu-after]")
     const fuBubble = conf?.querySelector<HTMLElement>("[data-fu-bubble]")
-    if (fuAfter)  gsap.set(fuAfter,  { opacity: 0 })
+    if (fuAfter) gsap.set(fuAfter, { opacity: 0 })
     if (fuBubble) gsap.set(fuBubble, { opacity: 0, x: 60, scale: 0.6 })
 
     // ── Scrubbed timeline — phase transitions only ──────────────────────────
@@ -808,15 +848,38 @@ export function ProposalsCrmSection() {
     })
 
     tl.addLabel("p1", 0)
-    tl.to(proposalsRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 }, "p1")
+    tl.to(
+      proposalsRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 },
+      "p1"
+    )
     fragRefs.current.forEach((f, i) => {
       if (!f) return
-      tl.to(f, { x: 0, y: 0, rotation: 0, scale: 0.6, ease: "power2.inOut", duration: 1.6 }, `p1+=${0.8 + i * 0.12}`)
+      tl.to(
+        f,
+        {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scale: 0.6,
+          ease: "power2.inOut",
+          duration: 1.6
+        },
+        `p1+=${0.8 + i * 0.12}`
+      )
     })
     tl.to({}, { duration: 0.8 })
 
-    tl.to(proposalsRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
-    tl.to(crmRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
+    tl.to(
+      proposalsRef.current,
+      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
+      ">"
+    )
+    tl.to(
+      crmRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
+      "<0.3"
+    )
     tl.addLabel("crmIn")
 
     // Signal pills converge into the card — scrubbed so they respond to scroll pace
@@ -824,34 +887,71 @@ export function ProposalsCrmSection() {
     SIGNALS.forEach((s, i) => {
       const pill = pills[i]
       const blob = blobs[i]
-      const row  = rowVals[i]
+      const row = rowVals[i]
       const targets = [pill, blob].filter(Boolean)
       if (!targets.length) return
       gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
       const base = 0.3
-      tl.to(targets, { opacity: 1, duration: 0.5, ease: "power2.out" },                         `crmIn+=${base + i * 0.35}`)
-      tl.to(targets, { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in" },    `crmIn+=${base + 0.6 + i * 0.35}`)
-      if (row) tl.to(row, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },              `crmIn+=${base + 1.3 + i * 0.35}`)
+      tl.to(
+        targets,
+        { opacity: 1, duration: 0.5, ease: "power2.out" },
+        `crmIn+=${base + i * 0.35}`
+      )
+      tl.to(
+        targets,
+        { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in" },
+        `crmIn+=${base + 0.6 + i * 0.35}`
+      )
+      if (row)
+        tl.to(
+          row,
+          { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },
+          `crmIn+=${base + 1.3 + i * 0.35}`
+        )
     })
 
     tl.to({}, { duration: 1.5 }) // dwell on filled card
 
-    tl.to(crmRef.current, { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 }, ">")
-    tl.to(confRef.current, { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 }, "<0.3")
+    tl.to(
+      crmRef.current,
+      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
+      ">"
+    )
+    tl.to(
+      confRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
+      "<0.3"
+    )
     tl.addLabel("confIn")
 
     // Gmail bubble + follow-up status flip — scrubbed
     if (fuBefore && fuAfter && fuBubble) {
-      tl.to(fuBubble, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "power2.out" }, "confIn+=0.9")
-      tl.to(fuBefore, { opacity: 0, duration: 0.6, ease: "power2.in" },                  "confIn+=1.7")
-      tl.to(fuAfter,  { opacity: 1, duration: 0.6, ease: "power2.out" },                 "confIn+=1.9")
-      tl.to(fuBubble, { opacity: 0, scale: 0.4, duration: 0.5, ease: "power2.in" },      "confIn+=2.1")
+      tl.to(
+        fuBubble,
+        { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "power2.out" },
+        "confIn+=0.9"
+      )
+      tl.to(
+        fuBefore,
+        { opacity: 0, duration: 0.6, ease: "power2.in" },
+        "confIn+=1.7"
+      )
+      tl.to(
+        fuAfter,
+        { opacity: 1, duration: 0.6, ease: "power2.out" },
+        "confIn+=1.9"
+      )
+      tl.to(
+        fuBubble,
+        { opacity: 0, scale: 0.4, duration: 0.5, ease: "power2.in" },
+        "confIn+=2.1"
+      )
     }
 
     tl.to({}, { duration: 3.5 }) // dwell on conf card — hold on green state
 
     // ── Auto-play card-reveal + content animations ──────────────────────────
-    const tlDur   = tl.duration()
+    const tlDur = tl.duration()
     const wrapperH = wrapperRef.current.scrollHeight
 
     // Convert a label position (minus an offset so we fire slightly early,
@@ -862,12 +962,12 @@ export function ProposalsCrmSection() {
     // Prevent/restore scroll-wheel & touch during a card animation so the user
     // must wait for the sequence to finish before continuing down.
     const noop = (e: Event) => e.preventDefault()
-    const lockScroll   = () => {
-      window.addEventListener("wheel",     noop, { passive: false })
+    const lockScroll = () => {
+      window.addEventListener("wheel", noop, { passive: false })
       window.addEventListener("touchmove", noop, { passive: false })
     }
     const unlockScroll = () => {
-      window.removeEventListener("wheel",     noop)
+      window.removeEventListener("wheel", noop)
       window.removeEventListener("touchmove", noop)
     }
 
@@ -876,43 +976,49 @@ export function ProposalsCrmSection() {
     const buildReveal = (shell: HTMLElement, inner: HTMLElement) => {
       const t = gsap.timeline({ paused: true })
       t.to(shell, { y: 0, scale: 1, ease: "back.out(1.4)", duration: 0.48 }, 0)
-      t.to(inner, { scale: 1, ease: "back.out(1.7)", duration: 0.38 },       0.26)
-      t.set(shell, { backgroundColor: "rgba(0,0,0,0)" },                    0.64)
-      t.to(inner,  { backgroundColor: "#E7F1FD", duration: 0.22, ease: "power2.inOut" }, 0.64)
+      t.to(inner, { scale: 1, ease: "back.out(1.7)", duration: 0.38 }, 0.26)
+      t.set(shell, { backgroundColor: "rgba(0,0,0,0)" }, 0.64)
+      t.to(
+        inner,
+        { backgroundColor: "#E7F1FD", duration: 0.22, ease: "power2.inOut" },
+        0.64
+      )
       return t
     }
 
     let crmRevealTl: gsap.core.Timeline | null = null
     let confRevealTl: gsap.core.Timeline | null = null
 
-    const crmSt = (p2Shell && p2Inner)
-      ? ScrollTrigger.create({
-          trigger: wrapperRef.current,
-          // Fire when the CRM card starts sliding in (-1.0 units before crmIn)
-          start: `top+=${scrollPx("crmIn", -1.0)}px top`,
-          once: true,
-          onEnter: () => {
-            lockScroll()
-            crmRevealTl = buildReveal(p2Shell, p2Inner)
-            crmRevealTl.call(unlockScroll, [], 11.0)
-            crmRevealTl.play()
-          }
-        })
-      : null
+    const crmSt =
+      p2Shell && p2Inner
+        ? ScrollTrigger.create({
+            trigger: wrapperRef.current,
+            // Fire when the CRM card starts sliding in (-1.0 units before crmIn)
+            start: `top+=${scrollPx("crmIn", -1.0)}px top`,
+            once: true,
+            onEnter: () => {
+              lockScroll()
+              crmRevealTl = buildReveal(p2Shell, p2Inner)
+              crmRevealTl.call(unlockScroll, [], 11.0)
+              crmRevealTl.play()
+            }
+          })
+        : null
 
-    const confSt = (p3Shell && p3Inner)
-      ? ScrollTrigger.create({
-          trigger: wrapperRef.current,
-          start: `top+=${scrollPx("confIn", -1.0)}px top`,
-          once: true,
-          onEnter: () => {
-            lockScroll()
-            confRevealTl = buildReveal(p3Shell, p3Inner)
-            confRevealTl.call(unlockScroll, [], 5.5)
-            confRevealTl.play()
-          }
-        })
-      : null
+    const confSt =
+      p3Shell && p3Inner
+        ? ScrollTrigger.create({
+            trigger: wrapperRef.current,
+            start: `top+=${scrollPx("confIn", -1.0)}px top`,
+            once: true,
+            onEnter: () => {
+              lockScroll()
+              confRevealTl = buildReveal(p3Shell, p3Inner)
+              confRevealTl.call(unlockScroll, [], 5.5)
+              confRevealTl.play()
+            }
+          })
+        : null
 
     return () => {
       unlockScroll()
@@ -992,8 +1098,8 @@ export function ProposalsCrmSection() {
             <div>
               <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
               <p style={bodyStyle}>
-                It sources clients that fit, drafts the outreach, and logs every
-                reply. No need to type.
+                Every call, reply, and follow-up logged the moment it happens.
+                Your CRM stays current without you opening it.
               </p>
             </div>
             <CrmCard animated={false} />
@@ -1095,15 +1201,18 @@ export function ProposalsCrmSection() {
                   borderRadius: "32px"
                 }}
               >
-                <div data-card-inner="p2" style={{ background: "#fff", borderRadius: "32px" }}>
+                <div
+                  data-card-inner="p2"
+                  style={{ background: "#fff", borderRadius: "32px" }}
+                >
                   <CrmCard animated />
                 </div>
               </div>
               <div>
                 <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
                 <p style={bodyStyle}>
-                  It sources clients that fit, drafts the outreach, and logs
-                  every reply. No need to type.
+                  Every call, reply, and follow-up logged the moment it happens.
+                  Your CRM stays current without you opening it.
                 </p>
               </div>
             </div>
@@ -1125,7 +1234,10 @@ export function ProposalsCrmSection() {
                   borderRadius: "32px"
                 }}
               >
-                <div data-card-inner="p3" style={{ background: "#fff", borderRadius: "32px" }}>
+                <div
+                  data-card-inner="p3"
+                  style={{ background: "#fff", borderRadius: "32px" }}
+                >
                   <ConferenceCard animated />
                 </div>
               </div>

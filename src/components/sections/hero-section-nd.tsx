@@ -91,16 +91,20 @@ function HeroVariantB() {
             Yaven
           </span>
 
-          <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(28px,6vw,42px)] md:text-[clamp(20px,3vw,42px)] font-medium text-white leading-[1.1] tracking-[-0.02em] m-0 opacity-92 mt-[clamp(60px,10vh,200px)] md:mt-[clamp(100px,16vh,200px)] mb-[clamp(2px,1vh,12px)]">
+          <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(28px,6vw,42px)] md:text-[clamp(20px,3vw,42px)] font-medium text-white leading-[1.1] tracking-[-0.02em] m-0 opacity-92 mt-[clamp(60px,10vh,200px)] md:mt-[clamp(50px,8vh,100px)] mb-[clamp(2px,1vh,12px)]">
             Less admin.
             <br />
             More flow.
           </p>
 
           <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(16px,3.5vw,20px)] md:text-[clamp(15px,1.8vw,20px)] font-normal text-white/70 leading-[1.5] mt-0 mr-0 mb-[clamp(24px,4vh,40px)] ml-0">
-            AI that handles the busywork
+            Yaven works across your inbox, calendar,
             <br />
-            letting you focus on what you love.
+            CRM, and any app on your screen.
+            <br />
+            It drafts, replies, files, and follows up.
+            <br />
+            You approve everything.
           </p>
 
           <div ref={ctaRef}>

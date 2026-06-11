@@ -656,23 +656,23 @@ export function CommandsSection() {
         className="text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0"
         style={{ fontFamily: "var(--font-instrument-serif)" }}
       >
-        Yaven works <span>anywhere</span>.
+        it works <span>anywhere</span>...
       </ScrollCutReveal>
       <p
-        className={`text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-4" : "mr-60 mt-24"}`}
+        className={`text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-2" : "mr-60 mt-38"}`}
       >
-        Draft a reply, explain a contract, answer a question, all without
-        leaving the app or site you&apos;re in. Press{" "}
+        Most AI assistants live in one app. Yaven lives on your screen.
+        Highlight a contract clause and ask. Open a LinkedIn DM and draft.{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">
           <KeyBadge small>⌥</KeyBadge>
           <KeyBadge small>D</KeyBadge>
         </span>{" "}
-        to draft or{" "}
+        anywhere or{" "}
         <span className="inline-flex items-center gap-[3px] align-middle">
           <KeyBadge small>⌥</KeyBadge>
           <KeyBadge small>A</KeyBadge>
         </span>{" "}
-        to ask.
+        anything.
       </p>
     </div>
   )

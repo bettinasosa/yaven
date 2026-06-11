@@ -18,7 +18,15 @@ gsap.registerPlugin(ScrollTrigger)
 const FOOTER_H = 660
 
 // Card entrance — section slides up with rounded top corners that flatten on arrival
-function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
+function CardWrap({
+  children,
+  z,
+  behindBg
+}: {
+  children: React.ReactNode
+  z: number
+  behindBg?: string
+}) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!ref.current) return
@@ -41,17 +49,18 @@ function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
     }
   }, [])
   return (
-    <div
-      ref={ref}
-      style={{
-        position: "relative",
-        zIndex: z,
-        borderRadius: "72px 72px 0 0",
-        overflow: "clip",
-        boxShadow: "0 -16px 64px rgba(0,0,0,0.22)"
-      }}
-    >
-      {children}
+    <div style={{ position: "relative", zIndex: z, background: behindBg }}>
+      <div
+        ref={ref}
+        style={{
+          position: "relative",
+          borderRadius: "72px 72px 0 0",
+          overflow: "clip",
+          boxShadow: "0 -16px 64px rgba(0,0,0,0.22)"
+        }}
+      >
+        {children}
+      </div>
     </div>
   )
 }
@@ -174,10 +183,9 @@ export default function Home() {
       <StickyGetYaven />
       <HeroSectionND />
       <MeetYavenSection />
-      <CardWrap z={3}>
+      <CardWrap z={3} behindBg="var(--primary)">
         <div data-cream>
           <TriageSection />
-          <ProposalsCrmSection />
         </div>
       </CardWrap>
       <div
@@ -191,7 +199,24 @@ export default function Home() {
       >
         <CommandsSection />
       </div>
-      <FooterCTASection />
+      <CardWrap z={3} behindBg="var(--primary)">
+        <div data-cream>
+          <ProposalsCrmSection />
+        </div>
+      </CardWrap>
+      <CardWrap z={4} behindBg="var(--cream)">
+        <div
+          style={{
+            position: "relative",
+            zIndex: 5,
+            background: "var(--primary)",
+            paddingTop: "80px",
+            marginTop: "-2px"
+          }}
+        >
+          <FooterCTASection />
+        </div>
+      </CardWrap>
 
       {/* ── Sticky footer ── */}
       <div

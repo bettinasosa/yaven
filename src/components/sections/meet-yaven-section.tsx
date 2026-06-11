@@ -42,8 +42,9 @@ function BI({ children }: { children: React.ReactNode }) {
 
 const BODY: React.ReactNode[] = [
   <>
-    Built for founders, freelancers, and solo operators who{" "}
-    <BI>run everything themselves</BI>.
+    Yaven learns your clients, your tone, and your rules, then acts on them. The
+    longer it works with you,
+    <BI>the more it handles alone.</BI>.
   </>,
   <>
     Yaven understands your context, tone and open tasks, then acts on them{" "}
