@@ -234,7 +234,7 @@ export function FooterSection() {
           }}
         >
           <Image
-            src="/yaven-logo.svg"
+            src="/yaven-logo.webp"
             alt="Yaven"
             width={16}
             height={28}

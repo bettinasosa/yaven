@@ -11,16 +11,6 @@ gsap.registerPlugin(ScrollTrigger)
 
 const INK = "#0a0e1a"
 
-const headlineStyle: React.CSSProperties = {
-  fontFamily: "var(--font-instrument-serif)",
-  fontSize: "clamp(32px, 4.5vw, 64px)",
-  fontWeight: 500,
-  letterSpacing: "-0.02em",
-  lineHeight: 1.08,
-  color: INK,
-  margin: 0
-}
-
 const bodyStyle: React.CSSProperties = {
   fontSize: "clamp(16px, 1.9vw, 22px)",
   fontWeight: 500,
@@ -29,20 +19,6 @@ const bodyStyle: React.CSSProperties = {
   opacity: 0.8,
   margin: "18px 0 0",
   maxWidth: "480px"
-}
-
-function Em({ children }: { children: React.ReactNode }) {
-  return (
-    <i
-      style={{
-        fontFamily: "var(--font-instrument-serif)",
-        fontWeight: 500,
-        fontStyle: "italic"
-      }}
-    >
-      {children}
-    </i>
-  )
 }
 
 function AppIcon({ name, tilt }: { name: string; tilt: number }) {
@@ -75,17 +51,49 @@ function AppIcon({ name, tilt }: { name: string; tilt: number }) {
         alt={name}
         width={16}
         height={16}
-        style={{ objectFit: "contain" }}
+        style={{ objectFit: "contain", width: "16px", height: "16px" }}
       />
     </span>
   )
 }
 
-export function FinaleContent({
-  underlineDrawn = false
-}: {
-  underlineDrawn?: boolean
-}) {
+function UniBadge({ name, logo }: { name: string; logo: string }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "5px",
+        padding: "3px 9px 3px 5px",
+        borderRadius: "16px",
+        background: "rgba(10,14,26,0.05)",
+        border: "1px solid rgba(10,14,26,0.08)",
+        fontSize: "clamp(11px, 1.1vw, 13px)",
+        fontWeight: 600,
+        color: INK,
+        opacity: 0.6,
+        verticalAlign: "middle",
+        margin: "0 2px"
+      }}
+    >
+      <Image
+        src={`/logos/${logo}.png`}
+        alt={name}
+        width={14}
+        height={14}
+        style={{
+          objectFit: "contain",
+          width: "14px",
+          height: "14px",
+          borderRadius: "2px"
+        }}
+      />
+      {name}
+    </span>
+  )
+}
+
+export function FinaleContent() {
   const paraStyle: React.CSSProperties = {
     ...bodyStyle,
     margin: 0,
@@ -96,7 +104,17 @@ export function FinaleContent({
     maxWidth: "none"
   }
 
-  // Each mask wrapper clips its child; the child slides up from below on enter.
+  const bioStyle: React.CSSProperties = {
+    ...bodyStyle,
+    margin: 0,
+    opacity: 0.75,
+    lineHeight: 1.7,
+    textAlign: "left",
+    width: "100%",
+    maxWidth: "none",
+    fontSize: "clamp(15px, 1.6vw, 19px)"
+  }
+
   const clip: React.CSSProperties = { overflow: "clip", width: "100%" }
 
   return (
@@ -105,76 +123,91 @@ export function FinaleContent({
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
-        width: "min(600px, 90%)",
-        margin: "0 auto"
+        width: "min(640px, 90%)",
+        margin: "0 auto",
+        gap: "clamp(16px, 2.5vh, 24px)"
       }}
     >
+      {/* Team heading */}
       <div style={clip}>
-        <h2
+        <h3
           data-mask-inner
-          style={{ ...headlineStyle, textAlign: "left", margin: 0 }}
+          style={{
+            fontFamily: "var(--font-instrument-serif)",
+            fontSize: "clamp(24px, 3vw, 40px)",
+            fontWeight: 500,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+            color: INK,
+            margin: 0
+          }}
         >
-          … so you focus on the work{" "}
-          <span
-            className={`triage-underline triage-underline-lg${underlineDrawn ? " is-visible" : ""}`}
-            style={{ backgroundImage: "linear-gradient(#df4f3e, #df4f3e)" }}
-          >
-            only you can do
-          </span>
-          .
-        </h2>
+          ...so who is building Yaven?
+        </h3>
       </div>
 
-      {/* spacer — outside clip containers so translateY doesn't fight clip height */}
-      <div style={{ height: "clamp(20px, 3vh, 32px)", flexShrink: 0 }} />
-
+      {/* Betts */}
       <div style={clip}>
-        <p data-mask-inner style={paraStyle}>
-          That was just a few examples. Yaven <Em>triages</Em> your inbox
-          <AppIcon name="gmail" tilt={-8} />
-          <Em>clears</Em> your docs
-          <AppIcon name="notion" tilt={6} />
-          <AppIcon name="excel" tilt={-5} />
-          <Em>logs</Em> your calls
-          <AppIcon name="granola" tilt={9} />
-          <Em>updates</Em> your CRM
-          <AppIcon name="hubspot" tilt={-7} />
-          <AppIcon name="salesforce" tilt={5} />
-          <Em>tracks</Em> your projects
-          <AppIcon name="asana" tilt={7} />
-          <AppIcon name="monday" tilt={-6} />
-          <Em>monitors</Em> your ads
-          <AppIcon name="googleads" tilt={8} />
-          <AppIcon name="googleanalytics" tilt={-5} />
-          and <Em>grows</Em> your network
-          <AppIcon name="linkedin" tilt={7} />
-          <AppIcon name="google" tilt={-8} />
+        <p data-mask-inner style={bioStyle}>
+          <strong style={{ color: INK, opacity: 0.9 }}>Betts</strong>{" "}
+          <a
+            href="https://www.bettinasosa.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: INK,
+              opacity: 0.4,
+              textDecoration: "none",
+              fontSize: "clamp(11px, 1vw, 13px)",
+              fontWeight: 500,
+              borderBottom: "1px solid rgba(10,14,26,0.2)"
+            }}
+          >
+            bettinasosa.com ↗
+          </a>
+          <br />
+          Design engineer. <UniBadge name="Imperial" logo="imperial" /> MEng.
+          Creative Conscience Gold + Silver. Founding engineer twice, Head of
+          Engineering, then grew her freelance practice to $20k+ MRR in a year.
+          Those systems became Yaven. She designed every pixel you&apos;re
+          scrolling.
         </p>
       </div>
 
-      <div style={{ height: "clamp(20px, 3vh, 32px)", flexShrink: 0 }} />
-
+      {/* Nick */}
       <div style={clip}>
+        <p data-mask-inner style={bioStyle}>
+          <strong style={{ color: INK, opacity: 0.9 }}>Nick</strong>
+          <br />
+          AI infrastructure. <UniBadge
+            name="Imperial"
+            logo="imperial"
+          /> then <UniBadge name="MIT" logo="mit" /> (only student selected from
+          his year). Digital twins in production across three countries. AI
+          agent infra for a hedge fund. Now building a twin of your working
+          life.
+        </p>
         <p
           data-mask-inner
-          style={{
-            ...bodyStyle,
-            margin: 0,
-            opacity: 0.6,
-            textAlign: "left",
-            width: "100%",
-            maxWidth: "none"
-          }}
+          style={{ ...bioStyle, marginTop: "8px", opacity: 0.45 }}
         >
-          Let Yaven handle the noise, while you handle the rest.
+          4,000 vinyl records. DJ sets on three continents. We take taste
+          seriously.
+        </p>
+      </div>
+
+      {/* Closing */}
+      <div style={clip}>
+        <p data-mask-inner style={{ ...bioStyle, opacity: 0.45 }}>
+          We were the customer before we were the company. We onboard every
+          tester ourselves.
         </p>
       </div>
     </div>
   )
 }
 
-// Sticky finale panel — sits below the pinned scroll section. Text lines
-// reveal with a mask-slide animation as the section scrolls into view.
+// Sticky finale panel with mask-slide animation.
 export function ProposalsFinaleSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
@@ -188,10 +221,6 @@ export function ProposalsFinaleSection() {
     const lines = Array.from(
       inner.querySelectorAll<HTMLElement>("[data-mask-inner]")
     )
-    const underlines = Array.from(
-      inner.querySelectorAll<HTMLElement>(".triage-underline")
-    )
-
     gsap.set(lines, { y: "110%" })
 
     const st = ScrollTrigger.create({
@@ -200,22 +229,18 @@ export function ProposalsFinaleSection() {
       onEnter: () => {
         gsap.to(lines, {
           y: "0%",
-          stagger: 0.1,
-          duration: 0.78,
+          stagger: 0.08,
+          duration: 0.72,
           ease: "power3.out"
         })
-        gsap.delayedCall(0.55, () =>
-          underlines.forEach(el => el.classList.add("is-visible"))
-        )
       },
       onLeaveBack: () => {
         gsap.to(lines, {
           y: "110%",
-          stagger: { each: 0.06, from: "end" },
-          duration: 0.42,
+          stagger: { each: 0.05, from: "end" },
+          duration: 0.38,
           ease: "power2.in"
         })
-        underlines.forEach(el => el.classList.remove("is-visible"))
       }
     })
 
@@ -227,7 +252,7 @@ export function ProposalsFinaleSection() {
       ref={wrapperRef}
       style={{
         position: "relative",
-        height: "170vh",
+        height: "220vh",
         background: "var(--cream)"
       }}
     >
@@ -239,7 +264,7 @@ export function ProposalsFinaleSection() {
           display: "grid",
           placeItems: "center",
           overflow: "hidden",
-          padding: "clamp(80px, 14vh, 160px) clamp(28px, 5vw, 48px)"
+          padding: "clamp(60px, 10vh, 120px) clamp(28px, 5vw, 48px)"
         }}
       >
         <div ref={innerRef}>

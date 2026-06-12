@@ -33,7 +33,13 @@ export function WaitlistInline() {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({
+          email,
+          ...(typeof window !== "undefined" && (() => {
+            try { const r = localStorage.getItem("yv_ref"); return r ? { referredBy: r } : {} }
+            catch { return {} }
+          })())
+        })
       })
       if (!res.ok) throw new Error("Failed")
       setSubmitted(true)

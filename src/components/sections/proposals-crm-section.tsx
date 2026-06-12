@@ -197,6 +197,17 @@ const SIGNALS = [
   { logo: "hubspot", x: 255, y: 115 }
 ]
 
+// Network slide — tool pills arranged around the "you" center
+const NET_POSITIONS = [
+  { logo: "linkedin", x: -180, y: -90 },
+  { logo: "gmail", x: 170, y: -110 },
+  { logo: "hubspot", x: -200, y: 80 },
+  { logo: "salesforce", x: 190, y: 95 },
+  { logo: "gcal", x: -50, y: -140 },
+  { logo: "notion", x: 80, y: 130 },
+  { logo: "granola", x: -130, y: 130 }
+]
+
 // Goo blobs sit behind the signal pills so they melt as they converge
 const SIGNAL_BLOBS = [
   { x: -255, y: -95, s: 46 },
@@ -370,7 +381,7 @@ function CrmCard({ animated }: { animated: boolean }) {
                 alt=""
                 width={28}
                 height={28}
-                style={{ objectFit: "contain" }}
+                style={{ objectFit: "contain", width: "28px", height: "28px" }}
               />
             </div>
           ))}
@@ -708,7 +719,11 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                   alt=""
                   width={16}
                   height={18}
-                  style={{ objectFit: "contain" }}
+                  style={{
+                    objectFit: "contain",
+                    width: "16px",
+                    height: "16px"
+                  }}
                 />
               </div>
             )}
@@ -725,7 +740,8 @@ export function ProposalsCrmSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const proposalsRef = useRef<HTMLDivElement>(null)
   const crmRef = useRef<HTMLDivElement>(null)
-  const confRef = useRef<HTMLDivElement>(null)
+  // confRef removed — conference slide dropped
+  const networkRef = useRef<HTMLDivElement>(null)
   const headerWrapRef = useRef<HTMLDivElement>(null)
   const fragRefs = useRef<(HTMLDivElement | null)[]>([])
   const mobileStackRef = useRef<HTMLElement>(null)
@@ -763,9 +779,17 @@ export function ProposalsCrmSection() {
     if (staticLayout || !wrapperRef.current) return
 
     // ── Initial state ───────────────────────────────────────────────────────
+    gsap.set(networkRef.current, { y: 60, opacity: 0 })
+    const netNodes = networkRef.current
+      ? Array.from(
+          networkRef.current.querySelectorAll<HTMLElement>("[data-net-node]")
+        )
+      : []
+    netNodes.forEach(n => gsap.set(n, { scale: 0, opacity: 0 }))
+
     gsap.set(proposalsRef.current, { y: 60, opacity: 0 })
     gsap.set(crmRef.current, { y: "100vh", opacity: 0 })
-    gsap.set(confRef.current, { y: "100vh", opacity: 0 })
+    // confRef removed — no longer animated
     fragRefs.current.forEach((f, i) => {
       if (f)
         gsap.set(f, {
@@ -778,9 +802,7 @@ export function ProposalsCrmSection() {
     const p2Shell = crmRef.current?.querySelector<HTMLElement>(
       '[data-card-shell="p2"]'
     )
-    const p3Shell = confRef.current?.querySelector<HTMLElement>(
-      '[data-card-shell="p3"]'
-    )
+    const p3Shell: HTMLElement | null = null
     if (p2Shell)
       gsap.set(p2Shell, {
         y: "75vh",
@@ -796,9 +818,7 @@ export function ProposalsCrmSection() {
     const p2Inner = crmRef.current?.querySelector<HTMLElement>(
       '[data-card-inner="p2"]'
     )
-    const p3Inner = confRef.current?.querySelector<HTMLElement>(
-      '[data-card-inner="p3"]'
-    )
+    const p3Inner: HTMLElement | null = null
     if (p2Inner)
       gsap.set(p2Inner, {
         scale: 0.08,
@@ -830,12 +850,7 @@ export function ProposalsCrmSection() {
         gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
     })
 
-    const conf = confRef.current
-    const fuBefore = conf?.querySelector<HTMLElement>("[data-fu-before]")
-    const fuAfter = conf?.querySelector<HTMLElement>("[data-fu-after]")
-    const fuBubble = conf?.querySelector<HTMLElement>("[data-fu-bubble]")
-    if (fuAfter) gsap.set(fuAfter, { opacity: 0 })
-    if (fuBubble) gsap.set(fuBubble, { opacity: 0, x: 60, scale: 0.6 })
+    // Conference animations removed
 
     // ── Scrubbed timeline — phase transitions only ──────────────────────────
     const tl = gsap.timeline({
@@ -847,7 +862,32 @@ export function ProposalsCrmSection() {
       }
     })
 
-    tl.addLabel("p1", 0)
+    // Phase 0 — Network mapping
+    tl.to(
+      networkRef.current,
+      { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 },
+      0
+    )
+    netNodes.forEach((node, i) => {
+      tl.to(
+        node,
+        {
+          scale: 1,
+          opacity: 1,
+          ease: "back.out(1.5)",
+          duration: 0.6
+        },
+        0.3 + i * 0.12
+      )
+    })
+    tl.to({}, { duration: 2 }) // dwell on network slide
+    tl.to(
+      networkRef.current,
+      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
+      ">"
+    )
+
+    tl.addLabel("p1")
     tl.to(
       proposalsRef.current,
       { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 },
@@ -910,45 +950,7 @@ export function ProposalsCrmSection() {
         )
     })
 
-    tl.to({}, { duration: 1.5 }) // dwell on filled card
-
-    tl.to(
-      crmRef.current,
-      { y: -60, opacity: 0, ease: "power2.in", duration: 0.8 },
-      ">"
-    )
-    tl.to(
-      confRef.current,
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      "<0.3"
-    )
-    tl.addLabel("confIn")
-
-    // Gmail bubble + follow-up status flip — scrubbed
-    if (fuBefore && fuAfter && fuBubble) {
-      tl.to(
-        fuBubble,
-        { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "power2.out" },
-        "confIn+=0.9"
-      )
-      tl.to(
-        fuBefore,
-        { opacity: 0, duration: 0.6, ease: "power2.in" },
-        "confIn+=1.7"
-      )
-      tl.to(
-        fuAfter,
-        { opacity: 1, duration: 0.6, ease: "power2.out" },
-        "confIn+=1.9"
-      )
-      tl.to(
-        fuBubble,
-        { opacity: 0, scale: 0.4, duration: 0.5, ease: "power2.in" },
-        "confIn+=2.1"
-      )
-    }
-
-    tl.to({}, { duration: 3.5 }) // dwell on conf card — hold on green state
+    tl.to({}, { duration: 3.5 }) // dwell on filled CRM card
 
     // ── Auto-play card-reveal + content animations ──────────────────────────
     const tlDur = tl.duration()
@@ -987,7 +989,6 @@ export function ProposalsCrmSection() {
     }
 
     let crmRevealTl: gsap.core.Timeline | null = null
-    let confRevealTl: gsap.core.Timeline | null = null
 
     const crmSt =
       p2Shell && p2Inner
@@ -1005,47 +1006,32 @@ export function ProposalsCrmSection() {
           })
         : null
 
-    const confSt =
-      p3Shell && p3Inner
-        ? ScrollTrigger.create({
-            trigger: wrapperRef.current,
-            start: `top+=${scrollPx("confIn", -1.0)}px top`,
-            once: true,
-            onEnter: () => {
-              lockScroll()
-              confRevealTl = buildReveal(p3Shell, p3Inner)
-              confRevealTl.call(unlockScroll, [], 5.5)
-              confRevealTl.play()
-            }
-          })
-        : null
-
     return () => {
       unlockScroll()
       tl.scrollTrigger?.kill()
       tl.kill()
       crmRevealTl?.kill()
-      confRevealTl?.kill()
       crmSt?.kill()
-      confSt?.kill()
     }
   }, [staticLayout, isMobile])
 
   const header = (
-    <ScrollCutReveal
-      style={{
-        fontFamily: "var(--font-instrument-serif)",
-        fontSize: "clamp(36px, 5.5vw, 76px)",
-        fontWeight: 500,
-        letterSpacing: "-0.02em",
-        lineHeight: 1,
-        color: INK,
-        margin: 0,
-        textAlign: "center"
-      }}
-    >
-      and streamlines your workflows…
-    </ScrollCutReveal>
+    <div style={{ textAlign: "center" }}>
+      <ScrollCutReveal
+        style={{
+          fontFamily: "var(--font-instrument-serif)",
+          fontSize: "clamp(36px, 5.5vw, 76px)",
+          fontWeight: 500,
+          letterSpacing: "-0.02em",
+          lineHeight: 1,
+          color: INK,
+          margin: 0,
+          textAlign: "center"
+        }}
+      >
+        creates your workflows
+      </ScrollCutReveal>
+    </div>
   )
 
   // Mobile uses the stacked, non-pinned layout too: the header reads as a
@@ -1073,6 +1059,91 @@ export function ProposalsCrmSection() {
           <div
             data-reveal
             style={{
+              position: "relative",
+              padding: "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px)",
+              textAlign: "center",
+              overflow: "hidden"
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                maxWidth: "600px",
+                margin: "0 auto"
+              }}
+            >
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  inset: "-100px -60px",
+                  pointerEvents: "none",
+                  zIndex: 0
+                }}
+              >
+                {NET_POSITIONS.map((pos, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      position: "absolute",
+                      left: `calc(50% + ${pos.x * 0.65}px)`,
+                      top: `calc(50% + ${pos.y * 0.65}px)`,
+                      transform: "translate(-50%, -50%)",
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "10px",
+                      background: "#fff",
+                      border: "1px solid rgba(38,127,229,0.1)",
+                      boxShadow: "0 3px 10px rgba(38,127,229,0.08)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      opacity: 0.6
+                    }}
+                  >
+                    <Image
+                      src={`/logos/${pos.logo}.png`}
+                      alt=""
+                      width={18}
+                      height={18}
+                      style={{
+                        objectFit: "contain",
+                        width: "18px",
+                        height: "18px"
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <h2
+                style={{
+                  ...subHeadingStyle,
+                  textAlign: "center",
+                  position: "relative",
+                  zIndex: 1
+                }}
+              >
+                Yaven maps everyone you know and how you know them.
+              </h2>
+              <p
+                style={{
+                  ...bodyStyle,
+                  maxWidth: "480px",
+                  margin: "14px auto 0",
+                  textAlign: "center",
+                  position: "relative",
+                  zIndex: 1
+                }}
+              >
+                It surfaces leads you&apos;d never have thought to ask, and
+                keeps your connections warm, so when the next project comes up,
+                you&apos;re already top of mind.
+              </p>
+            </div>
+          </div>
+          <div
+            data-reveal
+            style={{
               ...phaseGridStyle,
               position: "relative",
               padding: "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px)"
@@ -1081,7 +1152,8 @@ export function ProposalsCrmSection() {
             <div>
               <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
               <p style={bodyStyle}>
-                Built from your notes while the conversation is still warm.
+                Yaven pulls notes, context, and pricing from your past work and
+                drafts a ready-to-send proposal before you close the call.
               </p>
             </div>
             <GooeyStage fragRefs={fragRefs} merged />
@@ -1096,34 +1168,15 @@ export function ProposalsCrmSection() {
             }}
           >
             <div>
-              <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
+              <h2 style={subHeadingStyle}>Connections kept warm</h2>
               <p style={bodyStyle}>
                 Every call, reply, and follow-up logged the moment it happens.
-                Your CRM stays current without you opening it.
+                When the next project comes up, you&apos;re already top of mind.
               </p>
             </div>
             <CrmCard animated={false} />
           </div>
-          <div
-            data-reveal
-            style={{
-              ...phaseGridStyle,
-              position: "relative",
-              padding:
-                "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
-            }}
-          >
-            <div>
-              <h2 style={subHeadingStyle}>
-                Conference networking? Yaven handles it.
-              </h2>
-              <p style={bodyStyle}>
-                It finds their work, your mutual connections, and drafts a
-                follow-up that has your context and tone.
-              </p>
-            </div>
-            <ConferenceCard animated={false} />
-          </div>
+          {/* (Conference slide removed) */}
         </div>
         <div
           data-reveal
@@ -1136,7 +1189,7 @@ export function ProposalsCrmSection() {
             width: "100%"
           }}
         >
-          <FinaleContent underlineDrawn />
+          <FinaleContent />
         </div>
       </section>
     )
@@ -1148,7 +1201,7 @@ export function ProposalsCrmSection() {
         ref={wrapperRef}
         style={{
           position: "relative",
-          height: "800vh",
+          height: "750vh",
           background: "var(--cream)"
         }}
       >
@@ -1179,16 +1232,136 @@ export function ProposalsCrmSection() {
           </div>
 
           <div style={{ position: "relative", flex: 1 }}>
+            {/* Phase 0 — Network mapping */}
+            <div
+              ref={networkRef}
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "0 clamp(28px, 5vw, 48px)"
+              }}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  maxWidth: "700px",
+                  textAlign: "center"
+                }}
+              >
+                {/* Floating tool pills */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    inset: "-100px -120px",
+                    pointerEvents: "none"
+                  }}
+                >
+                  {NET_POSITIONS.map((pos, i) => (
+                    <div
+                      key={i}
+                      data-net-node
+                      style={{
+                        position: "absolute",
+                        left: `calc(50% + ${pos.x}px)`,
+                        top: `calc(50% + ${pos.y}px)`,
+                        transform: "translate(-50%, -50%)",
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "14px",
+                        background: "#fff",
+                        border: "1px solid rgba(38,127,229,0.12)",
+                        boxShadow: "0 4px 16px rgba(38,127,229,0.1)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      <Image
+                        src={`/logos/${pos.logo}.png`}
+                        alt=""
+                        width={24}
+                        height={24}
+                        style={{
+                          objectFit: "contain",
+                          width: "24px",
+                          height: "24px"
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {/* Faint connection lines */}
+                <svg
+                  aria-hidden="true"
+                  viewBox="-220 -160 440 320"
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "calc(100% + 240px)",
+                    height: "calc(100% + 200px)",
+                    pointerEvents: "none"
+                  }}
+                >
+                  {NET_POSITIONS.map((pos, i) => (
+                    <line
+                      key={i}
+                      x1={0}
+                      y1={0}
+                      x2={pos.x}
+                      y2={pos.y}
+                      stroke="rgba(38,127,229,0.12)"
+                      strokeWidth={1}
+                      strokeDasharray="4 6"
+                    />
+                  ))}
+                  <circle cx={0} cy={0} r={4} fill="#267FE5" opacity={0.4} />
+                </svg>
+                {/* Text */}
+                <h2
+                  style={{
+                    ...subHeadingStyle,
+                    fontSize: "clamp(28px, 4vw, 52px)",
+                    textAlign: "center",
+                    position: "relative",
+                    zIndex: 1
+                  }}
+                >
+                  Yaven maps everyone you know{" "}
+                  <span style={{ opacity: 0.5 }}>and how you know them.</span>
+                </h2>
+                <p
+                  style={{
+                    ...bodyStyle,
+                    maxWidth: "540px",
+                    margin: "18px auto 0",
+                    textAlign: "center",
+                    position: "relative",
+                    zIndex: 1
+                  }}
+                >
+                  It surfaces leads you&apos;d never have thought to ask, and
+                  keeps your connections warm, so when the next project comes
+                  up, you&apos;re already top of mind.
+                </p>
+              </div>
+            </div>
+
             {/* Phase 1 — Proposals */}
             <div ref={proposalsRef} style={phaseGridStyle}>
+              <GooeyStage fragRefs={fragRefs} merged={false} />
               <div>
                 <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
                 <p style={bodyStyle}>
-                  Built from your notes, client profile and context while the
-                  conversation is still warm.
+                  Yaven pulls notes, context, and pricing from your past work
+                  and drafts a ready-to-send proposal before you close the call.
                 </p>
               </div>
-              <GooeyStage fragRefs={fragRefs} merged={false} />
             </div>
 
             {/* Phase 2 — CRM */}
@@ -1209,39 +1382,16 @@ export function ProposalsCrmSection() {
                 </div>
               </div>
               <div>
-                <h2 style={subHeadingStyle}>A CRM that runs itself</h2>
+                <h2 style={subHeadingStyle}>Connections kept warm</h2>
                 <p style={bodyStyle}>
                   Every call, reply, and follow-up logged the moment it happens.
-                  Your CRM stays current without you opening it.
+                  When the next project comes up, you&apos;re already top of
+                  mind.
                 </p>
               </div>
             </div>
 
-            {/* Phase 3 — Conference follow-up */}
-            <div ref={confRef} style={phaseGridStyle}>
-              <div>
-                <h2 style={subHeadingStyle}>Conference networking</h2>
-                <p style={bodyStyle}>
-                  It finds their work, your mutual connections, and drafts a
-                  follow-up that has your context and tone.
-                </p>
-              </div>
-              <div
-                data-card-shell="p3"
-                style={{
-                  position: "relative",
-                  background: "#267FE5",
-                  borderRadius: "32px"
-                }}
-              >
-                <div
-                  data-card-inner="p3"
-                  style={{ background: "#fff", borderRadius: "32px" }}
-                >
-                  <ConferenceCard animated />
-                </div>
-              </div>
-            </div>
+            {/* (Conference slide removed — merged conceptually into CRM) */}
           </div>
         </section>
       </div>

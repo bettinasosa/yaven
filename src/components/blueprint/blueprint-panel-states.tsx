@@ -22,7 +22,7 @@ export function IdleBlueprintState({ onClick }: StateProps) {
       <div className="glass-wrap">
         <div className="glass-shadow" />
         <button type="button" onClick={onClick} className="glass-btn">
-          <span className="text-white">Get Yaven</span>
+          <span className="text-white">Get early access</span>
         </button>
       </div>
     </div>

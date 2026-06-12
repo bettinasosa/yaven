@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-// @ts-expect-error — no @types/three installed
-import * as THREE from "three"
 
+// ---------------------------------------------------------------------------
+// TouchTexture — canvas-based trail that feeds into the shader as a texture
+// ---------------------------------------------------------------------------
 class TouchTexture {
   size = 64
   width = 64
@@ -22,7 +23,6 @@ class TouchTexture {
   last: { x: number; y: number } | null = null
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
-  texture: THREE.Texture
 
   constructor() {
     this.canvas = document.createElement("canvas")
@@ -31,7 +31,6 @@ class TouchTexture {
     this.ctx = this.canvas.getContext("2d")!
     this.ctx.fillStyle = "black"
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
-    this.texture = new THREE.Texture(this.canvas)
   }
 
   update() {
@@ -46,7 +45,6 @@ class TouchTexture {
       if (p.age > this.maxAge) this.trail.splice(i, 1)
       else this.drawPoint(p)
     }
-    this.texture.needsUpdate = true
   }
 
   addTouch(point: { x: number; y: number }) {
@@ -95,9 +93,21 @@ class TouchTexture {
   }
 }
 
-const VERTEX = `varying vec2 vUv; void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); vUv = uv; }`
+// ---------------------------------------------------------------------------
+// Shaders
+// ---------------------------------------------------------------------------
+const VERTEX = `
+  attribute vec2 position;
+  varying vec2 vUv;
+  void main() {
+    vUv = position * 0.5 + 0.5;
+    gl_Position = vec4(position, 0.0, 1.0);
+  }
+`
 
 const FRAGMENT = `
+  precision mediump float;
+
   uniform float uTime, uSpeed, uIntensity, uGrainIntensity, uGradientSize, uColor1Weight, uColor2Weight;
   uniform vec2 uResolution;
   uniform vec3 uColor1, uColor2, uColor3, uColor4, uColor5, uColor6, uBase;
@@ -163,160 +173,229 @@ const FRAGMENT = `
   }
 `
 
-// Primary blue palette
-function hexToVec3(hex: string) {
-  const r = parseInt(hex.slice(1, 3), 16) / 255
-  const g = parseInt(hex.slice(3, 5), 16) / 255
-  const b = parseInt(hex.slice(5, 7), 16) / 255
-  return new THREE.Vector3(r, g, b)
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+function hexToRgb(hex: string): [number, number, number] {
+  return [
+    parseInt(hex.slice(1, 3), 16) / 255,
+    parseInt(hex.slice(3, 5), 16) / 255,
+    parseInt(hex.slice(5, 7), 16) / 255,
+  ]
 }
 
+function compileShader(gl: WebGLRenderingContext, type: number, src: string): WebGLShader {
+  const shader = gl.createShader(type)!
+  gl.shaderSource(shader, src)
+  gl.compileShader(shader)
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw new Error(`Shader compile error: ${gl.getShaderInfoLog(shader)}`)
+  }
+  return shader
+}
+
+function createProgram(gl: WebGLRenderingContext, vs: string, fs: string): WebGLProgram {
+  const program = gl.createProgram()!
+  gl.attachShader(program, compileShader(gl, gl.VERTEX_SHADER, vs))
+  gl.attachShader(program, compileShader(gl, gl.FRAGMENT_SHADER, fs))
+  gl.linkProgram(program)
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    throw new Error(`Program link error: ${gl.getProgramInfoLog(program)}`)
+  }
+  return program
+}
+
+// ---------------------------------------------------------------------------
+// GradientApp — raw WebGL implementation
+// ---------------------------------------------------------------------------
 class GradientApp {
-  renderer: THREE.WebGLRenderer
-  camera: THREE.PerspectiveCamera
-  scene: THREE.Scene
-  clock: THREE.Clock
-  touchTexture: TouchTexture
-  uniforms: Record<string, { value: unknown }>
-  mesh: THREE.Mesh | null = null
-  animationId: number | null = null
-  container: HTMLElement
+  private gl: WebGLRenderingContext
+  private program: WebGLProgram
+  private quadBuffer: WebGLBuffer
+  private touchTex: WebGLTexture
+  private touchTexture: TouchTexture
+  private uTime = 0
+  private lastNow = performance.now()
+  private animationId: number | null = null
+  private canvas: HTMLCanvasElement
+  private container: HTMLElement
+  private _eventRoot: HTMLElement
+  private _onResize: () => void
+  private _onMouseMove: (e: MouseEvent) => void
+  private _onTouchMove: (e: TouchEvent) => void
+
+  // Cached uniform locations
+  private loc: Record<string, WebGLUniformLocation | null> = {}
 
   constructor(container: HTMLElement) {
     this.container = container
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
-    this.renderer.setSize(container.clientWidth, container.clientHeight)
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.renderer.domElement.style.display = "block"
-    this.renderer.domElement.style.width = "100%"
-    this.renderer.domElement.style.height = "100%"
-    this.renderer.domElement.style.position = "absolute"
-    this.renderer.domElement.style.inset = "0"
-    this.renderer.domElement.style.zIndex = "0"
-    this.renderer.domElement.style.pointerEvents = "none"
-    container.appendChild(this.renderer.domElement)
 
-    this.camera = new THREE.PerspectiveCamera(
-      45,
-      container.clientWidth / container.clientHeight,
-      0.1,
-      10000
-    )
-    this.camera.position.z = 50
+    // Create and style the canvas
+    const canvas = document.createElement("canvas")
+    canvas.style.display = "block"
+    canvas.style.width = "100%"
+    canvas.style.height = "100%"
+    canvas.style.position = "absolute"
+    canvas.style.inset = "0"
+    canvas.style.zIndex = "0"
+    canvas.style.pointerEvents = "none"
+    container.appendChild(canvas)
+    this.canvas = canvas
 
-    this.scene = new THREE.Scene()
-    this.scene.background = new THREE.Color("#267FE5")
+    const dpr = Math.min(window.devicePixelRatio, 2)
+    canvas.width = container.clientWidth * dpr
+    canvas.height = container.clientHeight * dpr
 
-    this.clock = new THREE.Clock()
+    const gl = canvas.getContext("webgl", { antialias: true, alpha: false })
+    if (!gl) throw new Error("WebGL not supported")
+    this.gl = gl
+
+    // Compile program
+    this.program = createProgram(gl, VERTEX, FRAGMENT)
+    gl.useProgram(this.program)
+
+    // Cache uniform locations
+    const uniformNames = [
+      "uTime", "uSpeed", "uIntensity", "uGrainIntensity", "uGradientSize",
+      "uColor1Weight", "uColor2Weight", "uResolution",
+      "uColor1", "uColor2", "uColor3", "uColor4", "uColor5", "uColor6", "uBase",
+      "uTouchTexture",
+    ]
+    for (const name of uniformNames) {
+      this.loc[name] = gl.getUniformLocation(this.program, name)
+    }
+
+    // Full-screen quad in clip space: two triangles covering [-1,1]x[-1,1]
+    const verts = new Float32Array([
+      -1, -1,
+       1, -1,
+      -1,  1,
+      -1,  1,
+       1, -1,
+       1,  1,
+    ])
+    this.quadBuffer = gl.createBuffer()!
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW)
+
+    const posLoc = gl.getAttribLocation(this.program, "position")
+    gl.enableVertexAttribArray(posLoc)
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0)
+
+    // Touch texture (canvas → WebGL texture)
     this.touchTexture = new TouchTexture()
+    this.touchTex = gl.createTexture()!
+    gl.activeTexture(gl.TEXTURE0)
+    gl.bindTexture(gl.TEXTURE_2D, this.touchTex)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.touchTexture.canvas)
 
-    this.uniforms = {
-      uTime: { value: 0 },
-      uResolution: {
-        value: new THREE.Vector2(
-          container.clientWidth,
-          container.clientHeight
-        )
-      },
-      uColor1: { value: hexToVec3("#267FE5") }, // primary blue
-      uColor2: { value: hexToVec3("#267FE5") }, // primary blue
-      uColor3: { value: hexToVec3("#4da3f0") }, // brighter sky blue
-      uColor4: { value: hexToVec3("#7b8fd4") }, // brighter steel violet
-      uColor5: { value: hexToVec3("#9e8ec8") }, // brighter lavender
-      uColor6: { value: hexToVec3("#c8897a") }, // brighter warm coral
-      uBase: { value: hexToVec3("#267FE5") },
-      uSpeed: { value: 0.4 },
-      uIntensity: { value: 1.0 },
-      uTouchTexture: { value: this.touchTexture.texture },
-      uGrainIntensity: { value: 0.06 },
-      uGradientSize: { value: 0.45 },
-      uColor1Weight: { value: 1.8 },
-      uColor2Weight: { value: 0.5 }
+    // Set static uniforms
+    const w = container.clientWidth
+    const h = container.clientHeight
+    gl.uniform2f(this.loc["uResolution"], w, h)
+    gl.uniform1f(this.loc["uSpeed"], 0.4)
+    gl.uniform1f(this.loc["uIntensity"], 1.0)
+    gl.uniform1f(this.loc["uGrainIntensity"], 0.06)
+    gl.uniform1f(this.loc["uGradientSize"], 0.45)
+    gl.uniform1f(this.loc["uColor1Weight"], 1.8)
+    gl.uniform1f(this.loc["uColor2Weight"], 0.5)
+    gl.uniform3fv(this.loc["uColor1"], hexToRgb("#267FE5"))
+    gl.uniform3fv(this.loc["uColor2"], hexToRgb("#267FE5"))
+    gl.uniform3fv(this.loc["uColor3"], hexToRgb("#4da3f0"))
+    gl.uniform3fv(this.loc["uColor4"], hexToRgb("#7b8fd4"))
+    gl.uniform3fv(this.loc["uColor5"], hexToRgb("#9e8ec8"))
+    gl.uniform3fv(this.loc["uColor6"], hexToRgb("#c8897a"))
+    gl.uniform3fv(this.loc["uBase"],   hexToRgb("#267FE5"))
+    gl.uniform1i(this.loc["uTouchTexture"], 0)
+
+    // Clear to base color so there's no flash before first frame
+    gl.clearColor(...hexToRgb("#267FE5"), 1)
+
+    // Event listeners
+    const root = container.parentElement ?? container
+    this._eventRoot = root
+
+    this._onMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect()
+      this.touchTexture.addTouch({
+        x: (e.clientX - rect.left) / container.clientWidth,
+        y: 1 - (e.clientY - rect.top) / container.clientHeight,
+      })
     }
-
-    this.init()
-  }
-
-  getViewSize() {
-    const fov = (this.camera.fov * Math.PI) / 180
-    const height = Math.abs(this.camera.position.z * Math.tan(fov / 2) * 2)
-    return { width: height * this.camera.aspect, height }
-  }
-
-  init() {
-    const viewSize = this.getViewSize()
-    const geometry = new THREE.PlaneGeometry(
-      viewSize.width,
-      viewSize.height,
-      1,
-      1
-    )
-    const material = new THREE.ShaderMaterial({
-      uniforms: this.uniforms,
-      vertexShader: VERTEX,
-      fragmentShader: FRAGMENT
-    })
-    this.mesh = new THREE.Mesh(geometry, material)
-    this.scene.add(this.mesh)
-
-    // Mouse/touch tracking — listen on the parent section so content doesn't block events
-    const root = this.container.parentElement ?? this.container
-    const c = this.container
-    const onMove = (x: number, y: number) => {
-      this.touchTexture.addTouch({ x: x / c.clientWidth, y: 1 - y / c.clientHeight })
+    this._onTouchMove = (e: TouchEvent) => {
+      const rect = container.getBoundingClientRect()
+      this.touchTexture.addTouch({
+        x: (e.touches[0].clientX - rect.left) / container.clientWidth,
+        y: 1 - (e.touches[0].clientY - rect.top) / container.clientHeight,
+      })
     }
-    root.addEventListener("mousemove", (e) => {
-      const rect = c.getBoundingClientRect()
-      onMove(e.clientX - rect.left, e.clientY - rect.top)
-    })
-    root.addEventListener("touchmove", (e) => {
-      const rect = c.getBoundingClientRect()
-      onMove(
-        e.touches[0].clientX - rect.left,
-        e.touches[0].clientY - rect.top
-      )
-    })
+    root.addEventListener("mousemove", this._onMouseMove)
+    root.addEventListener("touchmove", this._onTouchMove)
 
-    const onResize = () => {
-      this.camera.aspect = c.clientWidth / c.clientHeight
-      this.camera.updateProjectionMatrix()
-      this.renderer.setSize(c.clientWidth, c.clientHeight)
-      const vs = this.getViewSize()
-      if (this.mesh) {
-        this.mesh.geometry.dispose()
-        this.mesh.geometry = new THREE.PlaneGeometry(vs.width, vs.height, 1, 1)
-      }
-      ;(this.uniforms.uResolution.value as THREE.Vector2).set(
-        c.clientWidth,
-        c.clientHeight
-      )
+    this._onResize = () => {
+      const dpr2 = Math.min(window.devicePixelRatio, 2)
+      canvas.width = container.clientWidth * dpr2
+      canvas.height = container.clientHeight * dpr2
+      gl.viewport(0, 0, canvas.width, canvas.height)
+      gl.uniform2f(this.loc["uResolution"], container.clientWidth, container.clientHeight)
     }
-    window.addEventListener("resize", onResize)
+    window.addEventListener("resize", this._onResize)
 
+    gl.viewport(0, 0, canvas.width, canvas.height)
     this.tick()
   }
 
-  tick() {
-    const delta = Math.min(this.clock.getDelta(), 0.1)
+  private tick = () => {
+    const now = performance.now()
+    const delta = Math.min((now - this.lastNow) / 1000, 0.1)
+    this.lastNow = now
+
     this.touchTexture.update()
-    ;(this.uniforms.uTime.value as number) += delta
-    this.renderer.render(this.scene, this.camera)
-    this.animationId = requestAnimationFrame(() => this.tick())
+
+    const gl = this.gl
+    // Upload updated touch canvas to texture
+    gl.activeTexture(gl.TEXTURE0)
+    gl.bindTexture(gl.TEXTURE_2D, this.touchTex)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.touchTexture.canvas)
+
+    this.uTime += delta
+    gl.uniform1f(this.loc["uTime"], this.uTime)
+
+    gl.clear(gl.COLOR_BUFFER_BIT)
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
+
+    this.animationId = requestAnimationFrame(this.tick)
   }
 
   cleanup() {
-    if (this.animationId) cancelAnimationFrame(this.animationId)
-    this.renderer.dispose()
-    if (
-      this.container &&
-      this.renderer.domElement &&
-      this.container.contains(this.renderer.domElement)
-    ) {
-      this.container.removeChild(this.renderer.domElement)
+    if (this.animationId !== null) cancelAnimationFrame(this.animationId)
+    this.animationId = null
+
+    window.removeEventListener("resize", this._onResize)
+    this._eventRoot.removeEventListener("mousemove", this._onMouseMove)
+    this._eventRoot.removeEventListener("touchmove", this._onTouchMove)
+
+    const gl = this.gl
+    gl.deleteTexture(this.touchTex)
+    gl.deleteBuffer(this.quadBuffer)
+    gl.deleteProgram(this.program)
+
+    const ext = gl.getExtension("WEBGL_lose_context")
+    if (ext) ext.loseContext()
+
+    if (this.container.contains(this.canvas)) {
+      this.container.removeChild(this.canvas)
     }
   }
 }
 
+// ---------------------------------------------------------------------------
+// React component
+// ---------------------------------------------------------------------------
 export function LiquidGradientBg() {
   const containerRef = useRef<HTMLDivElement>(null)
   const appRef = useRef<GradientApp | null>(null)
@@ -338,7 +417,7 @@ export function LiquidGradientBg() {
         position: "absolute",
         inset: 0,
         zIndex: 0,
-        pointerEvents: "none"
+        pointerEvents: "none",
       }}
     />
   )

@@ -40,7 +40,7 @@ function AppIcon({ name, tilt }: { name: string; tilt: number }) {
         alt={name}
         width={16}
         height={16}
-        style={{ objectFit: "contain" }}
+        style={{ objectFit: "contain", width: "16px", height: "16px" }}
       />
     </span>
   )
@@ -80,7 +80,13 @@ const CARDS = [
   }
 ]
 
-function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
+function TriageCard({
+  card,
+  lite
+}: {
+  card: (typeof CARDS)[number]
+  lite?: boolean
+}) {
   const dark = "textDark" in card && card.textDark
   const textColor = dark ? "#0a0e1a" : "#fff"
   const chipBg = dark ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.15)"
@@ -90,13 +96,15 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
     <div
       style={{
         background: card.bg,
-        borderRadius: "40px",
+        borderRadius: lite ? "28px" : "40px",
         padding: "clamp(28px, 3.5vw, 40px)",
         display: "flex",
         flexDirection: "column",
         gap: "2px",
-        minHeight: "340px",
-        boxShadow: "0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)"
+        minHeight: lite ? undefined : "340px",
+        boxShadow: lite
+          ? "0 4px 12px rgba(0,0,0,0.12)"
+          : "0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)"
       }}
     >
       {/* Can wait (the always-top card) keeps its pills near the header;
@@ -203,7 +211,11 @@ export function TriageSection() {
           { start: "30% top", end: "46% top" },
           { start: "60% top", end: "76% top" }
         ]
-    const rotations = [5, -4, 3]
+    // Mobile: drop rotation (border-radius: 40px + rotation + translateY
+    // forces sub-pixel anti-aliasing every frame on Safari) and add scrub
+    // smoothing so GSAP batches updates instead of firing on every 120Hz
+    // scroll event during momentum scrolling.
+    const rotations = isMobile ? [0, 0, 0] : [5, -4, 3]
 
     rotations.forEach((rotation, i) => {
       const tl = gsap.timeline({
@@ -211,7 +223,7 @@ export function TriageSection() {
           trigger: wrapper,
           start: timing[i].start,
           end: timing[i].end,
-          scrub: true
+          scrub: isMobile ? 0.5 : 0.8
         }
       })
       tl.fromTo(
@@ -275,7 +287,7 @@ export function TriageSection() {
         </p>
 
         <p style={bodyStyle}>
-          It knows the difference between {underline("work and personal")},
+          Yaven knows the difference between {underline("work and personal")},
           reads your context, and prioritizes what actually needs your attention
           right now.
         </p>
@@ -297,7 +309,7 @@ export function TriageSection() {
         <section
           style={{
             background: "var(--cream)",
-            padding: "clamp(60px, 10vh, 100px) clamp(20px, 6vw, 32px) 16px"
+            padding: "clamp(40px, 6vh, 80px) clamp(20px, 6vw, 32px) 16px"
           }}
         >
           <div className="max-w-[520px] mx-auto">{sideText}</div>
@@ -344,7 +356,7 @@ export function TriageSection() {
                     transform: "translateZ(0) translateY(100vh)"
                   }}
                 >
-                  <TriageCard card={card} />
+                  <TriageCard card={card} lite />
                 </div>
               ))}
             </div>

@@ -4,16 +4,21 @@ import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
-import { LiquidGradientBg } from "@/components/effects/liquid-gradient-bg"
+import dynamic from "next/dynamic"
+
+const LiquidGradientBg = dynamic(
+  () => import("@/components/effects/liquid-gradient-bg").then(m => m.LiquidGradientBg),
+  { ssr: false }
+)
 
 function YavenMark({ height }: { height: number }) {
   return (
     <Image
-      src="/yaven-logo.svg"
+      src="/yaven-logo.webp"
       alt="yaven"
-      width={height}
-      height={height}
-      style={{ mixBlendMode: "multiply" }}
+      width={628}
+      height={1152}
+      style={{ mixBlendMode: "multiply", width: "auto", height: `${height}px` }}
       priority
     />
   )
@@ -86,25 +91,25 @@ function HeroVariantB() {
         >
           <span
             style={{ fontFamily: "var(--font-instrument-serif)" }}
-            className="block text-[clamp(80px,14vw,180px)] md:text-[clamp(72px,12vw,180px)] font-medium text-white lowercase leading-[0.88] tracking-[-0.03em] mb-[clamp(20px,3vh,36px)] mt-[clamp(60px,12vh,200px)] md:mt-[clamp(100px,16vh,200px)]"
+            className="block text-[clamp(80px,14vw,180px)] md:text-[clamp(72px,12vw,180px)] font-medium text-white lowercase leading-[0.88] tracking-[-0.03em] mb-[clamp(20px,3vh,36px)] mt-[clamp(24px,5vh,80px)] md:mt-[clamp(100px,16vh,200px)]"
           >
             Yaven
           </span>
 
-          <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(28px,6vw,42px)] md:text-[clamp(20px,3vw,42px)] font-medium text-white leading-[1.1] tracking-[-0.02em] m-0 opacity-92 mt-[clamp(60px,10vh,200px)] md:mt-[clamp(50px,8vh,100px)] mb-[clamp(2px,1vh,12px)]">
+          <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(28px,6vw,42px)] md:text-[clamp(20px,3vw,42px)] font-medium text-white leading-[1.1] tracking-[-0.02em] m-0 opacity-92 mt-[clamp(28px,5vh,80px)] md:mt-[clamp(50px,8vh,100px)] mb-[clamp(2px,1vh,12px)]">
             Less admin.
             <br />
             More flow.
           </p>
 
           <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(16px,3.5vw,20px)] md:text-[clamp(15px,1.8vw,20px)] font-normal text-white/70 leading-[1.5] mt-0 mr-0 mb-[clamp(24px,4vh,40px)] ml-0">
-            Yaven works across your inbox, calendar,
+            Yaven is your second brain. It takes
             <br />
-            CRM, and any app on your screen.
+            the admin off your plate piece by piece,
             <br />
-            It drafts, replies, files, and follows up.
+            until the 10+ hours a week you lose
             <br />
-            You approve everything.
+            to it are yours again.
           </p>
 
           <div ref={ctaRef}>

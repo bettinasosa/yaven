@@ -312,7 +312,7 @@
 
 @theme inline {
   --font-instrument-serif:
-    "Bricolage Grotesque", var(--font-dm-sans), sans-serif;
+    var(--font-bricolage), "Bricolage Grotesque", var(--font-dm-sans), sans-serif;
   --font-inter: var(--font-helvetica);
   --font-sans: var(--font-helvetica);
   --font-mono: var(--font-space-mono), monospace;
@@ -434,24 +434,79 @@
   100% {
     transform: translateX(0);
   }
-  15% {
-    transform: translateX(-9px);
+  20% {
+    transform: translateX(-3px);
   }
-  30% {
-    transform: translateX(8px);
-  }
-  45% {
-    transform: translateX(-6px);
+  40% {
+    transform: translateX(3px);
   }
   60% {
-    transform: translateX(4px);
-  }
-  75% {
     transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(1px);
   }
 }
 .yv-shake {
-  animation: yv-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  animation: yv-shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+.yv-shake .waitlist-input-row,
+.yv-shake.waitlist-input-row {
+  border-color: rgba(255, 80, 80, 0.7) !important;
+  transition: border-color 0.3s ease;
+}
+
+/* Focus glow on waitlist email input */
+.waitlist-input-row:focus-within {
+  border-color: rgba(38, 127, 229, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(38, 127, 229, 0.15);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Odometer count-up for waitlist position */
+@keyframes countup-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes referral-slide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Glass button loading morph — collapses to circle with spinner */
+.glass-btn.is-loading > span {
+  opacity: 0;
+  padding-inline: 0;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.glass-btn.is-loading {
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.glass-btn.is-loading .btn-spinner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Cream variant for use on the blue Meet Yaven background */
@@ -484,7 +539,7 @@
 /* Bricolage Grotesque — heading font. Loaded from Google Fonts in layout.tsx. */
 
 :root {
-  --font-dm-sans: "Satoshi", sans-serif;
+  --font-dm-sans: var(--font-satoshi), "Satoshi", sans-serif;
 
   /* ── Design tokens ──────────────────────── */
   --ink: #07348b;

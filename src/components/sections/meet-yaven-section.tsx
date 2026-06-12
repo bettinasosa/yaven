@@ -1,18 +1,18 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Typewriter } from "@/components/effects/typewriter"
+import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Cream draw-on underline (matches the triage section's treatment)
+// Cream draw-on underline
 function U({ children }: { children: React.ReactNode }) {
-  // transition:none so the timeline (GSAP) drives the draw frame-by-frame
-  // without the CSS transition fighting it.
   return (
     <span className="triage-underline u-cream" style={{ transition: "none" }}>
       {children}
@@ -20,19 +20,70 @@ function U({ children }: { children: React.ReactNode }) {
   )
 }
 
-// Serif italic with shiny light-blue gradient
-function BI({ children }: { children: React.ReactNode }) {
+// Inline tool-icon pill (cream bg on dark)
+function IconPill({ name, tilt = 0 }: { name: string; tilt?: number }) {
   return (
     <span
       style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "26px",
+        height: "26px",
+        borderRadius: "7px",
+        background: "var(--cream)",
+        border: "1px solid rgba(255,248,240,0.25)",
+        verticalAlign: "middle",
+        margin: "0 3px",
+        flexShrink: 0,
+        position: "relative",
+        top: "-1px",
+        transform: `rotate(${tilt}deg)`
+      }}
+    >
+      <Image
+        src={`/logos/${name}.png`}
+        alt={name}
+        width={16}
+        height={16}
+        style={{ objectFit: "contain", width: "16px", height: "16px" }}
+      />
+    </span>
+  )
+}
+
+// ── Keyboard shortcut badges ────────────────────────────────────────────────
+
+function KeyBadge({
+  children,
+  small,
+  large
+}: {
+  children: React.ReactNode
+  small?: boolean
+  large?: boolean
+}) {
+  const fontSize = large ? "clamp(18px, 2.5vw, 28px)" : small ? "11px" : "13px"
+  const minWidth = large ? "clamp(32px, 4vw, 48px)" : small ? "22px" : "26px"
+  const height = large ? "clamp(32px, 4vw, 48px)" : small ? "22px" : "26px"
+  const radius = large ? "10px" : "6px"
+  const pad = large ? "0 10px" : "0 6px"
+
+  return (
+    <span
+      className="inline-flex items-center justify-center font-bold"
+      style={{
         fontFamily: "var(--font-dm-sans), sans-serif",
-        fontWeight: 700,
-        fontStyle: "italic",
-        background:
-          "linear-gradient(125deg, #9dd4ff 0%, #7ec8ff 22%, #e0f2ff 46%, #6ab8f8 70%, #8cc8ff 100%)",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-        backgroundClip: "text"
+        fontSize,
+        minWidth,
+        height,
+        padding: pad,
+        borderRadius: radius,
+        background: "rgba(255,255,255,0.9)",
+        color: "#0a0e1a",
+        boxShadow: large
+          ? "0 2px 6px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(0,0,0,0.08)"
+          : "0 1px 3px rgba(0,0,0,0.12), inset 0 -1px 0 rgba(0,0,0,0.08)"
       }}
     >
       {children}
@@ -40,539 +91,888 @@ function BI({ children }: { children: React.ReactNode }) {
   )
 }
 
-const BODY: React.ReactNode[] = [
-  <>
-    Yaven learns your clients, your tone, and your rules, then acts on them. The
-    longer it works with you,
-    <BI>the more it handles alone.</BI>.
-  </>,
-  <>
-    Yaven understands your context, tone and open tasks, then acts on them{" "}
-    <U>with you kept in the loop</U>. No new apps, tabs or empty chat boxes.
-  </>,
-  <>
-    So you can spend your time on <BI>the work only you can do</BI>.
-  </>
-]
-
-const SATELLITES = [
-  { x: -125, y: -95, label: "proposal drafted", pw: 118, ph: 32 },
-  { x: 130, y: -70, label: "follow-up sent", pw: 104, ph: 32 },
-  { x: -140, y: 65, label: "CRM updated", pw: 90, ph: 32 },
-  { x: 105, y: 110, label: "meeting prepped", pw: 112, ph: 32 },
-  { x: -25, y: -150, label: "reply drafted", pw: 96, ph: 32 }
-]
-
-const CORE_SIZE = 180
-
-const headingStyle: React.CSSProperties = {
-  fontFamily: "var(--font-instrument-serif)",
-  fontSize: "clamp(40px, 6vw, 80px)",
-  fontWeight: 500,
-  letterSpacing: "-0.02em",
-  lineHeight: 1,
-  color: "var(--cream)",
-  margin: "0 0 40px"
-}
-
-const bodyTextStyle: React.CSSProperties = {
-  fontSize: "clamp(20px, 2.2vw, 26px)",
-  fontWeight: 500,
-  lineHeight: 1.5,
-  color: "var(--cream)"
-}
-
-// The SVG filter handles the satellite blobs + proxy core:
-//   - Gooey threshold (organic merge)
-//   - Glass fill (semi-transparent white tint via feFlood)
-//   - Rim highlight (feMorphology edge detection)
-// The real glass core is a separate .glass-btn element layered on top.
-function GlassGooFilter() {
+function ShortcutBadge({ keys, small }: { keys: string[]; small?: boolean }) {
   return (
-    <svg
-      width="0"
-      height="0"
-      style={{ position: "absolute" }}
-      aria-hidden="true"
+    <span
+      className="inline-flex items-center gap-[3px]"
+      style={{
+        marginRight: small ? "3px" : undefined,
+        verticalAlign: "middle"
+      }}
     >
-      <defs>
-        <filter
-          id="yv-glass-goo"
-          x="-40%"
-          y="-40%"
-          width="180%"
-          height="180%"
-          colorInterpolationFilters="sRGB"
-        >
-          {/* Gooey threshold mask from fully-opaque white shapes */}
-          <feGaussianBlur in="SourceGraphic" stdDeviation="11" result="blur" />
-          <feColorMatrix
-            in="blur"
-            mode="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"
-            result="goo-mask"
-          />
-          {/* Glass body: translucent white fill — matches glass-btn background */}
-          <feFlood floodColor="white" floodOpacity="0.35" result="body-fill" />
-          <feComposite
-            in="body-fill"
-            in2="goo-mask"
-            operator="in"
-            result="glass-body"
-          />
-          {/* Inner glow: soft white core for depth */}
-          <feGaussianBlur
-            in="goo-mask"
-            stdDeviation="6"
-            result="inner-glow-blur"
-          />
-          <feFlood floodColor="white" floodOpacity="0.2" result="glow-fill" />
-          <feComposite
-            in="glow-fill"
-            in2="inner-glow-blur"
-            operator="in"
-            result="inner-glow"
-          />
-          {/* Specular sweep: angled light for glass reflection */}
-          <feSpecularLighting
-            in="goo-mask"
-            surfaceScale="5"
-            specularConstant="1.8"
-            specularExponent="20"
-            lightingColor="white"
-            result="specular"
-          >
-            <feDistantLight azimuth="305" elevation="50" />
-          </feSpecularLighting>
-          <feComposite
-            in="specular"
-            in2="goo-mask"
-            operator="in"
-            result="specular-clipped"
-          />
-          <feColorMatrix
-            in="specular-clipped"
-            type="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.55 0"
-            result="specular-dimmed"
-          />
-          {/* Rim highlight: bright edge ring — thicker for glass feel */}
-          <feMorphology
-            in="goo-mask"
-            operator="erode"
-            radius="2"
-            result="inner-mask"
-          />
-          <feComposite
-            in="goo-mask"
-            in2="inner-mask"
-            operator="out"
-            result="rim-mask"
-          />
-          <feFlood floodColor="white" floodOpacity="0.75" result="rim-fill" />
-          <feComposite
-            in="rim-fill"
-            in2="rim-mask"
-            operator="in"
-            result="glass-rim"
-          />
-          {/* Shadow beneath for depth */}
-          <feGaussianBlur in="goo-mask" stdDeviation="8" result="shadow-blur" />
-          <feOffset in="shadow-blur" dx="0" dy="4" result="shadow-offset" />
-          <feFlood
-            floodColor="black"
-            floodOpacity="0.12"
-            result="shadow-fill"
-          />
-          <feComposite
-            in="shadow-fill"
-            in2="shadow-offset"
-            operator="in"
-            result="shadow"
-          />
-          {/* Merge: shadow + body + inner glow + specular + rim */}
-          <feMerge>
-            <feMergeNode in="shadow" />
-            <feMergeNode in="glass-body" />
-            <feMergeNode in="inner-glow" />
-            <feMergeNode in="specular-dimmed" />
-            <feMergeNode in="glass-rim" />
-          </feMerge>
-        </filter>
-      </defs>
-    </svg>
+      {keys.map((k, i) => (
+        <KeyBadge key={i} small={small}>
+          {k}
+        </KeyBadge>
+      ))}
+    </span>
   )
 }
 
-function PresenceStage({
-  proxyRef,
-  satRefs,
-  labelRefs,
-  glassRef,
-  settled
-}: {
-  proxyRef: React.RefObject<HTMLDivElement | null>
-  satRefs: React.RefObject<(HTMLDivElement | null)[]>
-  labelRefs: React.RefObject<(HTMLDivElement | null)[]>
-  glassRef: React.RefObject<HTMLDivElement | null>
-  settled: boolean
-}) {
-  const stageStyle: React.CSSProperties = {
-    position: "absolute",
-    inset: 0,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
-  }
+// ── Draft card (LinkedIn DM) ────────────────────────────────────────────────
 
+const DRAFT_RESPONSE =
+  "Thanks so much for reaching out, Lola! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
+
+const ASK_RESPONSE =
+  "his team updated the payment window from 30 to 60 days. He mentioned cash-flow timing on their end. The rest of the scope is unchanged from your v2 redline."
+
+function LinkedInCard({
+  drafting,
+  active,
+  onTrigger
+}: {
+  drafting: boolean
+  active: boolean
+  onTrigger: () => void
+}) {
   return (
     <div
-      aria-hidden="true"
       style={{
-        position: "relative",
-        width: "min(600px, 92vw)",
-        height: "min(600px, 92vw)",
-        margin: "0 auto"
+        width: "100%",
+        minHeight: "480px",
+        borderRadius: "48px",
+        background: "linear-gradient(160deg, #0958b0, #0A66C2)",
+        boxShadow: "0 8px 28px rgba(0,0,0,0.22), 0 3px 10px rgba(0,0,0,0.1)",
+        display: "flex",
+        flexDirection: "column",
+        padding: "38px 35px 35px"
       }}
     >
-      <GlassGooFilter />
-
-      {/* Layer 1: gooey filter — proxy core only (label chips stand alone
-          as glass pills; a goo blob behind each read as disconnected). */}
-      <div style={{ ...stageStyle, filter: "url(#yv-glass-goo)" }}>
-        <div ref={proxyRef} />
+      <div className="flex items-center gap-2.5 px-[22px] pb-5">
+        <Image
+          src="/logos/linkedin.png"
+          alt="LinkedIn"
+          width={26}
+          height={26}
+          style={{
+            objectFit: "contain",
+            width: "26px",
+            height: "26px",
+            borderRadius: "5px",
+            filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.12))"
+          }}
+        />
+        <span className="font-bold text-white text-[16px]">Draft</span>
       </div>
 
-      {/* Layer 2: Yaven mark */}
-      <div style={{ ...stageStyle, pointerEvents: "none" }}>
+      <div
+        style={{
+          flex: 1,
+          background: "var(--cream)",
+          borderRadius: "28px",
+          padding: "clamp(20px,3vw,28px)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.1)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden"
+        }}
+      >
+        <div className="flex items-center gap-3 mb-3">
+          <span
+            style={{
+              width: "32px",
+              height: "32px",
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #00AFF9, #2563EB)",
+              flexShrink: 0,
+              display: "inline-block",
+              boxShadow: "0 2px 10px rgba(124,58,237,0.3)"
+            }}
+          />
+          <div>
+            <div className="font-bold text-[#0a0e1a] text-[14px]">Lola H.</div>
+            <div className="text-[#0a0e1a]/50 text-[12px]">
+              Recruiter · Founding Designer role
+            </div>
+          </div>
+        </div>
+
+        <p className="text-[#0a0e1a] text-[14px] leading-[1.55] font-medium mb-4 mx-1">
+          Hi Bettina! Your work is stunning, we&apos;re hiring a founding
+          designer. Open to a quick chat?
+        </p>
+
         <div
-          ref={glassRef}
+          className="rounded-[28px] p-5 flex flex-col gap-3 mt-auto"
           style={{
-            position: "relative",
-            width: `${CORE_SIZE}px`,
-            height: `${CORE_SIZE}px`,
-            fontSize: "16px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
+            background: "rgba(0,0,0,0.04)",
+            border: "1.5px solid rgba(0,0,0,0.08)"
           }}
         >
-          {/* Yaven mark */}
-          <span
-            className=""
-            style={{
-              position: "relative",
-              zIndex: 2,
-              display: "block",
-              padding: 0
-            }}
-          >
-            <Image
-              src="/yaven-logo.svg"
-              alt="Yaven"
-              width={56}
-              height={97}
-              style={{
-                display: "block",
-                width: "auto",
-                height: `clamp(280px, 35vw, ${CORE_SIZE * 3.2}px)`,
-                filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.22))"
-              }}
-            />
-          </span>
+          {!drafting ? (
+            <div className="flex items-end justify-between">
+              <div>
+                <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-1.5">
+                  You type
+                </div>
+                <div className="text-[#0a0e1a] font-medium text-[15px]">
+                  politely decline, warm
+                </div>
+              </div>
+              <div className="glass-wrap glass-btn-invite">
+                <button
+                  type="button"
+                  className="glass-btn glass-btn-sm"
+                  style={{ fontSize: "14px" }}
+                  onClick={onTrigger}
+                >
+                  <span className="text-white">
+                    <span className="inline-flex items-center gap-[3px]">
+                      <KeyBadge>⌥</KeyBadge>
+                      <KeyBadge>D</KeyBadge>
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="text-[#0a0e1a]/40 text-[11px] font-medium tracking-[0.06em] uppercase mb-2">
+                Yaven drafts
+              </div>
+              <div className="text-[#0a0e1a] text-[14px] leading-[1.55] font-medium">
+                {active ? (
+                  <Typewriter text={DRAFT_RESPONSE} speed={12} delay={300} />
+                ) : (
+                  <span className="opacity-0">.</span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
   )
+}
+
+// ── Ask card (document with macOS-style bg) ────────────────────────────────
+
+function AskCard({
+  asking,
+  active,
+  onTrigger,
+  inline = false
+}: {
+  asking: boolean
+  active: boolean
+  onTrigger: () => void
+  inline?: boolean
+}) {
+  return (
+    <div style={{ width: "100%", position: "relative" }}>
+      <div
+        style={{
+          width: "100%",
+          minHeight: "480px",
+          borderRadius: "52px",
+          position: "relative",
+          overflow: "hidden",
+          background: "#ebc1ff",
+          boxShadow: "0 10px 32px rgba(0,0,0,0.22), 0 4px 12px rgba(0,0,0,0.1)"
+        }}
+      >
+        <div
+          className="absolute top-0 left-0 right-0 flex items-end justify-between pl-[57px] pr-10 pt-14 pb-8 z-[2]"
+          style={{ height: "18%" }}
+        >
+          <div className="flex items-center gap-2.5">
+            <Image
+              src="/logos/google.png"
+              alt="Google"
+              width={26}
+              height={26}
+              style={{
+                objectFit: "contain",
+                width: "26px",
+                height: "26px",
+                borderRadius: "8px"
+              }}
+            />
+            <span className="font-bold text-white text-[16px]">Ask</span>
+          </div>
+        </div>
+
+        <div
+          style={{
+            position: "absolute",
+            top: "18%",
+            left: "-4%",
+            width: "90%",
+            bottom: "-4%",
+            background: "var(--cream)",
+            borderRadius: "0 32px 0",
+            padding: "52px 28px 40px 56px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+            zIndex: 1,
+            boxShadow:
+              "6px -6px 28px rgba(0,0,0,0.16), 3px -3px 10px rgba(0,0,0,0.08), 1px -1px 3px rgba(0,0,0,0.05)"
+          }}
+        >
+          <div className="flex justify-end" style={{ marginRight: "10px" }}>
+            <div
+              className="text-[11px] font-medium text-[#0a0e1a]/50"
+              style={{
+                background: "rgba(0,0,0,0.04)",
+                border: "1px solid rgba(0,0,0,0.06)",
+                padding: "5px 12px",
+                borderRadius: "20px"
+              }}
+            >
+              Ottos_Bakehouse_v3.pdf
+            </div>
+          </div>
+
+          <div className="text-[16px] leading-[1.75] text-[#0a0e1a]/70 mt-2">
+            <div className="mb-3">
+              <span className="text-[#0a0e1a]/30 text-[13px]">4.1</span> All
+              deliverables remain the sole property of the Client upon full
+              payment.
+            </div>
+            <div className="mb-3">
+              <span className="text-[#0a0e1a]/30 text-[13px]">4.2</span> Payment
+              due within{" "}
+              <strong
+                style={{
+                  color: "#0a0e1a",
+                  fontWeight: 600
+                }}
+              >
+                sixty (60)
+              </strong>{" "}
+              days of invoice date.
+            </div>
+          </div>
+
+          {!asking && (
+            <div className="flex items-center justify-between mt-auto">
+              <div className="text-[13px] font-medium text-[#0a0e1a]/35">
+                Ask about this document
+              </div>
+              <div className="glass-wrap glass-btn-invite">
+                <button
+                  type="button"
+                  className="glass-btn glass-btn-sm"
+                  style={{ fontSize: "14px" }}
+                  onClick={onTrigger}
+                >
+                  <span className="text-white">
+                    <span className="inline-flex items-center gap-[3px]">
+                      <KeyBadge>⌥</KeyBadge>
+                      <KeyBadge>A</KeyBadge>
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {inline && asking && (
+            <div
+              className="mt-auto"
+              style={{
+                borderTop: "1px solid rgba(0,0,0,0.08)",
+                paddingTop: "12px"
+              }}
+            >
+              <div
+                className="text-[13px] font-semibold mb-2"
+                style={{ color: "rgba(0,0,0,0.4)" }}
+              >
+                I thought this was 30 days? Why did it change?
+              </div>
+              <div
+                className="text-[14px] leading-[1.6] font-medium"
+                style={{ color: "rgba(0,0,0,0.75)" }}
+              >
+                {active ? (
+                  <>
+                    <span>Since your last </span>
+                    <span
+                      className="inline-flex items-center gap-1 align-middle"
+                      style={{
+                        background: "rgba(0,0,0,0.06)",
+                        borderRadius: "10px",
+                        fontSize: "12px"
+                      }}
+                    >
+                      <Image
+                        src="/logos/granola.png"
+                        alt="Granola"
+                        width={14}
+                        height={14}
+                        className="rounded-[3px]"
+                        style={{ flexShrink: 0, width: "14px", height: "14px" }}
+                      />
+                    </span>
+                    <span> call with Pablo on May 12, </span>
+                    <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
+                  </>
+                ) : null}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Floating glass bubble — desktop only */}
+      {!inline && asking && (
+        <div
+          style={{
+            position: "absolute",
+            top: "65%",
+            left: "calc(100% - 140px)",
+            transform: "translateY(-50%)",
+            width: "300px",
+            background: "rgba(255,255,255,0.45)",
+            backdropFilter: "blur(16px) saturate(1.2)",
+            WebkitBackdropFilter: "blur(16px) saturate(1.2)",
+            borderRadius: "32px",
+            border: "1px solid rgba(255,255,255,0.5)",
+            padding: "18px 22px",
+            boxShadow:
+              "0 8px 24px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4)",
+            zIndex: 10
+          }}
+        >
+          <div
+            className="text-[13px] font-semibold mb-2"
+            style={{ color: "rgba(0,0,0,0.4)" }}
+          >
+            I thought this was 30 days? Why did it change?
+          </div>
+          <div
+            className="text-[14px] leading-[1.6] font-medium"
+            style={{ color: "rgba(0,0,0,0.75)" }}
+          >
+            {active ? (
+              <>
+                <span>Since your last </span>
+                <span
+                  className="inline-flex items-center gap-1 align-middle"
+                  style={{
+                    background: "rgba(0,0,0,0.06)",
+                    borderRadius: "10px",
+                    fontSize: "12px"
+                  }}
+                >
+                  <Image
+                    src="/logos/granola.png"
+                    alt="Granola"
+                    width={14}
+                    height={14}
+                    className="rounded-[3px]"
+                    style={{ flexShrink: 0, width: "14px", height: "14px" }}
+                  />
+                </span>
+                <span> call with Pablo on May 12, </span>
+                <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
+              </>
+            ) : (
+              <span className="opacity-0">.</span>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Main section ────────────────────────────────────────────────────────────
+
+const bodyTextStyle: React.CSSProperties = {
+  fontSize: "clamp(15px, 1.6vw, 20px)",
+  fontWeight: 500,
+  lineHeight: 1.55,
+  color: "rgba(255,255,255,0.8)"
 }
 
 export function MeetYavenSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const headingRef = useRef<HTMLHeadingElement>(null)
-  const paraRefs = useRef<(HTMLParagraphElement | null)[]>([])
-  const proxyRef = useRef<HTMLDivElement>(null) // gooey proxy core
-  const satRefs = useRef<(HTMLDivElement | null)[]>([]) // pill proxies inside goo filter
-  const labelRefs = useRef<(HTMLDivElement | null)[]>([]) // glass chips above filter
-  const glassRef = useRef<HTMLDivElement>(null) // glass-btn core
-  const bodyWrapRef = useRef<HTMLDivElement>(null)
+
+  const draftCardRef = useRef<HTMLDivElement>(null)
+  const askCardRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const textWrapRef = useRef<HTMLDivElement>(null)
+
+  const [drafting, setDrafting] = useState(false)
+  const [draftTyping, setDraftTyping] = useState(false)
+  const [asking, setAsking] = useState(false)
+  const [askTyping, setAskTyping] = useState(false)
+
   const staticLayout = usePrefersReducedMotion()
   const isMobile = useIsMobile()
+  const draftInView = useRef(false)
+  const askInView = useRef(false)
 
-  // Underlines: the desktop pinned timeline draws each one as its paragraph
-  // reveals. Reduced motion AND mobile are static, so just show them.
+  const triggerDraft = useCallback(() => {
+    if (drafting || !draftInView.current) return
+    setDrafting(true)
+    setTimeout(() => setDraftTyping(true), 100)
+  }, [drafting])
+
+  const triggerAsk = useCallback(() => {
+    if (asking || !askInView.current) return
+    setAsking(true)
+    setTimeout(() => setAskTyping(true), 100)
+  }, [asking])
+
+  // Keyboard listeners
   useEffect(() => {
-    if (!(staticLayout || isMobile) || !bodyWrapRef.current) return
-    bodyWrapRef.current
+    const handler = (e: KeyboardEvent) => {
+      if (e.altKey) {
+        if (e.code === "KeyD") {
+          e.preventDefault()
+          triggerDraft()
+        } else if (e.code === "KeyA") {
+          e.preventDefault()
+          triggerAsk()
+        }
+      }
+    }
+    window.addEventListener("keydown", handler)
+    return () => window.removeEventListener("keydown", handler)
+  }, [triggerDraft, triggerAsk])
+
+  // Show underlines on static/mobile
+  useEffect(() => {
+    if (!(staticLayout || isMobile) || !textWrapRef.current) return
+    textWrapRef.current
       .querySelectorAll(".triage-underline")
       .forEach(el => el.classList.add("is-visible"))
   }, [staticLayout, isMobile])
 
+  // Animate underlines when they scroll into view (desktop)
   useEffect(() => {
-    // Desktop only — mobile renders the section static (orb settled, no
-    // animation) so the Yaven logo stays put instead of animating away.
-    if (staticLayout || isMobile || !wrapperRef.current) return
-
-    gsap.set(headingRef.current, { y: 50, opacity: 0 })
-    paraRefs.current.forEach(p => p && gsap.set(p, { y: 36, opacity: 0 }))
-    // One draw-on underline per paragraph; start them undrawn.
-    const underlines = paraRefs.current.map(
-      p => p?.querySelector<HTMLElement>(".triage-underline") ?? null
+    if (staticLayout || isMobile || !textWrapRef.current) return
+    const els = textWrapRef.current.querySelectorAll(".triage-underline")
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) e.target.classList.add("is-visible")
+        })
+      },
+      { threshold: 0.5 }
     )
-    underlines.forEach(u => u && gsap.set(u, { backgroundSize: "0% 3.5px" }))
-    gsap.set([proxyRef.current, glassRef.current], { scale: 0, y: 0 })
-    satRefs.current.forEach(
-      s => s && gsap.set(s, { x: 0, y: 0, opacity: 0, scale: 0.7 })
-    )
-    labelRefs.current.forEach(
-      l => l && gsap.set(l, { x: 0, y: 0, opacity: 0, scale: 0.7 })
-    )
-
-    // Desktop pins and scrubs the timeline; mobile plays it once when the
-    // (non-pinned) section scrolls into view, so nothing overflows the screen.
-    const tl = gsap.timeline({
-      scrollTrigger: isMobile
-        ? {
-            trigger: wrapperRef.current,
-            start: "top 75%",
-            toggleActions: "play none none none"
-          }
-        : {
-            trigger: wrapperRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1.2
-          }
-    })
-    if (isMobile) tl.timeScale(1.8)
-
-    // Mobile: compress paragraph timings so text arrives sooner
-    const p = isMobile ? 0.6 : 1
-
-    tl.to(
-      headingRef.current,
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1 },
-      0
-    )
-
-    // P1 — core appears (both layers in sync)
-    tl.to(
-      paraRefs.current[0],
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      1.2 * p
-    )
-    if (underlines[0])
-      tl.to(
-        underlines[0],
-        { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
-        1.8 * p
-      )
-    tl.to(
-      [proxyRef.current, glassRef.current],
-      { scale: 1, ease: "back.out(1.6)", duration: 1.9 },
-      0
-    )
-
-    // P2 — pill proxies + glass chips fly out from center together
-    tl.to(
-      paraRefs.current[1],
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      3.2 * p
-    )
-    if (underlines[1])
-      tl.to(
-        underlines[1],
-        { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
-        3.8 * p
-      )
-    SATELLITES.forEach((sat, i) => {
-      const s = satRefs.current[i]
-      const l = labelRefs.current[i]
-      const labelY = sat.y < 0 ? sat.y - sat.ph / 2 - 4 : sat.y + sat.ph / 2 + 4
-      if (s)
-        tl.to(
-          s,
-          {
-            x: sat.x,
-            y: labelY,
-            opacity: 1,
-            scale: 1,
-            ease: "back.out(1.5)",
-            duration: 1.3
-          },
-          3.4 + i * 0.2
-        )
-      if (l)
-        tl.to(
-          l,
-          {
-            x: sat.x,
-            y: labelY,
-            opacity: 1,
-            scale: 1,
-            ease: "back.out(1.5)",
-            duration: 1.3
-          },
-          3.4 + i * 0.2
-        )
-    })
-
-    // P3 — both retract back to center and goo-merge with the core
-    tl.to(
-      paraRefs.current[2],
-      { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
-      5.8 * p
-    )
-    if (underlines[2])
-      tl.to(
-        underlines[2],
-        { backgroundSize: "100% 3.5px", ease: "power2.out", duration: 0.8 },
-        6.4 * p
-      )
-    SATELLITES.forEach((sat, i) => {
-      const s = satRefs.current[i]
-      const l = labelRefs.current[i]
-      if (s)
-        tl.to(
-          s,
-          {
-            x: 0,
-            y: 0,
-            opacity: 0,
-            scale: 0.7,
-            ease: "power2.in",
-            duration: 1.0
-          },
-          6.0 + i * 0.12
-        )
-      if (l)
-        tl.to(
-          l,
-          {
-            x: 0,
-            y: 0,
-            opacity: 0,
-            scale: 0.7,
-            ease: "power2.in",
-            duration: 1.0
-          },
-          6.0 + i * 0.12
-        )
-    })
-    tl.to(
-      [proxyRef.current, glassRef.current],
-      { y: -120, opacity: 0, ease: "power2.in", duration: 2.2 },
-      9.5
-    )
-
-    tl.to({}, { duration: 1.4 })
-
-    return () => {
-      tl.scrollTrigger?.kill()
-      tl.kill()
-    }
+    els.forEach(el => io.observe(el))
+    return () => io.disconnect()
   }, [staticLayout, isMobile])
 
-  const content = (
-    <div
-      style={{
-        maxWidth: "1100px",
-        margin: "0 auto",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        alignItems: "center",
-        gap: "clamp(40px, 6vw, 80px)",
-        width: "100%"
-      }}
-    >
-      <div>
-        <h2 ref={headingRef} style={headingStyle}>
-          Meet Yaven.
-        </h2>
-        <div ref={bodyWrapRef} style={bodyTextStyle}>
-          {BODY.map((para, pi) => (
-            <p
-              key={pi}
-              ref={el => {
-                paraRefs.current[pi] = el
-              }}
-              style={{ margin: pi === 0 ? 0 : "1.1em 0 0" }}
-            >
-              {para}
-            </p>
-          ))}
-        </div>
+  // Desktop scroll animation
+  useEffect(() => {
+    if (staticLayout || isMobile || !wrapperRef.current) return
+
+    const wrapper = wrapperRef.current
+    const triggers: ScrollTrigger[] = []
+
+    gsap.set(contentRef.current, { opacity: 1 })
+
+    const draftEnterTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "0% top",
+        end: "10% top",
+        scrub: 0.8
+      }
+    })
+    draftEnterTl.fromTo(
+      draftCardRef.current,
+      { y: "100vh", rotation: 4 },
+      { y: 0, rotation: 0, ease: "none", force3D: true }
+    )
+    triggers.push(draftEnterTl.scrollTrigger!)
+
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "0% top",
+        end: "46% top",
+        onEnter: () => {
+          draftInView.current = true
+        },
+        onLeave: () => {
+          draftInView.current = false
+        },
+        onEnterBack: () => {
+          draftInView.current = true
+        },
+        onLeaveBack: () => {
+          draftInView.current = false
+          setDrafting(false)
+          setDraftTyping(false)
+        }
+      })
+    )
+
+    const stackTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "38% top",
+        end: "54% top",
+        scrub: 0.8
+      }
+    })
+    stackTl.fromTo(
+      askCardRef.current,
+      { y: "100vh", rotation: -4 },
+      { y: 36, rotation: 0, ease: "none", force3D: true },
+      0
+    )
+    triggers.push(stackTl.scrollTrigger!)
+
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "46% top",
+        end: "98% top",
+        onEnter: () => {
+          askInView.current = true
+        },
+        onLeave: () => {
+          askInView.current = false
+        },
+        onEnterBack: () => {
+          askInView.current = true
+        },
+        onLeaveBack: () => {
+          askInView.current = false
+          setAsking(false)
+          setAskTyping(false)
+        }
+      })
+    )
+
+    return () => triggers.forEach(t => t.kill())
+  }, [staticLayout, isMobile])
+
+  // Mobile scroll animation
+  useEffect(() => {
+    if (!isMobile || staticLayout || !wrapperRef.current) return
+
+    const wrapper = wrapperRef.current
+    const triggers: ScrollTrigger[] = []
+
+    gsap.set(contentRef.current, { opacity: 1 })
+
+    const draftTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "top 75%",
+        end: "top top",
+        scrub: 0.5
+      }
+    })
+    draftTl.fromTo(
+      draftCardRef.current,
+      { y: "100vh" },
+      { y: 0, ease: "none", force3D: true }
+    )
+    triggers.push(draftTl.scrollTrigger!)
+
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "top top",
+        end: "36% top",
+        onEnter: () => {
+          draftInView.current = true
+        },
+        onLeave: () => {
+          draftInView.current = false
+        },
+        onEnterBack: () => {
+          draftInView.current = true
+        },
+        onLeaveBack: () => {
+          draftInView.current = false
+          setDrafting(false)
+          setDraftTyping(false)
+        }
+      })
+    )
+
+    const askTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "20% top",
+        end: "38% top",
+        scrub: 0.5
+      }
+    })
+    askTl.fromTo(
+      askCardRef.current,
+      { y: "100vh" },
+      { y: 0, ease: "none", force3D: true }
+    )
+    triggers.push(askTl.scrollTrigger!)
+
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "36% top",
+        end: "85% top",
+        onEnter: () => {
+          askInView.current = true
+        },
+        onLeave: () => {
+          askInView.current = false
+        },
+        onEnterBack: () => {
+          askInView.current = true
+        },
+        onLeaveBack: () => {
+          askInView.current = false
+          setAsking(false)
+          setAskTyping(false)
+        }
+      })
+    )
+
+    return () => triggers.forEach(t => t.kill())
+  }, [isMobile, staticLayout])
+
+  const sideText = (
+    <div ref={textWrapRef} className="flex flex-col gap-5">
+      <ScrollCutReveal
+        className="text-[clamp(40px,6vw,80px)] font-medium tracking-[-0.02em] leading-[1] text-[var(--cream)] m-0"
+        style={{ fontFamily: "var(--font-instrument-serif)" }}
+      >
+        Meet Yaven.
+      </ScrollCutReveal>
+
+      <p
+        className="text-[clamp(18px,2.2vw,26px)] font-medium leading-[1.35] m-0"
+        style={{ color: "var(--cream)", opacity: 0.85 }}
+      >
+        Your second brain, on your Mac.
+      </p>
+
+      <div className="flex flex-col gap-5 max-w-[520px]">
+        <p style={bodyTextStyle}>
+          It connects to your <IconPill name="gmail" tilt={-3} /> email,{" "}
+          <IconPill name="gcal" tilt={2} /> calendar,{" "}
+          <IconPill name="hubspot" tilt={-2} /> CRM,{" "}
+          <IconPill name="notion" tilt={3} /> docs and more, and catches
+          everything in <U>one place</U>. The intro, the contract, the unpaid
+          invoice, none of it gets buried.
+        </p>
+
+        <p style={bodyTextStyle}>
+          <ShortcutBadge keys={["⌥", "D"]} small /> drafts any reply, anywhere,
+          in your voice. <ShortcutBadge keys={["⌥", "A"]} small /> answers
+          anything on your screen. You approve every step. The more you approve,{" "}
+          <U>the more it automates</U>.
+        </p>
       </div>
 
-      <PresenceStage
-        proxyRef={proxyRef}
-        satRefs={satRefs}
-        labelRefs={labelRefs}
-        glassRef={glassRef}
-        settled={staticLayout || isMobile}
-      />
+      <p className="text-[13px] font-semibold text-white/40 uppercase tracking-[0.08em] mt-1">
+        Try it!
+      </p>
     </div>
   )
 
-  // Reduced motion: non-pinned, settled, no animation.
+  // Reduced motion — static pre-activated cards
   if (staticLayout) {
     return (
       <section
         data-meet-yaven
         style={{
-          position: "relative",
           background: "var(--primary)",
-          padding:
-            "clamp(120px, 20vh, 360px) clamp(28px, 6vw, 48px) clamp(100px, 16vh, 220px)",
-          overflow: "hidden"
+          padding: "clamp(80px,12vh,140px) clamp(28px,5vw,48px)"
         }}
       >
-        {content}
+        <div className="max-w-[1100px] mx-auto">
+          <div
+            className="w-full grid items-start gap-[clamp(40px,6vw,80px)]"
+            style={{
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))"
+            }}
+          >
+            {sideText}
+            <div className="flex flex-col gap-6" style={{ maxWidth: "440px" }}>
+              <LinkedInCard drafting active onTrigger={() => {}} />
+              <AskCard asking active inline onTrigger={() => {}} />
+            </div>
+          </div>
+        </div>
       </section>
     )
   }
 
-  // Mobile: non-pinned and fully static (orb settled, no animation) so the
-  // Yaven logo stays put rather than animating away.
+  // Mobile — text block + stacking card animation
   if (isMobile) {
     return (
-      <div
-        data-meet-yaven
-        style={{
-          position: "relative",
-          background: "var(--primary)",
-          padding:
-            "clamp(90px, 14vh, 160px) clamp(28px, 6vw, 48px) clamp(100px, 16vh, 200px)",
-          overflow: "hidden"
-        }}
-      >
-        {content}
-      </div>
+      <>
+        <section
+          data-meet-yaven
+          className="bg-[var(--primary)]"
+          style={{
+            padding: "clamp(60px,10vh,100px) clamp(24px,5vw,40px) 16px"
+          }}
+        >
+          {sideText}
+        </section>
+
+        <div
+          ref={wrapperRef}
+          className="relative bg-[var(--primary)]"
+          style={{ height: "180vh", marginTop: "-1px" }}
+        >
+          <div
+            className="sticky top-0 h-screen overflow-visible flex items-center justify-center"
+            style={{ padding: "0 clamp(20px,5vw,32px)" }}
+          >
+            <div
+              ref={contentRef}
+              className="relative"
+              style={{
+                width: "100%",
+                maxWidth: "440px",
+                height: "600px",
+                opacity: 0
+              }}
+            >
+              <div
+                ref={draftCardRef}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  zIndex: 1,
+                  willChange: "transform",
+                  backfaceVisibility: "hidden",
+                  transformOrigin: "center bottom",
+                  transform: "translateZ(0) translateY(100vh) rotate(6deg)"
+                }}
+              >
+                <LinkedInCard
+                  drafting={drafting}
+                  active={draftTyping}
+                  onTrigger={triggerDraft}
+                />
+              </div>
+
+              <div
+                ref={askCardRef}
+                style={{
+                  position: "absolute",
+                  top: "48px",
+                  left: 0,
+                  right: 0,
+                  zIndex: 2,
+                  willChange: "transform",
+                  backfaceVisibility: "hidden",
+                  transformOrigin: "center bottom",
+                  transform: "translateZ(0) translateY(100vh) rotate(-6deg)"
+                }}
+              >
+                <AskCard
+                  asking={asking}
+                  active={askTyping}
+                  inline
+                  onTrigger={triggerAsk}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
     )
   }
 
+  // Desktop — full scroll-pinned animation
   return (
     <div
       ref={wrapperRef}
       data-meet-yaven
-      style={{
-        position: "relative",
-        height: "350vh",
-        background: "var(--primary)"
-      }}
+      className="relative h-[550vh] bg-[var(--primary)]"
     >
-      <section
+      {/* Bottom fade */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 h-[200px] z-[1] pointer-events-none"
         style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          overflow: "hidden",
-          display: "flex",
-          alignItems: "center",
-          padding: "0 clamp(28px, 5vw, 48px)"
+          background:
+            "linear-gradient(to bottom, transparent 0%, var(--primary) 100%)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 100%)"
         }}
-      >
-        {content}
-      </section>
+      />
+
+      <div className="sticky top-0 h-screen overflow-visible flex items-center z-2 p-[clamp(28px,4vh,60px)_clamp(28px,5vw,48px)]">
+        <div
+          ref={contentRef}
+          className="w-full max-w-[1100px] mx-auto grid items-start gap-[clamp(40px,6vw,80px)]"
+          style={{
+            gridTemplateColumns: "1.4fr 1fr",
+            opacity: 0
+          }}
+        >
+          {/* Text column */}
+          <div>{sideText}</div>
+
+          {/* Card column — stacking */}
+          <div
+            className="relative"
+            style={{
+              width: "100%",
+              maxWidth: "460px",
+              justifySelf: "end",
+              height: "540px"
+            }}
+          >
+            <div
+              ref={draftCardRef}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 1,
+                willChange: "transform",
+                backfaceVisibility: "hidden",
+                transformOrigin: "center bottom",
+                transform: "translateZ(0) translateY(100vh) rotate(6deg)"
+              }}
+            >
+              <LinkedInCard
+                drafting={drafting}
+                active={draftTyping}
+                onTrigger={() => {
+                  if (drafting) return
+                  setDrafting(true)
+                  setTimeout(() => setDraftTyping(true), 100)
+                }}
+              />
+            </div>
+
+            <div
+              ref={askCardRef}
+              style={{
+                position: "absolute",
+                top: "48px",
+                left: 0,
+                right: 0,
+                zIndex: 2,
+                willChange: "transform",
+                backfaceVisibility: "hidden",
+                transformOrigin: "center bottom",
+                transform: "translateZ(0) translateY(100vh) rotate(-6deg)"
+              }}
+            >
+              <AskCard
+                asking={asking}
+                active={askTyping}
+                onTrigger={triggerAsk}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

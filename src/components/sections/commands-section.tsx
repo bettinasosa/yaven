@@ -19,24 +19,34 @@ const ASK_RESPONSE =
 
 function KeyBadge({
   children,
-  small
+  small,
+  large
 }: {
   children: React.ReactNode
   small?: boolean
+  large?: boolean
 }) {
+  const fontSize = large ? "clamp(18px, 2.5vw, 28px)" : small ? "11px" : "13px"
+  const minWidth = large ? "clamp(32px, 4vw, 48px)" : small ? "22px" : "26px"
+  const height = large ? "clamp(32px, 4vw, 48px)" : small ? "22px" : "26px"
+  const radius = large ? "10px" : "6px"
+  const pad = large ? "0 10px" : "0 6px"
+
   return (
     <span
       className="inline-flex items-center justify-center font-bold"
       style={{
         fontFamily: "var(--font-dm-sans), sans-serif",
-        fontSize: small ? "11px" : "13px",
-        minWidth: small ? "22px" : "26px",
-        height: small ? "22px" : "26px",
-        padding: "0 6px",
-        borderRadius: "6px",
+        fontSize,
+        minWidth,
+        height,
+        padding: pad,
+        borderRadius: radius,
         background: "rgba(255,255,255,0.9)",
         color: "#0a0e1a",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.12), inset 0 -1px 0 rgba(0,0,0,0.08)"
+        boxShadow: large
+          ? "0 2px 6px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(0,0,0,0.08)"
+          : "0 1px 3px rgba(0,0,0,0.12), inset 0 -1px 0 rgba(0,0,0,0.08)"
       }}
     >
       {children}
@@ -44,11 +54,19 @@ function KeyBadge({
   )
 }
 
-function ShortcutBadge({ keys }: { keys: string[] }) {
+function ShortcutBadge({ keys, small, large }: { keys: string[]; small?: boolean; large?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-[3px]">
+    <span
+      className={`inline-flex items-center ${large ? "gap-[5px]" : "gap-[3px]"}`}
+      style={{
+        position: "relative",
+        top: large ? "-0.08em" : undefined,
+        marginRight: small ? "3px" : undefined,
+        verticalAlign: "middle"
+      }}
+    >
       {keys.map((k, i) => (
-        <KeyBadge key={i} small>
+        <KeyBadge key={i} small={small} large={large}>
           {k}
         </KeyBadge>
       ))}
@@ -74,7 +92,7 @@ function LinkedInCard({
         minHeight: "480px",
         borderRadius: "48px",
         background: "linear-gradient(160deg, #0958b0, #0A66C2)",
-        boxShadow: "0 16px 56px rgba(0,0,0,0.28), 0 4px 14px rgba(0,0,0,0.12)",
+        boxShadow: "0 8px 28px rgba(0,0,0,0.22), 0 3px 10px rgba(0,0,0,0.1)",
         display: "flex",
         flexDirection: "column",
         padding: "38px 35px 35px"
@@ -89,6 +107,8 @@ function LinkedInCard({
           height={26}
           style={{
             objectFit: "contain",
+            width: "26px",
+            height: "26px",
             borderRadius: "5px",
             filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.12))"
           }}
@@ -213,7 +233,7 @@ function AskCard({
           position: "relative",
           overflow: "hidden",
           background: "#ebc1ff",
-          boxShadow: "0 20px 64px rgba(0,0,0,0.28), 0 6px 18px rgba(0,0,0,0.12)"
+          boxShadow: "0 10px 32px rgba(0,0,0,0.22), 0 4px 12px rgba(0,0,0,0.1)"
         }}
       >
         {/* Header bar — Ask command (doc icon + ⌥A), on the red strip */}
@@ -227,7 +247,12 @@ function AskCard({
               alt="Google"
               width={26}
               height={26}
-              style={{ objectFit: "contain", borderRadius: "8px" }}
+              style={{
+                objectFit: "contain",
+                width: "26px",
+                height: "26px",
+                borderRadius: "8px"
+              }}
             />
             <span className="font-bold text-white text-[16px]">Ask</span>
           </div>
@@ -348,7 +373,7 @@ function AskCard({
                         width={14}
                         height={14}
                         className="rounded-[3px]"
-                        style={{ flexShrink: 0 }}
+                        style={{ flexShrink: 0, width: "14px", height: "14px" }}
                       />
                     </span>
                     <span> call with Pablo on May 12, </span>
@@ -371,13 +396,13 @@ function AskCard({
             transform: "translateY(-50%)",
             width: "300px",
             background: "rgba(255,255,255,0.45)",
-            backdropFilter: "blur(40px) saturate(1.4)",
-            WebkitBackdropFilter: "blur(40px) saturate(1.4)",
+            backdropFilter: "blur(16px) saturate(1.2)",
+            WebkitBackdropFilter: "blur(16px) saturate(1.2)",
             borderRadius: "32px",
             border: "1px solid rgba(255,255,255,0.5)",
             padding: "18px 22px",
             boxShadow:
-              "0 12px 40px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4)",
+              "0 8px 24px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4)",
             zIndex: 10
           }}
         >
@@ -408,7 +433,7 @@ function AskCard({
                     width={14}
                     height={14}
                     className="rounded-[3px]"
-                    style={{ flexShrink: 0 }}
+                    style={{ flexShrink: 0, width: "14px", height: "14px" }}
                   />
                 </span>
                 <span> call with Pablo on May 12, </span>
@@ -486,12 +511,12 @@ export function CommandsSection() {
         trigger: wrapper,
         start: "0% top",
         end: "10% top",
-        scrub: true
+        scrub: 0.8
       }
     })
     draftEnterTl.fromTo(
       draftCardRef.current,
-      { y: "100vh", rotation: 6 },
+      { y: "100vh", rotation: 4 },
       { y: 0, rotation: 0, ease: "none", force3D: true }
     )
     triggers.push(draftEnterTl.scrollTrigger!)
@@ -523,12 +548,12 @@ export function CommandsSection() {
         trigger: wrapper,
         start: "38% top",
         end: "54% top",
-        scrub: true
+        scrub: 0.8
       }
     })
     stackTl.fromTo(
       askCardRef.current,
-      { y: "100vh", rotation: -6 },
+      { y: "100vh", rotation: -4 },
       // Stop a touch low so the card's top lands just below the Draft header,
       // covering the draft card's cream rather than climbing over the header.
       { y: 36, rotation: 0, ease: "none", force3D: true },
@@ -576,13 +601,13 @@ export function CommandsSection() {
         trigger: wrapper,
         start: "top 75%",
         end: "top top",
-        scrub: true
+        scrub: 0.5
       }
     })
     draftTl.fromTo(
       draftCardRef.current,
-      { y: "100vh", rotation: 6 },
-      { y: 0, rotation: 0, ease: "none", force3D: true }
+      { y: "100vh" },
+      { y: 0, ease: "none", force3D: true }
     )
     triggers.push(draftTl.scrollTrigger!)
 
@@ -615,13 +640,13 @@ export function CommandsSection() {
         trigger: wrapper,
         start: "20% top",
         end: "38% top",
-        scrub: true
+        scrub: 0.5
       }
     })
     askTl.fromTo(
       askCardRef.current,
-      { y: "100vh", rotation: -6 },
-      { y: 0, rotation: 0, ease: "none", force3D: true }
+      { y: "100vh" },
+      { y: 0, ease: "none", force3D: true }
     )
     triggers.push(askTl.scrollTrigger!)
 
@@ -651,28 +676,27 @@ export function CommandsSection() {
   }, [isMobile, staticLayout])
 
   const sideText = (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <ScrollCutReveal
-        className="text-[clamp(44px,6.5vw,96px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0"
+        className="text-[clamp(36px,5.5vw,76px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0"
         style={{ fontFamily: "var(--font-instrument-serif)" }}
       >
-        it works <span>anywhere</span>...
+        <ShortcutBadge keys={["⌥", "D"]} large /> to draft.{" "}
+        <ShortcutBadge keys={["⌥", "A"]} large /> to ask.
       </ScrollCutReveal>
       <p
-        className={`text-[clamp(16px,1.9vw,22px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-2" : "mr-60 mt-38"}`}
+        className={`text-[clamp(15px,1.6vw,20px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-1" : "mt-3"}`}
+        style={{ maxWidth: "480px" }}
       >
-        Most AI assistants live in one app. Yaven lives on your screen.
-        Highlight a contract clause and ask. Open a LinkedIn DM and draft.{" "}
-        <span className="inline-flex items-center gap-[3px] align-middle">
-          <KeyBadge small>⌥</KeyBadge>
-          <KeyBadge small>D</KeyBadge>
-        </span>{" "}
-        anywhere or{" "}
-        <span className="inline-flex items-center gap-[3px] align-middle">
-          <KeyBadge small>⌥</KeyBadge>
-          <KeyBadge small>A</KeyBadge>
-        </span>{" "}
-        anything.
+        Press <ShortcutBadge keys={["⌥", "D"]} small /> in any app and the reply
+        writes itself: your tone, this client&apos;s history, the whole thread
+        accounted for. Press <ShortcutBadge keys={["⌥", "A"]} small /> and ask
+        about anything on your screen, a contract clause, a number in a
+        spreadsheet, a thread you don&apos;t want to reread. Full answers, not
+        shallow ones, because Yaven remembers.
+      </p>
+      <p className="text-[13px] font-semibold text-white/40 uppercase tracking-[0.08em] mt-1">
+        Try it!
       </p>
     </div>
   )
