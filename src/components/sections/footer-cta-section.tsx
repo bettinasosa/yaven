@@ -26,8 +26,8 @@ export function FooterCTASection() {
       <section className="sticky top-0 h-screen flex flex-col items-center justify-center px-[clamp(28px,5vw,48px)] py-6 overflow-hidden bg-[var(--primary)]">
         <div className="relative text-center z-2">
           <ScrollCutReveal
-            className="text-[var(--fs-display)] font-medium tracking-[-0.02em] leading-[1.1] text-white mx-auto max-w-[800px]"
-            style={{ fontFamily: "var(--font-instrument-serif)" }}
+            className="font-medium tracking-[-0.02em] leading-[1.1] text-white mx-auto max-w-[800px]"
+            style={{ fontFamily: "var(--font-instrument-serif)", fontSize: "var(--fs-title)" }}
           >
             Less admin. More flow.
           </ScrollCutReveal>

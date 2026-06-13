@@ -96,8 +96,8 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
           boxShadow: hero
-            ? "0 20px 60px rgba(0,0,0,0.45), 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)"
-            : "0 20px 60px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3)"
+            ? "0 4px 16px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2)"
+            : "0 4px 16px rgba(0,0,0,0.12)"
         }}
       >
         <input
@@ -106,7 +106,7 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
           placeholder="you@example.com"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className={`flex-1 min-w-0 rounded-full border-none bg-transparent text-white font-[var(--font-dm-sans),sans-serif] outline-none ${hero ? "py-4 px-6 text-[17px]" : "py-3 px-5 text-[15px]"}`}
+          className={`flex-1 min-w-0 rounded-full border-none bg-transparent text-white font-[var(--font-dm-sans),sans-serif] outline-none ${hero ? "py-6 px-6 text-[20px] sm:py-4 sm:text-[17px]" : "py-3 px-5 text-[15px]"}`}
           style={hero ? { textShadow: "0 1px 2px rgba(0,0,0,0.15)" } : undefined}
         />
         <div className="glass-wrap waitlist-btn-wrap shrink-0 w-full sm:w-auto">

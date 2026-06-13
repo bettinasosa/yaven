@@ -285,21 +285,19 @@ export function TriageSection() {
 
       <div className="flex flex-col gap-7 max-w-[480px]">
         <p style={bodyStyle}>
-          Your {appIcon("gmail", -3)} email, {appIcon("linkedin", 2)} messages,{" "}
-          {appIcon("google", -2)} calendar, {appIcon("hubspot", 3)} CRM,{" "}
-          {appIcon("notion", -1)} docs, all in {underline("one queue")}.
+          One queue instead of ten apps. Yaven pulls everything into a{" "}
+          {underline("single notification centre")} that only calls your
+          attention when something actually needs you, so you can stay in your
+          work.
         </p>
 
         <p style={bodyStyle}>
-          Yaven knows the difference between {underline("work and personal")},
-          reads your context, and prioritizes what actually needs your attention
-          right now.
+          {underline("Important threads never get buried")}. Yaven tracks every
+          conversation, drafts replies in your voice, and{" "}
+          {underline("preps you before every meeting")} with the context you
+          need.
         </p>
 
-        <p style={bodyStyle}>
-          Yaven handles what it can, drafts what it can&apos;t, and{" "}
-          {underline("never sends anything without your approval")}.
-        </p>
       </div>
     </div>
   )
@@ -323,7 +321,7 @@ export function TriageSection() {
           ref={wrapperRef}
           className="relative"
           style={{
-            height: "200vh",
+            height: "110vh",
             background: "var(--cream)",
             marginTop: "-1px"
           }}

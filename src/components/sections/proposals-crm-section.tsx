@@ -198,8 +198,82 @@ const SIGNALS = [
 ]
 
 // Network slide — layered message-card UI showing Yaven in context
-function NetworkStage() {
+function NetworkStage({ mobile }: { mobile?: boolean }) {
   const avatarGradient = "linear-gradient(145deg, #267FE5, #4da3f0, #9e8ec8)"
+
+  // Mobile: stacked vertical cards instead of absolute-positioned overlapping
+  if (mobile) {
+    return (
+      <div
+        aria-hidden="true"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+          width: "100%",
+          maxWidth: "440px",
+          margin: "0 auto"
+        }}
+      >
+        {/* Tjalling card */}
+        <div data-net-node style={{ marginRight: "24px" }}>
+          <GlassCard borderRadius="20px">
+            <div
+              style={{
+                padding: "18px",
+                display: "flex",
+                gap: "14px",
+                alignItems: "flex-start"
+              }}
+            >
+              <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: avatarGradient, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", fontWeight: 600, color: "#fff" }}>
+                TJ
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Tjalling</span>
+                  <Image src="/logos/gmail.png" alt="" width={16} height={16} style={{ objectFit: "contain", width: "16px", height: "16px" }} />
+                </div>
+                <p style={{ fontSize: "13px", color: INK, opacity: 0.7, margin: "4px 0 0", lineHeight: 1.45 }}>
+                  Following up on our conversation at Config.
+                  <br />
+                  Do you have <strong>availability this week</strong> for a call?
+                </p>
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+
+        {/* Yaven response card */}
+        <div data-net-node style={{ marginLeft: "24px" }}>
+          <GlassCard borderRadius="18px">
+            <div
+              style={{
+                padding: "18px",
+                display: "flex",
+                gap: "12px",
+                alignItems: "flex-start"
+              }}
+            >
+              <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "var(--primary)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                <Image src="/yaven-logo.webp" alt="Yaven" width={28} height={52} style={{ objectFit: "contain", width: "auto", height: "28px" }} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Yaven</span>
+                </div>
+                <p style={{ fontSize: "13px", color: INK, opacity: 0.8, margin: "4px 0 0", lineHeight: 1.5 }}>
+                  Tjalling met you at <strong>Config &apos;26</strong>. He works with
+                  a mutual, <strong>Oliver Normand</strong>. I drafted a reply
+                  with your <span style={{ color: "#267FE5", fontWeight: 500 }}>calendar link</span>.
+                </p>
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -292,7 +366,7 @@ function NetworkStage() {
         data-net-node
         style={{
           position: "absolute",
-          top: "48%",
+          top: "56%",
           left: "5%",
           width: "85%",
           zIndex: 3,
@@ -317,9 +391,14 @@ function NetworkStage() {
               alignItems: "flex-start"
             }}
           >
-            <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "conic-gradient(from 140deg, #e8956a, #c87dba, #6ab8f8, #e8956a)", flexShrink: 0, opacity: 0.85 }} />
+            <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "var(--primary)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+              <Image src="/yaven-logo.webp" alt="Yaven" width={28} height={52} style={{ objectFit: "contain", width: "auto", height: "28px" }} />
+            </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: "13px", color: INK, opacity: 0.8, margin: 0, lineHeight: 1.5 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Yaven</span>
+              </div>
+              <p style={{ fontSize: "13px", color: INK, opacity: 0.8, margin: "4px 0 0", lineHeight: 1.5 }}>
                 Tjalling met you at <strong>Config &apos;26</strong>. He works with
                 a mutual, <strong>Oliver Normand</strong>. I drafted a reply
                 with your <span style={{ color: "#267FE5", fontWeight: 500 }}>calendar link</span>.
@@ -1157,12 +1236,12 @@ export function ProposalsCrmSection() {
               overflow: "hidden"
             }}
           >
-            <NetworkStage />
-            <div style={{ textAlign: "center", marginTop: "clamp(24px, 4vh, 40px)" }}>
+            <NetworkStage mobile={isMobile} />
+            <div style={{ textAlign: isMobile ? "left" : "center", marginTop: "clamp(24px, 4vh, 40px)" }}>
               <h2
                 style={{
                   ...subHeadingStyle,
-                  textAlign: "center",
+                  textAlign: isMobile ? "left" : "center",
                   color: INK
                 }}
               >
@@ -1172,8 +1251,8 @@ export function ProposalsCrmSection() {
                 style={{
                   ...bodyStyle,
                   maxWidth: "480px",
-                  margin: "14px auto 0",
-                  textAlign: "center"
+                  margin: isMobile ? "14px 0 0" : "14px auto 0",
+                  textAlign: isMobile ? "left" : "center"
                 }}
               >
                 It spots the old client whose project is coming around again,
@@ -1206,8 +1285,9 @@ export function ProposalsCrmSection() {
             style={{
               ...phaseGridStyle,
               position: "relative",
-              padding:
-                "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
+              padding: isMobile
+                ? "clamp(40px, 6vh, 80px) clamp(28px, 5vw, 48px) clamp(40px, 6vh, 80px)"
+                : "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px) clamp(100px, 15vh, 180px)"
             }}
           >
             <div>
@@ -1228,8 +1308,10 @@ export function ProposalsCrmSection() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: "100vh",
-            padding: "0 clamp(28px, 5vw, 48px)",
+            minHeight: isMobile ? "auto" : "100vh",
+            padding: isMobile
+              ? "clamp(60px, 10vh, 100px) clamp(28px, 5vw, 48px)"
+              : "0 clamp(28px, 5vw, 48px)",
             width: "100%"
           }}
         >

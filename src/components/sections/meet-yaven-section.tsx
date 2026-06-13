@@ -679,8 +679,8 @@ export function MeetYavenSection() {
     const draftTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
-        start: "top 75%",
-        end: "top top",
+        start: "top 90%",
+        end: "top 20%",
         scrub: 0.5
       }
     })
@@ -695,7 +695,7 @@ export function MeetYavenSection() {
       ScrollTrigger.create({
         trigger: wrapper,
         start: "top top",
-        end: "36% top",
+        end: "30% top",
         onEnter: () => {
           draftInView.current = true
           setShowDraftHint(true)
@@ -719,8 +719,8 @@ export function MeetYavenSection() {
     const askTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
-        start: "20% top",
-        end: "38% top",
+        start: "18% top",
+        end: "42% top",
         scrub: 0.5
       }
     })
@@ -858,7 +858,7 @@ export function MeetYavenSection() {
           data-meet-yaven
           className="bg-[var(--primary)]"
           style={{
-            padding: "clamp(60px,10vh,100px) clamp(24px,5vw,40px) 16px"
+            padding: "clamp(60px,10vh,100px) clamp(24px,5vw,40px) 0"
           }}
         >
           {sideText}
@@ -867,7 +867,7 @@ export function MeetYavenSection() {
         <div
           ref={wrapperRef}
           className="relative bg-[var(--primary)]"
-          style={{ height: "180vh", marginTop: "-1px" }}
+          style={{ height: "160vh", marginTop: "-1px", marginBottom: "clamp(60px,10vh,100px)" }}
         >
           <div
             className="sticky top-0 h-screen overflow-visible flex items-center justify-center"
@@ -894,7 +894,7 @@ export function MeetYavenSection() {
                   willChange: "transform",
                   backfaceVisibility: "hidden",
                   transformOrigin: "center bottom",
-                  transform: "translateZ(0) translateY(100vh) rotate(6deg)"
+                  transform: "translateZ(0) translateY(100vh)"
                 }}
               >
                 <LinkedInCard
@@ -915,7 +915,7 @@ export function MeetYavenSection() {
                   willChange: "transform",
                   backfaceVisibility: "hidden",
                   transformOrigin: "center bottom",
-                  transform: "translateZ(0) translateY(100vh) rotate(-6deg)"
+                  transform: "translateZ(0) translateY(100vh)"
                 }}
               >
                 <AskCard

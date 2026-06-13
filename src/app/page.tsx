@@ -153,17 +153,16 @@ function StickyGetYaven() {
     }
   }, [checkOverlap])
 
-  // The floating "Get Yaven" button doesn't follow the page on mobile.
-  if (isMobile) return null
-
   return (
     <div
       ref={btnRef}
       style={{
         position: "fixed",
-        top: "clamp(16px, 2.5vh, 28px)",
-        right: "clamp(28px, 4vw, 48px)",
-        zIndex: 999
+        top: isMobile ? "16px" : "clamp(16px, 2.5vh, 28px)",
+        right: isMobile ? "16px" : "clamp(28px, 4vw, 48px)",
+        zIndex: 999,
+        opacity: 0,
+        transform: "translateX(120px)"
       }}
     >
       <BlueprintPanel />
