@@ -12,34 +12,48 @@ const INK = "#0a0e1a"
 
 const FAQS: { q: string; a: React.ReactNode }[] = [
   {
+    q: "So what actually is this?",
+    a: (
+      <>
+        Yaven is a native macOS menu bar app. It connects to your email,
+        calendar, CRM, and docs, triages everything into one queue, and drafts
+        replies in your voice. Press a shortcut, review the draft, approve or
+        edit. That&apos;s it. Currently in beta.
+      </>
+    )
+  },
+  {
     q: "How is this different from ChatGPT or Claude?",
     a: (
       <>
         A chat box waits for you to drive it: you write the prompt, paste the
-        context, copy the answer back. Yaven runs ahead of you. It already read
-        the thread, knows the client, and queued the reply for your approval.
-        And it remembers: who you know, how you write, what you always approve.
+        context, copy the answer back. Yaven already read the thread, knows the
+        client, and queued the reply before you opened it. You approve, it
+        learns. The more you use it, the less you have to touch.
       </>
     )
   },
   {
-    q: "What can Yaven see?",
+    q: "Where does my data go?",
     a: (
       <>
-        Yaven accesses only the apps you connect: email, calendar, CRM, docs. It
-        reads what it needs in the moment to draft or prioritize, and stores
-        context locally on your Mac. Nothing is sent to third parties. The hard
-        rule: Yaven never sends, files, or changes anything without your explicit
-        approval. Every action waits for you.
+        Yaven is local-first. Your emails, drafts, and the profile it builds
+        stay on your Mac, not on our servers, not synced to a cloud. When you
+        ask it to draft or answer, only the relevant text is sent to the AI
+        provider (Anthropic) for that single request. Nothing is stored
+        afterward. Yaven never sends, files, or changes anything without your
+        explicit approval.
       </>
     )
   },
   {
-    q: "Is it Mac only?",
+    q: "I handle client data under NDA. Can I trust this?",
     a: (
       <>
-        Yes, for now. Yaven is built native for macOS. Windows is coming; the
-        waitlist is where you&apos;ll hear first.
+        That&apos;s exactly why it&apos;s local-first. Your files and context
+        never leave your machine unless you trigger a draft. When you do, only
+        the relevant snippet goes to Anthropic for that one request, nothing is
+        retained. You control every action, every send.
       </>
     )
   },
@@ -47,8 +61,17 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     q: "What does it connect to?",
     a: (
       <>
-        Gmail, Google Calendar, LinkedIn, HubSpot, Salesforce, Notion, Granola,
-        and more arriving through the beta.
+        Gmail, Apple Calendar, iMessage, Telegram, Spotify, your files and docs.
+        Many more integrations are coming through the beta.
+      </>
+    )
+  },
+  {
+    q: "Is it Mac only?",
+    a: (
+      <>
+        Yes, for now. Yaven is built native for macOS. Windows is on the
+        roadmap.
       </>
     )
   },
@@ -56,8 +79,8 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     q: "When do I get access?",
     a: (
       <>
-        We onboard a small group every week, personally. Beta testers skip the
-        waitlist.
+        Yaven is in beta. We onboard a small group every week, personally. Join
+        the waitlist and we&apos;ll reach out.
       </>
     )
   }
@@ -115,7 +138,7 @@ function FaqItem({
         <span
           style={{
             fontFamily: "var(--font-dm-sans), sans-serif",
-            fontSize: "clamp(16px, 1.8vw, 20px)",
+            fontSize: "var(--fs-body-lg)",
             fontWeight: 600,
             color: "var(--cream)",
             lineHeight: 1.35
@@ -151,7 +174,7 @@ function FaqItem({
           ref={innerRef}
           style={{
             paddingBottom: "clamp(20px, 2.5vh, 28px)",
-            fontSize: "clamp(14px, 1.4vw, 17px)",
+            fontSize: "var(--fs-body)",
             fontWeight: 500,
             lineHeight: 1.65,
             color: "var(--cream)",
@@ -208,7 +231,7 @@ export function FaqSection() {
         <ScrollCutReveal
           style={{
             fontFamily: "var(--font-instrument-serif)",
-            fontSize: "clamp(32px, 4.5vw, 56px)",
+            fontSize: "var(--fs-display)",
             fontWeight: 500,
             letterSpacing: "-0.02em",
             lineHeight: 1.08,

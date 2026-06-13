@@ -5,7 +5,8 @@ import { Loader2 } from "lucide-react"
 
 // Inline email capture for the closing sections. Posts to the same
 // /api/waitlist endpoint as the blueprint flow.
-export function WaitlistInline() {
+export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
+  const hero = variant === "hero"
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -83,13 +84,20 @@ export function WaitlistInline() {
         ref={formRef}
         onSubmit={handleSubmit}
         noValidate
-        className="waitlist-input-row flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[28px] sm:rounded-full p-[5px]"
+        className="waitlist-input-row flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[28px] sm:rounded-full"
         style={{
-          border: "1px solid rgba(255,255,255,0.3)",
-          background: "rgba(255,255,255,0.1)",
+          padding: hero ? "6px" : "5px",
+          border: hero
+            ? "1.5px solid rgba(255,255,255,0.45)"
+            : "1px solid rgba(255,255,255,0.3)",
+          background: hero
+            ? "rgba(255,255,255,0.14)"
+            : "rgba(255,255,255,0.1)",
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3)"
+          boxShadow: hero
+            ? "0 20px 60px rgba(0,0,0,0.45), 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)"
+            : "0 20px 60px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3)"
         }}
       >
         <input
@@ -98,7 +106,8 @@ export function WaitlistInline() {
           placeholder="you@example.com"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="flex-1 min-w-0 py-3 px-5 rounded-full border-none bg-transparent text-white text-[15px] font-[var(--font-dm-sans),sans-serif] outline-none"
+          className={`flex-1 min-w-0 rounded-full border-none bg-transparent text-white font-[var(--font-dm-sans),sans-serif] outline-none ${hero ? "py-4 px-6 text-[17px]" : "py-3 px-5 text-[15px]"}`}
+          style={hero ? { textShadow: "0 1px 2px rgba(0,0,0,0.15)" } : undefined}
         />
         <div className="glass-wrap waitlist-btn-wrap shrink-0 w-full sm:w-auto">
           <div className="glass-shadow" />

@@ -8,6 +8,8 @@ import { Typewriter } from "@/components/effects/typewriter"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
+import { IconTooltip } from "@/components/ui/icon-tooltip"
+import { ICON_LABELS } from "@/components/ui/icon-labels"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -22,33 +24,40 @@ function U({ children }: { children: React.ReactNode }) {
 
 // Inline tool-icon pill (cream bg on dark)
 function IconPill({ name, tilt = 0 }: { name: string; tilt?: number }) {
+  const [hovered, setHovered] = useState(false)
   return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "26px",
-        height: "26px",
-        borderRadius: "7px",
-        background: "var(--cream)",
-        border: "1px solid rgba(255,248,240,0.25)",
-        verticalAlign: "middle",
-        margin: "0 3px",
-        flexShrink: 0,
-        position: "relative",
-        top: "-1px",
-        transform: `rotate(${tilt}deg)`
-      }}
-    >
-      <Image
-        src={`/logos/${name}.png`}
-        alt={name}
-        width={16}
-        height={16}
-        style={{ objectFit: "contain", width: "16px", height: "16px" }}
-      />
-    </span>
+    <IconTooltip label={ICON_LABELS[name] ?? name}>
+      <span
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "26px",
+          height: "26px",
+          borderRadius: "7px",
+          background: "var(--cream)",
+          border: "1px solid rgba(255,248,240,0.25)",
+          verticalAlign: "middle",
+          margin: "0 3px",
+          flexShrink: 0,
+          position: "relative",
+          top: "-1px",
+          transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
+          transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+          cursor: "default"
+        }}
+      >
+        <Image
+          src={`/logos/${name}.png`}
+          alt={name}
+          width={16}
+          height={16}
+          style={{ objectFit: "contain", width: "16px", height: "16px" }}
+        />
+      </span>
+    </IconTooltip>
   )
 }
 
@@ -68,10 +77,11 @@ function KeyBadge({
   const height = large ? "clamp(32px, 4vw, 48px)" : small ? "22px" : "26px"
   const radius = large ? "10px" : "6px"
   const pad = large ? "0 10px" : "0 6px"
+  const depth = large ? 2 : 1
 
   return (
     <span
-      className="inline-flex items-center justify-center font-bold"
+      className="yv-keybadge inline-flex items-center justify-center font-bold"
       style={{
         fontFamily: "var(--font-dm-sans), sans-serif",
         fontSize,
@@ -83,7 +93,9 @@ function KeyBadge({
         color: "#0a0e1a",
         boxShadow: large
           ? "0 2px 6px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(0,0,0,0.08)"
-          : "0 1px 3px rgba(0,0,0,0.12), inset 0 -1px 0 rgba(0,0,0,0.08)"
+          : "0 1px 3px rgba(0,0,0,0.12), inset 0 -1px 0 rgba(0,0,0,0.08)",
+        transition: "transform 0.1s ease, box-shadow 0.1s ease",
+        ["--depth" as string]: `${depth}px`
       }}
     >
       {children}
@@ -483,7 +495,7 @@ function AskCard({
 // ── Main section ────────────────────────────────────────────────────────────
 
 const bodyTextStyle: React.CSSProperties = {
-  fontSize: "clamp(15px, 1.6vw, 20px)",
+  fontSize: "var(--fs-body)",
   fontWeight: 500,
   lineHeight: 1.55,
   color: "rgba(255,255,255,0.8)"
@@ -501,6 +513,8 @@ export function MeetYavenSection() {
   const [draftTyping, setDraftTyping] = useState(false)
   const [asking, setAsking] = useState(false)
   const [askTyping, setAskTyping] = useState(false)
+  const [showDraftHint, setShowDraftHint] = useState(false)
+  const [showAskHint, setShowAskHint] = useState(false)
 
   const staticLayout = usePrefersReducedMotion()
   const isMobile = useIsMobile()
@@ -591,17 +605,20 @@ export function MeetYavenSection() {
         end: "46% top",
         onEnter: () => {
           draftInView.current = true
+          setShowDraftHint(true)
         },
         onLeave: () => {
           draftInView.current = false
         },
         onEnterBack: () => {
           draftInView.current = true
+          setShowDraftHint(true)
         },
         onLeaveBack: () => {
           draftInView.current = false
           setDrafting(false)
           setDraftTyping(false)
+          setShowDraftHint(false)
         }
       })
     )
@@ -629,17 +646,20 @@ export function MeetYavenSection() {
         end: "98% top",
         onEnter: () => {
           askInView.current = true
+          setShowAskHint(true)
         },
         onLeave: () => {
           askInView.current = false
         },
         onEnterBack: () => {
           askInView.current = true
+          setShowAskHint(true)
         },
         onLeaveBack: () => {
           askInView.current = false
           setAsking(false)
           setAskTyping(false)
+          setShowAskHint(false)
         }
       })
     )
@@ -678,17 +698,20 @@ export function MeetYavenSection() {
         end: "36% top",
         onEnter: () => {
           draftInView.current = true
+          setShowDraftHint(true)
         },
         onLeave: () => {
           draftInView.current = false
         },
         onEnterBack: () => {
           draftInView.current = true
+          setShowDraftHint(true)
         },
         onLeaveBack: () => {
           draftInView.current = false
           setDrafting(false)
           setDraftTyping(false)
+          setShowDraftHint(false)
         }
       })
     )
@@ -715,17 +738,20 @@ export function MeetYavenSection() {
         end: "85% top",
         onEnter: () => {
           askInView.current = true
+          setShowAskHint(true)
         },
         onLeave: () => {
           askInView.current = false
         },
         onEnterBack: () => {
           askInView.current = true
+          setShowAskHint(true)
         },
         onLeaveBack: () => {
           askInView.current = false
           setAsking(false)
           setAskTyping(false)
+          setShowAskHint(false)
         }
       })
     )
@@ -736,17 +762,26 @@ export function MeetYavenSection() {
   const sideText = (
     <div ref={textWrapRef} className="flex flex-col gap-5">
       <ScrollCutReveal
-        className="text-[clamp(40px,6vw,80px)] font-medium tracking-[-0.02em] leading-[1] text-[var(--cream)] m-0"
-        style={{ fontFamily: "var(--font-instrument-serif)" }}
+        className="font-medium tracking-[-0.02em] leading-[1] m-0"
+        style={{
+          fontFamily: "var(--font-instrument-serif)",
+          fontSize: "var(--fs-display)",
+          color: "#fff"
+        }}
       >
         Meet Yaven.
       </ScrollCutReveal>
 
       <p
-        className="text-[clamp(18px,2.2vw,26px)] font-medium leading-[1.35] m-0"
-        style={{ color: "var(--cream)", opacity: 0.85 }}
+        className="font-medium leading-[1.35] m-0"
+        style={{
+          fontFamily: "var(--font-instrument-serif)",
+          fontSize: "var(--fs-title)",
+          color: "#fff",
+          opacity: 0.85
+        }}
       >
-        Your second brain, on your Mac.
+        A menu bar assistant that lives on your Mac.
       </p>
 
       <div className="flex flex-col gap-5 max-w-[520px]">
@@ -760,15 +795,29 @@ export function MeetYavenSection() {
         </p>
 
         <p style={bodyTextStyle}>
-          <ShortcutBadge keys={["⌥", "D"]} small /> drafts any reply, anywhere,
-          in your voice. <ShortcutBadge keys={["⌥", "A"]} small /> answers
-          anything on your screen. You approve every step. The more you approve,{" "}
-          <U>the more it automates</U>.
+          Use <ShortcutBadge keys={["⌥", "D"]} small /> to draft any reply,
+          anywhere, in your voice. <ShortcutBadge keys={["⌥", "A"]} small />{" "}
+          answers anything on your screen. You approve every step. The more you
+          approve, <U>the more it automates</U>.
+        </p>
+
+        <p style={bodyTextStyle}>
+          <U>Local-first</U>. Your emails, drafts, and context stay on your
+          machine. Nothing is uploaded to our servers or synced to a cloud.
         </p>
       </div>
 
-      <p className="text-[13px] font-semibold text-white/40 uppercase tracking-[0.08em] mt-1">
-        Try it!
+      <p
+        className="text-[13px] font-semibold text-white/40 uppercase tracking-[0.08em] mt-1"
+        style={{
+          opacity: showDraftHint ? 1 : 0,
+          transition: "opacity 0.4s ease"
+        }}
+      >
+        Try the demo! press <ShortcutBadge keys={["⌥", "D"]} small />
+        <span style={{ opacity: showAskHint ? 1 : 0, transition: "opacity 0.4s ease" }}>
+          {" "}or <ShortcutBadge keys={["⌥", "A"]} small />
+        </span>
       </p>
     </div>
   )

@@ -38,7 +38,7 @@ function LogoPill({ logo }: { logo: string }) {
 }
 
 const bioStyle: React.CSSProperties = {
-  fontSize: "clamp(16px, 1.9vw, 22px)",
+  fontSize: "var(--fs-body-lg)",
   fontWeight: 500,
   lineHeight: 1.7,
   color: INK,
@@ -49,7 +49,7 @@ const bioStyle: React.CSSProperties = {
 
 const nameStyle: React.CSSProperties = {
   fontFamily: "var(--font-dm-sans), sans-serif",
-  fontSize: "clamp(20px, 2.4vw, 28px)",
+  fontSize: "var(--fs-title)",
   fontWeight: 700,
   letterSpacing: "-0.02em",
   lineHeight: 1.2,
@@ -180,7 +180,7 @@ export function TeamSection() {
             data-mask-inner
             style={{
               fontFamily: "var(--font-instrument-serif)",
-              fontSize: "clamp(32px, 4.5vw, 64px)",
+              fontSize: "var(--fs-display)",
               fontWeight: 500,
               letterSpacing: "-0.02em",
               lineHeight: 1.08,
@@ -283,7 +283,7 @@ export function TeamSection() {
           >
             <span
               style={{
-                fontSize: "clamp(13px, 1.3vw, 15px)",
+                fontSize: "var(--fs-body-sm)",
                 fontWeight: 600,
                 color: INK,
                 opacity: 0.4,

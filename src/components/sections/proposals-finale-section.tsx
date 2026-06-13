@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger)
 const INK = "#0a0e1a"
 
 const bodyStyle: React.CSSProperties = {
-  fontSize: "clamp(16px, 1.9vw, 22px)",
+  fontSize: "var(--fs-body-lg)",
   fontWeight: 500,
   lineHeight: 1.45,
   color: INK,
@@ -88,7 +88,7 @@ export function FinaleContent() {
     textAlign: "left",
     width: "100%",
     maxWidth: "none",
-    fontSize: "clamp(15px, 1.6vw, 19px)"
+    fontSize: "var(--fs-body)"
   }
 
   const clip: React.CSSProperties = { overflow: "clip", width: "100%" }
@@ -109,7 +109,7 @@ export function FinaleContent() {
           data-mask-inner
           style={{
             fontFamily: "var(--font-instrument-serif)",
-            fontSize: "clamp(32px, 4.5vw, 56px)",
+            fontSize: "var(--fs-display)",
             fontWeight: 500,
             letterSpacing: "-0.02em",
             lineHeight: 1.1,

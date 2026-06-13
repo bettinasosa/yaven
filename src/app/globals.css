@@ -545,6 +545,13 @@
 :root {
   --font-dm-sans: var(--font-satoshi), "Satoshi", sans-serif;
 
+  /* ── Fluid type scale ────────────────────── */
+  --fs-display:  clamp(36px, 5.5vw, 72px);   /* Section headings              */
+  --fs-title:    clamp(24px, 3vw, 38px);      /* Sub-headings, names           */
+  --fs-body-lg:  clamp(16px, 1.9vw, 22px);    /* Featured body, card labels    */
+  --fs-body:     clamp(15px, 1.6vw, 19px);    /* Standard body, bios           */
+  --fs-body-sm:  clamp(13px, 1.3vw, 15px);    /* Supporting text, descriptions */
+
   /* ── Design tokens ──────────────────────── */
   --ink: #07348b;
   --bd: 1px solid rgba(0, 0, 0, 0.1);
@@ -917,6 +924,24 @@ video::-webkit-media-controls {
     transform: translateY(0);
     max-height: 260px;
   }
+}
+
+.waitlist-input-row input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Keyboard shortcut badge — press effect on hover */
+.yv-keybadge {
+  cursor: default;
+}
+*:hover > .yv-keybadge {
+  transform: translateY(var(--depth, 1px));
+  box-shadow: 0 0 2px rgba(0,0,0,0.1), inset 0 0 0 rgba(0,0,0,0.08) !important;
+}
+
+@keyframes yv-tooltip-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 @media (max-width: 480px) {

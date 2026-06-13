@@ -7,42 +7,46 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
+import { IconTooltip } from "@/components/ui/icon-tooltip"
+import { ICON_LABELS } from "@/components/ui/icon-labels"
 
 gsap.registerPlugin(ScrollTrigger)
 
 function AppIcon({ name, tilt }: { name: string; tilt: number }) {
   const [hovered, setHovered] = useState(false)
   return (
-    <span
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "26px",
-        height: "26px",
-        borderRadius: "7px",
-        background: "rgba(10,14,26,0.07)",
-        border: "1px solid rgba(10,14,26,0.08)",
-        verticalAlign: "middle",
-        margin: "0 3px",
-        flexShrink: 0,
-        position: "relative",
-        top: "-1px",
-        transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
-        transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        cursor: "default"
-      }}
-    >
-      <Image
-        src={`/logos/${name}.png`}
-        alt={name}
-        width={16}
-        height={16}
-        style={{ objectFit: "contain", width: "16px", height: "16px" }}
-      />
-    </span>
+    <IconTooltip label={ICON_LABELS[name] ?? name}>
+      <span
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "26px",
+          height: "26px",
+          borderRadius: "7px",
+          background: "rgba(10,14,26,0.07)",
+          border: "1px solid rgba(10,14,26,0.08)",
+          verticalAlign: "middle",
+          margin: "0 3px",
+          flexShrink: 0,
+          position: "relative",
+          top: "-1px",
+          transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
+          transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+          cursor: "default"
+        }}
+      >
+        <Image
+          src={`/logos/${name}.png`}
+          alt={name}
+          width={16}
+          height={16}
+          style={{ objectFit: "contain", width: "16px", height: "16px" }}
+        />
+      </span>
+    </IconTooltip>
   )
 }
 
@@ -113,7 +117,7 @@ function TriageCard({
         <div
           style={{
             fontFamily: "var(--font-dm-sans), sans-serif",
-            fontSize: "clamp(19px, 2.1vw, 24px)",
+            fontSize: "var(--fs-body-lg)",
             fontWeight: 700,
             letterSpacing: "-0.02em",
             lineHeight: 1.15,
@@ -124,7 +128,7 @@ function TriageCard({
         </div>
         <p
           style={{
-            fontSize: "clamp(13px, 1.3vw, 15px)",
+            fontSize: "var(--fs-body-sm)",
             fontWeight: 400,
             lineHeight: 1.45,
             color: textColor,
@@ -151,7 +155,7 @@ function TriageCard({
         >
           <span
             style={{
-              fontSize: "clamp(13px, 1.3vw, 14px)",
+              fontSize: "var(--fs-body-sm)",
               fontWeight: 500,
               color: textColor,
               opacity: 0.9,
@@ -263,7 +267,7 @@ export function TriageSection() {
   )
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: "clamp(15px, 1.6vw, 18px)",
+    fontSize: "var(--fs-body)",
     lineHeight: 1.55,
     color: "#0a0e1a",
     opacity: 1,

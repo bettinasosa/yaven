@@ -21,7 +21,7 @@ const INK = "#0a0e1a"
 
 const headlineStyle: React.CSSProperties = {
   fontFamily: "var(--font-instrument-serif)",
-  fontSize: "clamp(32px, 4.5vw, 64px)",
+  fontSize: "var(--fs-display)",
   fontWeight: 500,
   letterSpacing: "-0.02em",
   lineHeight: 1.08,
@@ -33,7 +33,7 @@ const headlineStyle: React.CSSProperties = {
 // "and streamlines your workflows" section header above them.
 const subHeadingStyle: React.CSSProperties = {
   fontFamily: "var(--font-dm-sans), sans-serif",
-  fontSize: "clamp(26px, 3.6vw, 46px)",
+  fontSize: "var(--fs-title)",
   fontWeight: 700,
   letterSpacing: "-0.03em",
   lineHeight: 1.12,
@@ -42,7 +42,7 @@ const subHeadingStyle: React.CSSProperties = {
 }
 
 const bodyStyle: React.CSSProperties = {
-  fontSize: "clamp(16px, 1.9vw, 22px)",
+  fontSize: "var(--fs-body-lg)",
   fontWeight: 500,
   lineHeight: 1.45,
   color: INK,
@@ -676,7 +676,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
           <div>
             <div
               style={{
-                fontSize: "clamp(17px, 1.8vw, 20px)",
+                fontSize: "var(--fs-body-lg)",
                 fontWeight: 600,
                 color: "#fff",
                 lineHeight: 1.2
@@ -1113,7 +1113,7 @@ export function ProposalsCrmSection() {
       <ScrollCutReveal
         style={{
           fontFamily: "var(--font-instrument-serif)",
-          fontSize: "clamp(36px, 5.5vw, 76px)",
+          fontSize: "var(--fs-display)",
           fontWeight: 500,
           letterSpacing: "-0.02em",
           lineHeight: 1,

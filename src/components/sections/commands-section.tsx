@@ -31,10 +31,11 @@ function KeyBadge({
   const height = large ? "clamp(32px, 4vw, 48px)" : small ? "22px" : "26px"
   const radius = large ? "10px" : "6px"
   const pad = large ? "0 10px" : "0 6px"
+  const depth = large ? 2 : 1
 
   return (
     <span
-      className="inline-flex items-center justify-center font-bold"
+      className="yv-keybadge inline-flex items-center justify-center font-bold"
       style={{
         fontFamily: "var(--font-dm-sans), sans-serif",
         fontSize,
@@ -46,7 +47,9 @@ function KeyBadge({
         color: "#0a0e1a",
         boxShadow: large
           ? "0 2px 6px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(0,0,0,0.08)"
-          : "0 1px 3px rgba(0,0,0,0.12), inset 0 -1px 0 rgba(0,0,0,0.08)"
+          : "0 1px 3px rgba(0,0,0,0.12), inset 0 -1px 0 rgba(0,0,0,0.08)",
+        transition: "transform 0.1s ease, box-shadow 0.1s ease",
+        ["--depth" as string]: `${depth}px`
       }}
     >
       {children}
@@ -54,7 +57,15 @@ function KeyBadge({
   )
 }
 
-function ShortcutBadge({ keys, small, large }: { keys: string[]; small?: boolean; large?: boolean }) {
+function ShortcutBadge({
+  keys,
+  small,
+  large
+}: {
+  keys: string[]
+  small?: boolean
+  large?: boolean
+}) {
   return (
     <span
       className={`inline-flex items-center ${large ? "gap-[5px]" : "gap-[3px]"}`}
@@ -678,14 +689,14 @@ export function CommandsSection() {
   const sideText = (
     <div className="flex flex-col gap-4">
       <ScrollCutReveal
-        className="text-[clamp(36px,5.5vw,76px)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0"
+        className="text-[var(--fs-display)] font-medium tracking-[-0.02em] leading-[1.05] text-white m-0"
         style={{ fontFamily: "var(--font-instrument-serif)" }}
       >
         <ShortcutBadge keys={["⌥", "D"]} large /> to draft.{" "}
         <ShortcutBadge keys={["⌥", "A"]} large /> to ask.
       </ScrollCutReveal>
       <p
-        className={`text-[clamp(15px,1.6vw,20px)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-1" : "mt-3"}`}
+        className={`text-[var(--fs-body)] font-medium text-white/80 leading-[1.55] ${isMobile ? "mt-1" : "mt-3"}`}
         style={{ maxWidth: "480px" }}
       >
         Press <ShortcutBadge keys={["⌥", "D"]} small /> in any app and the reply
@@ -696,7 +707,7 @@ export function CommandsSection() {
         shallow ones, because Yaven remembers.
       </p>
       <p className="text-[13px] font-semibold text-white/40 uppercase tracking-[0.08em] mt-1">
-        Try it!
+        Try the demo!
       </p>
     </div>
   )
