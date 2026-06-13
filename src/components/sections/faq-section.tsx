@@ -15,10 +15,15 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     q: "So what actually is this?",
     a: (
       <>
-        Yaven is a native macOS menu bar app. It connects to your email,
-        calendar, CRM, and docs, triages everything into one queue, and drafts
-        replies in your voice. Press a shortcut, review the draft, approve or
-        edit. That&apos;s it. Currently in beta.
+        A second brain that lives in your Mac&apos;s menu bar. It connects to
+        your email, calendar, messages, and docs, learns how you work, and
+        builds a picture of every client, conversation, and commitment so
+        nothing falls through the cracks.
+        <br /><br />
+        Right now it intelligently prioritises your inbox so the most critical
+        messages are always at the top of your desk, drafts replies in your
+        voice from any app on your Mac, and preps you before every meeting. The
+        more you use it, the more it handles on its own. Currently in beta.
       </>
     )
   },

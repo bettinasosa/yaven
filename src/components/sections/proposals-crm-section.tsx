@@ -200,11 +200,46 @@ const SIGNALS = [
 // Network slide — layered message-card UI showing Yaven in context
 function NetworkStage({ mobile }: { mobile?: boolean }) {
   const avatarGradient = "linear-gradient(145deg, #267FE5, #4da3f0, #9e8ec8)"
+  const stageRef = useRef<HTMLDivElement>(null)
 
-  // Mobile: stacked vertical cards instead of absolute-positioned overlapping
+  useEffect(() => {
+    if (!mobile || !stageRef.current) return
+    const cards = Array.from(
+      stageRef.current.querySelectorAll<HTMLElement>("[data-net-card]")
+    )
+    gsap.set(cards, { y: 40, opacity: 0, scale: 0.95 })
+    const st = ScrollTrigger.create({
+      trigger: stageRef.current,
+      start: "top 80%",
+      onEnter: () => {
+        gsap.to(cards, {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          stagger: 0.2,
+          duration: 0.6,
+          ease: "back.out(1.4)"
+        })
+      },
+      onLeaveBack: () => {
+        gsap.to(cards, {
+          y: 40,
+          opacity: 0,
+          scale: 0.95,
+          stagger: { each: 0.08, from: "end" },
+          duration: 0.3,
+          ease: "power2.in"
+        })
+      }
+    })
+    return () => st.kill()
+  }, [mobile])
+
+  // Mobile: stacked vertical cards with staggered pop-in
   if (mobile) {
     return (
       <div
+        ref={stageRef}
         aria-hidden="true"
         style={{
           display: "flex",
@@ -216,7 +251,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
         }}
       >
         {/* Tjalling card */}
-        <div data-net-node style={{ marginRight: "24px" }}>
+        <div data-net-node data-net-card style={{ marginRight: "24px" }}>
           <GlassCard borderRadius="20px">
             <div
               style={{
@@ -245,7 +280,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
         </div>
 
         {/* Yaven response card */}
-        <div data-net-node style={{ marginLeft: "24px" }}>
+        <div data-net-node data-net-card style={{ marginLeft: "24px" }}>
           <GlassCard borderRadius="18px">
             <div
               style={{
@@ -961,10 +996,11 @@ export function ProposalsCrmSection() {
       mobileStackRef.current.querySelectorAll<HTMLElement>("[data-reveal]")
     const anims = Array.from(blocks).map(b =>
       gsap.from(b, {
-        y: 50,
+        y: 40,
         opacity: 0,
-        duration: 0.7,
-        ease: "power3.out",
+        scale: 0.95,
+        duration: 0.6,
+        ease: "back.out(1.4)",
         scrollTrigger: {
           trigger: b,
           start: "top 82%",
