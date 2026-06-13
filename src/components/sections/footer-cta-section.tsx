@@ -25,8 +25,11 @@ export function FooterCTASection() {
 
       <section className="sticky top-0 h-screen flex flex-col items-center justify-center px-[clamp(28px,5vw,48px)] py-6 overflow-hidden bg-[var(--primary)]">
         <div className="relative text-center z-2">
-          <ScrollCutReveal className="text-[clamp(32px,5vw,72px)] font-medium tracking-[-0.02em] leading-[1.1] text-white mx-auto max-w-[800px]" style={{ fontFamily: "var(--font-instrument-serif)" }}>
-            Give Yaven the admin you hate. Keep the work you love.
+          <ScrollCutReveal
+            className="text-[clamp(32px,5vw,72px)] font-medium tracking-[-0.02em] leading-[1.1] text-white mx-auto max-w-[800px]"
+            style={{ fontFamily: "var(--font-instrument-serif)" }}
+          >
+            Less admin. More flow.
           </ScrollCutReveal>
 
           <div className="mt-[clamp(40px,7vh,64px)] flex justify-center">

@@ -197,16 +197,141 @@ const SIGNALS = [
   { logo: "hubspot", x: 255, y: 115 }
 ]
 
-// Network slide — tool pills arranged around the "you" center
-const NET_POSITIONS = [
-  { logo: "linkedin", x: -180, y: -90 },
-  { logo: "gmail", x: 170, y: -110 },
-  { logo: "hubspot", x: -200, y: 80 },
-  { logo: "salesforce", x: 190, y: 95 },
-  { logo: "gcal", x: -50, y: -140 },
-  { logo: "notion", x: 80, y: 130 },
-  { logo: "granola", x: -130, y: 130 }
-]
+// Network slide — layered message-card UI showing Yaven in context
+function NetworkStage() {
+  const avatarGradient = "linear-gradient(145deg, #267FE5, #4da3f0, #9e8ec8)"
+
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: "relative",
+        width: "min(480px, 85vw)",
+        height: "min(520px, 85vw)",
+        margin: "clamp(100px, 16vh, 180px) auto 0"
+      }}
+    >
+      {/* Faded app window backdrop */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          width: "85%",
+          height: "60%",
+          borderRadius: "14px",
+          background: "#f5f5f5",
+          border: "1px solid rgba(0,0,0,0.08)",
+          overflow: "hidden",
+          opacity: 0.7
+        }}
+      >
+        {/* Traffic lights */}
+        <div style={{ display: "flex", gap: "6px", padding: "10px 14px" }}>
+          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#ff5f57" }} />
+          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#febc2e" }} />
+          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#28c840" }} />
+        </div>
+        {/* Search bar */}
+        <div style={{ margin: "4px 14px", padding: "8px 14px", borderRadius: "8px", background: "rgba(0,0,0,0.05)", display: "flex", alignItems: "center", gap: "8px" }}>
+          <div style={{ width: "18px", height: "18px", borderRadius: "5px", background: INK, opacity: 0.15 }} />
+          <span style={{ fontSize: "12px", color: INK, opacity: 0.35 }}>Start typing to ask or search...</span>
+        </div>
+      </div>
+
+      {/* Main message card — Tjalling */}
+      <div
+        data-net-node
+        style={{
+          position: "absolute",
+          top: "18%",
+          left: 0,
+          width: "88%",
+          zIndex: 2,
+          transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)"
+        }}
+        onMouseMove={e => {
+          const rect = e.currentTarget.getBoundingClientRect()
+          const x = (e.clientX - rect.left) / rect.width - 0.5
+          const y = (e.clientY - rect.top) / rect.height - 0.5
+          e.currentTarget.style.transform = `perspective(600px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)"
+        }}
+      >
+        <GlassCard borderRadius="20px">
+          <div
+            style={{
+              padding: "clamp(16px, 2vw, 22px)",
+              display: "flex",
+              gap: "14px",
+              alignItems: "flex-start"
+            }}
+          >
+            <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: avatarGradient, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", fontWeight: 600, color: "#fff" }}>
+              TJ
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Tjalling</span>
+                <Image src="/logos/gmail.png" alt="" width={16} height={16} style={{ objectFit: "contain", width: "16px", height: "16px" }} />
+              </div>
+              <p style={{ fontSize: "13px", color: INK, opacity: 0.7, margin: "4px 0 0", lineHeight: 1.45 }}>
+                Following up on our conversation at Config.
+                <br />
+                Do you have <strong>availability this week</strong> for a call?
+              </p>
+            </div>
+          </div>
+        </GlassCard>
+      </div>
+
+      {/* Yaven response card */}
+      <div
+        data-net-node
+        style={{
+          position: "absolute",
+          top: "48%",
+          left: "5%",
+          width: "85%",
+          zIndex: 3,
+          transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)"
+        }}
+        onMouseMove={e => {
+          const rect = e.currentTarget.getBoundingClientRect()
+          const x = (e.clientX - rect.left) / rect.width - 0.5
+          const y = (e.clientY - rect.top) / rect.height - 0.5
+          e.currentTarget.style.transform = `perspective(600px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)"
+        }}
+      >
+        <GlassCard borderRadius="18px">
+          <div
+            style={{
+              padding: "clamp(14px, 1.8vw, 20px)",
+              display: "flex",
+              gap: "12px",
+              alignItems: "flex-start"
+            }}
+          >
+            <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "conic-gradient(from 140deg, #e8956a, #c87dba, #6ab8f8, #e8956a)", flexShrink: 0, opacity: 0.85 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: "13px", color: INK, opacity: 0.8, margin: 0, lineHeight: 1.5 }}>
+                Tjalling met you at <strong>Config &apos;26</strong>. He works with
+                a mutual, <strong>Oliver Normand</strong>. I drafted a reply
+                with your <span style={{ color: "#267FE5", fontWeight: 500 }}>calendar link</span>.
+              </p>
+            </div>
+          </div>
+        </GlassCard>
+      </div>
+    </div>
+  )
+}
+
 
 // Goo blobs sit behind the signal pills so they melt as they converge
 const SIGNAL_BLOBS = [
@@ -739,8 +864,8 @@ function ConferenceCard({ animated }: { animated: boolean }) {
 export function ProposalsCrmSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const proposalsRef = useRef<HTMLDivElement>(null)
-  const crmRef = useRef<HTMLDivElement>(null)
-  // confRef removed — conference slide dropped
+  // crmRef removed — CRM slide replaced with Conference
+  const confRef = useRef<HTMLDivElement>(null)
   const networkRef = useRef<HTMLDivElement>(null)
   const headerWrapRef = useRef<HTMLDivElement>(null)
   const fragRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -788,8 +913,7 @@ export function ProposalsCrmSection() {
     netNodes.forEach(n => gsap.set(n, { scale: 0, opacity: 0 }))
 
     gsap.set(proposalsRef.current, { y: 60, opacity: 0 })
-    gsap.set(crmRef.current, { y: "100vh", opacity: 0 })
-    // confRef removed — no longer animated
+    gsap.set(confRef.current, { y: "100vh", opacity: 0 })
     fragRefs.current.forEach((f, i) => {
       if (f)
         gsap.set(f, {
@@ -799,58 +923,32 @@ export function ProposalsCrmSection() {
         })
     })
 
-    const p2Shell = crmRef.current?.querySelector<HTMLElement>(
+    const p2Shell = confRef.current?.querySelector<HTMLElement>(
       '[data-card-shell="p2"]'
     )
-    const p3Shell: HTMLElement | null = null
     if (p2Shell)
       gsap.set(p2Shell, {
         y: "75vh",
         scale: 0.08,
         transformOrigin: "center center"
       })
-    if (p3Shell)
-      gsap.set(p3Shell, {
-        y: "75vh",
-        scale: 0.08,
-        transformOrigin: "center center"
-      })
-    const p2Inner = crmRef.current?.querySelector<HTMLElement>(
+    const p2Inner = confRef.current?.querySelector<HTMLElement>(
       '[data-card-inner="p2"]'
     )
-    const p3Inner: HTMLElement | null = null
     if (p2Inner)
       gsap.set(p2Inner, {
         scale: 0.08,
         transformOrigin: "center center",
         backgroundColor: "#fff"
       })
-    if (p3Inner)
-      gsap.set(p3Inner, {
-        scale: 0.08,
-        transformOrigin: "center center",
-        backgroundColor: "#fff"
-      })
 
-    // Gather elements used in auto-play animations and set initial state
-    const crm = crmRef.current
-    const pills = crm
-      ? Array.from(crm.querySelectorAll<HTMLElement>("[data-signal-pill]"))
-      : []
-    const blobs = crm
-      ? Array.from(crm.querySelectorAll<HTMLElement>("[data-signal-blob]"))
-      : []
-    const rowVals = crm
-      ? Array.from(crm.querySelectorAll<HTMLElement>("[data-crm-value]"))
-      : []
-    gsap.set(rowVals, { opacity: 0, x: -6 })
-    SIGNALS.forEach((s, i) => {
-      const targets = [pills[i], blobs[i]].filter(Boolean)
-      if (targets.length)
-        gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
-    })
-
-    // Conference animations removed
+    // Conference card follow-up animation elements
+    const conf = confRef.current
+    const fuBefore = conf?.querySelector<HTMLElement>("[data-fu-before]")
+    const fuAfter = conf?.querySelector<HTMLElement>("[data-fu-after]")
+    const fuBubble = conf?.querySelector<HTMLElement>("[data-fu-bubble]")
+    if (fuAfter) gsap.set(fuAfter, { opacity: 0 })
+    if (fuBubble) gsap.set(fuBubble, { opacity: 0, x: 60, scale: 0.6 })
 
     // ── Scrubbed timeline — phase transitions only ──────────────────────────
     const tl = gsap.timeline({
@@ -916,41 +1014,37 @@ export function ProposalsCrmSection() {
       ">"
     )
     tl.to(
-      crmRef.current,
+      confRef.current,
       { y: 0, opacity: 1, ease: "power3.out", duration: 1.2 },
       "<0.3"
     )
-    tl.addLabel("crmIn")
+    tl.addLabel("confIn")
 
-    // Signal pills converge into the card — scrubbed so they respond to scroll pace
-    gsap.set(rowVals, { opacity: 0, x: -6 })
-    SIGNALS.forEach((s, i) => {
-      const pill = pills[i]
-      const blob = blobs[i]
-      const row = rowVals[i]
-      const targets = [pill, blob].filter(Boolean)
-      if (!targets.length) return
-      gsap.set(targets, { x: s.x, y: s.y, scale: 1, opacity: 0 })
-      const base = 0.3
+    // Gmail bubble + follow-up status flip — scrubbed
+    if (fuBefore && fuAfter && fuBubble) {
       tl.to(
-        targets,
-        { opacity: 1, duration: 0.5, ease: "power2.out" },
-        `crmIn+=${base + i * 0.35}`
+        fuBubble,
+        { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "power2.out" },
+        "confIn+=0.9"
       )
       tl.to(
-        targets,
-        { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 1, ease: "power2.in" },
-        `crmIn+=${base + 0.6 + i * 0.35}`
+        fuBefore,
+        { opacity: 0, duration: 0.6, ease: "power2.in" },
+        "confIn+=1.7"
       )
-      if (row)
-        tl.to(
-          row,
-          { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },
-          `crmIn+=${base + 1.3 + i * 0.35}`
-        )
-    })
+      tl.to(
+        fuAfter,
+        { opacity: 1, duration: 0.6, ease: "power2.out" },
+        "confIn+=1.9"
+      )
+      tl.to(
+        fuBubble,
+        { opacity: 0, scale: 0.4, duration: 0.5, ease: "power2.in" },
+        "confIn+=2.1"
+      )
+    }
 
-    tl.to({}, { duration: 3.5 }) // dwell on filled CRM card
+    tl.to({}, { duration: 3.5 }) // dwell on conference card
 
     // ── Auto-play card-reveal + content animations ──────────────────────────
     const tlDur = tl.duration()
@@ -988,20 +1082,19 @@ export function ProposalsCrmSection() {
       return t
     }
 
-    let crmRevealTl: gsap.core.Timeline | null = null
+    let confRevealTl: gsap.core.Timeline | null = null
 
-    const crmSt =
+    const confSt =
       p2Shell && p2Inner
         ? ScrollTrigger.create({
             trigger: wrapperRef.current,
-            // Fire when the CRM card starts sliding in (-1.0 units before crmIn)
-            start: `top+=${scrollPx("crmIn", -1.0)}px top`,
+            start: `top+=${scrollPx("confIn", -1.0)}px top`,
             once: true,
             onEnter: () => {
               lockScroll()
-              crmRevealTl = buildReveal(p2Shell, p2Inner)
-              crmRevealTl.call(unlockScroll, [], 11.0)
-              crmRevealTl.play()
+              confRevealTl = buildReveal(p2Shell, p2Inner)
+              confRevealTl.call(unlockScroll, [], 5.5)
+              confRevealTl.play()
             }
           })
         : null
@@ -1010,8 +1103,8 @@ export function ProposalsCrmSection() {
       unlockScroll()
       tl.scrollTrigger?.kill()
       tl.kill()
-      crmRevealTl?.kill()
-      crmSt?.kill()
+      confRevealTl?.kill()
+      confSt?.kill()
     }
   }, [staticLayout, isMobile])
 
@@ -1029,7 +1122,7 @@ export function ProposalsCrmSection() {
           textAlign: "center"
         }}
       >
-        creates your workflows
+        …and who matters.
       </ScrollCutReveal>
     </div>
   )
@@ -1060,84 +1153,34 @@ export function ProposalsCrmSection() {
             data-reveal
             style={{
               position: "relative",
-              padding: "clamp(60px, 9vh, 110px) clamp(28px, 5vw, 48px)",
-              textAlign: "center",
+              padding: "clamp(40px, 6vh, 80px) clamp(28px, 5vw, 48px)",
               overflow: "hidden"
             }}
           >
-            <div
-              style={{
-                position: "relative",
-                maxWidth: "600px",
-                margin: "0 auto"
-              }}
-            >
-              <div
-                aria-hidden="true"
-                style={{
-                  position: "absolute",
-                  inset: "-100px -60px",
-                  pointerEvents: "none",
-                  zIndex: 0
-                }}
-              >
-                {NET_POSITIONS.map((pos, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      position: "absolute",
-                      left: `calc(50% + ${pos.x * 0.65}px)`,
-                      top: `calc(50% + ${pos.y * 0.65}px)`,
-                      transform: "translate(-50%, -50%)",
-                      width: "36px",
-                      height: "36px",
-                      borderRadius: "10px",
-                      background: "#fff",
-                      border: "1px solid rgba(38,127,229,0.1)",
-                      boxShadow: "0 3px 10px rgba(38,127,229,0.08)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      opacity: 0.6
-                    }}
-                  >
-                    <Image
-                      src={`/logos/${pos.logo}.png`}
-                      alt=""
-                      width={18}
-                      height={18}
-                      style={{
-                        objectFit: "contain",
-                        width: "18px",
-                        height: "18px"
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
+            <NetworkStage />
+            <div style={{ textAlign: "center", marginTop: "clamp(24px, 4vh, 40px)" }}>
               <h2
                 style={{
                   ...subHeadingStyle,
                   textAlign: "center",
-                  position: "relative",
-                  zIndex: 1
+                  color: INK
                 }}
               >
-                Yaven maps everyone you know and how you know them.
+                Yaven remembers everyone you&apos;ve met and what you talked about.
               </h2>
               <p
                 style={{
                   ...bodyStyle,
                   maxWidth: "480px",
                   margin: "14px auto 0",
-                  textAlign: "center",
-                  position: "relative",
-                  zIndex: 1
+                  textAlign: "center"
                 }}
               >
-                It surfaces leads you&apos;d never have thought to ask, and
-                keeps your connections warm, so when the next project comes up,
-                you&apos;re already top of mind.
+                It spots the old client whose project is coming around again,
+                the intro you said you&apos;d make, the person worth a hello
+                before they forget you, and drafts the message before
+                you&apos;ve thought of it. You stay top of mind without keeping
+                a spreadsheet.
               </p>
             </div>
           </div>
@@ -1168,15 +1211,16 @@ export function ProposalsCrmSection() {
             }}
           >
             <div>
-              <h2 style={subHeadingStyle}>Connections kept warm</h2>
+              <h2 style={subHeadingStyle}>
+                Conference follow-ups, handled
+              </h2>
               <p style={bodyStyle}>
-                Every call, reply, and follow-up logged the moment it happens.
-                When the next project comes up, you&apos;re already top of mind.
+                It finds their work, your mutual connections, and drafts a
+                follow-up in your voice before the connection goes cold.
               </p>
             </div>
-            <CrmCard animated={false} />
+            <ConferenceCard animated={false} />
           </div>
-          {/* (Conference slide removed) */}
         </div>
         <div
           data-reveal
@@ -1232,122 +1276,19 @@ export function ProposalsCrmSection() {
           </div>
 
           <div style={{ position: "relative", flex: 1 }}>
-            {/* Phase 0 — Network mapping */}
-            <div
-              ref={networkRef}
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "0 clamp(28px, 5vw, 48px)"
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                  maxWidth: "700px",
-                  textAlign: "center"
-                }}
-              >
-                {/* Floating tool pills */}
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    inset: "-100px -120px",
-                    pointerEvents: "none"
-                  }}
-                >
-                  {NET_POSITIONS.map((pos, i) => (
-                    <div
-                      key={i}
-                      data-net-node
-                      style={{
-                        position: "absolute",
-                        left: `calc(50% + ${pos.x}px)`,
-                        top: `calc(50% + ${pos.y}px)`,
-                        transform: "translate(-50%, -50%)",
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "14px",
-                        background: "#fff",
-                        border: "1px solid rgba(38,127,229,0.12)",
-                        boxShadow: "0 4px 16px rgba(38,127,229,0.1)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center"
-                      }}
-                    >
-                      <Image
-                        src={`/logos/${pos.logo}.png`}
-                        alt=""
-                        width={24}
-                        height={24}
-                        style={{
-                          objectFit: "contain",
-                          width: "24px",
-                          height: "24px"
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-                {/* Faint connection lines */}
-                <svg
-                  aria-hidden="true"
-                  viewBox="-220 -160 440 320"
-                  style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "calc(100% + 240px)",
-                    height: "calc(100% + 200px)",
-                    pointerEvents: "none"
-                  }}
-                >
-                  {NET_POSITIONS.map((pos, i) => (
-                    <line
-                      key={i}
-                      x1={0}
-                      y1={0}
-                      x2={pos.x}
-                      y2={pos.y}
-                      stroke="rgba(38,127,229,0.12)"
-                      strokeWidth={1}
-                      strokeDasharray="4 6"
-                    />
-                  ))}
-                  <circle cx={0} cy={0} r={4} fill="#267FE5" opacity={0.4} />
-                </svg>
-                {/* Text */}
-                <h2
-                  style={{
-                    ...subHeadingStyle,
-                    fontSize: "clamp(28px, 4vw, 52px)",
-                    textAlign: "center",
-                    position: "relative",
-                    zIndex: 1
-                  }}
-                >
-                  Yaven maps everyone you know{" "}
-                  <span style={{ opacity: 0.5 }}>and how you know them.</span>
+            {/* Phase 0 — Network mapping (split layout) */}
+            <div ref={networkRef} style={phaseGridStyle}>
+              <NetworkStage />
+              <div>
+                <h2 style={subHeadingStyle}>
+                  Yaven remembers everyone you&apos;ve met and what you talked about.
                 </h2>
-                <p
-                  style={{
-                    ...bodyStyle,
-                    maxWidth: "540px",
-                    margin: "18px auto 0",
-                    textAlign: "center",
-                    position: "relative",
-                    zIndex: 1
-                  }}
-                >
-                  It surfaces leads you&apos;d never have thought to ask, and
-                  keeps your connections warm, so when the next project comes
-                  up, you&apos;re already top of mind.
+                <p style={bodyStyle}>
+                  It spots the old client whose project is coming around again,
+                  the intro you said you&apos;d make, the person worth a hello
+                  before they forget you, and drafts the message before
+                  you&apos;ve thought of it. You stay top of mind without
+                  keeping a spreadsheet.
                 </p>
               </div>
             </div>
@@ -1364,8 +1305,15 @@ export function ProposalsCrmSection() {
               </div>
             </div>
 
-            {/* Phase 2 — CRM */}
-            <div ref={crmRef} style={phaseGridStyle}>
+            {/* Phase 2 — Conference follow-up */}
+            <div ref={confRef} style={phaseGridStyle}>
+              <div>
+                <h2 style={subHeadingStyle}>Conference follow-ups, handled</h2>
+                <p style={bodyStyle}>
+                  It finds their work, your mutual connections, and drafts a
+                  follow-up in your voice before the connection goes cold.
+                </p>
+              </div>
               <div
                 data-card-shell="p2"
                 style={{
@@ -1378,20 +1326,10 @@ export function ProposalsCrmSection() {
                   data-card-inner="p2"
                   style={{ background: "#fff", borderRadius: "32px" }}
                 >
-                  <CrmCard animated />
+                  <ConferenceCard animated />
                 </div>
               </div>
-              <div>
-                <h2 style={subHeadingStyle}>Connections kept warm</h2>
-                <p style={bodyStyle}>
-                  Every call, reply, and follow-up logged the moment it happens.
-                  When the next project comes up, you&apos;re already top of
-                  mind.
-                </p>
-              </div>
             </div>
-
-            {/* (Conference slide removed — merged conceptually into CRM) */}
           </div>
         </section>
       </div>

@@ -7,6 +7,7 @@ import { HeroSectionND } from "@/components/sections/hero-section-nd"
 import { MeetYavenSection } from "@/components/sections/meet-yaven-section"
 import { ProposalsCrmSection } from "@/components/sections/proposals-crm-section"
 import { TriageSection } from "@/components/sections/triage-section"
+import { FaqSection } from "@/components/sections/faq-section"
 import { FooterCTASection } from "@/components/sections/footer-cta-section"
 import { FooterSection } from "@/components/sections/footer-section"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
@@ -190,10 +191,6 @@ export default function Home() {
       <CardWrap z={3} behindBg="var(--primary)">
         <div data-cream>
           <TriageSection />
-        </div>
-      </CardWrap>
-      <CardWrap z={3} behindBg="var(--primary)">
-        <div data-cream>
           <ProposalsCrmSection />
         </div>
       </CardWrap>
@@ -207,6 +204,7 @@ export default function Home() {
             marginTop: "-2px"
           }}
         >
+          <FaqSection />
           <FooterCTASection />
         </div>
       </CardWrap>
