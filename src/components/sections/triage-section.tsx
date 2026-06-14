@@ -57,7 +57,7 @@ const CARDS = [
     desc: "Things only you can handle. Yaven knows what is and isn't urgent.",
     items: [
       { text: "Can we move Thursday's call?", tag: "Client" },
-      { text: "Intro: Maya ↔ you", tag: "Warm lead" },
+      { text: "Intro: Fatimah ↔ you", tag: "Warm lead" },
       { text: "Contract redlines from legal", tag: "Deadline" }
     ]
   },
@@ -285,10 +285,10 @@ export function TriageSection() {
 
       <div className="flex flex-col gap-7 max-w-[480px]">
         <p style={bodyStyle}>
-          One queue instead of ten apps. Yaven pulls everything into a{" "}
-          {underline("single notification centre")} that only calls your
-          attention when something actually needs you, so you can stay in your
-          work.
+          One queue instead of ten different apps. Yaven pulls everything into
+          a{" "}
+          {underline("single notification centre")} that only demands your
+          attention when something actually needs you, so you can stay focused.
         </p>
 
         <p style={bodyStyle}>

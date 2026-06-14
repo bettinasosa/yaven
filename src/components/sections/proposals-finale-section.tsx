@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -21,60 +21,76 @@ const bodyStyle: React.CSSProperties = {
   maxWidth: "480px"
 }
 
-function UniBadge({ name, logo }: { name: string; logo: string }) {
-  const [hovered, setHovered] = useState(false)
+// Big logo strip. The three marks are wildly different shapes (Imperial is a
+// wide wordmark, MIT a monogram, Oxford a square crest with a baked-in navy
+// bg), so they sit bare on the cream — no cards — separated by hairline rules,
+// each normalised by its own max-height rather than a shared size.
+const UNIS: {
+  name: string
+  logo: string
+  w: number
+  h: number
+  maxH: string
+  radius?: number
+}[] = [
+  { name: "Imperial", logo: "imperial", w: 1290, h: 142, maxH: "22px" },
+  { name: "MIT", logo: "mit", w: 384, h: 199, maxH: "46px" },
+  { name: "Oxford", logo: "oxford", w: 226, h: 223, maxH: "62px", radius: 10 }
+]
+
+function UniLogo({ name, logo, w, h, maxH, radius }: (typeof UNIS)[number]) {
   return (
-    <span
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+    <div
+      onMouseEnter={e => {
+        const img = e.currentTarget.querySelector("img")
+        if (img) img.style.transform = "translateY(-3px)"
+      }}
+      onMouseLeave={e => {
+        const img = e.currentTarget.querySelector("img")
+        if (img) img.style.transform = ""
+      }}
       style={{
-        display: "inline-flex",
+        flex: "1 1 0",
+        minWidth: 0,
+        height: "clamp(72px, 10vw, 92px)",
+        display: "flex",
         alignItems: "center",
-        gap: "5px",
-        padding: "3px 9px 3px 5px",
-        borderRadius: "16px",
-        background: "rgba(10,14,26,0.05)",
-        border: "1px solid rgba(10,14,26,0.08)",
-        fontSize: "clamp(11px, 1.1vw, 13px)",
-        fontWeight: 600,
-        color: INK,
-        opacity: 0.85,
-        verticalAlign: "middle",
-        margin: "0 2px",
-        transform: `translateY(${hovered ? "-3px" : "0px"})`,
-        transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        justifyContent: "center",
+        padding: "0 clamp(16px, 3.5vw, 40px)",
         cursor: "default"
       }}
     >
       <Image
         src={`/logos/${logo}.png`}
         alt={name}
-        width={14}
-        height={14}
+        width={w}
+        height={h}
         style={{
           objectFit: "contain",
-          width: "14px",
-          height: "14px",
-          borderRadius: "2px"
+          width: "auto",
+          height: "auto",
+          maxHeight: maxH,
+          maxWidth: "100%",
+          borderRadius: radius ? `${radius}px` : undefined,
+          transition: "transform 0.28s cubic-bezier(0.34,1.56,0.64,1)"
         }}
       />
-      {name}
-    </span>
+    </div>
   )
 }
 
 function Em({ children }: { children: React.ReactNode }) {
   return (
-    <em
+    <span
       style={{
-        fontFamily: "var(--font-dm-sans), sans-serif",
-        fontStyle: "italic",
-        fontWeight: 700,
-        color: INK
+        textDecoration: "underline",
+        textDecorationColor: "var(--red)",
+        textDecorationThickness: "2px",
+        textUnderlineOffset: "3px"
       }}
     >
       {children}
-    </em>
+    </span>
   )
 }
 
@@ -117,23 +133,49 @@ export function FinaleContent() {
             margin: "0 0 clamp(8px, 1.5vh, 16px)"
           }}
         >
-          ...so, who&apos;s building this?
+          So, who&apos;s building this?
         </h3>
       </div>
 
       <div style={clip}>
+        <div
+          data-mask-inner
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            margin: "clamp(8px, 1.5vh, 16px) 0"
+          }}
+        >
+          {UNIS.map((u, i) => (
+            <Fragment key={u.name}>
+              {i > 0 && (
+                <div
+                  aria-hidden="true"
+                  style={{
+                    width: "1px",
+                    height: "clamp(40px, 6vw, 56px)",
+                    background: "rgba(10,14,26,0.12)",
+                    flexShrink: 0
+                  }}
+                />
+              )}
+              <UniLogo {...u} />
+            </Fragment>
+          ))}
+        </div>
+      </div>
+
+      <div style={clip}>
         <p data-mask-inner style={bioStyle}>
-          A small team from{" "}
-          <UniBadge name="Imperial" logo="imperial" />,{" "}
-          <UniBadge name="MIT" logo="mit" /> and{" "}
-          <UniBadge name="Oxford" logo="oxford" />. Between us:{" "}
-          <Em>digital twins</Em> running in production from Indian roads to US
-          power grids, AI agent infrastructure built for{" "}
-          <Em>a hedge fund</Em>, product design awards and work exhibited at
-          the <Em>Design Museum London</Em>, two stints as founding engineers,
-          and a freelance practice grown from zero to{" "}
-          <Em>$20k MRR</Em> in months. We were the customer first. We onboard
-          every tester ourselves.
+          A small team from Imperial, MIT and Oxford. Between us: digital twin
+          research in Q1 journals,{" "}
+          <Em>AI agent infrastructure in production</Em> across multiple
+          startups and an asset management firm, <Em>product design awards</Em>{" "}
+          and work exhibited at the Design Museum London, two stints as founding
+          engineers, and a <Em>freelance practice</Em> grown from zero to $20k
+          MRR in months; <Em>we were the customer first</Em>.
         </p>
       </div>
     </div>

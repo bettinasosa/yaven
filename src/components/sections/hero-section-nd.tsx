@@ -114,13 +114,11 @@ function HeroVariantB() {
           </p>
 
           <p className="font-[var(--font-dm-sans),sans-serif] text-[var(--fs-body)] font-normal text-white/70 leading-[1.5] mt-0 mr-0 mb-[clamp(24px,4vh,40px)] ml-0">
-            A macOS menu bar assistant that triages
+            A personal assistant that triages
             <br />
-            your inbox, drafts in your voice, and
+            your inbox, drafts in your voice, and proactively
             <br />
-            handles the admin you shouldn&apos;t be doing.
-            <br />
-            Local-first. Your data stays on your Mac.
+            handles the admin that doesn&apos;t need you.
           </p>
 
           <div ref={ctaRef}>

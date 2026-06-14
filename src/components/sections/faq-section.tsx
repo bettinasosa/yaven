@@ -66,8 +66,9 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     q: "What does it connect to?",
     a: (
       <>
-        Gmail, Apple Calendar, iMessage, Telegram, Spotify, your files and docs.
-        Many more integrations are coming through the beta.
+        Gmail, Google Calendar, Apple Calendar, iMessage, Telegram, Granola,
+        Spotify, your files and docs. Many more integrations are coming through
+        the beta.
       </>
     )
   },

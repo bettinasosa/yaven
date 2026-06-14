@@ -333,7 +333,7 @@ function AskCard({
                 borderRadius: "20px"
               }}
             >
-              Ottos_Bakehouse_v3.pdf
+              Martinas_Bakehouse_v3.pdf
             </div>
           </div>
 
@@ -789,16 +789,18 @@ export function MeetYavenSection() {
           It connects to your <IconPill name="gmail" tilt={-3} /> email,{" "}
           <IconPill name="gcal" tilt={2} /> calendar,{" "}
           <IconPill name="hubspot" tilt={-2} /> CRM,{" "}
-          <IconPill name="notion" tilt={3} /> docs and more, and catches
-          everything in <U>one place</U>. The intro, the contract, the unpaid
+          <IconPill name="notion" tilt={3} /> docs and more, collating
+          everything important in <U>one place</U>. The intro, the contract,
+          the unpaid
           invoice, none of it gets buried.
         </p>
 
         <p style={bodyTextStyle}>
           Use <ShortcutBadge keys={["⌥", "D"]} small /> to draft any reply,
           anywhere, in your voice. <ShortcutBadge keys={["⌥", "A"]} small />{" "}
-          answers anything on your screen. You approve every step. The more you
-          approve, <U>the more it automates</U>.
+          answers anything on your screen. Yaven learns how much to let you
+          review, and how much you want it to <U>handle automatically</U>, as
+          you use it.
         </p>
 
         <p style={bodyTextStyle}>

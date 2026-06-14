@@ -270,7 +270,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
                   <Image src="/logos/gmail.png" alt="" width={16} height={16} style={{ objectFit: "contain", width: "16px", height: "16px" }} />
                 </div>
                 <p style={{ fontSize: "13px", color: INK, opacity: 0.7, margin: "4px 0 0", lineHeight: 1.45 }}>
-                  Following up on our conversation at Config.
+                  Following up on our conversation at Design Expo &apos;26.
                   <br />
                   Do you have <strong>availability this week</strong> for a call?
                 </p>
@@ -298,7 +298,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
                   <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Yaven</span>
                 </div>
                 <p style={{ fontSize: "13px", color: INK, opacity: 0.8, margin: "4px 0 0", lineHeight: 1.5 }}>
-                  Tjalling met you at <strong>Config &apos;26</strong>. He works with
+                  Tjalling met you at <strong>Design Expo &apos;26</strong>. He works with
                   a mutual, <strong>Oliver Normand</strong>. I drafted a reply
                   with your <span style={{ color: "#267FE5", fontWeight: 500 }}>calendar link</span>.
                 </p>
@@ -822,8 +822,8 @@ function ConferenceCard({ animated }: { animated: boolean }) {
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
             {[
-              { label: "Spoke at", value: "Config '26" },
-              { label: "Mutual", value: "Oliver Normand" },
+              { label: "Spoke at", value: "Design Expo '26" },
+              { label: "Mutual", value: "Asker K." },
               { label: "Talked about", value: "Brand optimisation" }
             ].map(row => (
               <div
@@ -1281,7 +1281,7 @@ export function ProposalsCrmSection() {
                   color: INK
                 }}
               >
-                Yaven remembers everyone you&apos;ve met and what you talked about.
+                Yaven knows who you know
               </h2>
               <p
                 style={{
@@ -1291,11 +1291,11 @@ export function ProposalsCrmSection() {
                   textAlign: isMobile ? "left" : "center"
                 }}
               >
-                It spots the old client whose project is coming around again,
-                the intro you said you&apos;d make, the person worth a hello
-                before they forget you, and drafts the message before
-                you&apos;ve thought of it. You stay top of mind without keeping
-                a spreadsheet.
+                It remembers everyone you&apos;ve met and what you talked
+                about. It spots the old client whose project is coming around
+                again, the intro you said you&apos;d make, the person worth a
+                hello before they forget you, then drafts your messages and
+                proposals proactively.
               </p>
             </div>
           </div>
@@ -1399,14 +1399,14 @@ export function ProposalsCrmSection() {
               <NetworkStage />
               <div>
                 <h2 style={subHeadingStyle}>
-                  Yaven remembers everyone you&apos;ve met and what you talked about.
+                  Yaven knows who you know
                 </h2>
                 <p style={bodyStyle}>
-                  It spots the old client whose project is coming around again,
-                  the intro you said you&apos;d make, the person worth a hello
-                  before they forget you, and drafts the message before
-                  you&apos;ve thought of it. You stay top of mind without
-                  keeping a spreadsheet.
+                  It remembers everyone you&apos;ve met and what you talked
+                  about. It spots the old client whose project is coming around
+                  again, the intro you said you&apos;d make, the person worth a
+                  hello before they forget you, then drafts your messages and
+                  proposals proactively.
                 </p>
               </div>
             </div>
