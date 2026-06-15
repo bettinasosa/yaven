@@ -44,8 +44,8 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
       <>
         Yaven is local-first. Your emails, drafts, and the profile it builds
         stay on your Mac, not on our servers, not synced to a cloud. When you
-        ask it to draft or answer, only the relevant text is sent to the AI
-        provider (Anthropic) for that single request. Nothing is stored
+        ask it to draft or answer, only the relevant text is sent to your
+        existing model provider for that single request. Nothing is stored
         afterward. Yaven never sends, files, or changes anything without your
         explicit approval.
       </>
@@ -57,8 +57,8 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
       <>
         That&apos;s exactly why it&apos;s local-first. Your files and context
         never leave your machine unless you trigger a draft. When you do, only
-        the relevant snippet goes to Anthropic for that one request, nothing is
-        retained. You control every action, every send.
+        the relevant snippet goes to your existing model provider for that one
+        request, nothing is retained. You control every action, every send.
       </>
     )
   },
@@ -230,7 +230,7 @@ export function FaqSection() {
       style={{
         background: "var(--primary)",
         padding:
-          "clamp(80px, 12vh, 140px) clamp(28px, 5vw, 48px) clamp(24px, 4vh, 48px)"
+          "clamp(80px, 12vh, 140px) clamp(28px, 5vw, 48px) clamp(200px, 40vh, 480px)"
       }}
     >
       <div style={{ maxWidth: "720px", margin: "0 auto" }}>

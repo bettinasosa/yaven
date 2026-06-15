@@ -21,10 +21,10 @@ const bodyStyle: React.CSSProperties = {
   maxWidth: "480px"
 }
 
-// Big logo strip. The three marks are wildly different shapes (Imperial is a
-// wide wordmark, MIT a monogram, Oxford a square crest with a baked-in navy
-// bg), so they sit bare on the cream — no cards — separated by hairline rules,
-// each normalised by its own max-height rather than a shared size.
+// Big logo strip. The marks are wildly different shapes (Imperial is a wide
+// wordmark, MIT a monogram, Oxford/Harvard square crests — Oxford has a baked-in
+// navy bg), so they sit bare on the cream — no cards — separated by hairline
+// rules, each normalised by its own max-height rather than a shared size.
 const UNIS: {
   name: string
   logo: string
@@ -33,9 +33,10 @@ const UNIS: {
   maxH: string
   radius?: number
 }[] = [
-  { name: "Imperial", logo: "imperial", w: 1290, h: 142, maxH: "22px" },
-  { name: "MIT", logo: "mit", w: 384, h: 199, maxH: "46px" },
-  { name: "Oxford", logo: "oxford", w: 226, h: 223, maxH: "62px", radius: 10 }
+  { name: "Imperial", logo: "imperial", w: 1290, h: 142, maxH: "20px" },
+  { name: "MIT", logo: "mit", w: 384, h: 199, maxH: "42px" },
+  { name: "Oxford", logo: "oxford", w: 226, h: 223, maxH: "58px", radius: 10 },
+  { name: "Harvard", logo: "harvard", w: 788, h: 768, maxH: "58px" }
 ]
 
 function UniLogo({ name, logo, w, h, maxH, radius }: (typeof UNIS)[number]) {
@@ -56,7 +57,7 @@ function UniLogo({ name, logo, w, h, maxH, radius }: (typeof UNIS)[number]) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "0 clamp(16px, 3.5vw, 40px)",
+        padding: "0 clamp(8px, 2vw, 24px)",
         cursor: "default"
       }}
     >
@@ -169,13 +170,14 @@ export function FinaleContent() {
 
       <div style={clip}>
         <p data-mask-inner style={bioStyle}>
-          A small team from Imperial, MIT and Oxford. Between us: digital twin
-          research in Q1 journals,{" "}
+          We&apos;re a small team of former Imperial, MIT, Oxford and Harvard
+          researchers. Between us: digital twin research in Q1 journals,{" "}
           <Em>AI agent infrastructure in production</Em> across multiple
           startups and an asset management firm, <Em>product design awards</Em>{" "}
-          and work exhibited at the Design Museum London, two stints as founding
-          engineers, and a <Em>freelance practice</Em> grown from zero to $20k
-          MRR in months; <Em>we were the customer first</Em>.
+          and work exhibited at the Design Museum London,{" "}
+          <Em>an open-source AI tool with thousands of users</Em>, two stints as
+          founding engineers, and a <Em>freelance practice</Em> grown from zero
+          to $20k MRR in months; <Em>we were the customer first</Em>.
         </p>
       </div>
     </div>

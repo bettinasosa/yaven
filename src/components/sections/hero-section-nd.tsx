@@ -98,7 +98,7 @@ function HeroVariantB() {
       <div className="relative z-5 flex items-center justify-start md:justify-end w-full min-h-screen p-[clamp(80px,14vh,160px)_clamp(24px,5vw,80px)]">
         <div
           ref={contentRef}
-          className="max-w-[580px] text-left md:mr-[clamp(50px,8vh,100px)] md:ml-0 ml-[clamp(28px,4vw,48px)]"
+          className="max-w-[580px] text-left md:mr-[clamp(8px,2.5vh,28px)] md:ml-0 ml-[clamp(28px,4vw,48px)]"
         >
           <span
             style={{ fontFamily: "var(--font-instrument-serif)" }}

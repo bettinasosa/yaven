@@ -8,7 +8,6 @@ import { MeetYavenSection } from "@/components/sections/meet-yaven-section"
 import { ProposalsCrmSection } from "@/components/sections/proposals-crm-section"
 import { TriageSection } from "@/components/sections/triage-section"
 import { FaqSection } from "@/components/sections/faq-section"
-import { FooterCTASection } from "@/components/sections/footer-cta-section"
 import { FooterSection } from "@/components/sections/footer-section"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
@@ -195,6 +194,7 @@ export default function Home() {
       </CardWrap>
       <CardWrap z={4} behindBg="var(--cream)">
         <div
+          data-hide-getyaven
           style={{
             position: "relative",
             zIndex: 5,
@@ -204,7 +204,6 @@ export default function Home() {
           }}
         >
           <FaqSection />
-          <FooterCTASection />
         </div>
       </CardWrap>
 

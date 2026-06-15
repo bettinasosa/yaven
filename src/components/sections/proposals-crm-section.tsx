@@ -726,6 +726,22 @@ function CrmCard({ animated }: { animated: boolean }) {
 // with a hover tilt effect.
 const GREEN = "#3BA55C"
 
+// The gmail "button" that lives inside the follow-up status pill. It sits in
+// the red "Needs follow-up" pill, gets pressed on scroll, and reappears in the
+// green "drafted" pill.
+const fuIconStyle: React.CSSProperties = {
+  marginLeft: "auto",
+  width: "30px",
+  height: "30px",
+  borderRadius: "9px",
+  background: "#fff",
+  boxShadow: "0 3px 10px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexShrink: 0
+}
+
 function ConferenceCard({ animated }: { animated: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null)
 
@@ -859,8 +875,9 @@ function ConferenceCard({ animated }: { animated: boolean }) {
             ))}
           </div>
 
-          {/* Follow-up status — flips from "needs follow-up" to "drafted"
-              as a Gmail bubble passes through (driven by the timeline). */}
+          {/* Follow-up status — the gmail button sits in the red pill, gets
+              pressed on scroll, then reappears in the green "drafted" pill
+              (driven by the timeline). */}
           <div
             style={{
               position: "relative",
@@ -868,13 +885,13 @@ function ConferenceCard({ animated }: { animated: boolean }) {
               minHeight: "40px"
             }}
           >
-            {/* Before: needs follow-up */}
+            {/* Before: needs follow-up — gmail button lives here */}
             <div
               data-fu-before
               style={{
                 position: "absolute",
                 inset: 0,
-                padding: "10px 14px",
+                padding: "7px 8px 7px 14px",
                 borderRadius: "12px",
                 background: "var(--red)",
                 display: "flex",
@@ -897,9 +914,22 @@ function ConferenceCard({ animated }: { animated: boolean }) {
               >
                 Needs follow-up
               </span>
+              <span data-fu-icon-before style={fuIconStyle} aria-hidden="true">
+                <Image
+                  src="/logos/gmail.png"
+                  alt=""
+                  width={16}
+                  height={18}
+                  style={{
+                    objectFit: "contain",
+                    width: "16px",
+                    height: "16px"
+                  }}
+                />
+              </span>
             </div>
 
-            {/* After: follow-up drafted (green) */}
+            {/* After: follow-up drafted (green) — gmail button is gone now */}
             <div
               data-fu-after
               style={{
@@ -929,43 +959,6 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 Follow-up drafted with Yaven
               </span>
             </div>
-
-            {/* Gmail bubble that flies across as the status flips */}
-            {animated && (
-              <div
-                data-fu-bubble
-                aria-hidden="true"
-                style={{
-                  position: "absolute",
-                  right: "5px",
-                  top: "50%",
-                  marginTop: "-16px",
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "9px",
-                  background: "#fff",
-                  border: "1px solid rgba(38,127,229,0.18)",
-                  boxShadow: "0 6px 18px rgba(38,127,229,0.2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  opacity: 0,
-                  zIndex: 2
-                }}
-              >
-                <Image
-                  src="/logos/gmail.png"
-                  alt=""
-                  width={16}
-                  height={18}
-                  style={{
-                    objectFit: "contain",
-                    width: "16px",
-                    height: "16px"
-                  }}
-                />
-              </div>
-            )}
           </div>
         </div>
       </GlassCard>
@@ -1061,9 +1054,8 @@ export function ProposalsCrmSection() {
     const conf = confRef.current
     const fuBefore = conf?.querySelector<HTMLElement>("[data-fu-before]")
     const fuAfter = conf?.querySelector<HTMLElement>("[data-fu-after]")
-    const fuBubble = conf?.querySelector<HTMLElement>("[data-fu-bubble]")
+    const fuIconBefore = conf?.querySelector<HTMLElement>("[data-fu-icon-before]")
     if (fuAfter) gsap.set(fuAfter, { opacity: 0 })
-    if (fuBubble) gsap.set(fuBubble, { opacity: 0, x: 60, scale: 0.6 })
 
     // ── Scrubbed timeline — phase transitions only ──────────────────────────
     const tl = gsap.timeline({
@@ -1135,27 +1127,31 @@ export function ProposalsCrmSection() {
     )
     tl.addLabel("confIn")
 
-    // Gmail bubble + follow-up status flip — scrubbed
-    if (fuBefore && fuAfter && fuBubble) {
+    // Gmail button gets pressed in the red pill, disappears in place, then the
+    // pill flips to the green "drafted" state — all scrubbed/reversible.
+    if (fuBefore && fuAfter && fuIconBefore) {
+      // 1. press the gmail button down
       tl.to(
-        fuBubble,
-        { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "power2.out" },
-        "confIn+=0.9"
+        fuIconBefore,
+        { scale: 0.8, duration: 0.2, ease: "power2.in" },
+        "confIn+=1.3"
       )
+      // 2. it disappears in place
+      tl.to(
+        fuIconBefore,
+        { scale: 0, opacity: 0, duration: 0.3, ease: "back.in(1.7)" },
+        "confIn+=1.5"
+      )
+      // 3. red pill flips to green (now without the gmail button)
       tl.to(
         fuBefore,
-        { opacity: 0, duration: 0.6, ease: "power2.in" },
+        { opacity: 0, duration: 0.4, ease: "power2.inOut" },
         "confIn+=1.7"
       )
       tl.to(
         fuAfter,
-        { opacity: 1, duration: 0.6, ease: "power2.out" },
-        "confIn+=1.9"
-      )
-      tl.to(
-        fuBubble,
-        { opacity: 0, scale: 0.4, duration: 0.5, ease: "power2.in" },
-        "confIn+=2.1"
+        { opacity: 1, duration: 0.4, ease: "power2.inOut" },
+        "confIn+=1.75"
       )
     }
 
