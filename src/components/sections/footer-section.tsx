@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { WaitlistInline } from "@/components/waitlist-inline"
 
 const colLinkStyle: React.CSSProperties = {
   color: "var(--cream)",
@@ -203,6 +204,25 @@ export function FooterSection() {
           </div>
         </div>
 
+        {/* Waitlist — top right */}
+        <div className="w-full sm:w-auto sm:ml-auto sm:max-w-[400px] sm:min-w-[320px]">
+          <p
+            style={{
+              fontFamily: "var(--font-space-mono)",
+              fontSize: "10px",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "var(--cream)",
+              opacity: 0.38,
+              fontWeight: 700,
+              marginBottom: "14px"
+            }}
+          >
+            Join the waitlist
+          </p>
+          <WaitlistInline />
+        </div>
+
       </div>
 
       {/* ── Bottom: giant wordmark + copyright ── */}
@@ -234,7 +254,7 @@ export function FooterSection() {
           }}
         >
           <Image
-            src="/yaven-logo.svg"
+            src="/yaven-logo.webp"
             alt="Yaven"
             width={16}
             height={28}

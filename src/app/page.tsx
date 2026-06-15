@@ -7,8 +7,7 @@ import { HeroSectionND } from "@/components/sections/hero-section-nd"
 import { MeetYavenSection } from "@/components/sections/meet-yaven-section"
 import { ProposalsCrmSection } from "@/components/sections/proposals-crm-section"
 import { TriageSection } from "@/components/sections/triage-section"
-import { CommandsSection } from "@/components/sections/commands-section"
-import { FooterCTASection } from "@/components/sections/footer-cta-section"
+import { FaqSection } from "@/components/sections/faq-section"
 import { FooterSection } from "@/components/sections/footer-section"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
@@ -18,10 +17,21 @@ gsap.registerPlugin(ScrollTrigger)
 const FOOTER_H = 660
 
 // Card entrance — section slides up with rounded top corners that flatten on arrival
-function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
+function CardWrap({
+  children,
+  z,
+  behindBg
+}: {
+  children: React.ReactNode
+  z: number
+  behindBg?: string
+}) {
   const ref = useRef<HTMLDivElement>(null)
+  const mobile = useIsMobile()
   useEffect(() => {
-    if (!ref.current) return
+    // Skip the borderRadius animation on mobile — it forces re-rasterization
+    // every frame and can't be GPU-composited, causing scroll jank on Safari.
+    if (mobile || !ref.current) return
     const anim = gsap.fromTo(
       ref.current,
       { borderRadius: "72px 72px 0 0" },
@@ -39,19 +49,22 @@ function CardWrap({ children, z }: { children: React.ReactNode; z: number }) {
     return () => {
       anim.scrollTrigger?.kill()
     }
-  }, [])
+  }, [mobile])
   return (
-    <div
-      ref={ref}
-      style={{
-        position: "relative",
-        zIndex: z,
-        borderRadius: "72px 72px 0 0",
-        overflow: "clip",
-        boxShadow: "0 -16px 64px rgba(0,0,0,0.22)"
-      }}
-    >
-      {children}
+    <div style={{ position: "relative", zIndex: z, background: behindBg }}>
+      <div
+        ref={ref}
+        style={{
+          position: "relative",
+          borderRadius: mobile ? "32px 32px 0 0" : "72px 72px 0 0",
+          overflow: "clip",
+          boxShadow: mobile
+            ? "0 -8px 24px rgba(0,0,0,0.15)"
+            : "0 -16px 64px rgba(0,0,0,0.22)"
+        }}
+      >
+        {children}
+      </div>
     </div>
   )
 }
@@ -139,17 +152,16 @@ function StickyGetYaven() {
     }
   }, [checkOverlap])
 
-  // The floating "Get Yaven" button doesn't follow the page on mobile.
-  if (isMobile) return null
-
   return (
     <div
       ref={btnRef}
       style={{
         position: "fixed",
-        top: "clamp(16px, 2.5vh, 28px)",
-        right: "clamp(28px, 4vw, 48px)",
-        zIndex: 999
+        top: isMobile ? "16px" : "clamp(16px, 2.5vh, 28px)",
+        right: isMobile ? "16px" : "clamp(28px, 4vw, 48px)",
+        zIndex: 999,
+        opacity: 0,
+        transform: "translateX(120px)"
       }}
     >
       <BlueprintPanel />
@@ -174,24 +186,26 @@ export default function Home() {
       <StickyGetYaven />
       <HeroSectionND />
       <MeetYavenSection />
-      <CardWrap z={3}>
+      <CardWrap z={3} behindBg="var(--primary)">
         <div data-cream>
           <TriageSection />
           <ProposalsCrmSection />
         </div>
       </CardWrap>
-      <div
-        style={{
-          position: "relative",
-          zIndex: 5,
-          background: "var(--cream)",
-          paddingTop: "80px",
-          marginTop: "-2px"
-        }}
-      >
-        <CommandsSection />
-      </div>
-      <FooterCTASection />
+      <CardWrap z={4} behindBg="var(--cream)">
+        <div
+          data-hide-getyaven
+          style={{
+            position: "relative",
+            zIndex: 5,
+            background: "var(--primary)",
+            paddingTop: isMobile ? "40px" : "80px",
+            marginTop: "-2px"
+          }}
+        >
+          <FaqSection />
+        </div>
+      </CardWrap>
 
       {/* ── Sticky footer ── */}
       <div

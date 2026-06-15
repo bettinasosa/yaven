@@ -1,231 +1,197 @@
-# yaven — landing page script
+# yaven — landing page script (current copy)
 
-Edit the copy lines directly. `ALT:` lines are alternatives to pick from or delete.
-Animation names in [brackets] reference fancycomponents.dev or components already in the repo.
-Rule for the whole page: never say notch, menu bar, or macOS UI. The form factor
-is a running tease that pays off only when they install.
+Last synced with codebase: 2026-06-15
 
 ---
 
-## Header + Subtext (Hero)
+## Hero
 
 **Copy**
 
 > **Yaven**
 >
-> Less admin. More flow.
-> Sub:
-> yaven chases the invoices, warms the leads, drafts the replies,
-> while you focus on the things only you can do.
-> CTA: **Join the waitlist**
-> **Animation**
-
-- Wordmark: [Scramble In] — already built (`scramble-intro.tsx`), letters resolve into "yaven"
-- Headline: [Vertical Cut Reveal], one beat after the wordmark settles
-- Background: slow [Animated Gradient] drift in the blue, barely perceptible
-- Wordmark hover: [Variable Font Hover By Letter] if we ever move to a variable font; otherwise [Letter Swap Hover]
-- CTA hover: [Underline To Background] fill
-
----
-
-## Section 1 — The Drop (problem)
-
-Full-viewport scrolling lines. One per screen-third, mindmarket style.
-**Copy**
-
-> the invoice you forgot to chase.
+> Less admin.
+> More flow.
 >
-> the leads from Tuesday's conference.
+> A personal assistant that triages
+> your inbox, drafts in your voice, and proactively
+> handles the admin that doesn't need you.
 >
-> the proposal due Friday.
+> CTA: **Get Yaven** (opens waitlist/beta signup panel)
+
+**Nav**
+
+> Top left: Yaven logo mark
+> Top right: "Book a call" link (Calendly)
+
+---
+
+## Meet Yaven (scroll-pinned section)
+
+**Copy**
+
+> **Meet Yaven.**
 >
-> the 14 unread responses.
-
-Punchline (after the last line locks):
-
-> None of it needs _you_. It just needs doing.
-> **Animation**
-
-- Reuse `text-parallax-section`: each line slides at a different scroll speed, alternating full/15% opacity
-- The word "you" in the punchline: [Text Highlighter] sweep in the red (#DF4F3E)
-- Each line gets a [Strikethrough draw-on] as the next one arrives — the list is being dealt with before your eyes. This is the wow moment of the section.
-
----
-
-## Section 2 — What it is (cryptic reveal)
-
-**Copy**
-
-> Meet yaven.
+> A menu bar assistant that lives on your Mac.
 >
-> Yaven is the assistant that you never knew you needed.
-> Yaven sits with you all day, ready whenever you need, proactively suggesting things it can handle for you.
-> No new tabs, apps, or chat boxes to switch between. Yaven is the future of ambient AI.
-
-**Animation**
-
-- "Meet yaven." enters with [Scroll And Swap]
-- A small abstract glyph (reuse `yaven-glyph`) [Float]s near the text — present but unexplained. Do NOT shape it like a notch.
-- Cursor near the paragraph: [Text Cursor Proximity] — words lean toward the pointer. The site pays attention to you, like the product does.
-
----
-
-## Section 3 — Two commands (Draft + Ask)
-
-This is the showcase section. Split screen or stacked panels.
-**Copy**
-
-> Yaven drafts anywhere.
-> **Draft**
-> It writes where your cursor is - with the thread, the client,
-> and the way _you_ write already in its head.
-> Your voice. Not Claude’s.
-> **Ask**
-> Question anything on your screen, without leaving it.
-> "What did we quote them in March?" Answered. Page never changed.
-> **Animation**
-
-- Draft panel: [Typewriter] types a real reply into a fake email thread, mid-sentence, in context. Show it picking up after the user's own half-written sentence — that's the "knows how you write" proof.
-- Ask panel: a question types out, the answer slides in [Vertical Cut Reveal], the page behind it visibly never scrolls or navigates
-- Panels: [Stacking Cards] on scroll, Draft on top first, Ask peels over it
-- Section header: [Breathing Text] at very low amplitude
-
----
-
-## Section 4 — The follow-ups (conference / payment / client)
-
-Three cards. mindmarket-style parallel structure: pain in plain words, then what yaven did about it.
-**Copy**
-Card 1 — Conference:
-
-> 300 badge scans. 4 worth keeping.
-> yaven finds them and writes the intros before your flight lands.
-> Card 2 — Payment:
-> Invoice 47 days overdue?
-> The polite nudge is drafted. The firm one is queued behind it.
-> Card 3 — Client:
-> Quiet since the kickoff call?
-> yaven notices on day 6. Not month 6.
-> **Animation**
-
-- [Stacking Cards] — each card overlaps the last on scroll
-- Numbers ("300", "47 days", "day 6"): [Basic Number Ticker] counts up as the card lands
-- Card hover: subtle [Parallax Floating] on an inner illustration layer
-- "Not month 6.": render small and flat, then [Underline Animation] in red
-
----
-
-## Section 5 — Proposals + CRM
-
-**Copy**
-Proposals:
-
-> Call ended. Proposal ready.
-> Built from your notes while the conversation is still warm.
-> CRM:
-> A CRM that fills itself in.
-> Every call, email, and promise — logged. You never typed a field.
-> **Animation**
-
-- Proposals: [Gooey SVG Filter] — scattered note fragments melt together into one clean document shape. Strongest visual metaphor on the page; worth building properly.
-- CRM: a contact card assembles itself line by line, [Typewriter] but fast, like someone else is doing the data entry
-- "filled itself in": fields flash cream (#E3D5BB) as they populate
-
----
-
-## Section 6 — Inbound triage
-
-**Copy**
-
-> Five inboxes. One queue.
+> It connects to your [Gmail] email, [Google Calendar] calendar, [HubSpot] CRM, [Notion] docs and more, collating everything important in one place. The intro, the contract, the unpaid invoice, none of it gets buried.
 >
-> yaven sorts what needs you now, what it can answer itself,
-> and what can wait until Friday.
-> **Animation**
-
-- [Simple Marquee] of incoming message snippets streaming across the section
-- Messages visibly sort mid-marquee: some drop into a "you" pile, some get answered inline (tiny [Typewriter] flash), some grey out and drift down
-- Pile counts: [Basic Number Ticker]
-
----
-
-## Section 7 — The tease (form factor, never revealed)
-
-Short. Almost empty viewport. This is the memorable beat people quote.
-**Copy**
-
-> Where does it live?
+> Use [⌥ D] to draft any reply, anywhere, in your voice. [⌥ A] answers anything on your screen. Yaven learns how much to let you review, and how much you want it to handle automatically, as you use it.
 >
-> Closer than you think.
-> ALT: > Look up.
-> (stronger, but a near-giveaway — decide how cryptic you want to be)
-> **Animation**
+> Local-first. Your emails, drafts, and context stay on your machine. Nothing is uploaded to our servers or synced to a cloud.
+>
+> Try the demo! press [⌥ D] or [⌥ A]
 
-- Dead-stop scroll section, lots of negative space
-- "Where does it live?" in [Scramble Hover] — touching the question scrambles it, the answer stays out of reach
-- [Pixel Trail] follows the cursor here and only here — something is present on this screen that wasn't before
-- Optional: the floating glyph from Section 2 slowly rises and exits the top of the viewport. Says it without saying it.
+**Interactive cards**
 
----
+Draft card (LinkedIn DM):
+> Lola H. — Recruiter, Founding Designer role
+> "Hi Bettina! Your work is stunning, we're hiring a founding designer. Open to a quick chat?"
+> You type: "politely decline, warm"
+> [⌥ D] triggers Yaven draft:
+> "Thanks so much for reaching out, Lola! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
 
-## Section 8 — Footer CTA
-
-**Copy**
-
-> Get the boring half handled.
-> CTA: **Join the waitlist**
-> Then the existing giant "yaven" wordmark footer.
-> **Animation**
-
-- Keep the existing [Sticky Footer] giant-wordmark treatment
-- CTA button: [Cursor Attractor] — button leans slightly toward the pointer as it approaches
-- Wordmark: [Scroll And Swap] letters settle as you hit page bottom
+Ask card (contract document):
+> Martinas_Bakehouse_v3.pdf
+> 4.1 All deliverables remain the sole property of the Client upon full payment.
+> 4.2 Payment due within **sixty (60)** days of invoice date.
+> "Ask about this document"
+> [⌥ A] triggers question: "I thought this was 30 days? Why did it change?"
+> Yaven answer: "Since your last [Granola] call with Pablo on May 12, his team updated the payment window from 30 to 60 days. He mentioned cash-flow timing on their end. The rest of the scope is unchanged from your v2 redline."
 
 ---
 
-## Micro-interactions (page-wide)
+## Triage Section (cream background, scroll-pinned)
 
-- All section headers: [Vertical Cut Reveal] on scroll-enter, consistent so it reads as a system
-- Links: [Letter Swap Hover], never plain underlines
-- Waitlist input focus: border draws on like the strikethroughs in Section 1
-- 404 / empty states: [Screensaver] bouncing glyph
-- Keep one restraint rule: max one "wow" animation visible per viewport. The Gooey proposal merge, the marquee triage, and the Section 1 strikethroughs are the three set pieces — everything else stays quiet so they land.
+**Header**
 
-Notes:
+> **Yaven knows what matters...**
 
-- Lets make the yaven header bigger
-- Lets also capitalise Yaven throughout
-- Lets make the logo boxing font too
-- Lets make the crossing out animation slower
-- I also dont like the red colour, id prefer something else warmer
-- I really like the animation between the meet yaven section and the 'Two commands' section, where it takes the whole page and scrolling activates the animation. scrolling doesnt actually 'scroll'. all sections should be like that:
+**Body**
 
-- for example, it should be landing page -> new section called meet yaven. then this stuff appears and gets checked off as you scroll: the invoice you forgot to chase.
-  the leads from Tuesday's conference.
-  the proposal due Friday.
-  the 14 unread responses.
-  None of it needs you. It just needs doing.
+> One queue instead of ten different apps. Yaven pulls everything into a single notification centre that only demands your attention when something actually needs you, so you can stay focused.
+>
+> Important threads never get buried. Yaven tracks every conversation, drafts replies in your voice, and preps you before every meeting with the context you need.
 
-- i love the animation next to this: Call ends.
-  Proposal
-  exists.
-  Built from your notes while the conversation is still warm.
+**Triage cards (stacking on scroll)**
 
-lets add more of these :)
+Card 1 — Needs you now (blue):
+> Things only you can handle. Yaven knows what is and isn't urgent.
+> - "Can we move Thursday's call?" — Client
+> - "Intro: Fatimah <> you" — Warm lead
+> - "Contract redlines from legal" — Deadline
 
-the rest we can edit later.
+Card 2 — Already handled (red):
+> Drafted using your tone, context, and rules.
+> - "Re: proposal timeline?" — replied
+> - "Invoice #214 overdue" — nudged
+> - "Meeting recap sent" — drafted
+> - "Receipt filed to expenses" — sorted
 
-Notes 2:
+Card 3 — Can wait (purple/pink):
+> Queued for when you have the headspace.
+> - "AI Weekly digest" — Friday
+> - "Webinar invite: Q3 outlook" — Next week
 
-- colour bleeds from landing page to meet yaven
-- Backwards R on meet yaven remove it. lets make this section much cooler, add some micro animations like next to this section (Call ends. Proposal exists.
-  Built from your notes while the conversation is still warm.)
+---
 
-Lets make this look more like a chat conversation:
+## Proposals + CRM Section (cream background, scroll-pinned)
 
-Draft
-It writes where your cursor is - with the thread, the client, and the way youwrite already in its head. Your voice. Not Claude's.
+**Header**
 
-Re: Updated proposal — Hartwell & Co
-Sarah: Could you send over the revised numbers when you get a chance? We'd like to move before the end of the month.
-Hi Sarah — good speaking earlier. The revised numbers are attached, same scope we walked through but with the onboarding fee folded in. If it all looks right I can have the contract over to you by Thursday.
+> **...and who matters.**
+
+**Slide 1 — Network mapping**
+
+Tjalling card:
+> Tjalling — via Gmail
+> "Following up on our conversation at Config. Do you have availability this week for a call?"
+
+Yaven response card:
+> "Tjalling met you at Config '26. He works with a mutual, Oliver Normand. I drafted a reply with your calendar link."
+
+Text:
+> **Yaven knows who you know**
+>
+> It remembers everyone you've met and what you talked about. It spots the old client whose project is coming around again, the intro you said you'd make, the person worth a hello before they forget you, then drafts your messages and proposals proactively.
+
+**Slide 2 — Proposals (gooey animation)**
+
+> **Call ended, proposal ready**
+>
+> Yaven pulls notes, context, and pricing from your past work and drafts a ready-to-send proposal before you close the call.
+
+**Slide 3 — Conference follow-up (badge card)**
+
+Badge card:
+> Ariel Thomas — The Design Co.
+> Spoke at: Design Expo '26
+> Mutual: Asker K.
+> Talked about: Brand optimisation
+> Status: "Needs follow-up" (red) -> "Follow-up drafted with Yaven" (green)
+
+Text:
+> **Conference follow-ups, handled**
+>
+> It finds their work, your mutual connections, and drafts a follow-up in your voice before the connection goes cold.
+
+**CRM card (glass card)**
+
+> Otto's Bakehouse — "1 of 100 Yaven sourced"
+> - Matched: Fits your ideal client
+> - Outreach: Intro drafted in your voice
+> - Replied: Call booked Thursday
+> - Logged: Synced after the call
+
+---
+
+## Finale — "Who's building this?" (cream background)
+
+> **So, who's building this?**
+>
+> [Imperial] [MIT] [Oxford] [Harvard] logos
+>
+> We're a small team of former Imperial, MIT, Oxford and Harvard researchers. Between us: digital twin research in Q1 journals, AI agent infrastructure in production across multiple startups and an asset management firm, product design awards and work exhibited at the Design Museum London, an open-source AI tool with thousands of users, two stints as founding engineers, and a freelance practice grown from zero to $20k MRR in months; we were the customer first.
+
+---
+
+## FAQ (dark blue background)
+
+> **FAQ**
+>
+> **So what actually is this?**
+> A second brain that lives in your Mac's menu bar. It connects to your email, calendar, messages, and docs, learns how you work, and builds a picture of every client, conversation, and commitment so nothing falls through the cracks.
+> Right now it intelligently prioritises your inbox so the most critical messages are always at the top of your desk, drafts replies in your voice from any app on your Mac, and preps you before every meeting. The more you use it, the more it handles on its own. Currently in beta.
+>
+> **How is this different from ChatGPT or Claude?**
+> A chat box waits for you to drive it: you write the prompt, paste the context, copy the answer back. Yaven already read the thread, knows the client, and queued the reply before you opened it. You approve, it learns. The more you use it, the less you have to touch.
+>
+> **Where does my data go?**
+> Yaven is local-first. Your emails, drafts, and the profile it builds stay on your Mac, not on our servers, not synced to a cloud. When you ask it to draft or answer, only the relevant text is sent to your existing model provider for that single request. Nothing is stored afterward. Yaven never sends, files, or changes anything without your explicit approval.
+>
+> **I handle client data under NDA. Can I trust this?**
+> That's exactly why it's local-first. Your files and context never leave your machine unless you trigger a draft. When you do, only the relevant snippet goes to your existing model provider for that one request, nothing is retained. You control every action, every send.
+>
+> **What does it connect to?**
+> Gmail, Google Calendar, Apple Calendar, iMessage, Telegram, Granola, Spotify, your files and docs. Many more integrations are coming through the beta.
+>
+> **Is it Mac only?**
+> Yes, for now. Yaven is built native for macOS. Windows is on the roadmap.
+>
+> **When do I get access?**
+> Yaven is in beta. We onboard a small group every week, personally. Join the waitlist and we'll reach out.
+
+---
+
+## Footer (dark ink background)
+
+**Columns**
+
+> Follow: X, LinkedIn, Instagram
+> Contact: support@yaven.us, Book a call (Calendly)
+> Legal: Privacy Policy, Terms of Service
+> Join the waitlist: [inline waitlist form]
+
+**Bottom**
+
+> Giant "Yaven" wordmark + Yaven logo + "© 2026 Yaven"

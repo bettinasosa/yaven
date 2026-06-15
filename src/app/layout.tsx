@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
-import { Space_Mono } from "next/font/google"
+import { Space_Mono, Bricolage_Grotesque } from "next/font/google"
+import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/next"
 import { SmoothScroll } from "@/components/smooth-scroll"
 import "./globals.css"
@@ -9,6 +10,24 @@ const spaceMono = Space_Mono({
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap"
+})
+
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap"
+})
+
+const satoshi = localFont({
+  variable: "--font-satoshi",
+  display: "swap",
+  src: [
+    { path: "../../public/fonts/satoshi/Satoshi-Light.woff2", weight: "300", style: "normal" },
+    { path: "../../public/fonts/satoshi/Satoshi-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/satoshi/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../public/fonts/satoshi/Satoshi-Bold.woff2", weight: "700", style: "normal" },
+  ]
 })
 
 export const viewport: Viewport = {
@@ -37,19 +56,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceMono.variable} h-full antialiased scroll-smooth`}
+      className={`${spaceMono.variable} ${bricolage.variable} ${satoshi.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col">
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400,300&f[]=general-sans@700,500,400&f[]=switzer@700,500,400&f[]=supreme@700,500,400&f[]=author@700,500,400&f[]=clash-display@700,600,500,400&display=swap"
-          precedence="default"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap"
-          precedence="default"
-        />
         <SmoothScroll>{children}</SmoothScroll>
         <Analytics />
       </body>

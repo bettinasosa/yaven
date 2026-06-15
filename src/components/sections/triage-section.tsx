@@ -7,42 +7,46 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollCutReveal } from "@/components/effects/scroll-cut-reveal"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
+import { IconTooltip } from "@/components/ui/icon-tooltip"
+import { ICON_LABELS } from "@/components/ui/icon-labels"
 
 gsap.registerPlugin(ScrollTrigger)
 
 function AppIcon({ name, tilt }: { name: string; tilt: number }) {
   const [hovered, setHovered] = useState(false)
   return (
-    <span
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "26px",
-        height: "26px",
-        borderRadius: "7px",
-        background: "rgba(10,14,26,0.07)",
-        border: "1px solid rgba(10,14,26,0.08)",
-        verticalAlign: "middle",
-        margin: "0 3px",
-        flexShrink: 0,
-        position: "relative",
-        top: "-1px",
-        transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
-        transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        cursor: "default"
-      }}
-    >
-      <Image
-        src={`/logos/${name}.png`}
-        alt={name}
-        width={16}
-        height={16}
-        style={{ objectFit: "contain" }}
-      />
-    </span>
+    <IconTooltip label={ICON_LABELS[name] ?? name}>
+      <span
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "26px",
+          height: "26px",
+          borderRadius: "7px",
+          background: "rgba(10,14,26,0.07)",
+          border: "1px solid rgba(10,14,26,0.08)",
+          verticalAlign: "middle",
+          margin: "0 3px",
+          flexShrink: 0,
+          position: "relative",
+          top: "-1px",
+          transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
+          transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+          cursor: "default"
+        }}
+      >
+        <Image
+          src={`/logos/${name}.png`}
+          alt={name}
+          width={16}
+          height={16}
+          style={{ objectFit: "contain", width: "16px", height: "16px" }}
+        />
+      </span>
+    </IconTooltip>
   )
 }
 
@@ -53,7 +57,7 @@ const CARDS = [
     desc: "Things only you can handle. Yaven knows what is and isn't urgent.",
     items: [
       { text: "Can we move Thursday's call?", tag: "Client" },
-      { text: "Intro: Maya ↔ you", tag: "Warm lead" },
+      { text: "Intro: Fatimah ↔ you", tag: "Warm lead" },
       { text: "Contract redlines from legal", tag: "Deadline" }
     ]
   },
@@ -80,7 +84,13 @@ const CARDS = [
   }
 ]
 
-function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
+function TriageCard({
+  card,
+  lite
+}: {
+  card: (typeof CARDS)[number]
+  lite?: boolean
+}) {
   const dark = "textDark" in card && card.textDark
   const textColor = dark ? "#0a0e1a" : "#fff"
   const chipBg = dark ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.15)"
@@ -90,13 +100,15 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
     <div
       style={{
         background: card.bg,
-        borderRadius: "40px",
+        borderRadius: lite ? "28px" : "40px",
         padding: "clamp(28px, 3.5vw, 40px)",
         display: "flex",
         flexDirection: "column",
         gap: "2px",
-        minHeight: "340px",
-        boxShadow: "0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)"
+        minHeight: lite ? undefined : "340px",
+        boxShadow: lite
+          ? "0 4px 12px rgba(0,0,0,0.12)"
+          : "0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)"
       }}
     >
       {/* Can wait (the always-top card) keeps its pills near the header;
@@ -105,7 +117,7 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
         <div
           style={{
             fontFamily: "var(--font-dm-sans), sans-serif",
-            fontSize: "clamp(19px, 2.1vw, 24px)",
+            fontSize: "var(--fs-body-lg)",
             fontWeight: 700,
             letterSpacing: "-0.02em",
             lineHeight: 1.15,
@@ -116,7 +128,7 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
         </div>
         <p
           style={{
-            fontSize: "clamp(13px, 1.3vw, 15px)",
+            fontSize: "var(--fs-body-sm)",
             fontWeight: 400,
             lineHeight: 1.45,
             color: textColor,
@@ -143,7 +155,7 @@ function TriageCard({ card }: { card: (typeof CARDS)[number] }) {
         >
           <span
             style={{
-              fontSize: "clamp(13px, 1.3vw, 14px)",
+              fontSize: "var(--fs-body-sm)",
               fontWeight: 500,
               color: textColor,
               opacity: 0.9,
@@ -203,7 +215,11 @@ export function TriageSection() {
           { start: "30% top", end: "46% top" },
           { start: "60% top", end: "76% top" }
         ]
-    const rotations = [5, -4, 3]
+    // Mobile: drop rotation (border-radius: 40px + rotation + translateY
+    // forces sub-pixel anti-aliasing every frame on Safari) and add scrub
+    // smoothing so GSAP batches updates instead of firing on every 120Hz
+    // scroll event during momentum scrolling.
+    const rotations = isMobile ? [0, 0, 0] : [5, -4, 3]
 
     rotations.forEach((rotation, i) => {
       const tl = gsap.timeline({
@@ -211,7 +227,7 @@ export function TriageSection() {
           trigger: wrapper,
           start: timing[i].start,
           end: timing[i].end,
-          scrub: true
+          scrub: isMobile ? 0.5 : 0.8
         }
       })
       tl.fromTo(
@@ -251,7 +267,7 @@ export function TriageSection() {
   )
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: "clamp(15px, 1.6vw, 18px)",
+    fontSize: "var(--fs-body)",
     lineHeight: 1.55,
     color: "#0a0e1a",
     opacity: 1,
@@ -269,21 +285,19 @@ export function TriageSection() {
 
       <div className="flex flex-col gap-7 max-w-[480px]">
         <p style={bodyStyle}>
-          Your {appIcon("gmail", -3)} email, {appIcon("linkedin", 2)} messages,{" "}
-          {appIcon("google", -2)} calendar, {appIcon("hubspot", 3)} CRM,{" "}
-          {appIcon("notion", -1)} docs, all in {underline("one queue")}.
+          One queue instead of ten different apps. Yaven pulls everything into
+          a{" "}
+          {underline("single notification centre")} that only demands your
+          attention when something actually needs you, so you can stay focused.
         </p>
 
         <p style={bodyStyle}>
-          It knows the difference between {underline("work and personal")},
-          reads your context, and prioritizes what actually needs your attention
-          right now.
+          {underline("Important threads never get buried")}. Yaven tracks every
+          conversation, drafts replies in your voice, and{" "}
+          {underline("preps you before every meeting")} with the context you
+          need.
         </p>
 
-        <p style={bodyStyle}>
-          Yaven handles what it can, drafts what it can&apos;t, and{" "}
-          {underline("never sends anything without your approval")}.
-        </p>
       </div>
     </div>
   )
@@ -297,7 +311,7 @@ export function TriageSection() {
         <section
           style={{
             background: "var(--cream)",
-            padding: "clamp(60px, 10vh, 100px) clamp(20px, 6vw, 32px) 16px"
+            padding: "clamp(40px, 6vh, 80px) clamp(20px, 6vw, 32px) 16px"
           }}
         >
           <div className="max-w-[520px] mx-auto">{sideText}</div>
@@ -306,7 +320,11 @@ export function TriageSection() {
         <div
           ref={wrapperRef}
           className="relative"
-          style={{ height: "200vh", background: "var(--cream)", marginTop: "-1px" }}
+          style={{
+            height: "110vh",
+            background: "var(--cream)",
+            marginTop: "-1px"
+          }}
         >
           <div
             className="sticky top-0 h-screen overflow-visible flex items-center justify-center"
@@ -315,7 +333,12 @@ export function TriageSection() {
             <div
               ref={contentRef}
               className="relative"
-              style={{ width: "100%", maxWidth: "440px", height: "540px", opacity: 0 }}
+              style={{
+                width: "100%",
+                maxWidth: "440px",
+                height: "540px",
+                opacity: 0
+              }}
             >
               {CARDS.map((card, i) => (
                 <div
@@ -335,7 +358,7 @@ export function TriageSection() {
                     transform: "translateZ(0) translateY(100vh)"
                   }}
                 >
-                  <TriageCard card={card} />
+                  <TriageCard card={card} lite />
                 </div>
               ))}
             </div>

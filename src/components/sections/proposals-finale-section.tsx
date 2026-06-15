@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -11,18 +11,8 @@ gsap.registerPlugin(ScrollTrigger)
 
 const INK = "#0a0e1a"
 
-const headlineStyle: React.CSSProperties = {
-  fontFamily: "var(--font-instrument-serif)",
-  fontSize: "clamp(32px, 4.5vw, 64px)",
-  fontWeight: 500,
-  letterSpacing: "-0.02em",
-  lineHeight: 1.08,
-  color: INK,
-  margin: 0
-}
-
 const bodyStyle: React.CSSProperties = {
-  fontSize: "clamp(16px, 1.9vw, 22px)",
+  fontSize: "var(--fs-body-lg)",
   fontWeight: 500,
   lineHeight: 1.45,
   color: INK,
@@ -31,72 +21,93 @@ const bodyStyle: React.CSSProperties = {
   maxWidth: "480px"
 }
 
-function Em({ children }: { children: React.ReactNode }) {
-  return (
-    <i
-      style={{
-        fontFamily: "var(--font-instrument-serif)",
-        fontWeight: 500,
-        fontStyle: "italic"
-      }}
-    >
-      {children}
-    </i>
-  )
-}
+// Big logo strip. The marks are wildly different shapes (Imperial is a wide
+// wordmark, MIT a monogram, Oxford/Harvard square crests — Oxford has a baked-in
+// navy bg), so they sit bare on the cream — no cards — separated by hairline
+// rules, each normalised by its own max-height rather than a shared size.
+const UNIS: {
+  name: string
+  logo: string
+  w: number
+  h: number
+  maxH: string
+  radius?: number
+}[] = [
+  { name: "Imperial", logo: "imperial", w: 1290, h: 142, maxH: "20px" },
+  { name: "MIT", logo: "mit", w: 384, h: 199, maxH: "42px" },
+  { name: "Oxford", logo: "oxford", w: 226, h: 223, maxH: "58px", radius: 10 },
+  { name: "Harvard", logo: "harvard", w: 788, h: 768, maxH: "58px" }
+]
 
-function AppIcon({ name, tilt }: { name: string; tilt: number }) {
-  const [hovered, setHovered] = useState(false)
+function UniLogo({ name, logo, w, h, maxH, radius }: (typeof UNIS)[number]) {
   return (
-    <span
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+    <div
+      onMouseEnter={e => {
+        const img = e.currentTarget.querySelector("img")
+        if (img) img.style.transform = "translateY(-3px)"
+      }}
+      onMouseLeave={e => {
+        const img = e.currentTarget.querySelector("img")
+        if (img) img.style.transform = ""
+      }}
       style={{
-        display: "inline-flex",
+        flex: "1 1 0",
+        minWidth: 0,
+        height: "clamp(72px, 10vw, 92px)",
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        width: "26px",
-        height: "26px",
-        borderRadius: "7px",
-        background: "rgba(10,14,26,0.07)",
-        border: "1px solid rgba(10,14,26,0.08)",
-        verticalAlign: "middle",
-        margin: "0 6px",
-        flexShrink: 0,
-        position: "relative",
-        top: "-1px",
-        transform: `rotate(${tilt}deg) translateY(${hovered ? "-5px" : "0px"})`,
-        transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        padding: "0 clamp(8px, 2vw, 24px)",
         cursor: "default"
       }}
     >
       <Image
-        src={`/logos/${name}.png`}
+        src={`/logos/${logo}.png`}
         alt={name}
-        width={16}
-        height={16}
-        style={{ objectFit: "contain" }}
+        width={w}
+        height={h}
+        style={{
+          objectFit: "contain",
+          width: "auto",
+          height: "auto",
+          maxHeight: maxH,
+          maxWidth: "100%",
+          borderRadius: radius ? `${radius}px` : undefined,
+          transition: "transform 0.28s cubic-bezier(0.34,1.56,0.64,1)"
+        }}
       />
+    </div>
+  )
+}
+
+function Em({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        textDecoration: "underline",
+        textDecorationColor: "var(--red)",
+        textDecorationThickness: "2px",
+        textUnderlineOffset: "3px"
+      }}
+    >
+      {children}
     </span>
   )
 }
 
-export function FinaleContent({
-  underlineDrawn = false
-}: {
-  underlineDrawn?: boolean
-}) {
-  const paraStyle: React.CSSProperties = {
+export function FinaleContent() {
+  const bioStyle: React.CSSProperties = {
     ...bodyStyle,
     margin: 0,
     opacity: 1,
-    lineHeight: 1.85,
+    color: INK,
+    lineHeight: 1.7,
     textAlign: "left",
     width: "100%",
-    maxWidth: "none"
+    maxWidth: "none",
+    fontSize: "var(--fs-body)"
   }
 
-  // Each mask wrapper clips its child; the child slides up from below on enter.
   const clip: React.CSSProperties = { overflow: "clip", width: "100%" }
 
   return (
@@ -105,76 +116,75 @@ export function FinaleContent({
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
-        width: "min(600px, 90%)",
-        margin: "0 auto"
+        width: "min(640px, 90%)",
+        margin: "0 auto",
+        gap: "clamp(16px, 2.5vh, 24px)"
       }}
     >
       <div style={clip}>
-        <h2
-          data-mask-inner
-          style={{ ...headlineStyle, textAlign: "left", margin: 0 }}
-        >
-          … so you focus on the work{" "}
-          <span
-            className={`triage-underline triage-underline-lg${underlineDrawn ? " is-visible" : ""}`}
-            style={{ backgroundImage: "linear-gradient(#df4f3e, #df4f3e)" }}
-          >
-            only you can do
-          </span>
-          .
-        </h2>
-      </div>
-
-      {/* spacer — outside clip containers so translateY doesn't fight clip height */}
-      <div style={{ height: "clamp(20px, 3vh, 32px)", flexShrink: 0 }} />
-
-      <div style={clip}>
-        <p data-mask-inner style={paraStyle}>
-          That was just a few examples. Yaven <Em>triages</Em> your inbox
-          <AppIcon name="gmail" tilt={-8} />
-          <Em>clears</Em> your docs
-          <AppIcon name="notion" tilt={6} />
-          <AppIcon name="excel" tilt={-5} />
-          <Em>logs</Em> your calls
-          <AppIcon name="granola" tilt={9} />
-          <Em>updates</Em> your CRM
-          <AppIcon name="hubspot" tilt={-7} />
-          <AppIcon name="salesforce" tilt={5} />
-          <Em>tracks</Em> your projects
-          <AppIcon name="asana" tilt={7} />
-          <AppIcon name="monday" tilt={-6} />
-          <Em>monitors</Em> your ads
-          <AppIcon name="googleads" tilt={8} />
-          <AppIcon name="googleanalytics" tilt={-5} />
-          and <Em>grows</Em> your network
-          <AppIcon name="linkedin" tilt={7} />
-          <AppIcon name="google" tilt={-8} />
-        </p>
-      </div>
-
-      <div style={{ height: "clamp(20px, 3vh, 32px)", flexShrink: 0 }} />
-
-      <div style={clip}>
-        <p
+        <h3
           data-mask-inner
           style={{
-            ...bodyStyle,
-            margin: 0,
-            opacity: 0.6,
-            textAlign: "left",
-            width: "100%",
-            maxWidth: "none"
+            fontFamily: "var(--font-instrument-serif)",
+            fontSize: "var(--fs-display)",
+            fontWeight: 500,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+            color: INK,
+            margin: "0 0 clamp(8px, 1.5vh, 16px)"
           }}
         >
-          Let Yaven handle the noise, while you handle the rest.
+          So, who&apos;s building this?
+        </h3>
+      </div>
+
+      <div style={clip}>
+        <div
+          data-mask-inner
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            margin: "clamp(8px, 1.5vh, 16px) 0"
+          }}
+        >
+          {UNIS.map((u, i) => (
+            <Fragment key={u.name}>
+              {i > 0 && (
+                <div
+                  aria-hidden="true"
+                  style={{
+                    width: "1px",
+                    height: "clamp(40px, 6vw, 56px)",
+                    background: "rgba(10,14,26,0.12)",
+                    flexShrink: 0
+                  }}
+                />
+              )}
+              <UniLogo {...u} />
+            </Fragment>
+          ))}
+        </div>
+      </div>
+
+      <div style={clip}>
+        <p data-mask-inner style={bioStyle}>
+          We&apos;re a small team of former Imperial, MIT, Oxford and Harvard
+          researchers. Between us: digital twin research in Q1 journals,{" "}
+          <Em>AI agent infrastructure in production</Em> across multiple
+          startups and an asset management firm, <Em>product design awards</Em>{" "}
+          and work exhibited at the Design Museum London,{" "}
+          <Em>an open-source AI tool with thousands of users</Em>, two stints as
+          founding engineers, and a <Em>freelance practice</Em> grown from zero
+          to $20k MRR in months; <Em>we were the customer first</Em>.
         </p>
       </div>
     </div>
   )
 }
 
-// Sticky finale panel — sits below the pinned scroll section. Text lines
-// reveal with a mask-slide animation as the section scrolls into view.
+// Sticky finale panel with mask-slide animation.
 export function ProposalsFinaleSection() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
@@ -188,10 +198,6 @@ export function ProposalsFinaleSection() {
     const lines = Array.from(
       inner.querySelectorAll<HTMLElement>("[data-mask-inner]")
     )
-    const underlines = Array.from(
-      inner.querySelectorAll<HTMLElement>(".triage-underline")
-    )
-
     gsap.set(lines, { y: "110%" })
 
     const st = ScrollTrigger.create({
@@ -200,22 +206,18 @@ export function ProposalsFinaleSection() {
       onEnter: () => {
         gsap.to(lines, {
           y: "0%",
-          stagger: 0.1,
-          duration: 0.78,
+          stagger: 0.08,
+          duration: 0.72,
           ease: "power3.out"
         })
-        gsap.delayedCall(0.55, () =>
-          underlines.forEach(el => el.classList.add("is-visible"))
-        )
       },
       onLeaveBack: () => {
         gsap.to(lines, {
           y: "110%",
-          stagger: { each: 0.06, from: "end" },
-          duration: 0.42,
+          stagger: { each: 0.05, from: "end" },
+          duration: 0.38,
           ease: "power2.in"
         })
-        underlines.forEach(el => el.classList.remove("is-visible"))
       }
     })
 
@@ -227,7 +229,7 @@ export function ProposalsFinaleSection() {
       ref={wrapperRef}
       style={{
         position: "relative",
-        height: "170vh",
+        height: "220vh",
         background: "var(--cream)"
       }}
     >
@@ -239,7 +241,7 @@ export function ProposalsFinaleSection() {
           display: "grid",
           placeItems: "center",
           overflow: "hidden",
-          padding: "clamp(80px, 14vh, 160px) clamp(28px, 5vw, 48px)"
+          padding: "clamp(60px, 10vh, 120px) clamp(28px, 5vw, 48px)"
         }}
       >
         <div ref={innerRef}>
