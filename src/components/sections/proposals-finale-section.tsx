@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -83,11 +83,21 @@ function UniLogo({ name, logo, w, h, maxH, radius }: (typeof UNIS)[number]) {
 function Em({ children }: { children: React.ReactNode }) {
   return (
     <span
+      className="finale-em"
       style={{
-        textDecoration: "underline",
-        textDecorationColor: "var(--red)",
-        textDecorationThickness: "2px",
-        textUnderlineOffset: "3px"
+        backgroundImage: "linear-gradient(var(--red), var(--red))",
+        backgroundSize: "100% 2px",
+        backgroundPosition: "0 100%",
+        backgroundRepeat: "no-repeat",
+        transition: "background-size 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
+        paddingBottom: "2px",
+        cursor: "default"
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.backgroundSize = "0% 2px"
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.backgroundSize = "100% 2px"
       }}
     >
       {children}
@@ -149,21 +159,8 @@ export function FinaleContent() {
             margin: "clamp(8px, 1.5vh, 16px) 0"
           }}
         >
-          {UNIS.map((u, i) => (
-            <Fragment key={u.name}>
-              {i > 0 && (
-                <div
-                  aria-hidden="true"
-                  style={{
-                    width: "1px",
-                    height: "clamp(40px, 6vw, 56px)",
-                    background: "rgba(10,14,26,0.12)",
-                    flexShrink: 0
-                  }}
-                />
-              )}
-              <UniLogo {...u} />
-            </Fragment>
+          {UNIS.map(u => (
+            <UniLogo key={u.name} {...u} />
           ))}
         </div>
       </div>
@@ -171,13 +168,13 @@ export function FinaleContent() {
       <div style={clip}>
         <p data-mask-inner style={bioStyle}>
           We&apos;re a small team of former Imperial, MIT, Oxford and Harvard
-          researchers. Between us: digital twin research in Q1 journals,{" "}
+          researchers. Between us: <i>digital twin research</i> in Q1 journals,{" "}
           <Em>AI agent infrastructure in production</Em> across multiple
-          startups and an asset management firm, <Em>product design awards</Em>{" "}
-          and work exhibited at the Design Museum London,{" "}
-          <Em>an open-source AI tool with thousands of users</Em>, two stints as
-          founding engineers, and a <Em>freelance practice</Em> grown from zero
-          to $20k MRR in months; <Em>we were the customer first</Em>.
+          startups and an asset management firm, <b>product design awards</b>{" "}
+          and work exhibited at the <i>Design Museum London</i>,{" "}
+          an open-source AI tool with <b>thousands of users</b>, two stints as
+          founding engineers, and a freelance practice grown from zero
+          to <b>$20k MRR</b> in months; <Em>we were the customer first</Em>.
         </p>
       </div>
     </div>
