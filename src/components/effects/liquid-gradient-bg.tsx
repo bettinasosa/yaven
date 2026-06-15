@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-// @ts-expect-error — no @types/three installed
 import * as THREE from "three"
 
 class TouchTexture {
