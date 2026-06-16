@@ -69,21 +69,21 @@ const phaseGridStyle: React.CSSProperties = {
 const SOURCE_CARDS = [
   {
     title: "Call notes",
-    detail: "Brand refresh, 4-week timeline, packaging focus",
+    detail: "Website redesign, 4-week timeline, exhibition catalog",
     rotate: -4,
     x: -80,
     y: -140
   },
   {
     title: "Past project",
-    detail: "Otto's Bakehouse, logo + menus, $6,200",
+    detail: "Gigi's Art Gallery, site + catalog, $6,200",
     rotate: 3,
     x: 65,
     y: 0
   },
   {
     title: "Your pricing",
-    detail: "Brand packages start at $7,500",
+    detail: "Web + print packages start at $7,500",
     rotate: -2,
     x: -40,
     y: 140
@@ -264,7 +264,7 @@ function ProposalResult() {
             marginTop: "8px"
           }}
         >
-          Brand refresh + packaging
+          Website redesign + exhibition catalog
         </div>
         <div
           style={{
@@ -275,7 +275,7 @@ function ProposalResult() {
             marginTop: "3px"
           }}
         >
-          Otto&apos;s Bakehouse
+          Gigi&apos;s Art Gallery
         </div>
 
         {/* Skeleton lines */}
@@ -854,7 +854,7 @@ function CrmCard({ animated }: { animated: boolean }) {
                 color: "#fff"
               }}
             >
-              OB
+              GA
             </div>
             <div>
               <div
@@ -865,7 +865,7 @@ function CrmCard({ animated }: { animated: boolean }) {
                   lineHeight: 1.2
                 }}
               >
-                Otto&apos;s Bakehouse
+                Gigi&apos;s Art Gallery
               </div>
               <div
                 style={{
