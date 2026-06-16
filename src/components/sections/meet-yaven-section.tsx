@@ -264,13 +264,55 @@ function AskCard({
   asking,
   active,
   onTrigger,
-  inline = false
+  mobile = false
 }: {
   asking: boolean
   active: boolean
   onTrigger: () => void
-  inline?: boolean
+  mobile?: boolean
 }) {
+  const glassBubbleContent = (
+    <>
+      <div
+        className="text-[13px] font-semibold mb-2"
+        style={{ color: "rgba(0,0,0,0.4)" }}
+      >
+        I thought this was 30 days? Why did it change?
+      </div>
+      <div
+        className="text-[14px] leading-[1.6] font-medium"
+        style={{ color: "rgba(0,0,0,0.75)" }}
+      >
+        {active ? (
+          <>
+            <span>Since your last </span>
+            <span
+              className="inline-flex items-center gap-1 align-middle"
+              style={{
+                background: "rgba(0,0,0,0.06)",
+                borderRadius: "10px",
+                fontSize: "12px"
+              }}
+            >
+              <Image
+                src="/logos/granola.png"
+                alt="Granola"
+                width={14}
+                height={14}
+                className="rounded-[3px]"
+                style={{ flexShrink: 0, width: "14px", height: "14px" }}
+              />
+            </span>
+            <span> call with Pablo on May 12, </span>
+            <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
+          </>
+        ) : (
+          <span className="opacity-0">.</span>
+        )}
+      </div>
+    </>
+  )
+
   return (
     <div style={{ width: "100%", position: "relative" }}>
       <div
@@ -380,112 +422,48 @@ function AskCard({
               </div>
             </div>
           )}
-
-          {inline && asking && (
-            <div
-              className="mt-auto"
-              style={{
-                borderTop: "1px solid rgba(0,0,0,0.08)",
-                paddingTop: "12px"
-              }}
-            >
-              <div
-                className="text-[13px] font-semibold mb-2"
-                style={{ color: "rgba(0,0,0,0.4)" }}
-              >
-                I thought this was 30 days? Why did it change?
-              </div>
-              <div
-                className="text-[14px] leading-[1.6] font-medium"
-                style={{ color: "rgba(0,0,0,0.75)" }}
-              >
-                {active ? (
-                  <>
-                    <span>Since your last </span>
-                    <span
-                      className="inline-flex items-center gap-1 align-middle"
-                      style={{
-                        background: "rgba(0,0,0,0.06)",
-                        borderRadius: "10px",
-                        fontSize: "12px"
-                      }}
-                    >
-                      <Image
-                        src="/logos/granola.png"
-                        alt="Granola"
-                        width={14}
-                        height={14}
-                        className="rounded-[3px]"
-                        style={{ flexShrink: 0, width: "14px", height: "14px" }}
-                      />
-                    </span>
-                    <span> call with Pablo on May 12, </span>
-                    <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
-                  </>
-                ) : null}
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Floating glass bubble — desktop only */}
-      {!inline && asking && (
+      {/* Floating glass bubble */}
+      {asking && (
         <div
-          style={{
-            position: "absolute",
-            top: "65%",
-            left: "calc(100% - 140px)",
-            transform: "translateY(-50%)",
-            width: "300px",
-            background: "rgba(255,255,255,0.45)",
-            backdropFilter: "blur(16px) saturate(1.2)",
-            WebkitBackdropFilter: "blur(16px) saturate(1.2)",
-            borderRadius: "32px",
-            border: "1px solid rgba(255,255,255,0.5)",
-            padding: "18px 22px",
-            boxShadow:
-              "0 8px 24px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4)",
-            zIndex: 10
-          }}
+          style={
+            mobile
+              ? {
+                  position: "absolute",
+                  bottom: "-24px",
+                  right: "-8px",
+                  width: "min(280px, 75vw)",
+                  background: "rgba(255,255,255,0.55)",
+                  backdropFilter: "blur(20px) saturate(1.3)",
+                  WebkitBackdropFilter: "blur(20px) saturate(1.3)",
+                  borderRadius: "24px",
+                  border: "1px solid rgba(255,255,255,0.5)",
+                  padding: "16px 18px",
+                  boxShadow:
+                    "0 8px 28px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.4)",
+                  zIndex: 10
+                }
+              : {
+                  position: "absolute",
+                  top: "65%",
+                  left: "calc(100% - 140px)",
+                  transform: "translateY(-50%)",
+                  width: "300px",
+                  background: "rgba(255,255,255,0.45)",
+                  backdropFilter: "blur(16px) saturate(1.2)",
+                  WebkitBackdropFilter: "blur(16px) saturate(1.2)",
+                  borderRadius: "32px",
+                  border: "1px solid rgba(255,255,255,0.5)",
+                  padding: "18px 22px",
+                  boxShadow:
+                    "0 8px 24px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4)",
+                  zIndex: 10
+                }
+          }
         >
-          <div
-            className="text-[13px] font-semibold mb-2"
-            style={{ color: "rgba(0,0,0,0.4)" }}
-          >
-            I thought this was 30 days? Why did it change?
-          </div>
-          <div
-            className="text-[14px] leading-[1.6] font-medium"
-            style={{ color: "rgba(0,0,0,0.75)" }}
-          >
-            {active ? (
-              <>
-                <span>Since your last </span>
-                <span
-                  className="inline-flex items-center gap-1 align-middle"
-                  style={{
-                    background: "rgba(0,0,0,0.06)",
-                    borderRadius: "10px",
-                    fontSize: "12px"
-                  }}
-                >
-                  <Image
-                    src="/logos/granola.png"
-                    alt="Granola"
-                    width={14}
-                    height={14}
-                    className="rounded-[3px]"
-                    style={{ flexShrink: 0, width: "14px", height: "14px" }}
-                  />
-                </span>
-                <span> call with Pablo on May 12, </span>
-                <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
-              </>
-            ) : (
-              <span className="opacity-0">.</span>
-            )}
-          </div>
+          {glassBubbleContent}
         </div>
       )}
     </div>
@@ -522,13 +500,13 @@ export function MeetYavenSection() {
   const askInView = useRef(false)
 
   const triggerDraft = useCallback(() => {
-    if (drafting || !draftInView.current) return
+    if (drafting) return
     setDrafting(true)
     setTimeout(() => setDraftTyping(true), 100)
   }, [drafting])
 
   const triggerAsk = useCallback(() => {
-    if (asking || !askInView.current) return
+    if (asking) return
     setAsking(true)
     setTimeout(() => setAskTyping(true), 100)
   }, [asking])
@@ -695,7 +673,7 @@ export function MeetYavenSection() {
       ScrollTrigger.create({
         trigger: wrapper,
         start: "top top",
-        end: "30% top",
+        end: "35% top",
         onEnter: () => {
           draftInView.current = true
           setShowDraftHint(true)
@@ -719,8 +697,8 @@ export function MeetYavenSection() {
     const askTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
-        start: "18% top",
-        end: "42% top",
+        start: "15% top",
+        end: "35% top",
         scrub: 0.5
       }
     })
@@ -734,8 +712,8 @@ export function MeetYavenSection() {
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "36% top",
-        end: "85% top",
+        start: "30% top",
+        end: "90% top",
         onEnter: () => {
           askInView.current = true
           setShowAskHint(true)
@@ -831,20 +809,24 @@ export function MeetYavenSection() {
         data-meet-yaven
         style={{
           background: "var(--primary)",
-          padding: "clamp(80px,12vh,140px) clamp(28px,5vw,48px)"
+          padding: isMobile
+            ? "clamp(48px,8vh,80px) clamp(20px,5vw,32px)"
+            : "clamp(80px,12vh,140px) clamp(28px,5vw,48px)"
         }}
       >
         <div className="max-w-[1100px] mx-auto">
           <div
             className="w-full grid items-start gap-[clamp(40px,6vw,80px)]"
             style={{
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))"
+              gridTemplateColumns: isMobile
+                ? "1fr"
+                : "repeat(auto-fit, minmax(300px, 1fr))"
             }}
           >
             {sideText}
             <div className="flex flex-col gap-6" style={{ maxWidth: "440px" }}>
               <LinkedInCard drafting active onTrigger={() => {}} />
-              <AskCard asking active inline onTrigger={() => {}} />
+              <AskCard asking active mobile={isMobile} onTrigger={() => {}} />
             </div>
           </div>
         </div>
@@ -869,11 +851,14 @@ export function MeetYavenSection() {
         <div
           ref={wrapperRef}
           className="relative bg-[var(--primary)]"
-          style={{ height: "160vh", marginTop: "-1px", marginBottom: "clamp(60px,10vh,100px)" }}
+          style={{ height: "220vh", marginTop: "-1px", marginBottom: "clamp(60px,10vh,100px)" }}
         >
           <div
-            className="sticky top-0 h-screen overflow-visible flex items-center justify-center"
-            style={{ padding: "0 clamp(20px,5vw,32px)" }}
+            className="sticky top-0 h-screen overflow-visible flex justify-center"
+            style={{
+              padding: "0 clamp(20px,5vw,32px)",
+              paddingTop: "max(env(safe-area-inset-top, 0px), 10vh)"
+            }}
           >
             <div
               ref={contentRef}
@@ -881,7 +866,7 @@ export function MeetYavenSection() {
               style={{
                 width: "100%",
                 maxWidth: "440px",
-                height: "600px",
+                height: "540px",
                 opacity: 0
               }}
             >
@@ -923,7 +908,7 @@ export function MeetYavenSection() {
                 <AskCard
                   asking={asking}
                   active={askTyping}
-                  inline
+                  mobile
                   onTrigger={triggerAsk}
                 />
               </div>

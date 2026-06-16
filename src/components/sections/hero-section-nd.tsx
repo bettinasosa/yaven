@@ -71,6 +71,7 @@ function HeroVariantB() {
   return (
     <section
       ref={sectionRef}
+      data-hero
       className="relative min-h-screen overflow-hidden flex bg-[var(--primary)] z-50"
     >
       {/* Liquid gradient background */}

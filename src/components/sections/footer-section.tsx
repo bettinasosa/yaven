@@ -227,14 +227,14 @@ export function FooterSection() {
 
       {/* ── Bottom: giant wordmark + copyright ── */}
       <div
-        className="flex-1 flex items-end relative pr-4 pb-2"
-        style={{ paddingLeft: "clamp(20px, 2vw, 44px)" }}
+        className="flex-1 flex items-end relative pb-2"
+        style={{ paddingLeft: "clamp(20px, 2vw, 44px)", paddingRight: "16px" }}
       >
         <span
           className="font-medium select-none"
           style={{
             fontFamily: "var(--font-instrument-serif)",
-            fontSize: "clamp(80px, 23vw, 340px)",
+            fontSize: "clamp(60px, 18vw, 340px)",
             color: "var(--cream)",
             letterSpacing: "-0.04em",
             lineHeight: 0.82
@@ -246,11 +246,11 @@ export function FooterSection() {
         <div
           style={{
             position: "absolute",
-            right: "28px",
-            bottom: "20px",
+            right: "clamp(12px, 3vw, 28px)",
+            bottom: "clamp(8px, 1.5vh, 16px)",
             display: "flex",
             alignItems: "center",
-            gap: "10px"
+            gap: "6px"
           }}
         >
           <Image
@@ -258,15 +258,15 @@ export function FooterSection() {
             alt="Yaven"
             width={16}
             height={28}
-            style={{ display: "block", width: "auto", height: "22px", opacity: 0.7 }}
+            style={{ display: "block", width: "auto", height: "14px", opacity: 0.6 }}
           />
           <p
             style={{
               fontFamily: "var(--font-space-mono)",
-              fontSize: "11px",
+              fontSize: "9px",
               fontWeight: 700,
               color: "var(--cream)",
-              opacity: 0.35,
+              opacity: 0.3,
               letterSpacing: "0.06em",
               margin: 0
             }}

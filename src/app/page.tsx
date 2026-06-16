@@ -109,12 +109,12 @@ function StickyGetYaven() {
       })
     }
 
-    // Appear as the first Meet Yaven slide scrolls in (not just after one
-    // viewport of hero scroll).
-    const meetYaven = document.querySelector<HTMLElement>("[data-meet-yaven]")
+    // Appear only once the hero is fully off-screen so the button never
+    // overlaps the hero's own nav on mobile Safari.
+    const heroEl = document.querySelector<HTMLElement>("[data-hero]")
     const heroTrigger = ScrollTrigger.create({
-      trigger: meetYaven ?? document.body,
-      start: meetYaven ? "top 70%" : "100vh top",
+      trigger: heroEl ?? document.body,
+      start: "bottom top",
       onEnter: () => {
         pastHero.current = true
         apply()

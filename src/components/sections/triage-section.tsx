@@ -311,7 +311,7 @@ export function TriageSection() {
         <section
           style={{
             background: "var(--cream)",
-            padding: "clamp(40px, 6vh, 80px) clamp(20px, 6vw, 32px) 16px"
+            padding: "clamp(72px, 10vh, 120px) clamp(20px, 6vw, 32px) 16px"
           }}
         >
           <div className="max-w-[520px] mx-auto">{sideText}</div>
@@ -373,13 +373,17 @@ export function TriageSection() {
       <section
         style={{
           background: "var(--cream)",
-          padding: "clamp(80px, 12vh, 140px) clamp(28px, 5vw, 48px)"
+          padding: isMobile
+            ? "clamp(48px, 8vh, 80px) clamp(20px, 5vw, 32px)"
+            : "clamp(80px, 12vh, 140px) clamp(28px, 5vw, 48px)"
         }}
       >
         <div
           className="max-w-[1100px] mx-auto grid items-start gap-[clamp(40px,6vw,80px)]"
           style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))"
+            gridTemplateColumns: isMobile
+              ? "1fr"
+              : "repeat(auto-fit, minmax(300px, 1fr))"
           }}
         >
           <div className="flex flex-col gap-6" style={{ maxWidth: "440px" }}>
