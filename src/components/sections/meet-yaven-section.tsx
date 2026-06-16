@@ -654,6 +654,7 @@ export function MeetYavenSection() {
 
     gsap.set(contentRef.current, { opacity: 1 })
 
+    // Blue card enters early and sticks in the centre
     const draftTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
@@ -669,11 +670,12 @@ export function MeetYavenSection() {
     )
     triggers.push(draftTl.scrollTrigger!)
 
+    // Blue card stays interactive for a long stretch
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
         start: "top top",
-        end: "35% top",
+        end: "55% top",
         onEnter: () => {
           draftInView.current = true
           setShowDraftHint(true)
@@ -694,11 +696,12 @@ export function MeetYavenSection() {
       })
     )
 
+    // Purple card enters after the blue card has held
     const askTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
-        start: "15% top",
-        end: "35% top",
+        start: "38% top",
+        end: "55% top",
         scrub: 0.5
       }
     })
@@ -712,8 +715,8 @@ export function MeetYavenSection() {
     triggers.push(
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "30% top",
-        end: "90% top",
+        start: "50% top",
+        end: "82% top",
         onEnter: () => {
           askInView.current = true
           setShowAskHint(true)
@@ -851,7 +854,7 @@ export function MeetYavenSection() {
         <div
           ref={wrapperRef}
           className="relative bg-[var(--primary)]"
-          style={{ height: "220vh", marginTop: "-1px", marginBottom: "clamp(60px,10vh,100px)" }}
+          style={{ height: "250vh", marginTop: "-1px", marginBottom: "clamp(60px,10vh,100px)" }}
         >
           <div
             className="sticky top-0 h-screen overflow-visible flex justify-center"
@@ -990,7 +993,7 @@ export function MeetYavenSection() {
               ref={askCardRef}
               style={{
                 position: "absolute",
-                top: "48px",
+                top: "8px",
                 left: 0,
                 right: 0,
                 zIndex: 2,

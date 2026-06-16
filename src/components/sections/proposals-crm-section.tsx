@@ -63,17 +63,35 @@ const phaseGridStyle: React.CSSProperties = {
   gap: "clamp(40px, 6vw, 80px)"
 }
 
-// Scattered note fragments that melt into one document (gooey filter)
-const FRAGMENTS = [
-  { x: -150, y: -120, r: -18, w: 86, h: 54 },
-  { x: 160, y: -100, r: 14, w: 70, h: 70 },
-  { x: -180, y: 70, r: 10, w: 64, h: 64 },
-  { x: 140, y: 120, r: -12, w: 90, h: 50 },
-  { x: -40, y: -170, r: 6, w: 56, h: 56 },
-  { x: 60, y: 170, r: -8, w: 74, h: 46 }
+// ── Stacked document transition ────────────────────────────────────────────
+// Three GlassCards (call notes, past project, pricing) pop in staggered,
+// dwell so users can read them, then collapse into a clean proposal doc.
+const SOURCE_CARDS = [
+  {
+    title: "Call notes",
+    detail: "Brand refresh, 4-week timeline, packaging focus",
+    rotate: -4,
+    x: -80,
+    y: -140
+  },
+  {
+    title: "Past project",
+    detail: "Otto's Bakehouse, logo + menus, $6,200",
+    rotate: 3,
+    x: 65,
+    y: 0
+  },
+  {
+    title: "Your pricing",
+    detail: "Brand packages start at $7,500",
+    rotate: -2,
+    x: -40,
+    y: 140
+  }
 ]
 
-function GooeyStage({
+// Desktop: absolute-positioned scattered cards with scroll animation
+function StackedDocStage({
   fragRefs,
   merged
 }: {
@@ -82,103 +100,265 @@ function GooeyStage({
 }) {
   return (
     <div
-      aria-hidden="true"
       style={{
         position: "relative",
-        width: "min(380px, 80vw)",
-        height: "min(380px, 80vw)",
+        width: "min(560px, 85vw)",
+        height: "min(560px, 85vw)",
         margin: "0 auto"
       }}
     >
-      <svg width="0" height="0" style={{ position: "absolute" }}>
-        <defs>
-          <filter id="yv-goo">
-            <feGaussianBlur
-              in="SourceGraphic"
-              stdDeviation="12"
-              result="blur"
-            />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
-              result="goo"
-            />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
-
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          filter: "url(#yv-goo)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-      >
-        {/* The document the fragments melt into */}
+      {SOURCE_CARDS.map((card, i) => (
         <div
-          style={{
-            width: "150px",
-            height: "190px",
-            borderRadius: "16px",
-            background: "var(--primary)"
+          key={card.title}
+          ref={el => {
+            fragRefs.current[i] = el
           }}
-        />
-        {FRAGMENTS.map((f, i) => (
-          <div
-            key={i}
-            ref={el => {
-              fragRefs.current[i] = el
-            }}
-            style={{
-              position: "absolute",
-              width: `${f.w}px`,
-              height: `${f.h}px`,
-              borderRadius: "14px",
-              background: "var(--primary)",
-              transform: merged
-                ? "translate(0, 0) scale(0.6)"
-                : `translate(${f.x}px, ${f.y}px) rotate(${f.r}deg)`
-            }}
-          />
-        ))}
-      </div>
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: "min(360px, 75vw)",
+            transform: merged
+              ? "translate(-50%, -50%) rotate(0deg) scale(0)"
+              : `translate(calc(-50% + ${card.x}px), calc(-50% + ${card.y}px)) rotate(${card.rotate}deg)`,
+            zIndex: i + 1,
+            opacity: merged ? 0 : 1
+          }}
+        >
+          <SourceCard title={card.title} detail={card.detail} />
+        </div>
+      ))}
 
-      {/* Document face — above the filter so it stays crisp */}
+      {/* Merged result — clean proposal document */}
       <div
+        data-merged-proposal
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "150px",
-          height: "190px",
-          borderRadius: "16px",
-          padding: "18px 16px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "9px"
+          width: "min(380px, 80vw)",
+          opacity: merged ? 1 : 0
         }}
       >
-        {[80, 100, 100, 60, 100, 45].map((w, i) => (
-          <div
-            key={i}
-            style={{
-              height: i === 0 ? "10px" : "6px",
-              width: `${w}%`,
-              borderRadius: "4px",
-              background: "rgba(255,255,255,0.75)"
-            }}
-          />
-        ))}
+        <ProposalResult />
       </div>
     </div>
   )
 }
+
+// Mobile: vertical stack showing the full story — sources then result
+function StackedDocStageMobile() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        width: "100%",
+        maxWidth: "440px",
+        margin: "0 auto"
+      }}
+    >
+      {SOURCE_CARDS.map((card, i) => (
+        <div
+          key={card.title}
+          style={{
+            marginLeft: i % 2 === 0 ? 0 : "16px",
+            marginRight: i % 2 === 0 ? "16px" : 0
+          }}
+        >
+          <SourceCard title={card.title} detail={card.detail} />
+        </div>
+      ))}
+
+      {/* Arrow / connector hint */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "4px 0",
+          opacity: 0.3
+        }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 4v14m0 0l-5-5m5 5l5-5"
+            stroke={INK}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+
+      <ProposalResult />
+    </div>
+  )
+}
+
+// Shared presentational pieces
+function SourceCard({ title, detail }: { title: string; detail: string }) {
+  return (
+    <GlassCard borderRadius="20px">
+      <div
+        style={{
+          padding: "clamp(16px, 2vw, 24px) clamp(20px, 2.5vw, 28px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "5px"
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-dm-sans), sans-serif",
+            fontSize: "clamp(11px, 1vw, 13px)",
+            fontWeight: 600,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            color: INK,
+            opacity: 0.35
+          }}
+        >
+          {title}
+        </div>
+        <div
+          style={{
+            fontSize: "clamp(14px, 1.4vw, 17px)",
+            fontWeight: 500,
+            color: INK,
+            opacity: 0.8,
+            lineHeight: 1.45
+          }}
+        >
+          {detail}
+        </div>
+      </div>
+    </GlassCard>
+  )
+}
+
+function ProposalResult() {
+  return (
+    <GlassCard borderRadius="24px">
+      <div style={{ padding: "clamp(24px, 3vw, 34px) clamp(22px, 2.8vw, 32px)" }}>
+        <div
+          style={{
+            fontFamily: "var(--font-dm-sans), sans-serif",
+            fontSize: "clamp(11px, 1vw, 13px)",
+            fontWeight: 600,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            color: INK,
+            opacity: 0.35
+          }}
+        >
+          Proposal
+        </div>
+        <div
+          style={{
+            fontSize: "clamp(17px, 1.8vw, 22px)",
+            fontWeight: 600,
+            color: INK,
+            lineHeight: 1.25,
+            marginTop: "8px"
+          }}
+        >
+          Brand refresh + packaging
+        </div>
+        <div
+          style={{
+            fontSize: "clamp(13px, 1.3vw, 16px)",
+            fontWeight: 500,
+            color: INK,
+            opacity: 0.5,
+            marginTop: "3px"
+          }}
+        >
+          Otto&apos;s Bakehouse
+        </div>
+
+        {/* Skeleton lines */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            marginTop: "24px"
+          }}
+        >
+          {[85, 100, 100, 60].map((w, i) => (
+            <div
+              key={i}
+              style={{
+                height: i === 0 ? "9px" : "7px",
+                width: `${w}%`,
+                borderRadius: "4px",
+                background: INK,
+                opacity: 0.08
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Status pill */}
+        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "22px" }}>
+          <button
+            type="button"
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "#d9a0f7"
+              e.currentTarget.style.transform = "translateY(-1px)"
+              e.currentTarget.style.boxShadow = "0 6px 20px rgba(235, 193, 255, 0.5)"
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "#ebc1ff"
+              e.currentTarget.style.transform = "translateY(0)"
+              e.currentTarget.style.boxShadow = "0 4px 14px rgba(235, 193, 255, 0.35)"
+            }}
+            style={{
+              padding: "10px 16px",
+              borderRadius: "11px",
+              background: "#ebc1ff",
+              boxShadow: "0 4px 14px rgba(235, 193, 255, 0.35)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              border: "none",
+              cursor: "pointer",
+              transition: "all 0.2s ease"
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                stroke={INK}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span
+              style={{ fontSize: "clamp(12px, 1.1vw, 14px)", fontWeight: 600, color: INK }}
+            >
+              Ready to send
+            </span>
+          </button>
+        </div>
+      </div>
+    </GlassCard>
+  )
+}
+
+// Keep the old FRAGMENTS array shape so the scroll animation refs still work
+// (StackedDocStage uses 3 refs, the old gooey used 6 — we just need the first 3)
+const FRAGMENTS = [
+  { x: -150, y: -120, r: -18, w: 86, h: 54 },
+  { x: 160, y: -100, r: 14, w: 70, h: 70 },
+  { x: -180, y: 70, r: 10, w: 64, h: 64 },
+  { x: 140, y: 120, r: -12, w: 90, h: 50 },
+  { x: -40, y: -170, r: 6, w: 56, h: 56 },
+  { x: 60, y: 170, r: -8, w: 74, h: 46 }
+]
 
 // CRM contact card that fills itself in
 const CRM_ROWS = [
@@ -354,7 +534,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
         style={{
           position: "absolute",
           top: "18%",
-          left: 0,
+          left: "-8%",
           width: "88%",
           zIndex: 2,
           transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)"
@@ -401,7 +581,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
         data-net-node
         style={{
           position: "absolute",
-          top: "56%",
+          top: "42%",
           left: "5%",
           width: "85%",
           zIndex: 3,
@@ -724,7 +904,7 @@ function CrmCard({ animated }: { animated: boolean }) {
 
 // The conference follow-up card — styled as an identity/badge card
 // with a hover tilt effect.
-const GREEN = "#3BA55C"
+const DRAFTED_BG = "#ebc1ff"
 
 // The gmail "button" that lives inside the follow-up status pill. It sits in
 // the red "Needs follow-up" pill, gets pressed on scroll, and reappears in the
@@ -929,7 +1109,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
               </span>
             </div>
 
-            {/* After: follow-up drafted (green) — gmail button is gone now */}
+            {/* After: follow-up drafted */}
             <div
               data-fu-after
               style={{
@@ -937,7 +1117,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 inset: 0,
                 padding: "10px 14px",
                 borderRadius: "12px",
-                background: GREEN,
+                background: DRAFTED_BG,
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
@@ -949,12 +1129,13 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                   width: "8px",
                   height: "8px",
                   borderRadius: "50%",
-                  background: "#fff",
+                  background: INK,
+                  opacity: 0.4,
                   flexShrink: 0
                 }}
               />
               <span
-                style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}
+                style={{ fontSize: "13px", fontWeight: 600, color: INK }}
               >
                 Follow-up drafted with Yaven
               </span>
@@ -1021,40 +1202,23 @@ export function ProposalsCrmSection() {
     netNodes.forEach(n => gsap.set(n, { scale: 0, opacity: 0 }))
 
     gsap.set(proposalsRef.current, { y: 60, opacity: 0 })
-    gsap.set(confRef.current, { y: "100vh", opacity: 0 })
-    fragRefs.current.forEach((f, i) => {
-      if (f)
-        gsap.set(f, {
-          x: FRAGMENTS[i].x,
-          y: FRAGMENTS[i].y,
-          rotation: FRAGMENTS[i].r
-        })
+    gsap.set(confRef.current, { y: 60, opacity: 0 })
+    // Source cards start scaled down + invisible, pop in via timeline
+    fragRefs.current.forEach(f => {
+      if (f) gsap.set(f, { scale: 0, opacity: 0 })
     })
-
-    const p2Shell = confRef.current?.querySelector<HTMLElement>(
-      '[data-card-shell="p2"]'
+    const mergedEl = proposalsRef.current?.querySelector<HTMLElement>(
+      "[data-merged-proposal]"
     )
-    if (p2Shell)
-      gsap.set(p2Shell, {
-        y: "75vh",
-        scale: 0.08,
-        transformOrigin: "center center"
-      })
-    const p2Inner = confRef.current?.querySelector<HTMLElement>(
-      '[data-card-inner="p2"]'
-    )
-    if (p2Inner)
-      gsap.set(p2Inner, {
-        scale: 0.08,
-        transformOrigin: "center center",
-        backgroundColor: "#fff"
-      })
+    if (mergedEl) gsap.set(mergedEl, { opacity: 0, scale: 0.85 })
 
     // Conference card follow-up animation elements
     const conf = confRef.current
+    const confCard = conf?.querySelector<HTMLElement>("[data-conf-card]")
+    if (confCard) gsap.set(confCard, { scale: 0, opacity: 0 })
     const fuBefore = conf?.querySelector<HTMLElement>("[data-fu-before]")
     const fuAfter = conf?.querySelector<HTMLElement>("[data-fu-after]")
-    const fuIconBefore = conf?.querySelector<HTMLElement>("[data-fu-icon-before]")
+    const fuIcon = conf?.querySelector<HTMLElement>("[data-fu-icon-before]")
     if (fuAfter) gsap.set(fuAfter, { opacity: 0 })
 
     // ── Scrubbed timeline — phase transitions only ──────────────────────────
@@ -1098,22 +1262,57 @@ export function ProposalsCrmSection() {
       { y: 0, opacity: 1, ease: "power3.out", duration: 0.8 },
       "p1"
     )
+
+    // Pop source cards in with stagger — slow and deliberate
     fragRefs.current.forEach((f, i) => {
       if (!f) return
       tl.to(
         f,
         {
-          x: 0,
-          y: 0,
-          rotation: 0,
-          scale: 0.6,
-          ease: "power2.inOut",
-          duration: 1.6
+          scale: 1,
+          opacity: 1,
+          ease: "back.out(1.7)",
+          duration: 1.2
         },
-        `p1+=${0.8 + i * 0.12}`
+        `p1+=${0.8 + i * 0.5}`
       )
     })
-    tl.to({}, { duration: 0.8 })
+
+    // Dwell — let users read the cards
+    tl.to({}, { duration: 3.5 })
+
+    // Collapse source cards to center, reveal merged proposal
+    tl.addLabel("collapse")
+    const mergedAnimEl = proposalsRef.current?.querySelector<HTMLElement>(
+      "[data-merged-proposal]"
+    )
+    fragRefs.current.forEach((f, i) => {
+      if (!f) return
+      tl.to(
+        f,
+        {
+          rotation: 0,
+          scale: 0,
+          opacity: 0,
+          ease: "back.in(1.4)",
+          duration: 0.8
+        },
+        `collapse+=${i * 0.1}`
+      )
+    })
+    if (mergedAnimEl) {
+      tl.to(
+        mergedAnimEl,
+        {
+          opacity: 1,
+          scale: 1,
+          ease: "back.out(1.7)",
+          duration: 0.8
+        },
+        "collapse+=0.5"
+      )
+    }
+    tl.to({}, { duration: 1.5 })
 
     tl.to(
       proposalsRef.current,
@@ -1127,95 +1326,46 @@ export function ProposalsCrmSection() {
     )
     tl.addLabel("confIn")
 
-    // Gmail button gets pressed in the red pill, disappears in place, then the
-    // pill flips to the green "drafted" state — all scrubbed/reversible.
-    if (fuBefore && fuAfter && fuIconBefore) {
-      // 1. press the gmail button down
+    // Pop the card in with scale
+    if (confCard) {
       tl.to(
-        fuIconBefore,
-        { scale: 0.8, duration: 0.2, ease: "power2.in" },
-        "confIn+=1.3"
+        confCard,
+        {
+          scale: 1,
+          opacity: 1,
+          ease: "back.out(1.7)",
+          duration: 1.2
+        },
+        "confIn+=0.3"
       )
-      // 2. it disappears in place
+    }
+
+    // Gmail icon shrinks and slides right, then pill transitions
+    if (fuIcon) {
       tl.to(
-        fuIconBefore,
-        { scale: 0, opacity: 0, duration: 0.3, ease: "back.in(1.7)" },
-        "confIn+=1.5"
+        fuIcon,
+        { scale: 0.6, x: 20, opacity: 0, duration: 0.5, ease: "power2.in" },
+        "confIn+=1.8"
       )
-      // 3. red pill flips to green (now without the gmail button)
+    }
+    if (fuBefore && fuAfter) {
       tl.to(
         fuBefore,
-        { opacity: 0, duration: 0.4, ease: "power2.inOut" },
-        "confIn+=1.7"
+        { opacity: 0, duration: 0.6, ease: "power2.inOut" },
+        "confIn+=2.3"
       )
       tl.to(
         fuAfter,
-        { opacity: 1, duration: 0.4, ease: "power2.inOut" },
-        "confIn+=1.75"
+        { opacity: 1, duration: 0.6, ease: "power2.inOut" },
+        "confIn+=2.35"
       )
     }
 
     tl.to({}, { duration: 3.5 }) // dwell on conference card
 
-    // ── Auto-play card-reveal + content animations ──────────────────────────
-    const tlDur = tl.duration()
-    const wrapperH = wrapperRef.current.scrollHeight
-
-    // Convert a label position (minus an offset so we fire slightly early,
-    // as the card starts sliding in rather than after it lands).
-    const scrollPx = (label: string, offsetUnits = 0) =>
-      Math.round((((tl.labels[label] ?? 0) + offsetUnits) / tlDur) * wrapperH)
-
-    // Prevent/restore scroll-wheel & touch during a card animation so the user
-    // must wait for the sequence to finish before continuing down.
-    const noop = (e: Event) => e.preventDefault()
-    const lockScroll = () => {
-      window.addEventListener("wheel", noop, { passive: false })
-      window.addEventListener("touchmove", noop, { passive: false })
-    }
-    const unlockScroll = () => {
-      window.removeEventListener("wheel", noop)
-      window.removeEventListener("touchmove", noop)
-    }
-
-    // Blue rises → white covers → E7F1FD.  Fast — timed to land as the card
-    // text finishes sliding in.
-    const buildReveal = (shell: HTMLElement, inner: HTMLElement) => {
-      const t = gsap.timeline({ paused: true })
-      t.to(shell, { y: 0, scale: 1, ease: "back.out(1.4)", duration: 0.48 }, 0)
-      t.to(inner, { scale: 1, ease: "back.out(1.7)", duration: 0.38 }, 0.26)
-      t.set(shell, { backgroundColor: "rgba(0,0,0,0)" }, 0.64)
-      t.to(
-        inner,
-        { backgroundColor: "#E7F1FD", duration: 0.22, ease: "power2.inOut" },
-        0.64
-      )
-      return t
-    }
-
-    let confRevealTl: gsap.core.Timeline | null = null
-
-    const confSt =
-      p2Shell && p2Inner
-        ? ScrollTrigger.create({
-            trigger: wrapperRef.current,
-            start: `top+=${scrollPx("confIn", -1.0)}px top`,
-            once: true,
-            onEnter: () => {
-              lockScroll()
-              confRevealTl = buildReveal(p2Shell, p2Inner)
-              confRevealTl.call(unlockScroll, [], 5.5)
-              confRevealTl.play()
-            }
-          })
-        : null
-
     return () => {
-      unlockScroll()
       tl.scrollTrigger?.kill()
       tl.kill()
-      confRevealTl?.kill()
-      confSt?.kill()
     }
   }, [staticLayout, isMobile])
 
@@ -1310,7 +1460,7 @@ export function ProposalsCrmSection() {
                 drafts a ready-to-send proposal before you close the call.
               </p>
             </div>
-            <GooeyStage fragRefs={fragRefs} merged />
+            <StackedDocStageMobile />
           </div>
           <div
             data-reveal
@@ -1409,7 +1559,7 @@ export function ProposalsCrmSection() {
 
             {/* Phase 1 — Proposals */}
             <div ref={proposalsRef} style={phaseGridStyle}>
-              <GooeyStage fragRefs={fragRefs} merged={false} />
+              <StackedDocStage fragRefs={fragRefs} merged={false} />
               <div>
                 <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
                 <p style={bodyStyle}>
@@ -1428,20 +1578,8 @@ export function ProposalsCrmSection() {
                   follow-up in your voice before the connection goes cold.
                 </p>
               </div>
-              <div
-                data-card-shell="p2"
-                style={{
-                  position: "relative",
-                  background: "#267FE5",
-                  borderRadius: "32px"
-                }}
-              >
-                <div
-                  data-card-inner="p2"
-                  style={{ background: "#fff", borderRadius: "32px" }}
-                >
-                  <ConferenceCard animated />
-                </div>
+              <div data-conf-card>
+                <ConferenceCard animated />
               </div>
             </div>
           </div>

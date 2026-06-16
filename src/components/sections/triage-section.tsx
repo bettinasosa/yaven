@@ -207,8 +207,8 @@ export function TriageSection() {
     const timing = isMobile
       ? [
           { start: "top 80%", end: "top top" },
-          { start: "0% top", end: "16% top" },
-          { start: "22% top", end: "38% top" }
+          { start: "20% top", end: "36% top" },
+          { start: "50% top", end: "66% top" }
         ]
       : [
           { start: "0% top", end: "12% top" },
@@ -321,7 +321,7 @@ export function TriageSection() {
           ref={wrapperRef}
           className="relative"
           style={{
-            height: "110vh",
+            height: "280vh",
             background: "var(--cream)",
             marginTop: "-1px"
           }}
