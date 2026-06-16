@@ -56,7 +56,7 @@ const phaseGridStyle: React.CSSProperties = {
   inset: 0,
   maxWidth: "1100px",
   margin: "0 auto",
-  padding: "0 24px",
+  padding: "clamp(40px, 6vh, 80px) 24px 0",
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
   alignItems: "center",
@@ -1164,11 +1164,17 @@ export function ProposalsCrmSection() {
   // Mobile: the slides use the stacked static layout, but each one fades up as
   // it scrolls into view (reduced motion gets no animation).
   useEffect(() => {
-    if (!isMobile || staticLayout || !mobileStackRef.current) return
-    ScrollTrigger.refresh()
-    const blocks =
+    if (!mobileStackRef.current) return
+    const blocks = Array.from(
       mobileStackRef.current.querySelectorAll<HTMLElement>("[data-reveal]")
-    const anims = Array.from(blocks).map(b =>
+    )
+    // Reduced motion: clear any stale GSAP inline styles from the hydration race
+    if (!isMobile || staticLayout) {
+      blocks.forEach(b => gsap.set(b, { clearProps: "all" }))
+      return
+    }
+    ScrollTrigger.refresh()
+    const anims = blocks.map(b =>
       gsap.from(b, {
         y: 40,
         opacity: 0,
@@ -1190,15 +1196,38 @@ export function ProposalsCrmSection() {
   }, [isMobile, staticLayout])
 
   useEffect(() => {
-    if (staticLayout || !wrapperRef.current) return
+    if (!wrapperRef.current) return
 
-    // ── Initial state ───────────────────────────────────────────────────────
-    gsap.set(networkRef.current, { y: 60, opacity: 0 })
+    // Collect all animated elements so we can clear stale inline styles
+    const allAnimated: (HTMLElement | null | undefined)[] = [
+      networkRef.current,
+      proposalsRef.current,
+      confRef.current,
+      ...fragRefs.current
+    ]
     const netNodes = networkRef.current
       ? Array.from(
           networkRef.current.querySelectorAll<HTMLElement>("[data-net-node]")
         )
       : []
+    const mergedEl = proposalsRef.current?.querySelector<HTMLElement>(
+      "[data-merged-proposal]"
+    )
+    const conf = confRef.current
+    const confCard = conf?.querySelector<HTMLElement>("[data-conf-card]")
+    const fuBefore = conf?.querySelector<HTMLElement>("[data-fu-before]")
+    const fuAfter = conf?.querySelector<HTMLElement>("[data-fu-after]")
+    const fuIcon = conf?.querySelector<HTMLElement>("[data-fu-icon-before]")
+
+    // Reduced motion: clear any stale GSAP inline styles from the hydration race
+    if (staticLayout) {
+      ;[...allAnimated, mergedEl, confCard, fuBefore, fuAfter, fuIcon, ...netNodes]
+        .forEach(el => { if (el) gsap.set(el, { clearProps: "all" }) })
+      return
+    }
+
+    // ── Initial state ───────────────────────────────────────────────────────
+    gsap.set(networkRef.current, { y: 60, opacity: 0 })
     netNodes.forEach(n => gsap.set(n, { scale: 0, opacity: 0 }))
 
     gsap.set(proposalsRef.current, { y: 60, opacity: 0 })
@@ -1207,18 +1236,10 @@ export function ProposalsCrmSection() {
     fragRefs.current.forEach(f => {
       if (f) gsap.set(f, { scale: 0, opacity: 0 })
     })
-    const mergedEl = proposalsRef.current?.querySelector<HTMLElement>(
-      "[data-merged-proposal]"
-    )
     if (mergedEl) gsap.set(mergedEl, { opacity: 0, scale: 0.85 })
 
     // Conference card follow-up animation elements
-    const conf = confRef.current
-    const confCard = conf?.querySelector<HTMLElement>("[data-conf-card]")
     if (confCard) gsap.set(confCard, { scale: 0, opacity: 0 })
-    const fuBefore = conf?.querySelector<HTMLElement>("[data-fu-before]")
-    const fuAfter = conf?.querySelector<HTMLElement>("[data-fu-after]")
-    const fuIcon = conf?.querySelector<HTMLElement>("[data-fu-icon-before]")
     if (fuAfter) gsap.set(fuAfter, { opacity: 0 })
 
     // ── Scrubbed timeline — phase transitions only ──────────────────────────
@@ -1403,8 +1424,8 @@ export function ProposalsCrmSection() {
           <div
             style={{
               paddingTop: isMobile
-                ? "clamp(48px, 9vh, 90px)"
-                : "clamp(80px, 12vh, 140px)",
+                ? "clamp(60px, 10vh, 100px)"
+                : "clamp(80px, 14vh, 160px)",
               paddingBottom: isMobile ? "clamp(8px, 2vh, 20px)" : undefined
             }}
           >
@@ -1532,7 +1553,7 @@ export function ProposalsCrmSection() {
               left: 0,
               right: 0,
               zIndex: 5,
-              paddingTop: "clamp(48px, 8vh, 90px)",
+              paddingTop: "clamp(100px, 18vh, 200px)",
               pointerEvents: "none"
             }}
           >

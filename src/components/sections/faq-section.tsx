@@ -199,75 +199,107 @@ export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const staticLayout = usePrefersReducedMotion()
   const sectionRef = useRef<HTMLElement>(null)
+  const pinWrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (staticLayout || !sectionRef.current) return
+    if (!sectionRef.current) return
     const items = Array.from(
       sectionRef.current.querySelectorAll<HTMLElement>("[data-faq-item]")
     )
+
+    // Reduced motion — ensure items are visible (clears any inline styles
+    // left by a previous GSAP pass during the hydration race).
+    if (staticLayout) {
+      gsap.set(items, { clearProps: "all" })
+      return
+    }
+
     gsap.set(items, { y: 30, opacity: 0 })
 
-    const st = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: "top 75%",
-      onEnter: () => {
-        gsap.to(items, {
-          y: 0,
-          opacity: 1,
-          stagger: 0.08,
-          duration: 0.6,
-          ease: "power3.out"
-        })
-      }
-    })
+    const triggers: ScrollTrigger[] = []
 
-    return () => st.kill()
+    // Stagger-reveal items
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 75%",
+        onEnter: () => {
+          gsap.to(items, {
+            y: 0,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 0.6,
+            ease: "power3.out"
+          })
+        }
+      })
+    )
+
+    // Pin the section briefly so users can read the FAQs
+    if (pinWrapRef.current) {
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: pinWrapRef.current,
+          start: "top top",
+          end: "+=40%",
+          pin: sectionRef.current,
+          pinSpacing: true
+        })
+      )
+    }
+
+    return () => {
+      triggers.forEach(t => t.kill())
+      gsap.set(items, { clearProps: "all" })
+    }
   }, [staticLayout])
 
   return (
-    <section
-      ref={sectionRef}
-      style={{
-        background: "var(--primary)",
-        padding:
-          "clamp(80px, 12vh, 140px) clamp(28px, 5vw, 48px) clamp(200px, 40vh, 480px)"
-      }}
-    >
-      <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-        <ScrollCutReveal
-          style={{
-            fontFamily: "var(--font-instrument-serif)",
-            fontSize: "var(--fs-display)",
-            fontWeight: 500,
-            letterSpacing: "-0.02em",
-            lineHeight: 1.08,
-            color: "var(--cream)",
-            margin: "0 0 clamp(32px, 5vh, 56px)",
-            textAlign: "left"
-          }}
-        >
-          FAQ
-        </ScrollCutReveal>
+    <div ref={pinWrapRef}>
+      <section
+        ref={sectionRef}
+        style={{
+          background: "var(--primary)",
+          padding:
+            "clamp(80px, 12vh, 140px) clamp(28px, 5vw, 48px) clamp(80px, 12vh, 140px)"
+        }}
+      >
+        <div style={{ maxWidth: "720px", margin: "0 auto" }}>
+          <ScrollCutReveal
+            style={{
+              fontFamily: "var(--font-instrument-serif)",
+              fontSize: "var(--fs-display)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.08,
+              color: "var(--cream)",
+              margin: "0 0 clamp(32px, 5vh, 56px)",
+              textAlign: "left"
+            }}
+          >
+            FAQ
+          </ScrollCutReveal>
 
-        <div
-          style={{
-            borderTop: "1px solid rgba(255,255,255,0.1)"
-          }}
-        >
-          {FAQS.map((faq, i) => (
-            <div key={i} data-faq-item>
-              <FaqItem
-                q={faq.q}
-                a={faq.a}
-                open={openIndex === i}
-                onToggle={() =>
-                  setOpenIndex(openIndex === i ? null : i)
-                }
-              />
-            </div>
-          ))}
+          <div
+            style={{
+              borderTop: "1px solid rgba(255,255,255,0.1)"
+            }}
+          >
+            {FAQS.map((faq, i) => (
+              <div key={i} data-faq-item>
+                <FaqItem
+                  q={faq.q}
+                  a={faq.a}
+                  open={openIndex === i}
+                  onToggle={() =>
+                    setOpenIndex(openIndex === i ? null : i)
+                  }
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }
