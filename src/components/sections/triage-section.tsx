@@ -388,12 +388,15 @@ export function TriageSection() {
               : "repeat(auto-fit, minmax(300px, 1fr))"
           }}
         >
+          {/* Mobile reads text-first (matches the animated mobile layout);
+              desktop keeps cards-left / text-right. */}
+          {isMobile && sideText}
           <div className="flex flex-col gap-6" style={{ maxWidth: "440px" }}>
             {CARDS.map(card => (
               <TriageCard key={card.label} card={card} />
             ))}
           </div>
-          {sideText}
+          {!isMobile && sideText}
         </div>
       </section>
     )
