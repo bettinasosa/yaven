@@ -430,6 +430,10 @@
   .glass-btn-invite {
     animation: none;
   }
+  /* Honour reduced motion — jump instantly instead of CSS smooth-scrolling. */
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* Shake — invalid waitlist submit (replaces native validation bubble) */

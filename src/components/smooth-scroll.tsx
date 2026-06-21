@@ -4,11 +4,19 @@ import { useEffect } from "react"
 import Lenis from "lenis"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const reduceMotion = usePrefersReducedMotion()
+
   useEffect(() => {
+    // Reduced motion: skip Lenis entirely and let the browser scroll natively.
+    // Lenis virtualizes scroll on every frame, which fights Safari's native
+    // scrolling and is itself motion the user has asked us not to add.
+    if (reduceMotion) return
+
     const lenis = new Lenis({ lerp: 0.1 })
 
     // Sync ScrollTrigger with every Lenis scroll tick
@@ -29,7 +37,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       window.removeEventListener("content-changed", onContentChanged)
       lenis.destroy()
     }
-  }, [])
+  }, [reduceMotion])
 
   return <>{children}</>
 }

@@ -381,9 +381,11 @@ const SIGNALS = [
 function NetworkStage({ mobile }: { mobile?: boolean }) {
   const avatarGradient = "linear-gradient(145deg, #267FE5, #4da3f0, #9e8ec8)"
   const stageRef = useRef<HTMLDivElement>(null)
+  const staticLayout = usePrefersReducedMotion()
 
   useEffect(() => {
-    if (!mobile || !stageRef.current) return
+    // Reduced motion: leave the cards in their natural (visible) state.
+    if (staticLayout || !mobile || !stageRef.current) return
     const cards = Array.from(
       stageRef.current.querySelectorAll<HTMLElement>("[data-net-card]")
     )
@@ -413,7 +415,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
       }
     })
     return () => st.kill()
-  }, [mobile])
+  }, [mobile, staticLayout])
 
   // Mobile: stacked vertical cards with staggered pop-in
   if (mobile) {

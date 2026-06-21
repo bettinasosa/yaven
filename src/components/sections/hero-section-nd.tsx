@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
+import { bookDemoHref } from "@/lib/contact"
 import dynamic from "next/dynamic"
 
 const LiquidGradientBg = dynamic(
@@ -86,12 +87,10 @@ function HeroVariantB() {
         </div>
         <a
           ref={bookCallRef}
-          href="https://calendly.com/nickprice2000/yaven-support"
-          target="_blank"
-          rel="noopener noreferrer"
+          href={bookDemoHref}
           className="u-hover-underline font-[var(--font-space-mono)] text-[13px] font-medium tracking-[0.08em] text-white/70 no-underline"
         >
-          Book a call ↗
+          Book a demo
         </a>
       </div>
 

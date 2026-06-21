@@ -305,7 +305,9 @@ export function TriageSection() {
   // Mobile: read the text first (normal scroll), then a pinned stacking-card
   // pile below — same animation as desktop, just full phone-width and on its
   // own so it doesn't fight the text for vertical space.
-  if (isMobile) {
+  // Reduced motion must fall through to the static layout below — the pinned
+  // wrapper's fill animation is disabled, so it would leave a tall empty gap.
+  if (isMobile && !staticLayout) {
     return (
       <>
         <section

@@ -146,10 +146,7 @@ export function FooterSection() {
           <div className="flex flex-col gap-[10px]">
             {[
               { label: "support@yaven.us", href: "mailto:support@yaven.us" },
-              {
-                label: "Book a call ↗",
-                href: "https://calendly.com/nickprice2000/yaven-support"
-              }
+              { label: "+1 (628) 338-3898", href: "tel:+16283383898" }
             ].map(s => (
               <a
                 key={s.label}
@@ -167,6 +164,19 @@ export function FooterSection() {
               </a>
             ))}
           </div>
+          <address
+            style={{
+              ...colLinkStyle,
+              marginTop: "16px",
+              fontStyle: "normal",
+              lineHeight: 1.5,
+              cursor: "default"
+            }}
+          >
+            169 Madison Ave STE 31950
+            <br />
+            New York, NY 10016
+          </address>
         </div>
 
         {/* Legal column */}
