@@ -207,33 +207,40 @@ export default function Home() {
         </div>
       </CardWrap>
 
-      {/* ── Sticky footer ── */}
-      <div
-        className="relative"
-        style={{
-          height: FOOTER_H,
-          clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)",
-          zIndex: 1
-        }}
-      >
+      {/* ── Footer ── */}
+      {/* Mobile: the stacked footer is taller than both FOOTER_H and the
+          viewport, so the sticky-reveal trick clips the wordmark and can't
+          pin correctly. Render it in normal flow instead. */}
+      {isMobile ? (
+        <FooterSection />
+      ) : (
         <div
+          className="relative"
           style={{
-            position: "relative",
-            height: `calc(100vh + ${FOOTER_H}px)`,
-            top: "-100vh"
+            height: FOOTER_H,
+            clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)",
+            zIndex: 1
           }}
         >
           <div
             style={{
-              height: FOOTER_H,
-              position: "sticky",
-              top: `calc(100vh - ${FOOTER_H}px)`
+              position: "relative",
+              height: `calc(100vh + ${FOOTER_H}px)`,
+              top: "-100vh"
             }}
           >
-            <FooterSection />
+            <div
+              style={{
+                height: FOOTER_H,
+                position: "sticky",
+                top: `calc(100vh - ${FOOTER_H}px)`
+              }}
+            >
+              <FooterSection />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   )
 }

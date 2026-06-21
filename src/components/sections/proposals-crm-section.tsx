@@ -1170,9 +1170,10 @@ export function ProposalsCrmSection() {
     const blocks = Array.from(
       mobileStackRef.current.querySelectorAll<HTMLElement>("[data-reveal]")
     )
-    // Reduced motion: clear any stale GSAP inline styles from the hydration race
+    // Reduced motion: clear only the GSAP-animated props from a hydration race.
+    // "all" would also wipe the React-set inline padding, collapsing the slides.
     if (!isMobile || staticLayout) {
-      blocks.forEach(b => gsap.set(b, { clearProps: "all" }))
+      blocks.forEach(b => gsap.set(b, { clearProps: "opacity,transform" }))
       return
     }
     ScrollTrigger.refresh()

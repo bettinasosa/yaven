@@ -19,7 +19,7 @@ const colLinkStyle: React.CSSProperties = {
 export function FooterSection() {
   return (
     <footer
-      className="h-full flex flex-col"
+      className="min-h-full flex flex-col"
       style={{ background: "var(--ink)", position: "relative", overflow: "hidden" }}
     >
       {/* ── Top: link columns + waitlist ── */}
@@ -237,7 +237,7 @@ export function FooterSection() {
 
       {/* ── Bottom: giant wordmark + copyright ── */}
       <div
-        className="flex-1 flex items-end relative pb-2"
+        className="flex-1 flex items-end relative pb-2 pt-16 sm:pt-0"
         style={{ paddingLeft: "clamp(20px, 2vw, 44px)", paddingRight: "16px" }}
       >
         <span
