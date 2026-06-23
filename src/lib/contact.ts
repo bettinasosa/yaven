@@ -11,6 +11,6 @@ A little about me:
 
 Thanks!`
 
-export const bookDemoHref = `mailto:support@yaven.us?subject=${encodeURIComponent(
+export const bookDemoHref = `mailto:support@yaven.ai?subject=${encodeURIComponent(
   DEMO_SUBJECT
 )}&body=${encodeURIComponent(DEMO_BODY)}`

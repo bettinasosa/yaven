@@ -145,7 +145,7 @@ export function FooterSection() {
           </p>
           <div className="flex flex-col gap-[10px]">
             {[
-              { label: "support@yaven.us", href: "mailto:support@yaven.us" },
+              { label: "support@yaven.ai", href: "mailto:support@yaven.ai" },
               { label: "+1 (628) 338-3898", href: "tel:+16283383898" }
             ].map(s => (
               <a

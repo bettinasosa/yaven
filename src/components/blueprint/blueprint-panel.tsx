@@ -81,7 +81,7 @@ export function BlueprintPanel() {
   const copyLink = useCallback(async () => {
     if (!refCode) return
     try {
-      await navigator.clipboard.writeText(`yaven.us/w/${refCode}`)
+      await navigator.clipboard.writeText(`yaven.ai/w/${refCode}`)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch { /* clipboard not available */ }
@@ -248,7 +248,7 @@ export function BlueprintPanel() {
               marginRight: "10px"
             }}
           >
-            yaven.us/w/{refCode}
+            yaven.ai/w/{refCode}
           </span>
           <button
             type="button"

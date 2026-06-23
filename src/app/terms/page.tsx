@@ -114,8 +114,8 @@ export default function TermsPage() {
       <LegalH2>Contact</LegalH2>
       <LegalP>
         Questions about these terms? Email{" "}
-        <a href="mailto:support@yaven.us" style={{ color: "var(--ink)" }}>
-          support@yaven.us
+        <a href="mailto:support@yaven.ai" style={{ color: "var(--ink)" }}>
+          support@yaven.ai
         </a>
         .
       </LegalP>

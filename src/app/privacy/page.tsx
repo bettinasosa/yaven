@@ -192,8 +192,8 @@ export default function PrivacyPage() {
       <LegalH2>Contact</LegalH2>
       <LegalP>
         Questions about this policy or your data? Email{" "}
-        <a href="mailto:support@yaven.us" style={{ color: "var(--ink)" }}>
-          support@yaven.us
+        <a href="mailto:support@yaven.ai" style={{ color: "var(--ink)" }}>
+          support@yaven.ai
         </a>
         .
       </LegalP>
