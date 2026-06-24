@@ -15,6 +15,7 @@ export const ICON_LABELS: Record<string, string> = {
   googleads: "Google Ads",
   googleanalytics: "Google Analytics",
   telegram: "Telegram",
+  "telegram-icon": "Telegram",
   imessage: "iMessage",
   spotify: "Spotify",
   files: "Files"

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
@@ -8,7 +8,10 @@ import { bookDemoHref } from "@/lib/contact"
 import dynamic from "next/dynamic"
 
 const LiquidGradientBg = dynamic(
-  () => import("@/components/effects/liquid-gradient-bg").then(m => m.LiquidGradientBg),
+  () =>
+    import("@/components/effects/liquid-gradient-bg").then(
+      m => m.LiquidGradientBg
+    ),
   { ssr: false }
 )
 
@@ -22,6 +25,119 @@ function YavenMark({ height }: { height: number }) {
       style={{ mixBlendMode: "multiply", width: "auto", height: `${height}px` }}
       priority
     />
+  )
+}
+
+// ── Floating app icons on "apps" hover ──────────────────────────────────────
+
+const APP_ICONS = [
+  { src: "/logos/gmail.png", alt: "Gmail" },
+  { src: "/logos/telegram-icon.png", alt: "Telegram" },
+  { src: "/logos/notion.png", alt: "Notion" },
+  { src: "/logos/gcal.png", alt: "Google Calendar" },
+  { src: "/logos/hubspot.png", alt: "HubSpot" },
+  { src: "/logos/linkedin.png", alt: "LinkedIn" },
+  { src: "/logos/asana.png", alt: "Asana" },
+  { src: "/logos/salesforce.png", alt: "Salesforce" },
+  { src: "/logos/excel.png", alt: "Excel" },
+]
+
+// Party pop — spaced out, higher ones spread more
+const POP_TARGETS = [
+  { x: -56, y: 4, r: -14 },
+  { x: -44, y: -10, r: 10 },
+  { x: -28, y: -30, r: -6 },
+  { x: -4, y: -14, r: 8 },
+  { x: 20, y: -34, r: -4 },
+  { x: 38, y: -10, r: 12 },
+  { x: 58, y: 4, r: -8 },
+  { x: 62, y: -24, r: 6 },
+  { x: -52, y: -26, r: -10 },
+]
+
+function AppsWord() {
+  const [hovered, setHovered] = useState(false)
+  const iconsRef = useRef<(HTMLSpanElement | null)[]>([])
+
+  useEffect(() => {
+    if (!hovered) {
+      iconsRef.current.forEach(el => {
+        if (el) {
+          gsap.to(el, {
+            opacity: 0,
+            x: 0,
+            y: 0,
+            scale: 0.2,
+            rotation: 0,
+            duration: 0.15,
+            ease: "power4.in",
+          })
+        }
+      })
+      return
+    }
+    iconsRef.current.forEach((el, i) => {
+      if (!el) return
+      const t = POP_TARGETS[i]
+      gsap.fromTo(
+        el,
+        { opacity: 0, x: 0, y: 0, scale: 0, rotation: 0 },
+        {
+          opacity: 1,
+          x: t.x,
+          y: t.y,
+          scale: 1,
+          rotation: t.r,
+          duration: 0.3,
+          ease: "back.out(4)",
+          delay: i * 0.02,
+        }
+      )
+    })
+  }, [hovered])
+
+  return (
+    <span
+      className="relative inline-block cursor-default"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <span className="font-bold">apps</span>
+      {/* floating icons — party pop burst */}
+      <span
+        className="absolute pointer-events-none"
+        style={{ left: "50%", top: "0" }}
+        aria-hidden="true"
+      >
+        {APP_ICONS.map((icon, i) => (
+          <span
+            key={icon.alt}
+            ref={el => { iconsRef.current[i] = el }}
+            className="absolute flex items-center justify-center"
+            style={{
+              left: -10,
+              top: -10,
+              opacity: 0,
+              width: 20,
+              height: 20,
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.15)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.15), inset 0 0.5px 0 rgba(255,255,255,0.25)",
+            }}
+          >
+            <Image
+              src={icon.src}
+              alt={icon.alt}
+              width={14}
+              height={14}
+              style={{ objectFit: "contain", width: 14, height: 14 }}
+            />
+          </span>
+        ))}
+      </span>
+    </span>
   )
 }
 
@@ -79,9 +195,7 @@ function HeroVariantB() {
       <LiquidGradientBg />
 
       {/* Nav — logo top left, book a call top right */}
-      <div
-        className="absolute top-[clamp(28px,4vw,48px)] left-[clamp(28px,4vw,48px)] right-[clamp(28px,4vw,48px)] z-10 flex items-center justify-between"
-      >
+      <div className="absolute top-[clamp(28px,4vw,48px)] left-[clamp(28px,4vw,48px)] right-[clamp(28px,4vw,48px)] z-10 flex items-center justify-between">
         <div ref={logoRef}>
           <YavenMark height={52} />
         </div>
@@ -114,11 +228,11 @@ function HeroVariantB() {
           </p>
 
           <p className="font-[var(--font-dm-sans),sans-serif] text-[var(--fs-body)] font-normal text-white/70 leading-[1.5] mt-0 mr-0 mb-[clamp(24px,4vh,40px)] ml-0">
-            A personal assistant that triages
+            The AI assistant that lives in your menu bar,
             <br />
-            your inbox, drafts in your voice, and proactively
+            it handles the admin that eats your day
             <br />
-            handles the admin that doesn&apos;t need you.
+            across all your <AppsWord />. All of it!
           </p>
 
           <div ref={ctaRef}>

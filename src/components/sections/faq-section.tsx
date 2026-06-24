@@ -16,14 +16,16 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     a: (
       <>
         A second brain that lives in your Mac&apos;s menu bar. It connects to
-        your email, calendar, messages, and docs, learns how you work, and
-        builds a picture of every client, conversation, and commitment so
-        nothing falls through the cracks.
-        <br /><br />
+        all of your inbound (telegram, imessage, slack, mail etc.), calendar,
+        notes and docs, learns how you work, and builds a picture of your
+        conversations, and commitments so nothing falls through the cracks.
+        <br />
+        <br />
         Right now it intelligently prioritises your inbox so the most critical
-        messages are always at the top of your desk, drafts replies in your
-        voice from any app on your Mac, and preps you before every meeting. The
-        more you use it, the more it handles on its own. Currently in beta.
+        messages are always at the top of your desk, drafts replies on one click
+        in your voice from any app on your Mac, and preps you before every
+        meeting. The more you use it, the more it handles on its own. Currently
+        in beta.
       </>
     )
   },
@@ -291,9 +293,7 @@ export function FaqSection() {
                   q={faq.q}
                   a={faq.a}
                   open={openIndex === i}
-                  onToggle={() =>
-                    setOpenIndex(openIndex === i ? null : i)
-                  }
+                  onToggle={() => setOpenIndex(openIndex === i ? null : i)}
                 />
               </div>
             ))}

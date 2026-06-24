@@ -767,13 +767,15 @@ export function MeetYavenSection() {
 
       <div className="flex flex-col gap-5 max-w-[520px]">
         <p style={bodyTextStyle}>
-          It connects to your <IconPill name="gmail" tilt={-3} /> email,{" "}
+          It connects to all your <IconPill name="gmail" tilt={-3} />
+          <IconPill name="telegram-icon" tilt={3} />
+          <IconPill name="imessage" tilt={-3} />
+          <IconPill name="slack" tilt={3} /> inbound,{" "}
           <IconPill name="gcal" tilt={2} /> calendar,{" "}
-          <IconPill name="hubspot" tilt={-2} /> CRM,{" "}
+          <IconPill name="granola" tilt={-2} /> notes,{" "}
           <IconPill name="notion" tilt={3} /> docs and more, collating
-          everything important in <U>one place</U>. The intro, the contract,
-          the unpaid
-          invoice, none of it gets buried.
+          everything important in <U>one place</U>. The intro, the contract, the
+          unpaid invoice, none of it gets buried.
         </p>
 
         <p style={bodyTextStyle}>
@@ -785,7 +787,7 @@ export function MeetYavenSection() {
         </p>
 
         <p style={bodyTextStyle}>
-          <U>Local-first</U>. Your emails, drafts, and context stay on your
+          <U>Local-first</U>. Your messages, drafts, and context stay on your
           machine. Nothing is uploaded to our servers or synced to a cloud.
         </p>
       </div>
@@ -798,8 +800,14 @@ export function MeetYavenSection() {
         }}
       >
         Try the demo! press <ShortcutBadge keys={["⌥", "D"]} small />
-        <span style={{ opacity: showAskHint ? 1 : 0, transition: "opacity 0.4s ease" }}>
-          {" "}or <ShortcutBadge keys={["⌥", "A"]} small />
+        <span
+          style={{
+            opacity: showAskHint ? 1 : 0,
+            transition: "opacity 0.4s ease"
+          }}
+        >
+          {" "}
+          or <ShortcutBadge keys={["⌥", "A"]} small />
         </span>
       </p>
     </div>
@@ -854,7 +862,11 @@ export function MeetYavenSection() {
         <div
           ref={wrapperRef}
           className="relative bg-[var(--primary)]"
-          style={{ height: "250vh", marginTop: "-1px", marginBottom: "clamp(60px,10vh,100px)" }}
+          style={{
+            height: "250vh",
+            marginTop: "-1px",
+            marginBottom: "clamp(60px,10vh,100px)"
+          }}
         >
           <div
             className="sticky top-0 h-screen overflow-visible flex justify-center"
