@@ -39,7 +39,7 @@ const APP_ICONS = [
   { src: "/logos/linkedin.png", alt: "LinkedIn" },
   { src: "/logos/asana.png", alt: "Asana" },
   { src: "/logos/salesforce.png", alt: "Salesforce" },
-  { src: "/logos/excel.png", alt: "Excel" },
+  { src: "/logos/excel.png", alt: "Excel" }
 ]
 
 // Party pop — spaced out, higher ones spread more
@@ -52,7 +52,7 @@ const POP_TARGETS = [
   { x: 38, y: -10, r: 12 },
   { x: 58, y: 4, r: -8 },
   { x: 62, y: -24, r: 6 },
-  { x: -52, y: -26, r: -10 },
+  { x: -52, y: -26, r: -10 }
 ]
 
 function AppsWord() {
@@ -63,6 +63,7 @@ function AppsWord() {
     if (!hovered) {
       iconsRef.current.forEach(el => {
         if (el) {
+          gsap.killTweensOf(el)
           gsap.to(el, {
             opacity: 0,
             x: 0,
@@ -70,7 +71,7 @@ function AppsWord() {
             scale: 0.2,
             rotation: 0,
             duration: 0.15,
-            ease: "power4.in",
+            ease: "power4.in"
           })
         }
       })
@@ -78,6 +79,7 @@ function AppsWord() {
     }
     iconsRef.current.forEach((el, i) => {
       if (!el) return
+      gsap.killTweensOf(el)
       const t = POP_TARGETS[i]
       gsap.fromTo(
         el,
@@ -90,7 +92,7 @@ function AppsWord() {
           rotation: t.r,
           duration: 0.3,
           ease: "back.out(4)",
-          delay: i * 0.02,
+          delay: i * 0.02
         }
       )
     })
@@ -112,7 +114,9 @@ function AppsWord() {
         {APP_ICONS.map((icon, i) => (
           <span
             key={icon.alt}
-            ref={el => { iconsRef.current[i] = el }}
+            ref={el => {
+              iconsRef.current[i] = el
+            }}
             className="absolute flex items-center justify-center"
             style={{
               left: -10,
@@ -124,7 +128,8 @@ function AppsWord() {
               background: "rgba(255,255,255,0.15)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15), inset 0 0.5px 0 rgba(255,255,255,0.25)",
+              boxShadow:
+                "0 2px 8px rgba(0,0,0,0.15), inset 0 0.5px 0 rgba(255,255,255,0.25)"
             }}
           >
             <Image
@@ -232,7 +237,7 @@ function HeroVariantB() {
             <br />
             it handles the admin that eats your day
             <br />
-            across all your <AppsWord />. All of it!
+            across all your <AppsWord />.
           </p>
 
           <div ref={ctaRef}>
