@@ -28,6 +28,7 @@ export function BlueprintPanel() {
   const [open, setOpen] = useState(false)
   const [onCream, setOnCream] = useState(false)
   const [betaMode, setBetaMode] = useState(false)
+  const [openedAsBeta, setOpenedAsBeta] = useState(false)
   const [email, setEmail] = useState("")
   const [betaName, setBetaName] = useState("")
   const [role, setRole] = useState("")
@@ -50,15 +51,27 @@ export function BlueprintPanel() {
     el.classList.add("yv-shake")
   }
 
-  function handleOpen() {
+  function handleOpen(asBeta = false) {
     setOnCream(!!btnWrapRef.current?.closest(".get-yaven-cream"))
+    if (asBeta) {
+      setBetaMode(true)
+      setOpenedAsBeta(true)
+    }
     setOpen(true)
   }
+
+  // Allow other components to open the panel via a custom event
+  useEffect(() => {
+    function onOpenBeta() { handleOpen(true) }
+    window.addEventListener("yaven:open-beta", onOpenBeta)
+    return () => window.removeEventListener("yaven:open-beta", onOpenBeta)
+  })
 
   function handleClose() {
     if (loading) return
     setOpen(false)
     setBetaMode(false)
+    setOpenedAsBeta(false)
     setBetaName("")
     setRole("")
     setHasMac(null)
@@ -72,6 +85,11 @@ export function BlueprintPanel() {
   }
 
   function exitBeta() {
+    // If opened directly as beta (from receipt), back = close modal
+    if (openedAsBeta) {
+      handleClose()
+      return
+    }
     setBetaMode(false)
     setBetaName("")
     setRole("")
@@ -293,24 +311,45 @@ export function BlueprintPanel() {
       <p
         style={{
           fontFamily: font,
-          fontSize: "28px",
-          fontWeight: 600,
-          color: c.heading
+          fontSize: "12px",
+          fontWeight: 500,
+          color: c.body,
+          textTransform: "uppercase" as const,
+          letterSpacing: "0.12em",
+          margin: "0 0 8px"
         }}
       >
-        Application in.
+        Order confirmed
       </p>
       <p
         style={{
           fontFamily: font,
-          fontSize: "15px",
-          color: c.body,
-          marginTop: "8px",
-          lineHeight: 1.5
+          fontSize: "28px",
+          fontWeight: 600,
+          color: c.heading,
+          margin: 0,
+          lineHeight: 1.2
         }}
       >
-        We onboard testers personally. Grab a slot and skip the
-        email back-and-forth.
+        You're in.
+      </p>
+      {/* Dashed receipt divider */}
+      <div
+        style={{
+          borderBottom: `1px dashed ${c.rowBorder}`,
+          margin: "20px 0"
+        }}
+      />
+      <p
+        style={{
+          fontFamily: font,
+          fontSize: "14px",
+          color: c.body,
+          margin: 0,
+          lineHeight: 1.6
+        }}
+      >
+        We onboard testers personally. Grab a slot and skip the email back-and-forth.
       </p>
       <a
         href="https://calendly.com/nickprice2000/yaven-support"
@@ -318,8 +357,8 @@ export function BlueprintPanel() {
         rel="noopener noreferrer"
         style={{
           display: "inline-block",
-          marginTop: "20px",
-          padding: "13px 28px",
+          marginTop: "24px",
+          padding: "14px 32px",
           borderRadius: "999px",
           background: "#267fe5",
           color: "#fff",
@@ -327,12 +366,12 @@ export function BlueprintPanel() {
           fontWeight: 600,
           fontFamily: font,
           textDecoration: "none",
-          transition: "transform 0.15s ease"
+          transition: "transform 160ms ease-out, background 150ms ease"
         }}
       >
-        Book your 15-min onboarding
+        Book your onboarding
       </a>
-      <div style={{ marginTop: "14px" }}>
+      <div style={{ marginTop: "16px" }}>
         <button
           type="button"
           onClick={handleClose}
@@ -415,7 +454,7 @@ export function BlueprintPanel() {
                           display: "flex",
                           alignItems: "center",
                           gap: "10px",
-                          margin: "0 0 8px"
+                          margin: "0 0 6px"
                         }}
                       >
                         <button
@@ -450,7 +489,7 @@ export function BlueprintPanel() {
                             lineHeight: 1.2
                           }}
                         >
-                          Become a beta tester
+                          Complete your order
                         </h3>
                       </div>
                       <p
@@ -462,8 +501,7 @@ export function BlueprintPanel() {
                           lineHeight: 1.6
                         }}
                       >
-                        Help shape Yaven before launch. We onboard a small group
-                        each week, personally.
+                        Fill in the details below. We onboard a small group each week, personally.
                       </p>
                     </div>
                   ) : (
@@ -744,7 +782,7 @@ export function BlueprintPanel() {
                             {betaMode
                               ? hasMac === false
                                 ? "Join the waitlist"
-                                : "Apply \u2192"
+                                : "Place my order"
                               : "Get early access"}
                           </span>
                         </button>
@@ -776,7 +814,7 @@ export function BlueprintPanel() {
     <>
       <div ref={btnWrapRef} className="glass-wrap">
         <div className="glass-shadow" />
-        <button type="button" onClick={handleOpen} className="glass-btn">
+        <button type="button" onClick={() => handleOpen()} className="glass-btn">
           <span className="text-white">Get early access</span>
         </button>
       </div>
