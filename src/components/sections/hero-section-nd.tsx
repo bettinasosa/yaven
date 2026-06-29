@@ -235,7 +235,7 @@ function HeroVariantB() {
           <p className="font-[var(--font-dm-sans),sans-serif] text-[var(--fs-body)] font-normal text-white/70 leading-[1.5] mt-0 mr-0 mb-[clamp(24px,4vh,40px)] ml-0">
             The AI assistant that lives in your menu bar,
             <br />
-            it handles the admin that eats your day
+            handling the admin that eats your day
             <br />
             across all your <AppsWord />.
           </p>

@@ -45,6 +45,7 @@ Last synced with codebase: 2026-06-15
 **Interactive cards**
 
 Draft card (LinkedIn DM):
+
 > Lola H. — Recruiter, Founding Designer role
 > "Hi Bettina! Your work is stunning, we're hiring a founding designer. Open to a quick chat?"
 > You type: "politely decline, warm"
@@ -52,6 +53,7 @@ Draft card (LinkedIn DM):
 > "Thanks so much for reaching out, Lola! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
 
 Ask card (contract document):
+
 > Martinas_Bakehouse_v3.pdf
 > 4.1 All deliverables remain the sole property of the Client upon full payment.
 > 4.2 Payment due within **sixty (60)** days of invoice date.
@@ -76,20 +78,26 @@ Ask card (contract document):
 **Triage cards (stacking on scroll)**
 
 Card 1 — Needs you now (blue):
+
 > Things only you can handle. Yaven knows what is and isn't urgent.
+>
 > - "Can we move Thursday's call?" — Client
 > - "Intro: Fatimah <> you" — Warm lead
 > - "Contract redlines from legal" — Deadline
 
 Card 2 — Already handled (red):
+
 > Drafted using your tone, context, and rules.
+>
 > - "Re: proposal timeline?" — replied
 > - "Invoice #214 overdue" — nudged
 > - "Meeting recap sent" — drafted
 > - "Receipt filed to expenses" — sorted
 
 Card 3 — Can wait (purple/pink):
+
 > Queued for when you have the headspace.
+>
 > - "AI Weekly digest" — Friday
 > - "Webinar invite: Q3 outlook" — Next week
 
@@ -104,13 +112,16 @@ Card 3 — Can wait (purple/pink):
 **Slide 1 — Network mapping**
 
 Tjalling card:
+
 > Tjalling — via Gmail
 > "Following up on our conversation at Config. Do you have availability this week for a call?"
 
 Yaven response card:
+
 > "Tjalling met you at Config '26. He works with a mutual, Oliver Normand. I drafted a reply with your calendar link."
 
 Text:
+
 > **Yaven knows who you know**
 >
 > It remembers everyone you've met and what you talked about. It spots the old client whose project is coming around again, the intro you said you'd make, the person worth a hello before they forget you, then drafts your messages and proposals proactively.
@@ -124,6 +135,7 @@ Text:
 **Slide 3 — Conference follow-up (badge card)**
 
 Badge card:
+
 > Ariel Thomas — The Design Co.
 > Spoke at: Design Expo '26
 > Mutual: Asker K.
@@ -131,6 +143,7 @@ Badge card:
 > Status: "Needs follow-up" (red) -> "Follow-up drafted with Yaven" (green)
 
 Text:
+
 > **Conference follow-ups, handled**
 >
 > It finds their work, your mutual connections, and drafts a follow-up in your voice before the connection goes cold.
@@ -138,6 +151,7 @@ Text:
 **CRM card (glass card)**
 
 > Otto's Bakehouse — "1 of 100 Yaven sourced"
+>
 > - Matched: Fits your ideal client
 > - Outreach: Intro drafted in your voice
 > - Replied: Call booked Thursday
@@ -161,7 +175,7 @@ Text:
 >
 > **So what actually is this?**
 > A second brain that lives in your Mac's menu bar. It connects to your email, calendar, messages, and docs, learns how you work, and builds a picture of every client, conversation, and commitment so nothing falls through the cracks.
-> Right now it intelligently prioritises your inbox so the most critical messages are always at the top of your desk, drafts replies in your voice from any app on your Mac, and preps you before every meeting. The more you use it, the more it handles on its own. Currently in beta.
+> Right now it intelligently prioritises your inbox so the most critical messages are always at the top of your desk, drafts replies in your voice from any app on your Mac, and preps you before every meeting. The more you use it, the more handling on its own. Currently in beta.
 >
 > **How is this different from ChatGPT or Claude?**
 > A chat box waits for you to drive it: you write the prompt, paste the context, copy the answer back. Yaven already read the thread, knows the client, and queued the reply before you opened it. You approve, it learns. The more you use it, the less you have to touch.
