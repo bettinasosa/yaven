@@ -309,48 +309,8 @@ export function BlueprintPanel() {
           lineHeight: 1.5
         }}
       >
-        We onboard testers personally. Grab a slot and skip the
-        email back-and-forth.
+        We onboard testers personally, we&apos;ll be in touch soon.
       </p>
-      <a
-        href="https://calendly.com/nickprice2000/yaven-support"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          display: "inline-block",
-          marginTop: "20px",
-          padding: "13px 28px",
-          borderRadius: "999px",
-          background: "#267fe5",
-          color: "#fff",
-          fontSize: "15px",
-          fontWeight: 600,
-          fontFamily: font,
-          textDecoration: "none",
-          transition: "transform 0.15s ease"
-        }}
-      >
-        Book your 15-min onboarding
-      </a>
-      <div style={{ marginTop: "14px" }}>
-        <button
-          type="button"
-          onClick={handleClose}
-          style={{
-            fontFamily: font,
-            fontSize: "13px",
-            color: c.body,
-            background: "none",
-            border: "none",
-            padding: 0,
-            cursor: "pointer",
-            textDecoration: "underline",
-            textUnderlineOffset: "3px"
-          }}
-        >
-          Skip for now
-        </button>
-      </div>
     </div>
   )
 
