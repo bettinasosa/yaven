@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react"
 import { Loader2 } from "lucide-react"
+import { getAttribution } from "@/lib/attribution"
 
 // Inline email capture for the closing sections. Posts to the same
 // /api/waitlist endpoint as the blueprint flow.
@@ -36,6 +37,8 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
+          signup_source: variant === "hero" ? "hero" : "footer",
+          ...getAttribution(),
           ...(typeof window !== "undefined" && (() => {
             try { const r = localStorage.getItem("yv_ref"); return r ? { referredBy: r } : {} }
             catch { return {} }

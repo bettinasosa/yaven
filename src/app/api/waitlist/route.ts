@@ -53,16 +53,26 @@ export async function POST(request: Request) {
 
   const position = (count ?? 0) + 893
 
+  const str = (v: unknown) => (typeof v === "string" && v ? v : null)
+
   const { error: insertError } = await supabase.from("waitlist").insert({
     email: emailStr,
-    name: typeof payload.name === "string" ? payload.name : null,
-    role: typeof payload.role === "string" ? payload.role : null,
+    name: str(payload.name),
+    role: str(payload.role),
     has_mac: typeof payload.hasMac === "boolean" ? payload.hasMac : null,
     beta_tester: payload.betaTester === true,
     ref_code: refCode,
-    referred_by: typeof payload.referredBy === "string" ? payload.referredBy : null,
+    referred_by: str(payload.referredBy),
     position,
-    source: "website"
+    source: "website",
+    signup_source: str(payload.signup_source),
+    utm_source: str(payload.utm_source),
+    utm_medium: str(payload.utm_medium),
+    utm_campaign: str(payload.utm_campaign),
+    utm_content: str(payload.utm_content),
+    utm_term: str(payload.utm_term),
+    landing_page: str(payload.landing_page),
+    referrer: str(payload.referrer),
   })
 
   if (insertError) {

@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react"
 import { useState } from "react"
 import type { AutomationBlueprint, BlueprintInput } from "@/lib/blueprint/types"
+import { getAttribution } from "@/lib/attribution"
 
 type WaitlistFormProps = {
   blueprint: AutomationBlueprint
@@ -39,6 +40,8 @@ export function WaitlistForm({
           role: answers.role,
           tools: answers.toolsUsed.join(", "),
           tasks: answers.painfulTasks.join(", "),
+          signup_source: "blueprint",
+          ...getAttribution(),
         })
       })
 

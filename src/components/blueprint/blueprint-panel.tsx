@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { Loader2, ArrowLeft, Check, Copy } from "lucide-react"
+import { getAttribution } from "@/lib/attribution"
 
 // Odometer-style count-up from 0 to target over ~800ms
 function CountUp({ to }: { to: number }) {
@@ -117,6 +118,8 @@ export function BlueprintPanel() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
+          signup_source: isBetaSubmit ? "beta_panel" : "waitlist_panel",
+          ...getAttribution(),
           ...(referredBy && { referredBy }),
           ...(isBetaSubmit && {
             name: betaName,

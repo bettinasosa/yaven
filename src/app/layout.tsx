@@ -3,6 +3,7 @@ import { Space_Mono, Bricolage_Grotesque } from "next/font/google"
 import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/next"
 import { SmoothScroll } from "@/components/smooth-scroll"
+import { UtmCapture } from "@/components/utm-capture"
 import "./globals.css"
 
 const spaceMono = Space_Mono({
@@ -60,6 +61,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <SmoothScroll>{children}</SmoothScroll>
+        <UtmCapture />
         <Analytics />
       </body>
     </html>
