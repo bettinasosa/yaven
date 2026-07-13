@@ -18,6 +18,8 @@ import {
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const INK = "#0a0e1a"
+// Subsection titles sit a shade greyer than the main "…and who matters." title.
+const INK_SUB = "#4d5461"
 
 const headlineStyle: React.CSSProperties = {
   fontFamily: "var(--font-instrument-serif)",
@@ -37,7 +39,7 @@ const subHeadingStyle: React.CSSProperties = {
   fontWeight: 700,
   letterSpacing: "-0.03em",
   lineHeight: 1.12,
-  color: INK,
+  color: INK_SUB,
   margin: 0
 }
 
@@ -1448,7 +1450,7 @@ export function ProposalsCrmSection() {
                 style={{
                   ...subHeadingStyle,
                   textAlign: isMobile ? "left" : "center",
-                  color: INK
+                  color: INK_SUB
                 }}
               >
                 Yaven knows who you know
