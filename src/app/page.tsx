@@ -194,12 +194,13 @@ export default function Home() {
           <ProposalsCrmSection />
         </div>
       </CardWrap>
-      <CardWrap z={4} behindBg="transparent">
+      <CardWrap z={4} behindBg="var(--cream)">
         <div
           data-hide-getyaven
           style={{
             position: "relative",
             zIndex: 5,
+            background: "var(--primary)",
             paddingTop: isMobile ? "40px" : "80px",
             marginTop: "-2px"
           }}
