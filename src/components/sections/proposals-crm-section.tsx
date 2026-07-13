@@ -1556,14 +1556,20 @@ export function ProposalsCrmSection() {
               left: 0,
               right: 0,
               zIndex: 5,
-              paddingTop: "clamp(100px, 18vh, 200px)",
+              paddingTop: "clamp(64px, 12vh, 150px)",
               pointerEvents: "none"
             }}
           >
             {header}
           </div>
 
-          <div style={{ position: "relative", flex: 1 }}>
+          <div
+            style={{
+              position: "relative",
+              flex: 1,
+              transform: "translateY(clamp(28px, 5vh, 64px))"
+            }}
+          >
             {/* Phase 0 — Network mapping (split layout) */}
             <div ref={networkRef} style={phaseGridStyle}>
               <NetworkStage />

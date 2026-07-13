@@ -58,7 +58,7 @@ const CARDS = [
     items: [
       { text: "Can we move Thursday's call?", tag: "Client" },
       { text: "Intro: Fatimah ↔ you", tag: "Warm lead" },
-      { text: "Contract redlines from legal", tag: "Deadline" }
+      { text: "Redlines back from their legal", tag: "Deadline" }
     ]
   },
   {
@@ -68,7 +68,7 @@ const CARDS = [
     items: [
       { text: "Re: proposal timeline?", tag: "✓ replied" },
       { text: "Invoice #214 overdue", tag: "✓ nudged" },
-      { text: "Meeting recap sent", tag: "✓ drafted" },
+      { text: "Meeting action items", tag: "✓ sent" },
       { text: "Receipt filed to expenses", tag: "✓ sorted" }
     ]
   },
@@ -78,8 +78,8 @@ const CARDS = [
     textDark: true,
     desc: "Queued for when you have the headspace.",
     items: [
-      { text: "AI Weekly digest", tag: "Friday" },
-      { text: "Webinar invite: Q3 outlook", tag: "Next week" }
+      { text: "Competitor weekly digest", tag: "This weekend" },
+      { text: "Invite: founders dinner, Oct 12", tag: "Next month" }
     ]
   }
 ]

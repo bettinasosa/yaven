@@ -261,7 +261,6 @@ export function FaqSection() {
       <section
         ref={sectionRef}
         style={{
-          background: "var(--primary)",
           padding:
             "clamp(80px, 12vh, 140px) clamp(28px, 5vw, 48px) clamp(80px, 12vh, 140px)"
         }}

@@ -5,15 +5,6 @@ import Image from "next/image"
 import { gsap } from "gsap"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { bookDemoHref } from "@/lib/contact"
-import dynamic from "next/dynamic"
-
-const LiquidGradientBg = dynamic(
-  () =>
-    import("@/components/effects/liquid-gradient-bg").then(
-      m => m.LiquidGradientBg
-    ),
-  { ssr: false }
-)
 
 function YavenMark({ height }: { height: number }) {
   return (
@@ -194,10 +185,9 @@ function HeroVariantB() {
     <section
       ref={sectionRef}
       data-hero
-      className="relative min-h-screen overflow-hidden flex bg-[var(--primary)] z-50"
+      className="relative min-h-screen overflow-hidden flex z-[1]"
     >
-      {/* Liquid gradient background */}
-      <LiquidGradientBg />
+      {/* Background is the site-wide living gradient (fixed, in the layout). */}
 
       {/* Nav — logo top left, book a call top right */}
       <div className="absolute top-[clamp(28px,4vw,48px)] left-[clamp(28px,4vw,48px)] right-[clamp(28px,4vw,48px)] z-10 flex items-center justify-between">
@@ -233,7 +223,7 @@ function HeroVariantB() {
           </p>
 
           <p className="font-[var(--font-dm-sans),sans-serif] text-[var(--fs-body)] font-normal text-white/70 leading-[1.5] mt-0 mr-0 mb-[clamp(24px,4vh,40px)] ml-0">
-            The AI assistant that lives in your menu bar,
+            The AI workforce that lives in your menu bar,
             <br />
             handling the admin that eats your day
             <br />
@@ -245,16 +235,6 @@ function HeroVariantB() {
           </div>
         </div>
       </div>
-
-      {/* Bottom blend — fades the liquid gradient into solid primary so
-          there's no hard line between hero and the next section */}
-      <div
-        aria-hidden="true"
-        className="absolute bottom-0 left-0 right-0 h-[clamp(120px,20vh,240px)] pointer-events-none z-[6]"
-        style={{
-          background: "linear-gradient(to bottom, transparent 0%, #267FE5 100%)"
-        }}
-      />
     </section>
   )
 }

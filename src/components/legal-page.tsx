@@ -16,8 +16,20 @@ export function LegalPage({
   children: React.ReactNode
 }) {
   return (
-    <main className="flex min-h-screen flex-col bg-white text-[#1a1a1a]">
-      <div className="mx-auto w-full max-w-[760px] flex-1 px-6 py-16 sm:px-8 sm:py-24">
+    <main className="flex min-h-screen flex-col text-[#1a1a1a]">
+      <div className="mx-auto w-full max-w-[820px] flex-1 px-4 py-16 sm:px-6 sm:py-24">
+        {/* Frosted panel keeps the dense legal copy high-contrast while the
+            site's living gradient glows through the margins behind it. */}
+        <div
+          style={{
+            background: "rgba(255,255,255,0.82)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
+            borderRadius: "28px",
+            padding: "clamp(28px, 5vw, 64px)",
+            boxShadow: "0 24px 70px rgba(10,14,26,0.22)"
+          }}
+        >
         {/* Back to home */}
         <Link
           href="/"
@@ -62,6 +74,7 @@ export function LegalPage({
         </p>
 
         <div className="legal-prose">{children}</div>
+        </div>
       </div>
 
       <FooterSection />

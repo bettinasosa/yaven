@@ -780,8 +780,8 @@ export function MeetYavenSection() {
 
         <p style={bodyTextStyle}>
           Use <ShortcutBadge keys={["⌥", "D"]} small /> to draft any reply,
-          anywhere, in your voice. <ShortcutBadge keys={["⌥", "A"]} small />{" "}
-          answers anything on your screen. Yaven learns how much to let you
+          anywhere, in your voice. Use <ShortcutBadge keys={["⌥", "A"]} small />{" "}
+          to answer anything on your screen. Yaven learns how much to let you
           review, and how much you want it to <U>handle automatically</U>, as
           you use it.
         </p>

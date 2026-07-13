@@ -185,20 +185,21 @@ export default function Home() {
     <>
       <StickyGetYaven />
       <HeroSectionND />
-      <MeetYavenSection />
+      <CardWrap z={2} behindBg="transparent">
+        <MeetYavenSection />
+      </CardWrap>
       <CardWrap z={3} behindBg="var(--primary)">
         <div data-cream>
           <TriageSection />
           <ProposalsCrmSection />
         </div>
       </CardWrap>
-      <CardWrap z={4} behindBg="var(--cream)">
+      <CardWrap z={4} behindBg="transparent">
         <div
           data-hide-getyaven
           style={{
             position: "relative",
             zIndex: 5,
-            background: "var(--primary)",
             paddingTop: isMobile ? "40px" : "80px",
             marginTop: "-2px"
           }}

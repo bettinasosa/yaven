@@ -22,9 +22,8 @@ const bodyStyle: React.CSSProperties = {
 }
 
 // Big logo strip. The marks are wildly different shapes (Imperial is a wide
-// wordmark, MIT a monogram, Oxford/Harvard square crests — Oxford has a baked-in
-// navy bg), so they sit bare on the cream — no cards — separated by hairline
-// rules, each normalised by its own max-height rather than a shared size.
+// wordmark, MIT a monogram), so they sit bare on the cream — no cards —
+// each normalised by its own max-height rather than a shared size.
 const UNIS: {
   name: string
   logo: string
@@ -34,9 +33,7 @@ const UNIS: {
   radius?: number
 }[] = [
   { name: "Imperial", logo: "imperial", w: 1290, h: 142, maxH: "20px" },
-  { name: "MIT", logo: "mit", w: 384, h: 199, maxH: "42px" },
-  { name: "Oxford", logo: "oxford", w: 226, h: 223, maxH: "58px", radius: 10 },
-  { name: "Harvard", logo: "harvard", w: 788, h: 768, maxH: "58px" }
+  { name: "MIT", logo: "mit", w: 384, h: 199, maxH: "42px" }
 ]
 
 function UniLogo({ name, logo, w, h, maxH, radius }: (typeof UNIS)[number]) {
@@ -167,12 +164,11 @@ export function FinaleContent() {
 
       <div style={clip}>
         <p data-mask-inner style={bioStyle}>
-          We&apos;re a small team of former Imperial, MIT, Oxford and Harvard
-          researchers. Between us: <i>digital twin research</i> in Q1 journals,{" "}
+          We&apos;re a small team of former Imperial and MIT researchers.
+          Between us: <i>digital twin research</i> in Q1 journals,{" "}
           <Em>AI agent infrastructure in production</Em> across multiple
           startups and an asset management firm, <b>product design awards</b>{" "}
-          and work exhibited at the <i>Design Museum London</i>,{" "}
-          an open-source AI tool with <b>thousands of users</b>, two stints as
+          and work exhibited at the <i>Design Museum London</i>, two stints as
           founding engineers, and a freelance practice grown from zero
           to <b>$20k MRR</b> in months; <Em>we were the customer first</Em>.
         </p>
