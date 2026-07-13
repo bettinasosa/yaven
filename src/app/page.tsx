@@ -194,7 +194,7 @@ export default function Home() {
           <ProposalsCrmSection />
         </div>
       </CardWrap>
-      <CardWrap z={4} behindBg="var(--cream)">
+      <CardWrap z={4} behindBg="transparent">
         <div
           data-hide-getyaven
           style={{
