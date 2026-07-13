@@ -1,0 +1,24 @@
+{
+  "pkg": "yaven",
+  "projectId": "3adbba34-07df-4582-96ca-aaec9cefb070",
+  "globalName": "YavenEffects",
+  "shape": "package",
+  "entry": ".design-sync/synth-entry.tsx",
+  "componentSrcMap": {
+    "GlassCard": "src/components/effects/glass-card.tsx",
+    "GlassPanel": "src/components/effects/glass-panel.tsx",
+    "LiquidGradientBg": "src/components/effects/liquid-gradient-bg.tsx",
+    "NumberTicker": "src/components/effects/number-ticker.tsx",
+    "ScrollCutReveal": "src/components/effects/scroll-cut-reveal.tsx",
+    "Typewriter": "src/components/effects/typewriter.tsx",
+    "AnimatedHeadline": "src/components/animated-headline.tsx",
+    "IconTooltip": "src/components/ui/icon-tooltip.tsx",
+    "YavenLogo": ".design-sync/brand/yaven-logo.tsx"
+  },
+  "docsMap": {
+    "YavenLogo": ".design-sync/brand/yaven-logo.md"
+  },
+  "cssEntry": ".design-sync/effects.css",
+  "tsconfig": "tsconfig.json",
+  "readmeHeader": ".design-sync/conventions.md"
+}
