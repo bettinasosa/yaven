@@ -1,9 +1,13 @@
 "use client"
 
 import { Loader2 } from "lucide-react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import type { AutomationBlueprint, BlueprintInput } from "@/lib/blueprint/types"
 import { getAttribution } from "@/lib/attribution"
+import { hasReferral } from "@/lib/analytics/context"
+import { EVENTS } from "@/lib/analytics/events"
+import { track } from "@/lib/analytics/posthog"
+import { useFormSeen } from "@/lib/analytics/use-form-seen"
 
 type WaitlistFormProps = {
   blueprint: AutomationBlueprint
@@ -24,11 +28,26 @@ export function WaitlistForm({
   const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const formRef = useRef<HTMLFormElement>(null)
+  const started = useRef(false)
+
+  const surface = "blueprint" as const
+  useFormSeen(formRef, surface)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
     setError("")
+
+    const referred = hasReferral()
+    // Set once the failure has been reported with a specific reason, so the
+    // catch below only has to account for the request never completing.
+    let reported = false
+    track(EVENTS.SIGNUP_SUBMITTED, {
+      surface,
+      beta_application: false,
+      has_referral: referred
+    })
 
     try {
       const response = await fetch("/api/waitlist", {
@@ -45,9 +64,33 @@ export function WaitlistForm({
         })
       })
 
-      if (!response.ok) throw new Error("Failed to save signup")
+      if (!response.ok) {
+        reported = true
+        track(EVENTS.SIGNUP_FAILED, {
+          surface,
+          reason: response.status >= 500 ? "server" : "rejected",
+          beta_application: false
+        })
+        throw new Error("Failed to save signup")
+      }
+      // `existing: true` means the address was already on the list — a repeat
+      // visitor, not a new signup, and the two must never be added together.
+      const data = await response.json().catch(() => ({}))
+      track(EVENTS.SIGNUP_SUCCEEDED, {
+        surface,
+        already_registered: data?.existing === true,
+        beta_application: false,
+        has_referral: referred
+      })
       onSubmitted(email, "")
     } catch {
+      if (!reported) {
+        track(EVENTS.SIGNUP_FAILED, {
+          surface,
+          reason: "network",
+          beta_application: false
+        })
+      }
       setError("Something went wrong. Please try again.")
     } finally {
       setLoading(false)
@@ -55,7 +98,7 @@ export function WaitlistForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="space-y-2">
         <h3
           className="font-bold leading-tight"
@@ -88,7 +131,13 @@ export function WaitlistForm({
             type="email"
             required
             value={email}
-            onFocus={onStarted}
+            onFocus={() => {
+              if (!started.current) {
+                started.current = true
+                track(EVENTS.SIGNUP_STARTED, { surface })
+              }
+              onStarted()
+            }}
             onChange={event => setEmail(event.target.value)}
             placeholder="you@example.com"
             className="neu-input w-full px-4 py-3 text-sm font-medium"

@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SmoothScroll } from "@/components/smooth-scroll"
 import { GradientBackdrop } from "@/components/effects/gradient-backdrop"
 import { UtmCapture } from "@/components/utm-capture"
+import { WebAnalytics } from "@/components/web-analytics"
 import "./globals.css"
 
 const spaceMono = Space_Mono({
@@ -66,6 +67,7 @@ export default function RootLayout({
           <SmoothScroll>{children}</SmoothScroll>
         </div>
         <UtmCapture />
+        <WebAnalytics />
         <Analytics />
       </body>
     </html>

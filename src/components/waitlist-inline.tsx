@@ -3,6 +3,10 @@
 import { useRef, useState } from "react"
 import { Loader2 } from "lucide-react"
 import { getAttribution } from "@/lib/attribution"
+import { hasReferral } from "@/lib/analytics/context"
+import { EVENTS } from "@/lib/analytics/events"
+import { track } from "@/lib/analytics/posthog"
+import { useFormSeen } from "@/lib/analytics/use-form-seen"
 
 // Inline email capture for the closing sections. Posts to the same
 // /api/waitlist endpoint as the blueprint flow.
@@ -13,6 +17,16 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState("")
   const formRef = useRef<HTMLFormElement>(null)
+  const started = useRef(false)
+
+  const surface = hero ? "hero" : "footer"
+  useFormSeen(formRef, surface)
+
+  function handleFocus() {
+    if (started.current) return
+    started.current = true
+    track(EVENTS.SIGNUP_STARTED, { surface })
+  }
 
   function shake() {
     const el = formRef.current
@@ -26,11 +40,25 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
     e.preventDefault()
     // Invalid/empty → shake instead of the native validation bubble
     if (!email.trim() || !email.includes("@")) {
+      track(EVENTS.SIGNUP_FAILED, {
+        surface,
+        reason: "invalid_email",
+        beta_application: false
+      })
       shake()
       return
     }
     setLoading(true)
     setError("")
+    const referred = hasReferral()
+    // Set once the failure has been reported with a specific reason, so the
+    // catch below only has to account for the request never completing.
+    let reported = false
+    track(EVENTS.SIGNUP_SUBMITTED, {
+      surface,
+      beta_application: false,
+      has_referral: referred
+    })
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
@@ -45,9 +73,33 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
           })())
         })
       })
-      if (!res.ok) throw new Error("Failed")
+      if (!res.ok) {
+        reported = true
+        track(EVENTS.SIGNUP_FAILED, {
+          surface,
+          reason: res.status >= 500 ? "server" : "rejected",
+          beta_application: false
+        })
+        throw new Error("Failed")
+      }
+      // `existing: true` means the address was already on the list — a repeat
+      // visitor, not a new signup, and the two should never be added together.
+      const data = await res.json().catch(() => ({}))
+      track(EVENTS.SIGNUP_SUCCEEDED, {
+        surface,
+        already_registered: data?.existing === true,
+        beta_application: false,
+        has_referral: referred
+      })
       setSubmitted(true)
     } catch {
+      if (!reported) {
+        track(EVENTS.SIGNUP_FAILED, {
+          surface,
+          reason: "network",
+          beta_application: false
+        })
+      }
       setError("Something went wrong. Please try again.")
     } finally {
       setLoading(false)
@@ -108,6 +160,7 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
           required
           placeholder="you@example.com"
           value={email}
+          onFocus={handleFocus}
           onChange={e => setEmail(e.target.value)}
           className={`flex-1 min-w-0 rounded-full border-none bg-transparent text-white font-[var(--font-dm-sans),sans-serif] outline-none ${hero ? "py-6 px-6 text-[20px] sm:py-4 sm:text-[17px]" : "py-3 px-5 text-[15px]"}`}
           style={hero ? { textShadow: "0 1px 2px rgba(0,0,0,0.15)" } : undefined}

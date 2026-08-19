@@ -231,7 +231,7 @@ function HeroVariantB() {
           </p>
 
           <div ref={ctaRef}>
-            <BlueprintPanel />
+            <BlueprintPanel placement="hero_cta" />
           </div>
         </div>
       </div>

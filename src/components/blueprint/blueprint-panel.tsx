@@ -4,6 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { Loader2, ArrowLeft, Check, Copy } from "lucide-react"
 import { getAttribution } from "@/lib/attribution"
+import { hasReferral } from "@/lib/analytics/context"
+import { EVENTS } from "@/lib/analytics/events"
+import type { Placement } from "@/lib/analytics/events"
+import { track } from "@/lib/analytics/posthog"
 
 // Odometer-style count-up from 0 to target over ~800ms
 function CountUp({ to }: { to: number }) {
@@ -25,7 +29,13 @@ function CountUp({ to }: { to: number }) {
   return <>{val.toLocaleString()}</>
 }
 
-export function BlueprintPanel() {
+/**
+ * `placement` only feeds analytics: this panel renders twice on the home page
+ * (the hero CTA and the sticky top-right button) and both write the same
+ * `signup_source` to Supabase, so without it there is no way to tell which of
+ * the two buttons actually earns its place.
+ */
+export function BlueprintPanel({ placement }: { placement: Placement }) {
   const [open, setOpen] = useState(false)
   const [onCream, setOnCream] = useState(false)
   const [betaMode, setBetaMode] = useState(false)
@@ -42,6 +52,18 @@ export function BlueprintPanel() {
   const [error, setError] = useState("")
   const rowRef = useRef<HTMLDivElement>(null)
   const btnWrapRef = useRef<HTMLDivElement>(null)
+  const started = useRef(false)
+
+  // The panel is one form the user can switch into beta mode partway through,
+  // so the surface stays constant across the funnel. `beta_application` marks
+  // the submissions Supabase records as `beta_panel`.
+  const surface = "waitlist_panel" as const
+
+  function handleEmailFocus() {
+    if (started.current) return
+    started.current = true
+    track(EVENTS.SIGNUP_STARTED, { surface, placement })
+  }
 
   function shake() {
     const el = rowRef.current
@@ -54,6 +76,9 @@ export function BlueprintPanel() {
   function handleOpen() {
     setOnCream(!!btnWrapRef.current?.closest(".get-yaven-cream"))
     setOpen(true)
+    // Opening the modal is the moment this form becomes visible — the panel's
+    // equivalent of an inline form scrolling into view.
+    track(EVENTS.SIGNUP_FORM_SEEN, { surface, placement })
   }
 
   function handleClose() {
@@ -70,6 +95,7 @@ export function BlueprintPanel() {
     setPosition(0)
     setRefCode("")
     setCopied(false)
+    started.current = false
   }
 
   function exitBeta() {
@@ -83,19 +109,32 @@ export function BlueprintPanel() {
     if (!refCode) return
     try {
       await navigator.clipboard.writeText(`yaven.ai/w/${refCode}`)
+      track(EVENTS.REFERRAL_LINK_COPIED, { surface, placement })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch { /* clipboard not available */ }
-  }, [refCode])
+  }, [refCode, placement])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!email.trim() || !email.includes("@")) {
+      track(EVENTS.SIGNUP_FAILED, {
+        surface,
+        placement,
+        reason: "invalid_email",
+        beta_application: betaMode
+      })
       setError("invalid")
       shake()
       return
     }
     if (betaMode && (!role.trim() || hasMac === null)) {
+      track(EVENTS.SIGNUP_FAILED, {
+        surface,
+        placement,
+        reason: "incomplete_beta_fields",
+        beta_application: true
+      })
       setError("incomplete")
       shake()
       return
@@ -111,6 +150,17 @@ export function BlueprintPanel() {
     try {
       referredBy = localStorage.getItem("yv_ref") ?? undefined
     } catch { /* localStorage unavailable */ }
+
+    const referred = hasReferral()
+    // Set once the failure has been reported with a specific reason, so the
+    // catch below only has to account for the request never completing.
+    let reported = false
+    track(EVENTS.SIGNUP_SUBMITTED, {
+      surface,
+      placement,
+      beta_application: isBetaSubmit,
+      has_referral: referred
+    })
 
     try {
       const response = await fetch("/api/waitlist", {
@@ -129,8 +179,30 @@ export function BlueprintPanel() {
           })
         })
       })
-      if (!response.ok) throw new Error("Failed")
+      if (!response.ok) {
+        reported = true
+        track(EVENTS.SIGNUP_FAILED, {
+          surface,
+          placement,
+          reason: response.status >= 500 ? "server" : "rejected",
+          beta_application: isBetaSubmit
+        })
+        throw new Error("Failed")
+      }
       const data = await response.json()
+      track(EVENTS.SIGNUP_SUCCEEDED, {
+        surface,
+        placement,
+        // `existing: true` means the address was already on the list — a repeat
+        // visitor, not a new signup, and the two must never be added together.
+        already_registered: data?.existing === true,
+        beta_application: isBetaSubmit,
+        has_referral: referred,
+        ...(isBetaSubmit && { role, has_mac: hasMac })
+      })
+      if (isBetaSubmit) {
+        track(EVENTS.BETA_OPTIN_COMPLETED, { placement, role, has_mac: hasMac })
+      }
       setPosition(data.position ?? 0)
       setRefCode(data.refCode ?? "")
       setSuccess(true)
@@ -139,6 +211,14 @@ export function BlueprintPanel() {
       }
       try { localStorage.removeItem("yv_ref") } catch { /* noop */ }
     } catch {
+      if (!reported) {
+        track(EVENTS.SIGNUP_FAILED, {
+          surface,
+          placement,
+          reason: "network",
+          beta_application: isBetaSubmit
+        })
+      }
       setError("network")
     } finally {
       setLoading(false)
@@ -455,7 +535,10 @@ export function BlueprintPanel() {
                         Be first in when we launch. Or skip the line and{" "}
                         <button
                           type="button"
-                          onClick={() => setBetaMode(true)}
+                          onClick={() => {
+                            track(EVENTS.BETA_OPTIN_STARTED, { surface, placement })
+                            setBetaMode(true)
+                          }}
                           style={{
                             fontFamily: "inherit",
                             fontSize: "inherit",
@@ -602,7 +685,17 @@ export function BlueprintPanel() {
                             <button
                               key={String(opt.value)}
                               type="button"
-                              onClick={() => setHasMac(opt.value)}
+                              onClick={() => {
+                                // Fires on the answer, not on submit: the share
+                                // of visitors without a Mac is the number that
+                                // decides whether paid acquisition is worth it,
+                                // and most of them never reach submit.
+                                track(EVENTS.BETA_MAC_ANSWERED, {
+                                  has_mac: opt.value,
+                                  placement
+                                })
+                                setHasMac(opt.value)
+                              }}
                               style={{
                                 flex: 1,
                                 padding: "10px",
@@ -660,6 +753,7 @@ export function BlueprintPanel() {
                       type="email"
                       required
                       value={email}
+                      onFocus={handleEmailFocus}
                       onChange={e => {
                         setEmail(e.target.value)
                         if (error === "invalid") setError("")
