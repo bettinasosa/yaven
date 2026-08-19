@@ -164,7 +164,7 @@ function StickyGetYaven() {
         transform: "translateX(120px)"
       }}
     >
-      <BlueprintPanel />
+      <BlueprintPanel placement="sticky_cta" />
     </div>
   )
 }
