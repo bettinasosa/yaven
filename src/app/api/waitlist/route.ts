@@ -1,5 +1,5 @@
 import { isValidEmail } from "@/lib/blueprint/validation"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 function generateRefCode(email: string): string {
   const prefix = email.split("@")[0].slice(0, 5).toLowerCase().replace(/[^a-z]/g, "")
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Valid email is required" }, { status: 400 })
   }
 
+  const supabase = getSupabase()
   const emailStr = String(payload.email).trim().toLowerCase()
   const refCode = generateRefCode(emailStr)
 
