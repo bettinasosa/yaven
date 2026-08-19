@@ -17,7 +17,12 @@ import { createClient } from "@supabase/supabase-js"
  * Keep it that way — every read of this table stays behind the API route.
  */
 const supabaseUrl = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
+// Supabase now issues `sb_secret_…` keys and calls the old JWT ones legacy
+// service_role. Either works here, so accept both names rather than making the
+// deploy depend on which tab of the dashboard the key was copied from.
+const supabaseServiceRoleKey =
+  process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
   auth: { persistSession: false, autoRefreshToken: false },
