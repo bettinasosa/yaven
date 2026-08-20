@@ -612,7 +612,11 @@ export function MeetYavenSection() {
     stackTl.fromTo(
       askCardRef.current,
       { y: "100vh", rotation: -4 },
-      { y: 36, rotation: 0, ease: "none", force3D: true },
+      // Rests 84px below the draft card's top (8px offset + 76): its header is
+      // 38px of padding plus a 26px logo, so anything less slices the LinkedIn
+      // mark and "Draft" in half. 84 clears both and leaves the card's own 20px
+      // of header breathing room showing.
+      { y: 76, rotation: 0, ease: "none", force3D: true },
       0
     )
     triggers.push(stackTl.scrollTrigger!)
