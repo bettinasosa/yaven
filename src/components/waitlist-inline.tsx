@@ -22,7 +22,11 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
   const surface = hero ? "hero" : "footer"
   useFormSeen(formRef, surface)
 
-  function handleFocus() {
+  // Fired from focus AND change. Focus alone misses anyone whose browser
+  // autofills the field or who pastes into it without clicking first, which
+  // produced more submissions than starts in the first day of real traffic.
+  // The ref keeps it to once per mount however it is reached.
+  function handleStarted() {
     if (started.current) return
     started.current = true
     track(EVENTS.SIGNUP_STARTED, { surface })
@@ -160,8 +164,11 @@ export function WaitlistInline({ variant }: { variant?: "hero" } = {}) {
           required
           placeholder="you@example.com"
           value={email}
-          onFocus={handleFocus}
-          onChange={e => setEmail(e.target.value)}
+          onFocus={handleStarted}
+          onChange={e => {
+            handleStarted()
+            setEmail(e.target.value)
+          }}
           className={`flex-1 min-w-0 rounded-full border-none bg-transparent text-white font-[var(--font-dm-sans),sans-serif] outline-none ${hero ? "py-6 px-6 text-[20px] sm:py-4 sm:text-[17px]" : "py-3 px-5 text-[15px]"}`}
           style={hero ? { textShadow: "0 1px 2px rgba(0,0,0,0.15)" } : undefined}
         />

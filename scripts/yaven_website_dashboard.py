@@ -48,14 +48,30 @@ SUCCEEDED = "web_signup_succeeded"
 FAILED = "web_signup_failed"
 VIEWED = "web_page_viewed"
 
+# Production host. localhost and *.vercel.app preview deploys emit the same
+# events, so without this every tile counts our own testing as real traffic.
+# Overridable for anyone running the site on a different domain.
+PROD_HOST = os.environ.get("POSTHOG_PROD_HOST", "www.yaven.ai")
+
+# Applied to every trends/funnel series.
+HOST_FILTER = [{
+    "key": "$host",
+    "value": [PROD_HOST],
+    "operator": "exact",
+    "type": "event",
+}]
+
+# The same restriction for the HogQL tiles, which build their own WHERE clause.
+HOST_SQL = f"properties.$host = '{PROD_HOST}'"
+
 
 # ── query builders (PostHog `query` format) ──────────────────────────────────
 def event(name, math=None, props=None):
+    """An event series, restricted to production traffic unless told otherwise."""
     node = {"kind": "EventsNode", "event": name, "name": name}
     if math:
         node["math"] = math
-    if props:
-        node["properties"] = props
+    node["properties"] = (props or []) + HOST_FILTER
     return node
 
 
@@ -134,12 +150,46 @@ def set_layout(dash_id):
     print(f"  layout: {'ok' if patch.ok else f'FAILED {patch.status_code}: {patch.text[:200]}'}")
 
 
+def find_insight(dash_id, name):
+    """The existing tile with this exact name on this dashboard, if there is one."""
+    r = requests.get(
+        f"{HOST}/api/projects/{PROJECT}/insights/",
+        headers=HEADERS,
+        params={"search": name, "limit": 100},
+    )
+    if not r.ok:
+        return None
+    for item in r.json().get("results", []):
+        if item.get("name") != name:
+            continue
+        on_dash = [d if isinstance(d, int) else d.get("id") for d in (item.get("dashboards") or [])]
+        if int(dash_id) in on_dash:
+            return item.get("id")
+    return None
+
+
 def insight(dash_id, name, query, description=None):
+    """Create the tile, or update it if this dashboard already has one by that name.
+
+    This script is documented as re-runnable, but it used to POST unconditionally,
+    so every rerun added a second copy of every tile instead of refreshing them.
+    Matching on name first makes a rerun mean what it says.
+    """
     body = {"name": name, "query": query, "dashboards": [int(dash_id)]}
     if description:
         body["description"] = description
-    r = requests.post(f"{HOST}/api/projects/{PROJECT}/insights/", headers=HEADERS, json=body)
-    print(f"  + {name}: {'ok' if r.ok else f'FAILED {r.status_code}: {r.text[:250]}'}")
+
+    existing = find_insight(dash_id, name)
+    if existing:
+        r = requests.patch(
+            f"{HOST}/api/projects/{PROJECT}/insights/{existing}/", headers=HEADERS, json=body
+        )
+        verb = "~"
+    else:
+        r = requests.post(f"{HOST}/api/projects/{PROJECT}/insights/", headers=HEADERS, json=body)
+        verb = "+"
+
+    print(f"  {verb} {name}: {'ok' if r.ok else f'FAILED {r.status_code}: {r.text[:250]}'}")
     return r.json().get("id") if r.ok else None
 
 
@@ -157,7 +207,7 @@ select
   round(100.0 * countIf(event = '{SUCCEEDED}')
         / nullif(countIf(event = '{SEEN}'), 0), 1) as seen_to_signup_pct
 from events
-where timestamp > now() - interval {days} day
+where {HOST_SQL} and timestamp > now() - interval {days} day
   and event in ('{SEEN}', '{STARTED}', '{SUBMITTED}', '{SUCCEEDED}')
 group by {label}
 order by signups desc, seen desc
@@ -175,7 +225,7 @@ select
   round(100.0 * count(distinct if(event = '{SUCCEEDED}', person_id, null))
         / nullif(count(distinct if(event = '{VIEWED}', person_id, null)), 0), 1) as conversion_pct
 from events
-where timestamp > now() - interval {days} day
+where {HOST_SQL} and timestamp > now() - interval {days} day
   and event in ('{VIEWED}', '{SUCCEEDED}')
 group by {label}
 order by visitors desc
@@ -196,7 +246,7 @@ with c as (
     count(distinct if(event = '{SUBMITTED}', person_id, null)) as s4,
     count(distinct if(event = '{SUCCEEDED}', person_id, null)) as s5
   from events
-  where timestamp > now() - interval 30 day
+  where {HOST_SQL} and timestamp > now() - interval 30 day
     and event in ('{VIEWED}', '{SEEN}', '{STARTED}', '{SUBMITTED}', '{SUCCEEDED}')
 )
 select step, people, kept_from_previous_pct, lost_here from (
@@ -222,30 +272,30 @@ select
   round(100.0 * (countIf(event = '{SEEN}') - countIf(event = '{STARTED}'))
         / nullif(countIf(event = '{SEEN}'), 0), 1) as looked_and_left_pct
 from events
-where timestamp > now() - interval 30 day and event in ('{SEEN}', '{STARTED}')
+where {HOST_SQL} and timestamp > now() - interval 30 day and event in ('{SEEN}', '{STARTED}')
 group by surface
 order by saw_the_form desc
 """
 
-MAC_SHARE_SQL = """
+MAC_SHARE_SQL = f"""
 select
   countIf(properties.has_mac = true)  as has_a_mac,
   countIf(properties.has_mac = false) as no_mac,
   round(100.0 * countIf(properties.has_mac = true) / nullif(count(), 0), 1) as mac_eligible_pct
 from events
-where timestamp > now() - interval 90 day and event = 'web_beta_mac_answered'
+where {HOST_SQL} and timestamp > now() - interval 90 day and event = 'web_beta_mac_answered'
 """
 
 # Answered on the question, not on submit — most people who say "no" never submit,
 # so counting only submissions would flatter the Mac-eligible share.
-MAC_BY_SOURCE_SQL = """
+MAC_BY_SOURCE_SQL = f"""
 select
   coalesce(nullif(toString(properties.utm_source), ''), '(none)') as utm_source,
   countIf(properties.has_mac = true)  as has_a_mac,
   countIf(properties.has_mac = false) as no_mac,
   round(100.0 * countIf(properties.has_mac = true) / nullif(count(), 0), 1) as mac_eligible_pct
 from events
-where timestamp > now() - interval 90 day and event = 'web_beta_mac_answered'
+where {HOST_SQL} and timestamp > now() - interval 90 day and event = 'web_beta_mac_answered'
 group by utm_source
 order by has_a_mac + no_mac desc
 """
@@ -256,7 +306,7 @@ select
   count(distinct if(event = '{SUCCEEDED}' and properties.has_referral = true, person_id, null)) as signups_from_referral,
   count(distinct if(event = 'web_referral_link_copied', person_id, null)) as links_copied
 from events
-where timestamp > now() - interval 90 day
+where {HOST_SQL} and timestamp > now() - interval 90 day
   and event in ('web_referral_landing', '{SUCCEEDED}', 'web_referral_link_copied')
 """
 

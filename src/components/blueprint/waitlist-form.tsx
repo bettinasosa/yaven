@@ -97,6 +97,16 @@ export function WaitlistForm({
     }
   }
 
+  // Fired from focus AND change, because focus alone misses autofill and
+  // paste-without-clicking. The ref keeps it to once per mount either way.
+  function handleStarted() {
+    if (!started.current) {
+      started.current = true
+      track(EVENTS.SIGNUP_STARTED, { surface })
+    }
+    onStarted()
+  }
+
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="space-y-2">
@@ -131,14 +141,11 @@ export function WaitlistForm({
             type="email"
             required
             value={email}
-            onFocus={() => {
-              if (!started.current) {
-                started.current = true
-                track(EVENTS.SIGNUP_STARTED, { surface })
-              }
-              onStarted()
+            onFocus={handleStarted}
+            onChange={event => {
+              handleStarted()
+              setEmail(event.target.value)
             }}
-            onChange={event => setEmail(event.target.value)}
             placeholder="you@example.com"
             className="neu-input w-full px-4 py-3 text-sm font-medium"
             style={{ color: "var(--ink)" }}
