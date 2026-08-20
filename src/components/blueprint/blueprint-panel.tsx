@@ -59,7 +59,10 @@ export function BlueprintPanel({ placement }: { placement: Placement }) {
   // the submissions Supabase records as `beta_panel`.
   const surface = "waitlist_panel" as const
 
-  function handleEmailFocus() {
+  // Fired from focus AND change. Focus alone misses autofill and paste-without-
+  // clicking, which is why the first day of real traffic recorded more
+  // submissions than starts. The ref keeps it to once per mount either way.
+  function handleEmailStarted() {
     if (started.current) return
     started.current = true
     track(EVENTS.SIGNUP_STARTED, { surface, placement })
@@ -753,8 +756,9 @@ export function BlueprintPanel({ placement }: { placement: Placement }) {
                       type="email"
                       required
                       value={email}
-                      onFocus={handleEmailFocus}
+                      onFocus={handleEmailStarted}
                       onChange={e => {
+                        handleEmailStarted()
                         setEmail(e.target.value)
                         if (error === "invalid") setError("")
                       }}

@@ -38,7 +38,7 @@ still builds and runs with no analytics configured.
 | --- | --- | --- |
 | `web_page_viewed` | First load and every route change | `path`, `is_referral_landing`, `has_referral` |
 | `web_signup_form_seen` | Email field becomes visible — scrolled into view, or the panel modal opening | `surface`, `placement` |
-| `web_signup_started` | First focus of the email field | `surface`, `placement` |
+| `web_signup_started` | First focus **or first change** of the email field | `surface`, `placement` |
 | `web_signup_submitted` | Client validation passed, request sent | `surface`, `placement`, `beta_application`, `has_referral` |
 | `web_signup_succeeded` | Waitlist accepted it | `+ already_registered`, `role`, `has_mac` |
 | `web_signup_failed` | Attempt did not land | `+ reason` |
@@ -97,11 +97,19 @@ posture that most sites take without one. `posthog-js` supports
 - **`web_search_triggered` is not a website event.** It is the macOS app's in-app
   web search. Never build a tile that matches on the `web_` prefix — always list
   event names explicitly, which the dashboard script does.
-- **Dev and preview traffic is not excluded by default.** Visits from
-  `localhost`, `127.0.0.1` and `*.vercel.app` are tagged with the
-  `$internal_or_test_user` person property; the reliable event-level filter is
-  `$host = www.yaven.ai`. The dashboard ships unfiltered so it shows data from
-  day one — add that filter once real traffic arrives.
+- **Dev and preview traffic is excluded from the dashboard.** Every tile filters
+  on `$host = www.yaven.ai`, set in `scripts/yaven_website_dashboard.py` via
+  `PROD_HOST` (override with `POSTHOG_PROD_HOST`). This was added once real
+  traffic arrived: over the first week 34% of all website events came from
+  `localhost` and `*.vercel.app` previews, so unfiltered tiles counted our own
+  testing as customers. Raw queries outside the dashboard still need the filter
+  applied by hand.
+- **Rerunning the dashboard script updates tiles rather than duplicating them.**
+  It matches an existing insight by name on the same dashboard and PATCHes it.
+- **`web_signup_started` fires on change as well as focus.** Focus alone missed
+  anyone whose browser autofilled the field or who pasted without clicking, which
+  recorded more submissions than starts on the first day of real traffic. A ref
+  keeps it to once per mount however it is reached.
 - **PostHog draws funnel charts blank inside a dashboard tile** in the current
   build. They render correctly when you click the tile title. The headline
   drop-off is therefore also served as a HogQL table, which always renders.
