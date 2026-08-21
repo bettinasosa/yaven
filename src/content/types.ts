@@ -48,6 +48,8 @@ export interface InlineKit {
   keys(...keys: string[]): ReactNode
   /** Bold, for the one phrase in a contract clause that matters. */
   b(children: ReactNode): ReactNode
+  /** A link-coloured phrase inside a mock message. Not a real link. */
+  link(children: ReactNode): ReactNode
 }
 
 /** A paragraph that needs inline elements. See {@link InlineKit}. */
@@ -92,6 +94,37 @@ export interface AskDemo {
   answered: string
 }
 
+export interface Slide {
+  title: string
+  body: Rich<Record<string, never>>
+}
+
+export interface NetworkDemo {
+  senderName: string
+  /** Two letters for the avatar circle. */
+  senderInitials: string
+  /** Which app it arrived in — a file in /public/logos. */
+  senderLogo: string
+  inbound: Rich<Pick<InlineKit, "b">>
+  reply: Rich<Pick<InlineKit, "b" | "link">>
+}
+
+export interface SourceCard {
+  title: string
+  detail: string
+}
+
+export interface ConferenceDemo {
+  name: string
+  company: string
+  /** Exactly three facts — the card's height is built for three rows. */
+  rows: readonly [
+    { label: string; value: string },
+    { label: string; value: string },
+    { label: string; value: string }
+  ]
+}
+
 export interface TriageItem {
   /** The message line. */
   text: string
@@ -124,7 +157,11 @@ export interface SiteCopy {
     headline: string
     subhead: string
     /** Exactly three — the stack between them is a fixed gap. */
-    body: readonly [Rich, Rich, Rich]
+    body: readonly [
+      Rich<Pick<InlineKit, "pill" | "keys" | "u">>,
+      Rich<Pick<InlineKit, "pill" | "keys" | "u">>,
+      Rich<Pick<InlineKit, "pill" | "keys" | "u">>
+    ]
     /** The ⌥D demo: an inbound message, and the reply Yaven writes back. */
     draft: DraftDemo
     /** The ⌥A demo: a document on screen, and a question answered from it. */
@@ -140,6 +177,24 @@ export interface SiteCopy {
      * cards arriving.
      */
     cards: readonly [TriageCard, TriageCard, TriageCard]
+  }
+
+  proposals: {
+    headline: string
+    /**
+     * Exactly three, and rendered from here by BOTH the mobile and desktop
+     * layouts. They used to be written out twice, which is how the two drifted
+     * apart; one source is what stops that happening again.
+     */
+    slides: readonly [Slide, Slide, Slide]
+    /** The mock message thread — an inbound note and Yaven's reply. */
+    network: NetworkDemo
+    /** The three scraps that collapse into a finished proposal. Exactly three. */
+    sourceCards: readonly [SourceCard, SourceCard, SourceCard]
+    /** The proposal they collapse into. */
+    proposal: { label: string; title: string; client: string }
+    /** The person you met at a conference, and what Yaven knows about them. */
+    conference: ConferenceDemo
   }
 
   /**

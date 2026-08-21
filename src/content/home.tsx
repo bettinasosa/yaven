@@ -137,6 +137,89 @@ export const homeCopy: SiteCopy = {
     ]
   },
 
+  proposals: {
+    headline: "…and who matters.",
+    slides: [
+      {
+        title: "Yaven knows who you know",
+        body: () => (
+          <>
+            It remembers everyone you&apos;ve met and what you talked about. It
+            spots the old client whose project is coming around again, the
+            intro you said you&apos;d make, the person worth a hello before
+            they forget you, then drafts your messages and proposals
+            proactively.
+          </>
+        )
+      },
+      {
+        title: "Call ended, proposal ready",
+        body: () => (
+          <>
+            Yaven pulls notes, context, and pricing from your past work and
+            drafts a ready-to-send proposal before you close the call.
+          </>
+        )
+      },
+      {
+        title: "Conference follow-ups, handled",
+        body: () => (
+          <>
+            It finds their work, your mutual connections, and drafts a
+            follow-up in your voice before the connection goes cold.
+          </>
+        )
+      }
+    ],
+    network: {
+      senderName: "Tjalling",
+      senderInitials: "TJ",
+      senderLogo: "gmail",
+      inbound: ({ b }) => (
+        <>
+          Following up on our conversation at Design Expo &apos;26.
+          <br />
+          Do you have {b("availability this week")} for a call?
+        </>
+      ),
+      reply: ({ b, link }) => (
+        <>
+          Tjalling met you at {b("Design Expo '26")}. He works with a mutual,{" "}
+          {b("Oliver Normand")}. I drafted a reply with your{" "}
+          {link("calendar link")}.
+        </>
+      )
+    },
+    sourceCards: [
+      {
+        title: "Call notes",
+        detail: "Website redesign, 4-week timeline, exhibition catalog"
+      },
+      {
+        title: "Past project",
+        detail: "Gigi's Art Gallery, site + catalog, $6,200"
+      },
+      {
+        title: "Your pricing",
+        detail: "Web + print packages start at $7,500"
+      }
+    ],
+    proposal: {
+      label: "Proposal",
+      title: "Website redesign + exhibition catalog",
+      client: "Gigi's Art Gallery"
+    },
+    conference: {
+      name: "Ariel Thomas",
+      company: "The Design Co.",
+      rows: [
+        { label: "Spoke at", value: "Design Expo '26" },
+        { label: "Mutual", value: "Asker K." },
+        { label: "Talked about", value: "Brand optimisation" }
+      ]
+    }
+  },
+
   faq: [
     {
       q: "So what actually is this?",
