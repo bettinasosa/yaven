@@ -42,10 +42,55 @@ export interface InlineKit {
   u(children: ReactNode): ReactNode
   /** The hero's "apps" word, which bursts app icons out of itself on hover. */
   apps(): ReactNode
+  /** An app logo inline in a sentence. `name` is a file in /public/logos. */
+  pill(name: string, tilt?: number): ReactNode
+  /** A keyboard shortcut, e.g. `keys("⌥", "D")`. */
+  keys(...keys: string[]): ReactNode
+  /** Bold, for the one phrase in a contract clause that matters. */
+  b(children: ReactNode): ReactNode
 }
 
 /** A paragraph that needs inline elements. See {@link InlineKit}. */
 export type Rich<K = InlineKit> = (kit: K) => ReactNode
+
+export interface DraftDemo {
+  /**
+   * Which app this arrived in — a file in /public/logos, shown beside "Draft".
+   * Part of the scenario, not decoration: a message that would realistically
+   * reach this audience over email should not be badged LinkedIn.
+   */
+  logo: string
+  senderName: string
+  senderMeta: string
+  /** The message that came in. */
+  inbound: string
+  /** The shorthand the user types to steer the reply. */
+  youType: string
+  /**
+   * What Yaven writes back. Plain string — it is typed out character by
+   * character inside a scroll window, so a much longer one finishes after the
+   * reader has already scrolled past.
+   */
+  drafted: string
+}
+
+export interface AskDemo {
+  /** Which app the document is open in — a file in /public/logos. */
+  logo: string
+  /** Filename on the chip above the document. */
+  docName: string
+  /** Two numbered clauses. The question below should be about the second. */
+  clauses: readonly [
+    { num: string; text: Rich<Pick<InlineKit, "b">> },
+    { num: string; text: Rich<Pick<InlineKit, "b">> }
+  ]
+  /** What the user asks about the document. */
+  question: string
+  /** The start of the answer, before the typing begins. */
+  answerLead: Rich<Pick<InlineKit, "pill">>
+  /** The rest of the answer, typed out. Plain string, same reason as `drafted`. */
+  answered: string
+}
 
 export interface TriageItem {
   /** The message line. */
@@ -73,6 +118,17 @@ export interface SiteCopy {
     tagline: readonly [string, string]
     /** The paragraph under it. Writes its own line breaks, for the same reason. */
     sub: Rich<Pick<InlineKit, "apps">>
+  }
+
+  meetYaven: {
+    headline: string
+    subhead: string
+    /** Exactly three — the stack between them is a fixed gap. */
+    body: readonly [Rich, Rich, Rich]
+    /** The ⌥D demo: an inbound message, and the reply Yaven writes back. */
+    draft: DraftDemo
+    /** The ⌥A demo: a document on screen, and a question answered from it. */
+    ask: AskDemo
   }
 
   triage: {

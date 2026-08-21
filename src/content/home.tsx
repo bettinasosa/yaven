@@ -21,6 +21,73 @@ export const homeCopy: SiteCopy = {
     )
   },
 
+  meetYaven: {
+    headline: "Meet Yaven.",
+    subhead: "A menu bar assistant that lives on your Mac.",
+    body: [
+      ({ pill, u }) => (
+        <>
+          It connects to all your {pill("gmail", -3)}
+          {pill("telegram-icon", 3)}
+          {pill("imessage", -3)}
+          {pill("slack", 3)} inbound, {pill("gcal", 2)} calendar,{" "}
+          {pill("granola", -2)} notes, {pill("notion", 3)} docs and more,
+          collating everything important in {u("one place")}. The intro, the
+          contract, the unpaid invoice, none of it gets buried.
+        </>
+      ),
+      ({ keys, u }) => (
+        <>
+          Use {keys("⌥", "D")} to draft any reply, anywhere, in your voice. Use{" "}
+          {keys("⌥", "A")} to answer anything on your screen. Yaven learns how
+          much to let you review, and how much you want it to{" "}
+          {u("handle automatically")}, as you use it.
+        </>
+      ),
+      ({ u }) => (
+        <>
+          {u("Local-first")}. Your messages, drafts, and context stay on your
+          machine. Nothing is uploaded to our servers or synced to a cloud.
+        </>
+      )
+    ],
+    draft: {
+      logo: "linkedin",
+      senderName: "Lola H.",
+      senderMeta: "Recruiter · Founding Designer role",
+      inbound:
+        "Hi Bettina! Your work is stunning, we're hiring a founding designer. Open to a quick chat?",
+      youType: "politely decline, warm",
+      drafted:
+        "Thanks so much for reaching out, Lola! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
+    },
+    ask: {
+      logo: "google",
+      docName: "Martinas_Bakehouse_v3.pdf",
+      clauses: [
+        {
+          num: "4.1",
+          text: () => (
+            <>
+              All deliverables remain the sole property of the Client upon full
+              payment.
+            </>
+          )
+        },
+        {
+          num: "4.2",
+          text: ({ b }) => <>Payment due within {b("sixty (60)")} days of invoice date.</>
+        }
+      ],
+      question: "I thought this was 30 days? Why did it change?",
+      answerLead: ({ pill }) => (
+        <>Since your last {pill("granola")} call with Pablo on May 12, </>
+      ),
+      answered:
+        "his team updated the payment window from 30 to 60 days. He mentioned cash-flow timing on their end. The rest of the scope is unchanged from your v2 redline."
+    }
+  },
+
   triage: {
     headline: "Yaven knows what matters…",
     body: [

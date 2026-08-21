@@ -10,6 +10,8 @@ import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduce
 import { useIsMobile } from "@/components/effects/use-is-mobile"
 import { IconTooltip } from "@/components/ui/icon-tooltip"
 import { ICON_LABELS } from "@/components/ui/icon-labels"
+import { useCopy } from "@/content/copy-context"
+import type { AskDemo, DraftDemo } from "@/content/types"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -123,17 +125,13 @@ function ShortcutBadge({ keys, small }: { keys: string[]; small?: boolean }) {
 
 // ── Draft card (LinkedIn DM) ────────────────────────────────────────────────
 
-const DRAFT_RESPONSE =
-  "Thanks so much for reaching out, Lola! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
-
-const ASK_RESPONSE =
-  "his team updated the payment window from 30 to 60 days. He mentioned cash-flow timing on their end. The rest of the scope is unchanged from your v2 redline."
-
 function LinkedInCard({
+  demo,
   drafting,
   active,
   onTrigger
 }: {
+  demo: DraftDemo
   drafting: boolean
   active: boolean
   onTrigger: () => void
@@ -153,8 +151,8 @@ function LinkedInCard({
     >
       <div className="flex items-center gap-2.5 px-[22px] pb-5">
         <Image
-          src="/logos/linkedin.png"
-          alt="LinkedIn"
+          src={`/logos/${demo.logo}.png`}
+          alt=""
           width={26}
           height={26}
           style={{
@@ -193,16 +191,15 @@ function LinkedInCard({
             }}
           />
           <div>
-            <div className="font-bold text-[#0a0e1a] text-[14px]">Lola H.</div>
-            <div className="text-[#0a0e1a]/50 text-[12px]">
-              Recruiter · Founding Designer role
+            <div className="font-bold text-[#0a0e1a] text-[14px]">
+              {demo.senderName}
             </div>
+            <div className="text-[#0a0e1a]/50 text-[12px]">{demo.senderMeta}</div>
           </div>
         </div>
 
         <p className="text-[#0a0e1a] text-[14px] leading-[1.55] font-medium mb-4 mx-1">
-          Hi Bettina! Your work is stunning, we&apos;re hiring a founding
-          designer. Open to a quick chat?
+          {demo.inbound}
         </p>
 
         <div
@@ -219,7 +216,7 @@ function LinkedInCard({
                   You type
                 </div>
                 <div className="text-[#0a0e1a] font-medium text-[15px]">
-                  politely decline, warm
+                  {demo.youType}
                 </div>
               </div>
               <div className="glass-wrap glass-btn-invite">
@@ -245,7 +242,7 @@ function LinkedInCard({
               </div>
               <div className="text-[#0a0e1a] text-[14px] leading-[1.55] font-medium">
                 {active ? (
-                  <Typewriter text={DRAFT_RESPONSE} speed={12} delay={300} />
+                  <Typewriter text={demo.drafted} speed={12} delay={300} />
                 ) : (
                   <span className="opacity-0">.</span>
                 )}
@@ -261,11 +258,13 @@ function LinkedInCard({
 // ── Ask card (document with macOS-style bg) ────────────────────────────────
 
 function AskCard({
+  demo,
   asking,
   active,
   onTrigger,
   mobile = false
 }: {
+  demo: AskDemo
   asking: boolean
   active: boolean
   onTrigger: () => void
@@ -277,7 +276,7 @@ function AskCard({
         className="text-[13px] font-semibold mb-2"
         style={{ color: "rgba(0,0,0,0.4)" }}
       >
-        I thought this was 30 days? Why did it change?
+        {demo.question}
       </div>
       <div
         className="text-[14px] leading-[1.6] font-medium"
@@ -285,26 +284,28 @@ function AskCard({
       >
         {active ? (
           <>
-            <span>Since your last </span>
-            <span
-              className="inline-flex items-center gap-1 align-middle"
-              style={{
-                background: "rgba(0,0,0,0.06)",
-                borderRadius: "10px",
-                fontSize: "12px"
-              }}
-            >
-              <Image
-                src="/logos/granola.png"
-                alt="Granola"
-                width={14}
-                height={14}
-                className="rounded-[3px]"
-                style={{ flexShrink: 0, width: "14px", height: "14px" }}
-              />
-            </span>
-            <span> call with Pablo on May 12, </span>
-            <Typewriter text={ASK_RESPONSE} speed={12} delay={300} />
+            {demo.answerLead({
+              pill: name => (
+                <span
+                  className="inline-flex items-center gap-1 align-middle"
+                  style={{
+                    background: "rgba(0,0,0,0.06)",
+                    borderRadius: "10px",
+                    fontSize: "12px"
+                  }}
+                >
+                  <Image
+                    src={`/logos/${name}.png`}
+                    alt=""
+                    width={14}
+                    height={14}
+                    className="rounded-[3px]"
+                    style={{ flexShrink: 0, width: "14px", height: "14px" }}
+                  />
+                </span>
+              )
+            })}
+            <Typewriter text={demo.answered} speed={12} delay={300} />
           </>
         ) : (
           <span className="opacity-0">.</span>
@@ -332,7 +333,7 @@ function AskCard({
         >
           <div className="flex items-center gap-2.5">
             <Image
-              src="/logos/google.png"
+              src={`/logos/${demo.logo}.png`}
               alt="Google"
               width={26}
               height={26}
@@ -375,29 +376,25 @@ function AskCard({
                 borderRadius: "20px"
               }}
             >
-              Martinas_Bakehouse_v3.pdf
+              {demo.docName}
             </div>
           </div>
 
           <div className="text-[16px] leading-[1.75] text-[#0a0e1a]/70 mt-2">
-            <div className="mb-3">
-              <span className="text-[#0a0e1a]/30 text-[13px]">4.1</span> All
-              deliverables remain the sole property of the Client upon full
-              payment.
-            </div>
-            <div className="mb-3">
-              <span className="text-[#0a0e1a]/30 text-[13px]">4.2</span> Payment
-              due within{" "}
-              <strong
-                style={{
-                  color: "#0a0e1a",
-                  fontWeight: 600
-                }}
-              >
-                sixty (60)
-              </strong>{" "}
-              days of invoice date.
-            </div>
+            {demo.clauses.map(clause => (
+              <div key={clause.num} className="mb-3">
+                <span className="text-[#0a0e1a]/30 text-[13px]">
+                  {clause.num}
+                </span>{" "}
+                {clause.text({
+                  b: children => (
+                    <strong style={{ color: "#0a0e1a", fontWeight: 600 }}>
+                      {children}
+                    </strong>
+                  )
+                })}
+              </div>
+            ))}
           </div>
 
           {!asking && (
@@ -480,6 +477,17 @@ const bodyTextStyle: React.CSSProperties = {
 }
 
 export function MeetYavenSection() {
+  const copy = useCopy()
+
+  // The inline pieces this section lends to its own body copy.
+  const bodyKit = {
+    pill: (name: string, tilt = 0) => <IconPill name={name} tilt={tilt} />,
+    keys: (...keys: string[]) => <ShortcutBadge keys={keys} small />,
+    u: (children: React.ReactNode) => <U>{children}</U>,
+    apps: () => null,
+    b: (children: React.ReactNode) => <strong>{children}</strong>
+  }
+
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   const draftCardRef = useRef<HTMLDivElement>(null)
@@ -754,7 +762,7 @@ export function MeetYavenSection() {
           color: "#fff"
         }}
       >
-        Meet Yaven.
+        {copy.meetYaven.headline}
       </ScrollCutReveal>
 
       <p
@@ -766,34 +774,15 @@ export function MeetYavenSection() {
           opacity: 0.85
         }}
       >
-        A menu bar assistant that lives on your Mac.
+        {copy.meetYaven.subhead}
       </p>
 
       <div className="flex flex-col gap-5 max-w-[520px]">
-        <p style={bodyTextStyle}>
-          It connects to all your <IconPill name="gmail" tilt={-3} />
-          <IconPill name="telegram-icon" tilt={3} />
-          <IconPill name="imessage" tilt={-3} />
-          <IconPill name="slack" tilt={3} /> inbound,{" "}
-          <IconPill name="gcal" tilt={2} /> calendar,{" "}
-          <IconPill name="granola" tilt={-2} /> notes,{" "}
-          <IconPill name="notion" tilt={3} /> docs and more, collating
-          everything important in <U>one place</U>. The intro, the contract, the
-          unpaid invoice, none of it gets buried.
-        </p>
-
-        <p style={bodyTextStyle}>
-          Use <ShortcutBadge keys={["⌥", "D"]} small /> to draft any reply,
-          anywhere, in your voice. Use <ShortcutBadge keys={["⌥", "A"]} small />{" "}
-          to answer anything on your screen. Yaven learns how much to let you
-          review, and how much you want it to <U>handle automatically</U>, as
-          you use it.
-        </p>
-
-        <p style={bodyTextStyle}>
-          <U>Local-first</U>. Your messages, drafts, and context stay on your
-          machine. Nothing is uploaded to our servers or synced to a cloud.
-        </p>
+        {copy.meetYaven.body.map((paragraph, i) => (
+          <p key={i} style={bodyTextStyle}>
+            {paragraph(bodyKit)}
+          </p>
+        ))}
       </div>
 
       <p
@@ -840,8 +829,19 @@ export function MeetYavenSection() {
           >
             {sideText}
             <div className="flex flex-col gap-6" style={{ maxWidth: "440px" }}>
-              <LinkedInCard drafting active onTrigger={() => {}} />
-              <AskCard asking active mobile={isMobile} onTrigger={() => {}} />
+              <LinkedInCard
+                demo={copy.meetYaven.draft}
+                drafting
+                active
+                onTrigger={() => {}}
+              />
+              <AskCard
+                demo={copy.meetYaven.ask}
+                asking
+                active
+                mobile={isMobile}
+                onTrigger={() => {}}
+              />
             </div>
           </div>
         </div>
@@ -904,6 +904,7 @@ export function MeetYavenSection() {
                 }}
               >
                 <LinkedInCard
+                  demo={copy.meetYaven.draft}
                   drafting={drafting}
                   active={draftTyping}
                   onTrigger={triggerDraft}
@@ -925,6 +926,7 @@ export function MeetYavenSection() {
                 }}
               >
                 <AskCard
+                  demo={copy.meetYaven.ask}
                   asking={asking}
                   active={askTyping}
                   mobile
@@ -995,6 +997,7 @@ export function MeetYavenSection() {
               }}
             >
               <LinkedInCard
+                demo={copy.meetYaven.draft}
                 drafting={drafting}
                 active={draftTyping}
                 onTrigger={() => {
@@ -1020,6 +1023,7 @@ export function MeetYavenSection() {
               }}
             >
               <AskCard
+                demo={copy.meetYaven.ask}
                 asking={asking}
                 active={askTyping}
                 onTrigger={triggerAsk}
