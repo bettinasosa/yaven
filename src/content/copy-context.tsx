@@ -2,6 +2,9 @@
 
 import { createContext, useContext } from "react"
 import type { ReactNode } from "react"
+import { boutiqueAgencyCopy } from "./boutique-agency"
+import { fractionalCmoCopy } from "./fractional-cmo"
+import { influencerMarketingCopy } from "./influencer-marketing"
 import { homeCopy } from "./home"
 import type { SiteCopy } from "./types"
 import type { VariantId } from "./variants"
@@ -14,13 +17,12 @@ import type { VariantId } from "./variants"
  * the server/client boundary. Routes hand over a `VariantId` string; this is
  * where it becomes copy.
  *
- * Variants are added to this map as their copy files land.
  */
 const VARIANT_COPY: Record<VariantId, SiteCopy> = {
   home: homeCopy,
-  fractionalCmo: homeCopy,
-  boutiqueAgency: homeCopy,
-  influencerMarketing: homeCopy
+  fractionalCmo: fractionalCmoCopy,
+  boutiqueAgency: boutiqueAgencyCopy,
+  influencerMarketing: influencerMarketingCopy
 }
 
 const CopyContext = createContext<SiteCopy>(homeCopy)
