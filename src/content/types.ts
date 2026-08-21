@@ -1,0 +1,73 @@
+import type { ReactNode } from "react"
+
+/**
+ * The shape of every word on the marketing page.
+ *
+ * One page renders four ways — the home page plus three audience-specific
+ * copies at /fractional-cmo and friends. Only the words change; the structure,
+ * animation and layout are identical everywhere.
+ *
+ * Two rules keep that true, and both are load-bearing:
+ *
+ * 1. **Variants change strings, never structure.** The scroll-pinned sections
+ *    are tuned to a fixed number of beats (three triage cards, three proposal
+ *    slides), and the floating CTA finds its trigger points with
+ *    `document.querySelector` on markers in the shell. Fixed-length tuples
+ *    below are what stop a variant quietly changing either.
+ *
+ * 2. **Headline slots are plain strings, never rich copy.** `ScrollCutReveal`
+ *    runs GSAP `SplitText` over its children and reverts it on cleanup, which
+ *    rebuilds their DOM. Nested elements lose their handlers and the line masks
+ *    mis-clip. If a headline needs emphasis, it needs a different reveal.
+ *
+ * Length matters too, because the layout was tuned to today's copy — fixed card
+ * heights and pinned scroll distances. Keep variant copy within roughly 15% of
+ * the home page's length for the same slot, and check the result on screen;
+ * text that fits at 1440px wide can still overflow a pinned section at 1280.
+ */
+
+/**
+ * Inline elements a section lends to its own rich copy.
+ *
+ * Rich copy can't just contain JSX: the components it would need (`IconPill`,
+ * the underline span, the shortcut badge) are private to the section that
+ * renders them, so a copy module importing them would form a cycle. Instead the
+ * copy is a function, and the section passes in the pieces at render time.
+ *
+ * Each slot asks only for what it uses, via `Pick`, so it stays obvious from
+ * the type which inline elements a given paragraph is allowed to reach for.
+ */
+export interface InlineKit {
+  /** Draws an underline on as it scrolls into view. */
+  u(children: ReactNode): ReactNode
+}
+
+/** A paragraph that needs inline elements. See {@link InlineKit}. */
+export type Rich<K = InlineKit> = (kit: K) => ReactNode
+
+export interface TriageItem {
+  /** The message line. */
+  text: string
+  /** The little chip on the right — "Client", "✓ replied", "Next month". */
+  tag: string
+}
+
+export interface TriageCard {
+  label: string
+  desc: string
+  /** Length is free — the cards already carry 3, 4 and 2 respectively. */
+  items: readonly TriageItem[]
+}
+
+export interface SiteCopy {
+  triage: {
+    headline: string
+    body: readonly [Rich<Pick<InlineKit, "u">>, Rich<Pick<InlineKit, "u">>]
+    /**
+     * Exactly three. Card colours, rotation and stack offsets are keyed by
+     * index in the component, and the pinned scroll distance is tuned to three
+     * cards arriving.
+     */
+    cards: readonly [TriageCard, TriageCard, TriageCard]
+  }
+}

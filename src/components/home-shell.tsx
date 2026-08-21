@@ -11,6 +11,8 @@ import { FaqSection } from "@/components/sections/faq-section"
 import { FooterSection } from "@/components/sections/footer-section"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
+import { SiteCopyProvider } from "@/content/copy-context"
+import type { VariantId } from "@/content/variants"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -178,7 +180,7 @@ function StickyGetYaven() {
  * page.tsx can stay a Server Component and export its own metadata — a client
  * component cannot.
  */
-export function HomeShell() {
+export function HomeShell({ variant = "home" }: { variant?: VariantId }) {
   const isMobile = useIsMobile()
 
   // Mobile and desktop layouts have very different heights. When the layout
@@ -191,7 +193,7 @@ export function HomeShell() {
   }, [isMobile])
 
   return (
-    <>
+    <SiteCopyProvider variant={variant}>
       <StickyGetYaven />
       <HeroSectionND />
       <CardWrap z={2} behindBg="transparent">
@@ -252,6 +254,6 @@ export function HomeShell() {
           </div>
         </div>
       )}
-    </>
+    </SiteCopyProvider>
   )
 }

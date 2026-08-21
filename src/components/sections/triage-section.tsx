@@ -9,6 +9,8 @@ import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduce
 import { useIsMobile } from "@/components/effects/use-is-mobile"
 import { IconTooltip } from "@/components/ui/icon-tooltip"
 import { ICON_LABELS } from "@/components/ui/icon-labels"
+import { useCopy } from "@/content/copy-context"
+import type { TriageCard as TriageCardCopy } from "@/content/types"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -50,48 +52,25 @@ function AppIcon({ name, tilt }: { name: string; tilt: number }) {
   )
 }
 
-const CARDS = [
-  {
-    label: "Needs you now",
-    bg: "var(--primary)",
-    desc: "Things only you can handle. Yaven knows what is and isn't urgent.",
-    items: [
-      { text: "Can we move Thursday's call?", tag: "Client" },
-      { text: "Intro: Fatimah ↔ you", tag: "Warm lead" },
-      { text: "Redlines back from their legal", tag: "Deadline" }
-    ]
-  },
-  {
-    label: "Already handled",
-    bg: "#df4f3e",
-    desc: "Drafted using your tone, context, and rules.",
-    items: [
-      { text: "Re: proposal timeline?", tag: "✓ replied" },
-      { text: "Invoice #214 overdue", tag: "✓ nudged" },
-      { text: "Meeting action items", tag: "✓ sent" },
-      { text: "Receipt filed to expenses", tag: "✓ sorted" }
-    ]
-  },
-  {
-    label: "Can wait",
-    bg: "#ebc1ff",
-    textDark: true,
-    desc: "Queued for when you have the headspace.",
-    items: [
-      { text: "Competitor weekly digest", tag: "This weekend" },
-      { text: "Invite: founders dinner, Oct 12", tag: "Next month" }
-    ]
-  }
-]
+// Presentation only — the words live in src/content. Index-matched to
+// copy.triage.cards, which is a fixed-length tuple of three for exactly this
+// reason: the stack offsets and rotations below are positional.
+const CARD_STYLES = [
+  { bg: "var(--primary)" },
+  { bg: "#df4f3e" },
+  { bg: "#ebc1ff", textDark: true }
+] as const
 
 function TriageCard({
   card,
+  style,
   lite
 }: {
-  card: (typeof CARDS)[number]
+  card: TriageCardCopy
+  style: (typeof CARD_STYLES)[number]
   lite?: boolean
 }) {
-  const dark = "textDark" in card && card.textDark
+  const dark = "textDark" in style && style.textDark
   const textColor = dark ? "#0a0e1a" : "#fff"
   const chipBg = dark ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.15)"
   const tagColor = dark ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.5)"
@@ -99,7 +78,7 @@ function TriageCard({
   return (
     <div
       style={{
-        background: card.bg,
+        background: style.bg,
         borderRadius: lite ? "28px" : "40px",
         padding: "clamp(28px, 3.5vw, 40px)",
         display: "flex",
@@ -187,6 +166,7 @@ function TriageCard({
 }
 
 export function TriageSection() {
+  const copy = useCopy()
   const wrapperRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -262,9 +242,12 @@ export function TriageSection() {
     <AppIcon name={name} tilt={tilt} />
   )
 
-  const underline = (text: string) => (
-    <span className="triage-underline">{text}</span>
-  )
+  // Inline elements this section lends to its own rich copy — see InlineKit.
+  const kit = {
+    u: (children: React.ReactNode) => (
+      <span className="triage-underline">{children}</span>
+    )
+  }
 
   const bodyStyle: React.CSSProperties = {
     fontSize: "var(--fs-body)",
@@ -280,24 +263,15 @@ export function TriageSection() {
         className="text-[clamp(36px,5.5vw,76px)] font-medium tracking-[-0.02em] leading-[1.05] m-0"
         style={{ color: "#0a0e1a", fontFamily: "var(--font-instrument-serif)" }}
       >
-        Yaven knows what matters…
+        {copy.triage.headline}
       </ScrollCutReveal>
 
       <div className="flex flex-col gap-7 max-w-[480px]">
-        <p style={bodyStyle}>
-          One queue instead of ten different apps. Yaven pulls everything into
-          a{" "}
-          {underline("single notification centre")} that only demands your
-          attention when something actually needs you, so you can stay focused.
-        </p>
-
-        <p style={bodyStyle}>
-          {underline("Important threads never get buried")}. Yaven tracks every
-          conversation, drafts replies in your voice, and{" "}
-          {underline("preps you before every meeting")} with the context you
-          need.
-        </p>
-
+        {copy.triage.body.map((paragraph, i) => (
+          <p key={i} style={bodyStyle}>
+            {paragraph(kit)}
+          </p>
+        ))}
       </div>
     </div>
   )
@@ -342,7 +316,7 @@ export function TriageSection() {
                 opacity: 0
               }}
             >
-              {CARDS.map((card, i) => (
+              {copy.triage.cards.map((card, i) => (
                 <div
                   key={card.label}
                   ref={el => {
@@ -360,7 +334,7 @@ export function TriageSection() {
                     transform: "translateZ(0) translateY(100vh)"
                   }}
                 >
-                  <TriageCard card={card} lite />
+                  <TriageCard card={card} style={CARD_STYLES[i]} lite />
                 </div>
               ))}
             </div>
@@ -392,8 +366,12 @@ export function TriageSection() {
               desktop keeps cards-left / text-right. */}
           {isMobile && sideText}
           <div className="flex flex-col gap-6" style={{ maxWidth: "440px" }}>
-            {CARDS.map(card => (
-              <TriageCard key={card.label} card={card} />
+            {copy.triage.cards.map((card, i) => (
+              <TriageCard
+                key={card.label}
+                card={card}
+                style={CARD_STYLES[i]}
+              />
             ))}
           </div>
           {!isMobile && sideText}
@@ -429,7 +407,7 @@ export function TriageSection() {
               height: "540px"
             }}
           >
-            {CARDS.map((card, i) => (
+            {copy.triage.cards.map((card, i) => (
               <div
                 key={card.label}
                 ref={el => {
@@ -447,7 +425,7 @@ export function TriageSection() {
                   transform: "translateZ(0) translateY(100vh)"
                 }}
               >
-                <TriageCard card={card} />
+                <TriageCard card={card} style={CARD_STYLES[i]} />
               </div>
             ))}
           </div>
