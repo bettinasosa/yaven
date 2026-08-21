@@ -483,9 +483,7 @@ export function MeetYavenSection() {
   const bodyKit = {
     pill: (name: string, tilt = 0) => <IconPill name={name} tilt={tilt} />,
     keys: (...keys: string[]) => <ShortcutBadge keys={keys} small />,
-    u: (children: React.ReactNode) => <U>{children}</U>,
-    apps: () => null,
-    b: (children: React.ReactNode) => <strong>{children}</strong>
+    u: (children: React.ReactNode) => <U>{children}</U>
   }
 
   const wrapperRef = useRef<HTMLDivElement>(null)
