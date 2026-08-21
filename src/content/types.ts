@@ -40,6 +40,8 @@ import type { ReactNode } from "react"
 export interface InlineKit {
   /** Draws an underline on as it scrolls into view. */
   u(children: ReactNode): ReactNode
+  /** The hero's "apps" word, which bursts app icons out of itself on hover. */
+  apps(): ReactNode
 }
 
 /** A paragraph that needs inline elements. See {@link InlineKit}. */
@@ -60,6 +62,19 @@ export interface TriageCard {
 }
 
 export interface SiteCopy {
+  hero: {
+    /**
+     * The big two-line headline, rendered one line per entry.
+     *
+     * Line breaks are the copy's business, not the layout's: the break sits
+     * where it does because of how long these particular words are at this
+     * font size. Different words want a different break.
+     */
+    tagline: readonly [string, string]
+    /** The paragraph under it. Writes its own line breaks, for the same reason. */
+    sub: Rich<Pick<InlineKit, "apps">>
+  }
+
   triage: {
     headline: string
     body: readonly [Rich<Pick<InlineKit, "u">>, Rich<Pick<InlineKit, "u">>]
@@ -70,4 +85,14 @@ export interface SiteCopy {
      */
     cards: readonly [TriageCard, TriageCard, TriageCard]
   }
+
+  /**
+   * The one list whose length may vary between audiences — the FAQ sits in
+   * normal flow and its pin is defined relative to its own height, so adding or
+   * dropping a question doesn't desync anything.
+   *
+   * Answers are plain nodes rather than {@link Rich} because they only ever use
+   * ordinary markup, so there's no section-private component to pass in.
+   */
+  faq: readonly { q: string; a: ReactNode }[]
 }

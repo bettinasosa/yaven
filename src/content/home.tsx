@@ -8,6 +8,19 @@ import type { SiteCopy } from "./types"
  * a side effect of extracting something else.
  */
 export const homeCopy: SiteCopy = {
+  hero: {
+    tagline: ["Less admin.", "More flow."],
+    sub: ({ apps }) => (
+      <>
+        The AI workforce that lives in your menu bar,
+        <br />
+        handling the admin that eats your day
+        <br />
+        across all your {apps()}.
+      </>
+    )
+  },
+
   triage: {
     headline: "Yaven knows what matters…",
     body: [
@@ -55,5 +68,89 @@ export const homeCopy: SiteCopy = {
         ]
       }
     ]
-  }
+  },
+
+  faq: [
+    {
+      q: "So what actually is this?",
+      a: (
+        <>
+          A second brain that lives in your Mac&apos;s menu bar. It connects to
+          all of your inbound (telegram, imessage, slack, mail etc.), calendar,
+          notes and docs, learns how you work, and builds a picture of your
+          conversations, and commitments so nothing falls through the cracks.
+          <br />
+          <br />
+          Right now it intelligently prioritises your inbox so the most critical
+          messages are always at the top of your desk, drafts replies on one click
+          in your voice from any app on your Mac, and preps you before every
+          meeting. The more you use it, the more it handles on its own. Currently
+          in beta.
+        </>
+      )
+    },
+    {
+      q: "How is this different from ChatGPT or Claude?",
+      a: (
+        <>
+          A chat box waits for you to drive it: you write the prompt, paste the
+          context, copy the answer back. Yaven already read the thread, knows the
+          client, and queued the reply before you opened it. You approve, it
+          learns. The more you use it, the less you have to touch.
+        </>
+      )
+    },
+    {
+      q: "Where does my data go?",
+      a: (
+        <>
+          Yaven is local-first. Your emails, drafts, and the profile it builds
+          stay on your Mac, not on our servers, not synced to a cloud. When you
+          ask it to draft or answer, only the relevant text is sent to your
+          existing model provider for that single request. Nothing is stored
+          afterward. Yaven never sends, files, or changes anything without your
+          explicit approval.
+        </>
+      )
+    },
+    {
+      q: "I handle client data under NDA. Can I trust this?",
+      a: (
+        <>
+          That&apos;s exactly why it&apos;s local-first. Your files and context
+          never leave your machine unless you trigger a draft. When you do, only
+          the relevant snippet goes to your existing model provider for that one
+          request, nothing is retained. You control every action, every send.
+        </>
+      )
+    },
+    {
+      q: "What does it connect to?",
+      a: (
+        <>
+          Gmail, Google Calendar, Apple Calendar, iMessage, Telegram, Granola,
+          Spotify, your files and docs. Many more integrations are coming through
+          the beta.
+        </>
+      )
+    },
+    {
+      q: "Is it Mac only?",
+      a: (
+        <>
+          Yes, for now. Yaven is built native for macOS. Windows is on the
+          roadmap.
+        </>
+      )
+    },
+    {
+      q: "When do I get access?",
+      a: (
+        <>
+          Yaven is in beta. We onboard a small group every week, personally. Join
+          the waitlist and we&apos;ll reach out.
+        </>
+      )
+    }
+  ]
 }
