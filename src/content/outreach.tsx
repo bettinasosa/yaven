@@ -51,10 +51,10 @@ export const outreachCopy: SiteCopy = {
       ),
       ({ u }) => (
         <>
-          {u("Nothing automates a platform")}. No bot logs into your account, no
-          connection requests fire overnight, no cookie sits on somebody
-          else&apos;s server. You press send, which is the part that keeps the
-          account yours.
+          {u("No bot logs in as you")}. Nothing fires connection requests
+          overnight, and your session cookie never sits on somebody else&apos;s
+          server. You press send, which is the part that keeps the account
+          yours.
         </>
       )
     ],
@@ -169,11 +169,12 @@ export const outreachCopy: SiteCopy = {
         )
       },
       {
-        title: "Conference follow-ups, handled",
+        title: "The no that became a yes",
         body: () => (
           <>
-            It finds their work, your mutual connections, and drafts a
-            follow-up in your voice before the connection goes cold.
+            Someone said not right now in March and has just moved to a company
+            with a budget. Yaven spots the change, reminds you what they
+            actually objected to, and opens on that rather than on hello again.
           </>
         )
       }
@@ -184,15 +185,16 @@ export const outreachCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Following up on our conversation at SaaStock &apos;26.
+          You got in touch a while back — I&apos;ve moved since.
           <br />
-          Do you have {b("availability this week")} for a call?
+          Is that {b("still something you do")}?
         </>
       ),
       reply: ({ b, link }) => (
         <>
-          Marcus met you at {b("SaaStock '26")}. He works with a mutual,{" "}
-          {b("Oliver Normand")}. I drafted a reply with your {link("calendar link")}.
+          Marcus said {b("no budget")} in March, at a company half this size. He
+          runs growth at {b("Halcyon")} now. I drafted a reply that picks up
+          where you left off, with your {link("calendar link")}.
         </>
       )
     },
@@ -216,12 +218,12 @@ export const outreachCopy: SiteCopy = {
       client: "Daniel O."
     },
     conference: {
-      name: "Ariel Thomas",
+      name: "Marcus Chen",
       company: "Halcyon Group",
       rows: [
-        { label: "Spoke at", value: "SaaStock '26" },
-        { label: "Mutual", value: "Asker K." },
-        { label: "Talked about", value: "Outbound reply rates" }
+        { label: "Last replied", value: "March, no budget" },
+        { label: "Changed", value: "New role, runs growth" },
+        { label: "Objected to", value: "Price, not the product" }
       ]
     }
   },
@@ -237,10 +239,9 @@ export const outreachCopy: SiteCopy = {
           touch, the reply, the follow-up.
           <br />
           <br />
-          The part that matters is what it doesn&apos;t do. Nothing sends
-          itself. Every draft waits for you to read it, which is why the
-          messages don&apos;t read like everybody else&apos;s. Currently in
-          beta.
+          Nothing sends itself. Every draft waits for you to read it, which
+          is why the messages don&apos;t read like everybody else&apos;s.
+          Currently in beta.
         </>
       )
     },

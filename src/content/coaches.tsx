@@ -107,7 +107,7 @@ export const coachesCopy: SiteCopy = {
       ),
       ({ u }) => (
         <>
-          {u("Nobody warm goes cold")}. Yaven tracks who asked about pricing and
+          {u("Nobody asks twice")}. Yaven tracks who asked about pricing and
           never heard back, drafts the follow-up in your voice, and{" "}
           {u("preps you before every call")} so you open knowing their goal.
         </>
@@ -168,11 +168,12 @@ export const coachesCopy: SiteCopy = {
         )
       },
       {
-        title: "Event follow-ups, handled",
+        title: "The friend of a client who finished",
         body: () => (
           <>
-            It finds their work, your mutual connections, and drafts a
-            follow-up in your voice before the conversation goes cold.
+            Somebody messages saying Hannah sent them. Yaven knows who Hannah
+            is, what she did, and how it went, so you can answer with the thing
+            that will actually land rather than asking who referred them.
           </>
         )
       }
@@ -183,15 +184,16 @@ export const coachesCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Following up on our conversation at the Wellness Summit &apos;26.
+          Hi! Hannah said I should speak to you.
           <br />
-          Do you have {b("availability this week")} for a call?
+          Do you have {b("space in January")}?
         </>
       ),
       reply: ({ b, link }) => (
         <>
-          Priya met you at {b("Wellness Summit '26")}. She works with a mutual,{" "}
-          {b("Asker K.")}. I drafted a reply with your {link("calendar link")}.
+          {b("Hannah R.")} finished her twelve weeks in March and referred two
+          people since. Priya trains at the same gym. I drafted a reply with
+          your {link("calendar link")}.
         </>
       )
     },
@@ -215,12 +217,12 @@ export const coachesCopy: SiteCopy = {
       client: "Hannah R."
     },
     conference: {
-      name: "Ariel Thomas",
-      company: "Halcyon Health",
+      name: "Priya Nayar",
+      company: "Referred by Hannah R.",
       rows: [
-        { label: "Spoke at", value: "Wellness Summit '26" },
-        { label: "Mutual", value: "Asker K." },
-        { label: "Talked about", value: "Retention after week four" }
+        { label: "Hannah finished", value: "12 weeks, March" },
+        { label: "How it went", value: "Ran her first half marathon" },
+        { label: "Also referred", value: "Two others since" }
       ]
     }
   },

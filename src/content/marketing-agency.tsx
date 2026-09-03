@@ -99,7 +99,7 @@ export const marketingAgencyCopy: SiteCopy = {
     body: [
       ({ u }) => (
         <>
-          Six accounts, six Slacks, and a industry that moves faster than
+          Six accounts, six Slacks, and an industry that moves faster than
           anyone can read. Yaven pulls it into a{" "}
           {u("single notification centre")} and tells you what actually needs
           you now, so the loudest account stops winning by default.
@@ -169,11 +169,12 @@ export const marketingAgencyCopy: SiteCopy = {
         )
       },
       {
-        title: "Conference follow-ups, handled",
+        title: "The pitch you lost, coming back",
         body: () => (
           <>
-            It finds their work, your mutual connections, and drafts a
-            follow-up in your voice before the connection goes cold.
+            Agencies get replaced roughly every three years, which means the
+            business you lost in 2024 is in play again now. Yaven watches for
+            the signs and reminds you what they picked instead, and why.
           </>
         )
       }
@@ -184,15 +185,16 @@ export const marketingAgencyCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Following up on our conversation at Advertising Week &apos;26.
+          We&apos;re reviewing agencies again for next year.
           <br />
-          Do you have {b("availability this week")} for a call?
+          Would you be open to {b("re-pitching")} in September?
         </>
       ),
       reply: ({ b, link }) => (
         <>
-          Marcus met you at {b("Advertising Week '26")}. He works with a mutual,{" "}
-          {b("Oliver Normand")}. I drafted a reply with your {link("calendar link")}.
+          You pitched Marcus in {b("March 2024")} and lost on price. He has since
+          moved to {b("Halcyon")}, where the budget is roughly double. I drafted
+          a reply with your {link("calendar link")}.
         </>
       )
     },
@@ -216,12 +218,12 @@ export const marketingAgencyCopy: SiteCopy = {
       client: "Halcyon"
     },
     conference: {
-      name: "Ariel Thomas",
+      name: "Marcus Chen",
       company: "Halcyon Group",
       rows: [
-        { label: "Spoke at", value: "Advertising Week '26" },
-        { label: "Mutual", value: "Asker K." },
-        { label: "Talked about", value: "Attribution after GA4" }
+        { label: "You pitched", value: "March 2024, brand + paid" },
+        { label: "Lost to", value: "An incumbent, on price" },
+        { label: "Changed", value: "New role, budget roughly doubled" }
       ]
     }
   },

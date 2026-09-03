@@ -167,11 +167,13 @@ export const fractionalsCopy: SiteCopy = {
         )
       },
       {
-        title: "Conference follow-ups, handled",
+        title: "Intros you can answer properly",
         body: () => (
           <>
-            It finds their work, your mutual connections, and drafts a
-            follow-up in your voice before the connection goes cold.
+            A founder gets your name from an investor and emails on a Tuesday
+            night. Yaven tells you who passed on your name, what the company
+            does and what they are short of, so the reply sounds like you
+            already knew.
           </>
         )
       }
@@ -182,15 +184,17 @@ export const fractionalsCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Following up on our conversation at the Operators Summit &apos;26.
+          Asker suggested I get in touch — we&apos;re raising and have{" "}
+          {b("no senior finance hire")} until Q4.
           <br />
-          Do you have {b("availability this week")} for a call?
+          Any chance of a call this week?
         </>
       ),
       reply: ({ b, link }) => (
         <>
-          Marcus met you at {b("Operators Summit '26")}. He works with a mutual,{" "}
-          {b("Oliver Normand")}. I drafted a reply with your {link("calendar link")}.
+          {b("Asker K.")} introduced Marcus. You did the same three days a month
+          for {b("Meridian")} at their stage. I drafted a reply with your{" "}
+          {link("calendar link")}.
         </>
       )
     },
@@ -214,12 +218,12 @@ export const fractionalsCopy: SiteCopy = {
       client: "Northwind"
     },
     conference: {
-      name: "Ariel Thomas",
-      company: "Halcyon Group",
+      name: "Marcus Chen",
+      company: "Northwind",
       rows: [
-        { label: "Spoke at", value: "Operators Summit '26" },
-        { label: "Mutual", value: "Asker K." },
-        { label: "Talked about", value: "Hiring a first finance lead" }
+        { label: "Introduced by", value: "Asker K., their investor" },
+        { label: "Stage", value: "Series A, closing this quarter" },
+        { label: "Short of", value: "A finance lead until Q4" }
       ]
     }
   },

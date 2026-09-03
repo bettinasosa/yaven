@@ -168,11 +168,12 @@ export const influencerMarketingCopy: SiteCopy = {
         )
       },
       {
-        title: "Conference follow-ups, handled",
+        title: "Your contact moved brands",
         body: () => (
           <>
-            It finds their work, your mutual connections, and drafts a
-            follow-up in your voice before the connection goes cold.
+            The relationship was with the person, and they have just taken a
+            budget somewhere else. Yaven spots the move and reminds you which
+            campaign you ran together and how it landed.
           </>
         )
       }
@@ -183,15 +184,16 @@ export const influencerMarketingCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Following up on our conversation at Creator Summit &apos;26.
+          New role, new budget — and I need creators for a {b("Q1 launch")}.
           <br />
-          Do you have {b("availability this week")} for a call?
+          Are you taking on work?
         </>
       ),
       reply: ({ b, link }) => (
         <>
-          Tjalling met you at {b("Creator Summit '26")}. He works with a mutual,{" "}
-          {b("Oliver Normand")}. I drafted a reply with your {link("calendar link")}.
+          You ran {b("Lumen Q4")} with Tjalling, six creators, delivered on
+          time. He is at {b("Kestrel")} now. I drafted a reply with your{" "}
+          {link("calendar link")}.
         </>
       )
     },
@@ -215,12 +217,12 @@ export const influencerMarketingCopy: SiteCopy = {
       client: "Lumen Skincare"
     },
     conference: {
-      name: "Ariel Thomas",
-      company: "Halo Talent",
+      name: "Tjalling de Vries",
+      company: "Kestrel (was Lumen)",
       rows: [
-        { label: "Spoke at", value: "Creator Summit '26" },
-        { label: "Mutual", value: "Asker K." },
-        { label: "Talked about", value: "Rate cards after TikTok" }
+        { label: "You ran", value: "Lumen Q4, six creators" },
+        { label: "How it went", value: "On time, £18,000" },
+        { label: "Now needs", value: "Creators for a Q1 launch" }
       ]
     }
   },
