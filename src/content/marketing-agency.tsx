@@ -26,7 +26,7 @@ export const marketingAgencyCopy: SiteCopy = {
 
   meetYaven: {
     headline: "Meet Yaven.",
-    subhead: "A menu bar assistant for running the whole agency.",
+    subhead: "An AI assistant for marketing agencies.",
     body: [
       ({ pill, u }) => (
         <>
@@ -57,7 +57,7 @@ export const marketingAgencyCopy: SiteCopy = {
     ],
     draft: {
       logo: "slack",
-      senderName: "Daniel O.",
+      senderName: "Lola H.",
       senderMeta: "Halcyon · retained account",
       inbound:
         "Board's asking why our CPMs jumped last month. Can you get us something before Thursday?",
@@ -87,10 +87,10 @@ export const marketingAgencyCopy: SiteCopy = {
       ],
       question: "Is the board deck covered, or do we quote it?",
       answerLead: ({ pill }) => (
-        <>Since your last {pill("granola")} call with Daniel on May 2, </>
+        <>Since your last {pill("granola")} call with Lola on May 2, </>
       ),
       answered:
-        "monthly reporting was agreed as standard and anything board-facing was to be quoted. He said he'd rather be told before the work started than see it on the invoice."
+        "monthly reporting was agreed as standard and anything board-facing was to be quoted. They said they'd rather be told before the work started than see it on the invoice."
     }
   },
 
@@ -180,8 +180,8 @@ export const marketingAgencyCopy: SiteCopy = {
       }
     ],
     network: {
-      senderName: "Marcus",
-      senderInitials: "MC",
+      senderName: "Ariel",
+      senderInitials: "AT",
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
@@ -192,7 +192,7 @@ export const marketingAgencyCopy: SiteCopy = {
       ),
       reply: ({ b, link }) => (
         <>
-          You pitched Marcus in {b("March 2024")} and lost on price. He has since
+          You pitched Ariel in {b("March 2024")} and lost on price. They have since
           moved to {b("Halcyon")}, where the budget is roughly double. I drafted
           a reply with your {link("calendar link")}.
         </>
@@ -218,7 +218,7 @@ export const marketingAgencyCopy: SiteCopy = {
       client: "Halcyon"
     },
     conference: {
-      name: "Marcus Chen",
+      name: "Ariel Thomas",
       company: "Halcyon Group",
       rows: [
         { label: "You pitched", value: "March 2024, brand + paid" },

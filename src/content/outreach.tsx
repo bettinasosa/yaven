@@ -60,7 +60,7 @@ export const outreachCopy: SiteCopy = {
     ],
     draft: {
       logo: "gmail",
-      senderName: "Daniel O.",
+      senderName: "Lola H.",
       senderMeta: "reply · cold outreach, day four",
       inbound:
         "Interesting, though we already use something similar. What would we actually gain by switching?",
@@ -89,7 +89,7 @@ export const outreachCopy: SiteCopy = {
       ],
       question: "Have I already chased this one twice?",
       answerLead: ({ pill }) => (
-        <>Since your last {pill("gmail")} thread with Daniel on May 2, </>
+        <>Since your last {pill("gmail")} thread with Lola on May 2, </>
       ),
       answered:
         "you've followed up twice with no reply. Your own rule allows one more, so this is the last one before it goes back to the list."
@@ -120,7 +120,7 @@ export const outreachCopy: SiteCopy = {
         label: "Needs you now",
         desc: "Replies only you can answer. Yaven knows who is close.",
         items: [
-          { text: "Daniel: asked what they'd gain", tag: "Reply" },
+          { text: "Lola: asked what they'd gain", tag: "Reply" },
           { text: "Warm intro offered by Asker", tag: "Referral" },
           { text: "Call booked, no notes yet", tag: "Today" }
         ]
@@ -180,8 +180,8 @@ export const outreachCopy: SiteCopy = {
       }
     ],
     network: {
-      senderName: "Marcus",
-      senderInitials: "MC",
+      senderName: "Ariel",
+      senderInitials: "AT",
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
@@ -192,8 +192,8 @@ export const outreachCopy: SiteCopy = {
       ),
       reply: ({ b, link }) => (
         <>
-          Marcus said {b("no budget")} in March, at a company half this size. He
-          runs growth at {b("Halcyon")} now. I drafted a reply that picks up
+          Ariel said {b("no budget")} in March, at a company half this size. They
+          run growth at {b("Halcyon")} now. I drafted a reply that picks up
           where you left off, with your {link("calendar link")}.
         </>
       )
@@ -215,10 +215,10 @@ export const outreachCopy: SiteCopy = {
     proposal: {
       label: "Drafted message",
       title: "Third and final follow-up",
-      client: "Daniel O."
+      client: "Lola H."
     },
     conference: {
-      name: "Marcus Chen",
+      name: "Ariel Thomas",
       company: "Halcyon Group",
       rows: [
         { label: "Last replied", value: "March, no budget" },

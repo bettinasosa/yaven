@@ -26,7 +26,7 @@ export const fractionalsCopy: SiteCopy = {
 
   meetYaven: {
     headline: "Meet Yaven.",
-    subhead: "A menu bar assistant for holding four seats at once.",
+    subhead: "An AI assistant for fractional CMOs, CFOs and chiefs of staff.",
     body: [
       ({ pill, u }) => (
         <>
@@ -57,7 +57,7 @@ export const fractionalsCopy: SiteCopy = {
     ],
     draft: {
       logo: "slack",
-      senderName: "Priya M.",
+      senderName: "Lola H.",
       senderMeta: "Northwind · retained",
       inbound:
         "Quick one, can you sit in on the two ops interviews Thursday? Assuming that's in scope?",
@@ -86,10 +86,10 @@ export const fractionalsCopy: SiteCopy = {
       ],
       question: "Didn't we agree hiring panels were included?",
       answerLead: ({ pill }) => (
-        <>Since your last {pill("granola")} call with Priya on April 3, </>
+        <>Since your last {pill("granola")} call with Lola on April 3, </>
       ),
       answered:
-        "hiring support was moved out of scope to hold the retainer at four days a month. She asked for it to be quoted separately once the round opened."
+        "hiring support was moved out of scope to hold the retainer at four days a month. They asked for it to be quoted separately once the round opened."
     }
   },
 
@@ -179,8 +179,8 @@ export const fractionalsCopy: SiteCopy = {
       }
     ],
     network: {
-      senderName: "Marcus",
-      senderInitials: "MC",
+      senderName: "Ariel",
+      senderInitials: "AT",
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
@@ -192,7 +192,7 @@ export const fractionalsCopy: SiteCopy = {
       ),
       reply: ({ b, link }) => (
         <>
-          {b("Asker K.")} introduced Marcus. You did the same three days a month
+          {b("Asker K.")} introduced Ariel. You did the same three days a month
           for {b("Meridian")} at their stage. I drafted a reply with your{" "}
           {link("calendar link")}.
         </>
@@ -218,7 +218,7 @@ export const fractionalsCopy: SiteCopy = {
       client: "Northwind"
     },
     conference: {
-      name: "Marcus Chen",
+      name: "Ariel Thomas",
       company: "Northwind",
       rows: [
         { label: "Introduced by", value: "Asker K., their investor" },

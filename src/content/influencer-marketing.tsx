@@ -26,7 +26,7 @@ export const influencerMarketingCopy: SiteCopy = {
 
   meetYaven: {
     headline: "Meet Yaven.",
-    subhead: "A menu bar assistant for campaign chasing.",
+    subhead: "An AI assistant for influencer marketing agencies.",
     body: [
       ({ pill, u }) => (
         <>
@@ -57,7 +57,7 @@ export const influencerMarketingCopy: SiteCopy = {
     ],
     draft: {
       logo: "slack",
-      senderName: "Nadia K.",
+      senderName: "Lola H.",
       senderMeta: "Lumen Skincare · brand client",
       inbound:
         "Where are we on the March creators? Client review is Thursday and I have nothing to show them.",
@@ -87,7 +87,7 @@ export const influencerMarketingCopy: SiteCopy = {
       ],
       question: "They're asking for a third round. Do we owe them that?",
       answerLead: ({ pill }) => (
-        <>Since your last {pill("granola")} call with Nadia on Feb 9, </>
+        <>Since your last {pill("granola")} call with Lola on Feb 9, </>
       ),
       answered:
         "revisions were capped at two rounds per creator, and anything beyond that was agreed as billable. Usage rights were extended to six months in the same call."
@@ -192,7 +192,7 @@ export const influencerMarketingCopy: SiteCopy = {
       reply: ({ b, link }) => (
         <>
           You ran {b("Lumen Q4")} with Tjalling, six creators, delivered on
-          time. He is at {b("Kestrel")} now. I drafted a reply with your{" "}
+          time. They are at {b("Kestrel")} now. I drafted a reply with your{" "}
           {link("calendar link")}.
         </>
       )

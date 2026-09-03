@@ -26,7 +26,7 @@ export const coachesCopy: SiteCopy = {
 
   meetYaven: {
     headline: "Meet Yaven.",
-    subhead: "A menu bar assistant for coaches who sell from their DMs.",
+    subhead: "An AI assistant for coaches selling their own programmes.",
     body: [
       ({ pill, u }) => (
         <>
@@ -57,7 +57,7 @@ export const coachesCopy: SiteCopy = {
     ],
     draft: {
       logo: "imessage",
-      senderName: "Hannah R.",
+      senderName: "Lola H.",
       senderMeta: "enquiry · from your Instagram",
       inbound:
         "Hey! Saw your post about the 12-week programme. What's the investment and do you have space in January?",
@@ -87,10 +87,10 @@ export const coachesCopy: SiteCopy = {
       ],
       question: "Didn't I say she could pause twice?",
       answerLead: ({ pill }) => (
-        <>Since your last {pill("granola")} call with Hannah on Jan 9, </>
+        <>Since your last {pill("granola")} call with Lola on Jan 9, </>
       ),
       answered:
-        "you agreed one pause of four weeks, and said a second would need the term extending. She asked you to put it in writing before she paid."
+        "you agreed one pause of four weeks, and said a second would need the term extending. They asked you to put it in writing before they paid."
     }
   },
 
@@ -118,7 +118,7 @@ export const coachesCopy: SiteCopy = {
         label: "Needs you now",
         desc: "Things only you can handle. Yaven knows who is close.",
         items: [
-          { text: "Hannah: asked about January spots", tag: "Enquiry" },
+          { text: "Lola: asked about January spots", tag: "Enquiry" },
           { text: "Refund request, week three", tag: "Client" },
           { text: "Podcast wants you next week", tag: "Deadline" }
         ]
@@ -171,7 +171,7 @@ export const coachesCopy: SiteCopy = {
         title: "The friend of a client who finished",
         body: () => (
           <>
-            Somebody messages saying Hannah sent them. Yaven knows who Hannah
+            Somebody messages saying Lola sent them. Yaven knows who Lola
             is, what she did, and how it went, so you can answer with the thing
             that will actually land rather than asking who referred them.
           </>
@@ -179,20 +179,20 @@ export const coachesCopy: SiteCopy = {
       }
     ],
     network: {
-      senderName: "Priya",
-      senderInitials: "PN",
+      senderName: "Ariel",
+      senderInitials: "AT",
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Hi! Hannah said I should speak to you.
+          Hi! Lola said I should speak to you.
           <br />
           Do you have {b("space in January")}?
         </>
       ),
       reply: ({ b, link }) => (
         <>
-          {b("Hannah R.")} finished her twelve weeks in March and referred two
-          people since. Priya trains at the same gym. I drafted a reply with
+          {b("Lola H.")} finished their twelve weeks in March and referred two
+          people since. Ariel trains at the same gym. I drafted a reply with
           your {link("calendar link")}.
         </>
       )
@@ -214,14 +214,14 @@ export const coachesCopy: SiteCopy = {
     proposal: {
       label: "Programme offer",
       title: "12-week one-to-one, January start",
-      client: "Hannah R."
+      client: "Lola H."
     },
     conference: {
-      name: "Priya Nayar",
-      company: "Referred by Hannah R.",
+      name: "Ariel Thomas",
+      company: "Referred by Lola H.",
       rows: [
-        { label: "Hannah finished", value: "12 weeks, March" },
-        { label: "How it went", value: "Ran her first half marathon" },
+        { label: "Lola finished", value: "12 weeks, March" },
+        { label: "How it went", value: "Ran a first half marathon" },
         { label: "Also referred", value: "Two others since" }
       ]
     }
