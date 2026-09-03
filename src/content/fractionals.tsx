@@ -2,22 +2,22 @@ import { homeCopy } from "./home"
 import type { SiteCopy } from "./types"
 
 /**
- * /fractional-cmo — for people running marketing for three or four companies
- * at once, each with its own Slack, its own retainer, and its own idea of
- * what's in scope.
+ * /fractionals — for anyone selling a senior seat by the day: fractional CMOs,
+ * CFOs, COOs, chiefs of staff.
  *
- * The demos are the tailoring that matters: scope creep in a client Slack, and
- * a retainer document that says something different from what everyone
- * remembers agreeing.
+ * Broader than the CMO page it replaces, so the demos avoid one discipline's
+ * vocabulary. What every fractional shares is a retainer with a fixed number of
+ * hours, several companies each believing they are the priority, and scope that
+ * drifts one favour at a time.
  */
-export const fractionalCmoCopy: SiteCopy = {
+export const fractionalsCopy: SiteCopy = {
   hero: {
-    tagline: ["Four clients.", "One inbox."],
+    tagline: ["Four companies.", "One inbox."],
     sub: ({ apps }) => (
       <>
         The AI workforce that lives in your menu bar,
         <br />
-        keeping every client&apos;s context straight
+        keeping every company&apos;s context straight
         <br />
         across all your {apps()}.
       </>
@@ -26,30 +26,30 @@ export const fractionalCmoCopy: SiteCopy = {
 
   meetYaven: {
     headline: "Meet Yaven.",
-    subhead: "A menu bar assistant for running four clients.",
+    subhead: "A menu bar assistant for holding four seats at once.",
     body: [
       ({ pill, u }) => (
         <>
-          It connects to every client&apos;s {pill("gmail", -3)}
+          It connects to every company&apos;s {pill("gmail", -3)}
           {pill("telegram-icon", 3)}
           {pill("imessage", -3)}
           {pill("slack", 3)} inbound, {pill("gcal", 2)} calendar,{" "}
           {pill("granola", -2)} notes and {pill("notion", 3)} docs, and keeps
-          them {u("in separate lanes")}. Whose deadline, whose budget, whose
-          intro you promised.
+          them {u("in separate lanes")}. Whose board meeting, whose runway,
+          whose hire you promised to sit in on.
         </>
       ),
       ({ keys, u }) => (
         <>
           Use {keys("⌥", "D")} to draft a reply in your voice without opening
           the thread. Use {keys("⌥", "A")} to answer anything on your screen.
-          It learns which clients you want to review and which you{" "}
+          It learns which companies you want to review and which you{" "}
           {u("let it handle")}.
         </>
       ),
       ({ u }) => (
         <>
-          {u("Local-first")}. Client work stays on your machine. Nothing is
+          {u("Local-first")}. Company data stays on your machine. Nothing is
           uploaded to our servers or synced to a cloud, which is the answer to
           the NDA question before anyone asks it.
         </>
@@ -58,12 +58,12 @@ export const fractionalCmoCopy: SiteCopy = {
     draft: {
       logo: "slack",
       senderName: "Priya M.",
-      senderMeta: "Northwind · retainer client",
+      senderMeta: "Northwind · retained",
       inbound:
-        "Quick one, can you also run paid social for launch week? Assuming that's in scope?",
+        "Quick one, can you sit in on the two ops interviews Thursday? Assuming that's in scope?",
       youType: "warm, but it's out of scope",
       drafted:
-        "Happy to take it on. Paid social sits outside the current retainer, so I'll send a short add-on scope this afternoon rather than quietly absorb it. Do you want it priced for launch week only, or ongoing?"
+        "Happy to. Hiring panels sit outside the current retainer, so I'll send a short add-on this afternoon rather than quietly absorb it. Do you want it priced for these two, or for the whole round?"
     },
     ask: {
       logo: "google",
@@ -73,23 +73,23 @@ export const fractionalCmoCopy: SiteCopy = {
           num: "3.1",
           text: () => (
             <>
-              Retained hours are allocated monthly and do not carry forward.
+              Retained days are allocated monthly and do not carry forward.
             </>
           )
         },
         {
           num: "3.2",
           text: ({ b }) => (
-            <>Scope covers strategy and oversight, not {b("media buying")}.</>
+            <>Scope covers strategy and oversight, not {b("execution")}.</>
           )
         }
       ],
-      question: "Didn't we agree paid social was included?",
+      question: "Didn't we agree hiring panels were included?",
       answerLead: ({ pill }) => (
         <>Since your last {pill("granola")} call with Priya on April 3, </>
       ),
       answered:
-        "paid media was moved out of scope to hold the retainer at twenty hours. She asked for it to be quoted separately once launch dates firmed up."
+        "hiring support was moved out of scope to hold the retainer at four days a month. She asked for it to be quoted separately once the round opened."
     }
   },
 
@@ -98,14 +98,14 @@ export const fractionalCmoCopy: SiteCopy = {
     body: [
       ({ u }) => (
         <>
-          Four clients, four Slacks, four inboxes. Yaven pulls all of it into a{" "}
-          {u("single notification centre")} and tells you which one actually
-          needs you now, so the loudest client stops winning by default.
+          Four companies, four Slacks, four inboxes. Yaven pulls all of it into
+          a {u("single notification centre")} and tells you which one actually
+          needs you now, so the loudest company stops winning by default.
         </>
       ),
       ({ u }) => (
         <>
-          {u("Nothing slips between clients")}. Yaven tracks what you promised
+          {u("Nothing slips between companies")}. Yaven tracks what you promised
           whom, drafts the updates in your voice, and{" "}
           {u("preps you before every call")} so you never open with the wrong
           company&apos;s numbers.
@@ -115,11 +115,11 @@ export const fractionalCmoCopy: SiteCopy = {
     cards: [
       {
         label: "Needs you now",
-        desc: "Things only you can handle. Yaven knows which client can wait.",
+        desc: "Things only you can handle. Yaven knows which company can wait.",
         items: [
           { text: "Northwind: can we move Thursday?", tag: "Client" },
           { text: "Referral from an old client", tag: "New business" },
-          { text: "Redlines back from their legal", tag: "Deadline" }
+          { text: "Board pack due before Friday", tag: "Deadline" }
         ]
       },
       {
@@ -137,7 +137,7 @@ export const fractionalCmoCopy: SiteCopy = {
         desc: "Queued for when you have the headspace.",
         items: [
           { text: "Competitor weekly digest", tag: "This weekend" },
-          { text: "Invite: CMO dinner, Oct 12", tag: "Next month" }
+          { text: "Invite: operators dinner, Oct 12", tag: "Next month" }
         ]
       }
     ]
@@ -147,7 +147,7 @@ export const fractionalCmoCopy: SiteCopy = {
     headline: "…and what you promised.",
     slides: [
       {
-        title: "Yaven remembers every client",
+        title: "Yaven remembers every company",
         body: () => (
           <>
             Including the ones from three years ago. It spots the old client
@@ -182,14 +182,14 @@ export const fractionalCmoCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Following up on our conversation at MeasureFest &apos;26.
+          Following up on our conversation at the Operators Summit &apos;26.
           <br />
           Do you have {b("availability this week")} for a call?
         </>
       ),
       reply: ({ b, link }) => (
         <>
-          Marcus met you at {b("MeasureFest '26")}. He works with a mutual,{" "}
+          Marcus met you at {b("Operators Summit '26")}. He works with a mutual,{" "}
           {b("Oliver Normand")}. I drafted a reply with your {link("calendar link")}.
         </>
       )
@@ -197,11 +197,11 @@ export const fractionalCmoCopy: SiteCopy = {
     sourceCards: [
       {
         title: "Call notes",
-        detail: "Q3 push, launch in six weeks, no in-house team"
+        detail: "Series A closing, no senior finance hire until Q4"
       },
       {
         title: "Past retainer",
-        detail: "Meridian, £6,000/month, twenty hours"
+        detail: "Meridian, £6,000/month, four days"
       },
       {
         title: "Your rates",
@@ -210,16 +210,16 @@ export const fractionalCmoCopy: SiteCopy = {
     ],
     proposal: {
       label: "Scope of work",
-      title: "Q3 retainer + launch support",
+      title: "Q3 retainer + board support",
       client: "Northwind"
     },
     conference: {
       name: "Ariel Thomas",
       company: "Halcyon Group",
       rows: [
-        { label: "Spoke at", value: "MeasureFest '26" },
+        { label: "Spoke at", value: "Operators Summit '26" },
         { label: "Mutual", value: "Asker K." },
-        { label: "Talked about", value: "Attribution after GA4" }
+        { label: "Talked about", value: "Hiring a first finance lead" }
       ]
     }
   },
@@ -230,13 +230,13 @@ export const fractionalCmoCopy: SiteCopy = {
       a: (
         <>
           A second brain that lives in your Mac&apos;s menu bar. It connects to
-          every client&apos;s inbound (slack, mail, telegram, imessage),
+          every company&apos;s inbound (slack, mail, telegram, imessage),
           calendar, notes and docs, learns how you work, and keeps each
-          client&apos;s context separate so you stop paying the switching cost
+          company&apos;s context separate so you stop paying the switching cost
           twenty times a day.
           <br />
           <br />
-          Right now it prioritises across all your clients at once, drafts
+          Right now it prioritises across all your companies at once, drafts
           replies in your voice from any app on your Mac, and preps you before
           every call. The more you use it, the more it handles on its own.
           Currently in beta.
@@ -244,14 +244,14 @@ export const fractionalCmoCopy: SiteCopy = {
       )
     },
     {
-      q: "I sign NDAs with every client. Can I use this?",
+      q: "I sign NDAs with every company. Can I use this?",
       a: (
         <>
-          That&apos;s exactly why it&apos;s local-first. Client files and
+          That&apos;s exactly why it&apos;s local-first. Company files and
           context never leave your machine unless you trigger a draft. When you
           do, only the relevant snippet goes to your existing model provider for
-          that one request, and nothing is retained. No client&apos;s data ever
-          touches another client&apos;s context.
+          that one request, and nothing is retained. No company&apos;s data ever
+          touches another&apos;s context.
         </>
       )
     },

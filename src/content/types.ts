@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
  * The shape of every word on the marketing page.
  *
  * One page renders four ways — the home page plus three audience-specific
- * copies at /fractional-cmo and friends. Only the words change; the structure,
+ * copies at /fractionals and friends. Only the words change; the structure,
  * animation and layout are identical everywhere.
  *
  * Two rules keep that true, and both are load-bearing:

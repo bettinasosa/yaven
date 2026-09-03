@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { HomeShell } from "@/components/home-shell"
 
 // Hidden from search: same page as / with different words, and these links are
-// pasted into DMs rather than found by searching. See /fractional-cmo.
+// pasted into DMs rather than found by searching. See /fractionals.
 export const metadata: Metadata = {
   title: "Yaven | Forty creators. One deadline.",
   description:

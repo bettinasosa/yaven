@@ -176,7 +176,7 @@ function StickyGetYaven() {
  * floating "Get early access" button, and the footer reveal.
  *
  * Lives here rather than in app/page.tsx so the audience-specific landing pages
- * (/fractional-cmo and friends) render the same page, and so each route's
+ * (/fractionals and friends) render the same page, and so each route's
  * page.tsx can stay a Server Component and export its own metadata — a client
  * component cannot.
  */
