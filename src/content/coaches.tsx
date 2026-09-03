@@ -63,7 +63,7 @@ export const coachesCopy: SiteCopy = {
         "Hey! Saw your post about the 12-week programme. What's the investment and do you have space in January?",
       youType: "warm, send the price, offer a call",
       drafted:
-        "Thanks for reaching out! The 12-week one-to-one is £1,800, paid up front or in three. January has two spots left. Easiest thing is a quick call so I can check it's the right fit before you commit — here's my calendar."
+        "Thanks for reaching out! The 12-week one-to-one is £1,800, paid up front or in three. January has two spots left. Easiest thing is a quick call so I can check it's the right fit before you commit. Here's my calendar."
     },
     ask: {
       logo: "notion",
@@ -85,7 +85,7 @@ export const coachesCopy: SiteCopy = {
           )
         }
       ],
-      question: "Didn't I say she could pause twice?",
+      question: "Didn't I say they could pause twice?",
       answerLead: ({ pill }) => (
         <>Since your last {pill("granola")} call with Lola on Jan 9, </>
       ),
@@ -172,8 +172,8 @@ export const coachesCopy: SiteCopy = {
         body: () => (
           <>
             Somebody messages saying Lola sent them. Yaven knows who Lola
-            is, what she did, and how it went, so you can answer with the thing
-            that will actually land rather than asking who referred them.
+            is, what they did, and how it went, so you can open with the thing
+            that will actually land.
           </>
         )
       }
@@ -250,7 +250,7 @@ export const coachesCopy: SiteCopy = {
       a: (
         <>
           Not yet, and that&apos;s the honest answer. Yaven reads mail, Slack,
-          Telegram and iMessage today — Instagram and TikTok DMs are not
+          Telegram and iMessage today. Instagram and TikTok DMs are not
           connected. If that&apos;s where every enquiry starts for you, it will
           only pick things up once the conversation moves to email or a booked
           call, which is usually the point where money is discussed.

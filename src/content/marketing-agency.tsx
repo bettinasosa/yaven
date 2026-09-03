@@ -42,7 +42,7 @@ export const marketingAgencyCopy: SiteCopy = {
       ({ keys, u }) => (
         <>
           Use {keys("⌥", "D")} to draft a reply in your voice without opening
-          the thread. Use {keys("⌥", "A")} to answer anything on your screen —
+          the thread. Use {keys("⌥", "A")} to answer anything on your screen,
           including the deck you are halfway through. It learns what you want to
           see and what you&apos;d rather it {u("just handles")}.
         </>
@@ -251,7 +251,7 @@ export const marketingAgencyCopy: SiteCopy = {
       q: "Can my team use it, or is this just for me?",
       a: (
         <>
-          Today it is one person, one Mac — it learns your voice and your
+          Today it is one person, one Mac. It learns your voice and your
           judgement, which is what makes the drafts worth sending. Shared
           accounts are on the roadmap and not in the beta. Most agencies start
           with whoever carries the most context, usually a founder or an account

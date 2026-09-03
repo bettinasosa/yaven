@@ -184,7 +184,7 @@ export const influencerMarketingCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          New role, new budget — and I need creators for a {b("Q1 launch")}.
+          New role, new budget, and I need creators for a {b("Q1 launch")}.
           <br />
           Are you taking on work?
         </>

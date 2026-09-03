@@ -8,6 +8,9 @@ import type { SiteCopy } from "./types"
  * a side effect of extracting something else.
  */
 export const homeCopy: SiteCopy = {
+  // The founders ran a freelance practice. This is the page where that is true.
+  wasTheCustomer: true,
+
   hero: {
     tagline: ["Less admin.", "More flow."],
     sub: ({ apps }) => (

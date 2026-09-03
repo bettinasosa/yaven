@@ -140,6 +140,16 @@ export interface TriageCard {
 }
 
 export interface SiteCopy {
+  /**
+   * Whether the team bio may end on "we were the customer first".
+   *
+   * True only where it is true. The founders ran a freelance practice, so the
+   * claim holds on the home page and nowhere else — a fractional CFO or a
+   * coach reading it would be being told something untrue about their own job,
+   * which is the fastest way to lose them.
+   */
+  wasTheCustomer?: boolean
+
   hero: {
     /**
      * The big two-line headline, rendered one line per entry.

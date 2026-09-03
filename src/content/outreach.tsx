@@ -20,7 +20,7 @@ export const outreachCopy: SiteCopy = {
       <>
         Finds the leads, drafts every message in your voice,
         <br />
-        and sends nothing until you say so —
+        and sends nothing until you say so,
         <br />
         from your menu bar, across your {apps()}.
       </>
@@ -37,7 +37,7 @@ export const outreachCopy: SiteCopy = {
           pulls what it needs from your {pill("gmail", -3)}
           {pill("telegram-icon", 3)}
           {pill("slack", 3)} inbound, {pill("gcal", 2)} calendar,{" "}
-          {pill("granola", -2)} call notes and {pill("notion", 3)} docs — so
+          {pill("granola", -2)} call notes and {pill("notion", 3)} docs, so
           every message {u("says something only you could have written")}.
         </>
       ),
@@ -66,7 +66,7 @@ export const outreachCopy: SiteCopy = {
         "Interesting, though we already use something similar. What would we actually gain by switching?",
       youType: "honest, don't oversell, ask about their setup",
       drafted:
-        "Fair question, and if it's working I wouldn't switch either. The difference is usually that ours drafts rather than sends, so nothing goes out sounding like a template. Worth fifteen minutes only if the current one is costing you edits — what are you running?"
+        "Fair question, and if it's working I wouldn't switch either. The difference is usually that ours drafts rather than sends, so nothing goes out sounding like a template. Worth fifteen minutes only if the current one is costing you edits. What are you running?"
     },
     ask: {
       logo: "notion",
@@ -174,7 +174,7 @@ export const outreachCopy: SiteCopy = {
           <>
             Someone said not right now in March and has just moved to a company
             with a budget. Yaven spots the change, reminds you what they
-            actually objected to, and opens on that rather than on hello again.
+            actually objected to, and opens on that.
           </>
         )
       }
@@ -185,7 +185,7 @@ export const outreachCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          You got in touch a while back — I&apos;ve moved since.
+          You got in touch a while back. I&apos;ve moved since.
           <br />
           Is that {b("still something you do")}?
         </>
@@ -235,7 +235,7 @@ export const outreachCopy: SiteCopy = {
         <>
           An outreach assistant that lives in your Mac&apos;s menu bar. It finds
           people matching who you sell to, keeps them in a CRM, checks who you
-          already know, and drafts every message in your voice — the first
+          already know, and drafts every message in your voice: the first
           touch, the reply, the follow-up.
           <br />
           <br />
@@ -251,7 +251,7 @@ export const outreachCopy: SiteCopy = {
         <>
           Not through us, because we never touch your account. The tools that
           get people restricted run a headless browser holding your session
-          cookie and fire connection requests and messages on a timer — that is
+          cookie and fire connection requests and messages on a timer. That is
           what platforms detect and act on.
           <br />
           <br />

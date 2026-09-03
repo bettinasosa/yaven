@@ -184,7 +184,7 @@ export const fractionalsCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Asker suggested I get in touch — we&apos;re raising and have{" "}
+          Asker suggested I get in touch. We&apos;re raising and have{" "}
           {b("no senior finance hire")} until Q4.
           <br />
           Any chance of a call this week?
