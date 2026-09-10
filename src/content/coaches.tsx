@@ -12,14 +12,14 @@ import type { SiteCopy } from "./types"
  */
 export const coachesCopy: SiteCopy = {
   hero: {
-    tagline: ["Every enquiry.", "Answered."],
+    tagline: ["Nobody", "falls through."],
     sub: ({ apps }) => (
       <>
-        The AI workforce that lives in your menu bar,
+        Every enquiry, every client, every follow-up
         <br />
-        so nobody who asked about your programme
+        you meant to send, held in one place
         <br />
-        gets lost across your {apps()}.
+        across all your {apps()}.
       </>
     )
   },
@@ -109,7 +109,8 @@ export const coachesCopy: SiteCopy = {
         <>
           {u("Nobody asks twice")}. Yaven tracks who asked about pricing and
           never heard back, drafts the follow-up in your voice, and{" "}
-          {u("preps you before every call")} so you open knowing their goal.
+          {u("preps you before every call")}{" "}
+          so you open knowing their goal.
         </>
       )
     ],
@@ -249,11 +250,14 @@ export const coachesCopy: SiteCopy = {
       q: "My enquiries come through Instagram DMs. Does that work?",
       a: (
         <>
-          Not yet, and that&apos;s the honest answer. Yaven reads mail, Slack,
-          Telegram and iMessage today. Instagram and TikTok DMs are not
-          connected. If that&apos;s where every enquiry starts for you, it will
-          only pick things up once the conversation moves to email or a booked
-          call, which is usually the point where money is discussed.
+          Yes. Instagram DMs are connected, which is the point for most coaches
+          — the enquiry, the pricing question and the follow-up all happen
+          there, mixed in with everything else. Yaven reads them alongside your
+          mail, Slack, Telegram and iMessage, so an enquiry and the call that
+          comes out of it are the same thread rather than two.
+          <br />
+          <br />
+          TikTok is next.
         </>
       )
     },

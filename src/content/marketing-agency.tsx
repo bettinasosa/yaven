@@ -12,14 +12,14 @@ import type { SiteCopy } from "./types"
  */
 export const marketingAgencyCopy: SiteCopy = {
   hero: {
-    tagline: ["Every account.", "Straight."],
+    tagline: ["Six accounts.", "Nothing dropped."],
     sub: ({ apps }) => (
       <>
-        The AI workforce that lives in your menu bar,
+        The AI workforce for marketing agencies,
         <br />
-        keeping every account, deadline and change
+        holding every account, deadline and promise
         <br />
-        straight across all your {apps()}.
+        across all your {apps()}.
       </>
     )
   },
@@ -109,8 +109,8 @@ export const marketingAgencyCopy: SiteCopy = {
         <>
           {u("Nothing slips between accounts")}. Yaven tracks what you promised
           whom, drafts the updates in your voice, and{" "}
-          {u("preps you before every call")} so you never open with the wrong
-          client&apos;s numbers.
+          {u("preps you before every call")}{" "}
+          so you never open with the wrong client&apos;s numbers.
         </>
       )
     ],

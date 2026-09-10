@@ -15,21 +15,21 @@ import type { SiteCopy } from "./types"
  */
 export const outreachCopy: SiteCopy = {
   hero: {
-    tagline: ["Outreach.", "Not slop."],
+    tagline: ["Supercharge", "your outreach."],
     sub: ({ apps }) => (
       <>
-        Finds the leads, drafts every message in your voice,
+        Finds them, researches them, writes to them
         <br />
-        and sends nothing until you say so,
+        in your words. You read it and you send it,
         <br />
-        from your menu bar, across your {apps()}.
+        from wherever you already work: {apps()}.
       </>
     )
   },
 
   meetYaven: {
     headline: "Meet Yaven.",
-    subhead: "An outreach assistant that never sends on its own.",
+    subhead: "An AI workforce for outreach that leaves the sending to you.",
     body: [
       ({ pill, u }) => (
         <>
@@ -44,55 +44,54 @@ export const outreachCopy: SiteCopy = {
       ({ keys, u }) => (
         <>
           Use {keys("⌥", "D")} to draft the message, the reply or the follow-up
-          in your voice, from any app. Use {keys("⌥", "A")} to ask who someone
-          is and how you know them before you write. Every draft{" "}
-          {u("waits for you")}.
+          in your voice, in the tab you are already in. Use {keys("⌥", "A")} to
+          ask what changed at their company, what they said last time, or
+          whether you have a way in. Every draft {u("waits for you")}.
         </>
       ),
       ({ u }) => (
         <>
           {u("No bot logs in as you")}. Nothing fires connection requests
-          overnight, and your session cookie never sits on somebody else&apos;s
-          server. You press send, which is the part that keeps the account
+          overnight and your session cookie never sits on somebody else&apos;s
+          server, which is why this works inside LinkedIn at all. You do the
+          reading and the sending. That is the part that keeps the account
           yours.
         </>
       )
     ],
     draft: {
-      logo: "gmail",
+      logo: "linkedin",
       senderName: "Lola H.",
-      senderMeta: "reply · cold outreach, day four",
+      senderMeta: "cold · Head of Growth, Halcyon",
       inbound:
-        "Interesting, though we already use something similar. What would we actually gain by switching?",
-      youType: "honest, don't oversell, ask about their setup",
+        "Posted: \"Third quarter running outbound. Reply rates down 40% and I genuinely think the tools are the problem.\"",
+      youType: "agree with the diagnosis, don't pitch yet",
       drafted:
-        "Fair question, and if it's working I wouldn't switch either. The difference is usually that ours drafts rather than sends, so nothing goes out sounding like a template. Worth fifteen minutes only if the current one is costing you edits. What are you running?"
+        "The 40% tracks what everyone is seeing, and I think you have the cause right. The tools got fast at sending, which is the part that stopped working. Curious whether yours fell evenly or only on the sequenced steps. Happy to compare notes either way."
     },
     ask: {
-      logo: "notion",
-      docName: "Outreach_playbook.pdf",
+      logo: "linkedin",
+      docName: "Lola H. · Head of Growth",
       clauses: [
         {
-          num: "1.2",
+          num: "1",
           text: () => (
-            <>
-              First touch references something specific and asks nothing.
-            </>
+            <>Joined Halcyon four months ago, from a company half the size.</>
           )
         },
         {
-          num: "1.4",
+          num: "2",
           text: ({ b }) => (
-            <>Never more than {b("three follow-ups")} without a reply.</>
+            <>Posts weekly about {b("outbound reply rates")} falling.</>
           )
         }
       ],
-      question: "Have I already chased this one twice?",
+      question: "Have we spoken before, and what did they say?",
       answerLead: ({ pill }) => (
-        <>Since your last {pill("gmail")} thread with Lola on May 2, </>
+        <>Across your {pill("gmail")} and your CRM, </>
       ),
       answered:
-        "you've followed up twice with no reply. Your own rule allows one more, so this is the last one before it goes back to the list."
+        "you emailed them in March at their last company. They said the budget was not theirs to spend. It is now, and the objection was never the product."
     }
   },
 
@@ -111,7 +110,8 @@ export const outreachCopy: SiteCopy = {
         <>
           {u("Nobody warm goes cold")}. Yaven tracks who opened, who replied and
           who you chased twice, drafts the next message in your voice, and{" "}
-          {u("preps you before every call")} that comes out of it.
+          {u("preps you before every call")}{" "}
+          that comes out of it.
         </>
       )
     ],
@@ -150,21 +150,22 @@ export const outreachCopy: SiteCopy = {
     headline: "…and who you already know.",
     slides: [
       {
-        title: "Yaven finds the leads",
+        title: "Finds them, then keeps them",
         body: () => (
           <>
-            Tell it who you sell to and it builds the list, keeps it in a CRM
-            you actually own, and flags the ones where you have a mutual worth
-            asking. No scraping your connections, no bot logging in as you.
+            Describe who you sell to and Yaven builds the list, then holds it in
+            a CRM that remembers every touch: who replied, who went quiet, who
+            you have chased twice and should leave alone.
           </>
         )
       },
       {
-        title: "Every message, drafted not sent",
+        title: "A template per kind of person",
         body: () => (
           <>
-            Yaven pulls what it knows about them, what you last said, and your
-            own rules, then writes the message and waits. You edit or you send.
+            The way you open with a founder is not the way you open with a head
+            of procurement. Keep a template for each, and Yaven picks the right
+            one and fills it with things that are true about them.
           </>
         )
       },
@@ -201,15 +202,15 @@ export const outreachCopy: SiteCopy = {
     sourceCards: [
       {
         title: "Their last post",
-        detail: "Hiring two SDRs, says outbound reply rates have halved"
+        detail: "Reply rates down 40%, thinks the tools are the problem"
       },
       {
-        title: "Your history",
-        detail: "Two follow-ups, no reply, last touched May 2"
+        title: "Your CRM",
+        detail: "Emailed March, said the budget was not theirs"
       },
       {
-        title: "Who you both know",
-        detail: "Asker K., worked with them at Halcyon"
+        title: "What changed",
+        detail: "New role since June, and now it is"
       }
     ],
     proposal: {
@@ -233,10 +234,10 @@ export const outreachCopy: SiteCopy = {
       q: "So what actually is this?",
       a: (
         <>
-          An outreach assistant that lives in your Mac&apos;s menu bar. It finds
-          people matching who you sell to, keeps them in a CRM, checks who you
-          already know, and drafts every message in your voice: the first
-          touch, the reply, the follow-up.
+          An outreach assistant that lives on your Mac. It finds people
+          matching who you sell to, keeps them in a CRM, reads what they have
+          been posting and what you last said to them, and drafts the first
+          touch, the reply and the follow-up in your words.
           <br />
           <br />
           Nothing sends itself. Every draft waits for you to read it, which

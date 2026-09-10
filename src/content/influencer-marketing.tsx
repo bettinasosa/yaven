@@ -12,7 +12,7 @@ import type { SiteCopy } from "./types"
  */
 export const influencerMarketingCopy: SiteCopy = {
   hero: {
-    tagline: ["Forty creators.", "One deadline."],
+    tagline: ["Forty creators.", "All accounted for."],
     sub: ({ apps }) => (
       <>
         The AI workforce that lives in your menu bar,
@@ -249,11 +249,14 @@ export const influencerMarketingCopy: SiteCopy = {
       q: "Does it connect to Instagram or TikTok DMs?",
       a: (
         <>
-          Not yet, and we&apos;d rather say so than let you find out after
-          installing. Yaven reads email, Slack, Telegram and iMessage, which is
-          where the brand side of your work lives. If your creator
-          conversations happen entirely in Instagram DMs, it will only cover
-          half your day right now. Both are on the roadmap.
+          Instagram, yes. That matters here more than anywhere, because your
+          work has two sides and they live in different places: the brand in
+          email and Slack, the creators in DMs. Yaven reads both, so a
+          deliverable chased in a DM and a brand asking about it on email are
+          the same campaign rather than two systems you hold together yourself.
+          <br />
+          <br />
+          TikTok is next.
         </>
       )
     },

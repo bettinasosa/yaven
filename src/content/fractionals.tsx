@@ -12,7 +12,7 @@ import type { SiteCopy } from "./types"
  */
 export const fractionalsCopy: SiteCopy = {
   hero: {
-    tagline: ["Four companies.", "One inbox."],
+    tagline: ["More clients.", "Less chaos."],
     sub: ({ apps }) => (
       <>
         The AI workforce that lives in your menu bar,
@@ -26,16 +26,16 @@ export const fractionalsCopy: SiteCopy = {
 
   meetYaven: {
     headline: "Meet Yaven.",
-    subhead: "An AI assistant for fractional CMOs, CFOs and chiefs of staff.",
+    subhead: "An AI workforce for fractional workers that keeps every company straight.",
     body: [
       ({ pill, u }) => (
         <>
-          It connects to every company&apos;s {pill("gmail", -3)}
+          It connects to every company&apos;s inbound {pill("gmail", -3)}
           {pill("telegram-icon", 3)}
           {pill("imessage", -3)}
-          {pill("slack", 3)} inbound, {pill("gcal", 2)} calendar,{" "}
-          {pill("granola", -2)} notes and {pill("notion", 3)} docs, and keeps
-          them {u("in separate lanes")}. Whose board meeting, whose runway,
+          {pill("slack", 3)}, calendar {pill("gcal", 2)}, notes{" "}
+          {pill("granola", -2)} and docs {pill("notion", 3)}, and keeps them{" "}
+          {u("in separate lanes")}. Whose board meeting, whose runway,
           whose hire you promised to sit in on.
         </>
       ),
@@ -107,8 +107,8 @@ export const fractionalsCopy: SiteCopy = {
         <>
           {u("Nothing slips between companies")}. Yaven tracks what you promised
           whom, drafts the updates in your voice, and{" "}
-          {u("preps you before every call")} so you never open with the wrong
-          company&apos;s numbers.
+          {u("preps you before every call")}{" "}
+          so you never open with the wrong company&apos;s numbers.
         </>
       )
     ],
