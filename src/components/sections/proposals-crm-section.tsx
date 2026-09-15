@@ -14,6 +14,7 @@ import {
   FinaleContent,
   ProposalsFinaleSection
 } from "./proposals-finale-section"
+import { useCopy } from "@/content/copy-context"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -68,28 +69,12 @@ const phaseGridStyle: React.CSSProperties = {
 // ── Stacked document transition ────────────────────────────────────────────
 // Three GlassCards (call notes, past project, pricing) pop in staggered,
 // dwell so users can read them, then collapse into a clean proposal doc.
-const SOURCE_CARDS = [
-  {
-    title: "Call notes",
-    detail: "Website redesign, 4-week timeline, exhibition catalog",
-    rotate: -4,
-    x: -80,
-    y: -140
-  },
-  {
-    title: "Past project",
-    detail: "Gigi's Art Gallery, site + catalog, $6,200",
-    rotate: 3,
-    x: 65,
-    y: 0
-  },
-  {
-    title: "Your pricing",
-    detail: "Web + print packages start at $7,500",
-    rotate: -2,
-    x: -40,
-    y: 140
-  }
+// Geometry only — the words live in src/content, index-matched to
+// copy.proposals.sourceCards, which is a three-tuple for exactly this reason.
+const SOURCE_CARD_POSITIONS = [
+  { rotate: -4, x: -80, y: -140 },
+  { rotate: 3, x: 65, y: 0 },
+  { rotate: -2, x: -40, y: 140 }
 ]
 
 // Desktop: absolute-positioned scattered cards with scroll animation
@@ -100,6 +85,7 @@ function StackedDocStage({
   fragRefs: React.RefObject<(HTMLDivElement | null)[]>
   merged: boolean
 }) {
+  const copy = useCopy()
   return (
     <div
       style={{
@@ -109,7 +95,7 @@ function StackedDocStage({
         margin: "0 auto"
       }}
     >
-      {SOURCE_CARDS.map((card, i) => (
+      {copy.proposals.sourceCards.map((card, i) => (
         <div
           key={card.title}
           ref={el => {
@@ -122,7 +108,7 @@ function StackedDocStage({
             width: "min(360px, 75vw)",
             transform: merged
               ? "translate(-50%, -50%) rotate(0deg) scale(0)"
-              : `translate(calc(-50% + ${card.x}px), calc(-50% + ${card.y}px)) rotate(${card.rotate}deg)`,
+              : `translate(calc(-50% + ${SOURCE_CARD_POSITIONS[i].x}px), calc(-50% + ${SOURCE_CARD_POSITIONS[i].y}px)) rotate(${SOURCE_CARD_POSITIONS[i].rotate}deg)`,
             zIndex: i + 1,
             opacity: merged ? 0 : 1
           }}
@@ -151,6 +137,7 @@ function StackedDocStage({
 
 // Mobile: vertical stack showing the full story — sources then result
 function StackedDocStageMobile() {
+  const copy = useCopy()
   return (
     <div
       style={{
@@ -162,7 +149,7 @@ function StackedDocStageMobile() {
         margin: "0 auto"
       }}
     >
-      {SOURCE_CARDS.map((card, i) => (
+      {copy.proposals.sourceCards.map((card, i) => (
         <div
           key={card.title}
           style={{
@@ -241,6 +228,7 @@ function SourceCard({ title, detail }: { title: string; detail: string }) {
 }
 
 function ProposalResult() {
+  const copy = useCopy()
   return (
     <GlassCard borderRadius="24px">
       <div style={{ padding: "clamp(24px, 3vw, 34px) clamp(22px, 2.8vw, 32px)" }}>
@@ -255,7 +243,7 @@ function ProposalResult() {
             opacity: 0.35
           }}
         >
-          Proposal
+          {copy.proposals.proposal.label}
         </div>
         <div
           style={{
@@ -266,7 +254,7 @@ function ProposalResult() {
             marginTop: "8px"
           }}
         >
-          Website redesign + exhibition catalog
+          {copy.proposals.proposal.title}
         </div>
         <div
           style={{
@@ -277,7 +265,7 @@ function ProposalResult() {
             marginTop: "3px"
           }}
         >
-          Gigi&apos;s Art Gallery
+          {copy.proposals.proposal.client}
         </div>
 
         {/* Skeleton lines */}
@@ -381,6 +369,15 @@ const SIGNALS = [
 
 // Network slide — layered message-card UI showing Yaven in context
 function NetworkStage({ mobile }: { mobile?: boolean }) {
+  const copy = useCopy()
+
+  // Inline pieces this mock thread lends to its own copy.
+  const kit = {
+    b: (c: React.ReactNode) => <strong>{c}</strong>,
+    link: (c: React.ReactNode) => (
+      <span style={{ color: "#267FE5", fontWeight: 500 }}>{c}</span>
+    )
+  }
   const avatarGradient = "linear-gradient(145deg, #267FE5, #4da3f0, #9e8ec8)"
   const stageRef = useRef<HTMLDivElement>(null)
   const staticLayout = usePrefersReducedMotion()
@@ -446,17 +443,15 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
               }}
             >
               <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: avatarGradient, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", fontWeight: 600, color: "#fff" }}>
-                TJ
+                {copy.proposals.network.senderInitials}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Tjalling</span>
-                  <Image src="/logos/gmail.png" alt="" width={16} height={16} style={{ objectFit: "contain", width: "16px", height: "16px" }} />
+                  <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>{copy.proposals.network.senderName}</span>
+                  <Image src={`/logos/${copy.proposals.network.senderLogo}.png`} alt="" width={16} height={16} style={{ objectFit: "contain", width: "16px", height: "16px" }} />
                 </div>
                 <p style={{ fontSize: "13px", color: INK, opacity: 0.7, margin: "4px 0 0", lineHeight: 1.45 }}>
-                  Following up on our conversation at Design Expo &apos;26.
-                  <br />
-                  Do you have <strong>availability this week</strong> for a call?
+                  {copy.proposals.network.inbound(kit)}
                 </p>
               </div>
             </div>
@@ -482,9 +477,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
                   <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Yaven</span>
                 </div>
                 <p style={{ fontSize: "13px", color: INK, opacity: 0.8, margin: "4px 0 0", lineHeight: 1.5 }}>
-                  Tjalling met you at <strong>Design Expo &apos;26</strong>. He works with
-                  a mutual, <strong>Oliver Normand</strong>. I drafted a reply
-                  with your <span style={{ color: "#267FE5", fontWeight: 500 }}>calendar link</span>.
+                  {copy.proposals.network.reply(kit)}
                 </p>
               </div>
             </div>
@@ -563,17 +556,15 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
             }}
           >
             <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: avatarGradient, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", fontWeight: 600, color: "#fff" }}>
-              TJ
+              {copy.proposals.network.senderInitials}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Tjalling</span>
-                <Image src="/logos/gmail.png" alt="" width={16} height={16} style={{ objectFit: "contain", width: "16px", height: "16px" }} />
+                <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>{copy.proposals.network.senderName}</span>
+                <Image src={`/logos/${copy.proposals.network.senderLogo}.png`} alt="" width={16} height={16} style={{ objectFit: "contain", width: "16px", height: "16px" }} />
               </div>
               <p style={{ fontSize: "13px", color: INK, opacity: 0.7, margin: "4px 0 0", lineHeight: 1.45 }}>
-                Following up on our conversation at Config.
-                <br />
-                Do you have <strong>availability this week</strong> for a call?
+                {copy.proposals.network.inbound(kit)}
               </p>
             </div>
           </div>
@@ -618,9 +609,7 @@ function NetworkStage({ mobile }: { mobile?: boolean }) {
                 <span style={{ fontSize: "15px", fontWeight: 600, color: INK }}>Yaven</span>
               </div>
               <p style={{ fontSize: "13px", color: INK, opacity: 0.8, margin: "4px 0 0", lineHeight: 1.5 }}>
-                Tjalling met you at <strong>Config &apos;26</strong>. He works with
-                a mutual, <strong>Oliver Normand</strong>. I drafted a reply
-                with your <span style={{ color: "#267FE5", fontWeight: 500 }}>calendar link</span>.
+                {copy.proposals.network.reply(kit)}
               </p>
             </div>
           </div>
@@ -927,6 +916,7 @@ const fuIconStyle: React.CSSProperties = {
 }
 
 function ConferenceCard({ animated }: { animated: boolean }) {
+  const copy = useCopy()
   const cardRef = useRef<HTMLDivElement>(null)
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -996,7 +986,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 lineHeight: 1.2
               }}
             >
-              Ariel Thomas
+              {copy.proposals.conference.name}
             </div>
             <div
               style={{
@@ -1006,7 +996,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
                 marginTop: "2px"
               }}
             >
-              The Design Co.
+              {copy.proposals.conference.company}
             </div>
           </div>
         </div>
@@ -1021,11 +1011,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
           <div
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
-            {[
-              { label: "Spoke at", value: "Design Expo '26" },
-              { label: "Mutual", value: "Asker K." },
-              { label: "Talked about", value: "Brand optimisation" }
-            ].map(row => (
+            {copy.proposals.conference.rows.map(row => (
               <div
                 key={row.label}
                 style={{ display: "flex", gap: "12px", alignItems: "baseline" }}
@@ -1154,6 +1140,7 @@ function ConferenceCard({ animated }: { animated: boolean }) {
 // Script §4+§5 — Automations. Pinned three-phase set piece: the gooey
 // proposal merge, the self-filling CRM, and the conference follow-up.
 export function ProposalsCrmSection() {
+  const copy = useCopy()
   const wrapperRef = useRef<HTMLDivElement>(null)
   const proposalsRef = useRef<HTMLDivElement>(null)
   // crmRef removed — CRM slide replaced with Conference
@@ -1409,7 +1396,7 @@ export function ProposalsCrmSection() {
           textAlign: "center"
         }}
       >
-        …and who matters.
+        {copy.proposals.headline}
       </ScrollCutReveal>
     </div>
   )
@@ -1453,7 +1440,7 @@ export function ProposalsCrmSection() {
                   color: INK_SUB
                 }}
               >
-                Yaven knows who you know
+                {copy.proposals.slides[0].title}
               </h2>
               <p
                 style={{
@@ -1463,11 +1450,7 @@ export function ProposalsCrmSection() {
                   textAlign: isMobile ? "left" : "center"
                 }}
               >
-                It remembers everyone you&apos;ve met and what you talked
-                about. It spots the old client whose project is coming around
-                again, the intro you said you&apos;d make, the person worth a
-                hello before they forget you, then drafts your messages and
-                proposals proactively.
+                {copy.proposals.slides[0].body({})}
               </p>
             </div>
           </div>
@@ -1480,11 +1463,8 @@ export function ProposalsCrmSection() {
             }}
           >
             <div>
-              <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
-              <p style={bodyStyle}>
-                Yaven pulls notes, context, and pricing from your past work and
-                drafts a ready-to-send proposal before you close the call.
-              </p>
+              <h2 style={subHeadingStyle}>{copy.proposals.slides[1].title}</h2>
+              <p style={bodyStyle}>{copy.proposals.slides[1].body({})}</p>
             </div>
             <StackedDocStageMobile />
           </div>
@@ -1499,13 +1479,8 @@ export function ProposalsCrmSection() {
             }}
           >
             <div>
-              <h2 style={subHeadingStyle}>
-                Conference follow-ups, handled
-              </h2>
-              <p style={bodyStyle}>
-                It finds their work, your mutual connections, and drafts a
-                follow-up in your voice before the connection goes cold.
-              </p>
+              <h2 style={subHeadingStyle}>{copy.proposals.slides[2].title}</h2>
+              <p style={bodyStyle}>{copy.proposals.slides[2].body({})}</p>
             </div>
             <ConferenceCard animated={false} />
           </div>
@@ -1576,16 +1551,8 @@ export function ProposalsCrmSection() {
             <div ref={networkRef} style={phaseGridStyle}>
               <NetworkStage />
               <div>
-                <h2 style={subHeadingStyle}>
-                  Yaven knows who you know
-                </h2>
-                <p style={bodyStyle}>
-                  It remembers everyone you&apos;ve met and what you talked
-                  about. It spots the old client whose project is coming around
-                  again, the intro you said you&apos;d make, the person worth a
-                  hello before they forget you, then drafts your messages and
-                  proposals proactively.
-                </p>
+                <h2 style={subHeadingStyle}>{copy.proposals.slides[0].title}</h2>
+                <p style={bodyStyle}>{copy.proposals.slides[0].body({})}</p>
               </div>
             </div>
 
@@ -1593,22 +1560,16 @@ export function ProposalsCrmSection() {
             <div ref={proposalsRef} style={phaseGridStyle}>
               <StackedDocStage fragRefs={fragRefs} merged={false} />
               <div>
-                <h2 style={subHeadingStyle}>Call ended, proposal ready</h2>
-                <p style={bodyStyle}>
-                  Yaven pulls notes, context, and pricing from your past work
-                  and drafts a ready-to-send proposal before you close the call.
-                </p>
+                <h2 style={subHeadingStyle}>{copy.proposals.slides[1].title}</h2>
+                <p style={bodyStyle}>{copy.proposals.slides[1].body({})}</p>
               </div>
             </div>
 
             {/* Phase 2 — Conference follow-up */}
             <div ref={confRef} style={phaseGridStyle}>
               <div>
-                <h2 style={subHeadingStyle}>Conference follow-ups, handled</h2>
-                <p style={bodyStyle}>
-                  It finds their work, your mutual connections, and drafts a
-                  follow-up in your voice before the connection goes cold.
-                </p>
+                <h2 style={subHeadingStyle}>{copy.proposals.slides[2].title}</h2>
+                <p style={bodyStyle}>{copy.proposals.slides[2].body({})}</p>
               </div>
               <div data-conf-card>
                 <ConferenceCard animated />

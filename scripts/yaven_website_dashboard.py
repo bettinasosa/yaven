@@ -263,6 +263,47 @@ select step, people, kept_from_previous_pct, lost_here from (
 ) order by ord
 """
 
+# ── Audience landing pages ───────────────────────────────────────────────────
+# `landing_page` is a PostHog super property set from the first path of the
+# session, so it rides on every signup event too. That is what makes the
+# variants comparable without a join.
+#
+# Denominator counts PEOPLE, not events: web_page_viewed fires again on every
+# client-side route change, so raw event counts flatter whichever page people
+# navigate away from and back to.
+VARIANT_CONVERSION_SQL = f"""
+select
+  coalesce(nullif(toString(properties.landing_page), ''), '(unknown)') as landed_on,
+  count(distinct if(event = '{VIEWED}', person_id, null))    as visitors,
+  count(distinct if(event = '{SEEN}', person_id, null))      as saw_the_form,
+  count(distinct if(event = '{SUCCEEDED}', person_id, null)) as signups,
+  round(100.0 * count(distinct if(event = '{SUCCEEDED}', person_id, null))
+        / nullif(count(distinct if(event = '{VIEWED}', person_id, null)), 0), 1) as conversion_pct
+from events
+where timestamp > now() - interval 90 day
+  and event in ('{VIEWED}', '{SEEN}', '{SUCCEEDED}')
+group by landed_on
+order by visitors desc
+"""
+
+# Splits "the page did not hold them" from "they saw the form and still left",
+# which is the actual thing an audience test is trying to learn.
+VARIANT_DROPOFF_SQL = f"""
+select
+  coalesce(nullif(toString(properties.landing_page), ''), '(unknown)') as landed_on,
+  count(distinct if(event = '{VIEWED}', person_id, null)) as visitors,
+  count(distinct if(event = '{SEEN}', person_id, null))   as reached_the_form,
+  round(100.0 * count(distinct if(event = '{SEEN}', person_id, null))
+        / nullif(count(distinct if(event = '{VIEWED}', person_id, null)), 0), 1) as reached_form_pct,
+  round(100.0 * count(distinct if(event = '{SUCCEEDED}', person_id, null))
+        / nullif(count(distinct if(event = '{SEEN}', person_id, null)), 0), 1) as form_to_signup_pct
+from events
+where timestamp > now() - interval 90 day
+  and event in ('{VIEWED}', '{SEEN}', '{SUCCEEDED}')
+group by landed_on
+order by visitors desc
+"""
+
 SEEN_NOT_STARTED_SQL = f"""
 select
   coalesce(nullif(toString(properties.surface), ''), '(none)') as surface,
@@ -339,6 +380,20 @@ def main():
          "buttons can be told apart."),
 
         ("Saw the form and left without typing", sql(SEEN_NOT_STARTED_SQL), None),
+
+        # ── Audience landing pages ───────────────────────────────────────────
+        ("★ Which audience page converts (90d)", sql(VARIANT_CONVERSION_SQL),
+         "One row per landing page. '/' is the untargeted home page and is the "
+         "control. Visitors are counted as people, not page views."),
+
+        ("Audience pages — where they fall out (90d)", sql(VARIANT_DROPOFF_SQL),
+         "Separates a page that did not hold them from one where they reached "
+         "the form and left anyway. Two very different problems."),
+
+        ("Views per day by landing page",
+         trends([event(VIEWED, "dau")], breakdown_prop="landing_page"),
+         "Mostly a report on how hard each link was pushed, not how good the "
+         "page is. Read the conversion tiles for that."),
 
         # ── Where signups come from ──────────────────────────────────────────
         ("★ Conversion by utm_source (90d)", sql(conversion_by("utm_source", "utm_source")),
