@@ -6,6 +6,7 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { usePrefersReducedMotion } from "@/components/effects/use-prefers-reduced-motion"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
+import { useCopy } from "@/content/copy-context"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -103,6 +104,7 @@ function Em({ children }: { children: React.ReactNode }) {
 }
 
 export function FinaleContent() {
+  const { wasTheCustomer } = useCopy()
   const bioStyle: React.CSSProperties = {
     ...bodyStyle,
     margin: 0,
@@ -170,7 +172,13 @@ export function FinaleContent() {
           startups and an asset management firm, <b>product design awards</b>{" "}
           and work exhibited at the <i>Design Museum London</i>, two stints as
           founding engineers, and a freelance practice grown from zero
-          to <b>$20k MRR</b> in months; <Em>we were the customer first</Em>.
+          to <b>$20k MRR</b> in months
+          {wasTheCustomer ? (
+            <>
+              ; <Em>we were the customer first</Em>
+            </>
+          ) : null}
+          .
         </p>
       </div>
     </div>

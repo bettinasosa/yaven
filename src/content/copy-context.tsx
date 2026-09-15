@@ -2,9 +2,11 @@
 
 import { createContext, useContext } from "react"
 import type { ReactNode } from "react"
-import { boutiqueAgencyCopy } from "./boutique-agency"
-import { fractionalCmoCopy } from "./fractional-cmo"
+import { coachesCopy } from "./coaches"
+import { fractionalsCopy } from "./fractionals"
 import { influencerMarketingCopy } from "./influencer-marketing"
+import { marketingAgencyCopy } from "./marketing-agency"
+import { outreachCopy } from "./outreach"
 import { homeCopy } from "./home"
 import type { SiteCopy } from "./types"
 import type { VariantId } from "./variants"
@@ -20,9 +22,11 @@ import type { VariantId } from "./variants"
  */
 const VARIANT_COPY: Record<VariantId, SiteCopy> = {
   home: homeCopy,
-  fractionalCmo: fractionalCmoCopy,
-  boutiqueAgency: boutiqueAgencyCopy,
-  influencerMarketing: influencerMarketingCopy
+  fractionals: fractionalsCopy,
+  marketingAgency: marketingAgencyCopy,
+  influencerMarketing: influencerMarketingCopy,
+  coaches: coachesCopy,
+  outreach: outreachCopy
 }
 
 const CopyContext = createContext<SiteCopy>(homeCopy)

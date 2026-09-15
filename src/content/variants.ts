@@ -9,14 +9,18 @@
  */
 export type VariantId =
   | "home"
-  | "fractionalCmo"
-  | "boutiqueAgency"
+  | "fractionals"
+  | "marketingAgency"
   | "influencerMarketing"
+  | "coaches"
+  | "outreach"
 
 /** URL path for each variant, so links and analytics read from one place. */
 export const VARIANT_PATHS: Record<VariantId, string> = {
   home: "/",
-  fractionalCmo: "/fractional-cmo",
-  boutiqueAgency: "/boutique-agency",
-  influencerMarketing: "/influencer-marketing"
+  fractionals: "/fractionals",
+  marketingAgency: "/marketing-agency",
+  influencerMarketing: "/influencer-marketing",
+  coaches: "/coaches",
+  outreach: "/outreach"
 }

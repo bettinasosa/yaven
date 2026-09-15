@@ -12,7 +12,7 @@ import type { SiteCopy } from "./types"
  */
 export const influencerMarketingCopy: SiteCopy = {
   hero: {
-    tagline: ["Forty creators.", "One deadline."],
+    tagline: ["Forty creators.", "All accounted for."],
     sub: ({ apps }) => (
       <>
         The AI workforce that lives in your menu bar,
@@ -26,7 +26,7 @@ export const influencerMarketingCopy: SiteCopy = {
 
   meetYaven: {
     headline: "Meet Yaven.",
-    subhead: "A menu bar assistant for campaign chasing.",
+    subhead: "An AI assistant for influencer marketing agencies.",
     body: [
       ({ pill, u }) => (
         <>
@@ -57,7 +57,7 @@ export const influencerMarketingCopy: SiteCopy = {
     ],
     draft: {
       logo: "slack",
-      senderName: "Nadia K.",
+      senderName: "Lola H.",
       senderMeta: "Lumen Skincare · brand client",
       inbound:
         "Where are we on the March creators? Client review is Thursday and I have nothing to show them.",
@@ -87,7 +87,7 @@ export const influencerMarketingCopy: SiteCopy = {
       ],
       question: "They're asking for a third round. Do we owe them that?",
       answerLead: ({ pill }) => (
-        <>Since your last {pill("granola")} call with Nadia on Feb 9, </>
+        <>Since your last {pill("granola")} call with Lola on Feb 9, </>
       ),
       answered:
         "revisions were capped at two rounds per creator, and anything beyond that was agreed as billable. Usage rights were extended to six months in the same call."
@@ -168,11 +168,12 @@ export const influencerMarketingCopy: SiteCopy = {
         )
       },
       {
-        title: "Conference follow-ups, handled",
+        title: "Your contact moved brands",
         body: () => (
           <>
-            It finds their work, your mutual connections, and drafts a
-            follow-up in your voice before the connection goes cold.
+            The relationship was with the person, and they have just taken a
+            budget somewhere else. Yaven spots the move and reminds you which
+            campaign you ran together and how it landed.
           </>
         )
       }
@@ -183,15 +184,16 @@ export const influencerMarketingCopy: SiteCopy = {
       senderLogo: "gmail",
       inbound: ({ b }) => (
         <>
-          Following up on our conversation at Creator Summit &apos;26.
+          New role, new budget, and I need creators for a {b("Q1 launch")}.
           <br />
-          Do you have {b("availability this week")} for a call?
+          Are you taking on work?
         </>
       ),
       reply: ({ b, link }) => (
         <>
-          Tjalling met you at {b("Creator Summit '26")}. He works with a mutual,{" "}
-          {b("Oliver Normand")}. I drafted a reply with your {link("calendar link")}.
+          You ran {b("Lumen Q4")} with Tjalling, six creators, delivered on
+          time. They are at {b("Kestrel")} now. I drafted a reply with your{" "}
+          {link("calendar link")}.
         </>
       )
     },
@@ -215,12 +217,12 @@ export const influencerMarketingCopy: SiteCopy = {
       client: "Lumen Skincare"
     },
     conference: {
-      name: "Ariel Thomas",
-      company: "Halo Talent",
+      name: "Tjalling de Vries",
+      company: "Kestrel (was Lumen)",
       rows: [
-        { label: "Spoke at", value: "Creator Summit '26" },
-        { label: "Mutual", value: "Asker K." },
-        { label: "Talked about", value: "Rate cards after TikTok" }
+        { label: "You ran", value: "Lumen Q4, six creators" },
+        { label: "How it went", value: "On time, £18,000" },
+        { label: "Now needs", value: "Creators for a Q1 launch" }
       ]
     }
   },
@@ -247,11 +249,14 @@ export const influencerMarketingCopy: SiteCopy = {
       q: "Does it connect to Instagram or TikTok DMs?",
       a: (
         <>
-          Not yet, and we&apos;d rather say so than let you find out after
-          installing. Yaven reads email, Slack, Telegram and iMessage, which is
-          where the brand side of your work lives. If your creator
-          conversations happen entirely in Instagram DMs, it will only cover
-          half your day right now. Both are on the roadmap.
+          Instagram, yes. That matters here more than anywhere, because your
+          work has two sides and they live in different places: the brand in
+          email and Slack, the creators in DMs. Yaven reads both, so a
+          deliverable chased in a DM and a brand asking about it on email are
+          the same campaign rather than two systems you hold together yourself.
+          <br />
+          <br />
+          TikTok is next.
         </>
       )
     },
