@@ -32,7 +32,7 @@ export function LegalPage({
             marginBottom: "48px"
           }}
         >
-          ← Yaven
+          ← yaven
         </Link>
 
         <h1

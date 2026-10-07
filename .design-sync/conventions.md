@@ -1,6 +1,15 @@
-## Yaven effects — conventions
+## yaven effects — conventions
 
-This is a small set of visual effects lifted from Yaven's marketing site, not
+### Required design rule: no decorative tags
+
+Never add marketing tags, badges, eyebrow labels, kickers, or tagline strips
+above or below the hero copy, at the top or bottom of a section, or in the
+page footer. This applies to every audience version and future redesign.
+Start with the headline, followed by supporting copy and actions. Do not
+reintroduce tags as proof strips or small uppercase labels. Functional labels
+inside product UI are separate from decorative marketing tags.
+
+This is a small set of visual effects lifted from yaven's marketing site, not
 a full component library. No provider or root wrapper is required — every
 component works standalone. Import `styles.css` (already wired for you) for
 the glass/gradient/reveal visuals to render correctly; without it these
@@ -51,7 +60,7 @@ the cream and primary-blue backgrounds.
 | `--primary` | `#267fe5` | Brand blue — buttons, accents, `GlassPanel` backdrops |
 | `--cream` | `#f5f1e4` | Light background `GlassCard` is designed to sit on |
 | `--secondary` | `#df4f3e` | Secondary accent (warm red) |
-| `--accent` | `#ebc1ff` | Tertiary accent (lavender) |
+| `--yaven-purple` | `#ebc1ff` | Original pinkish yaven purple: primary CTAs, selected controls, forms, keyboard and artwork; use the shared token, not alternate lavenders |
 | `--font-dm-sans` | `"Satoshi", sans-serif` | The brand sans font; already applied to `body` |
 
 ### Where the truth lives
@@ -78,3 +87,9 @@ the cream and primary-blue backgrounds.
   </GlassCard>
 </div>
 ```
+
+## Brand spelling
+
+Always write **yaven** in lowercase in visible copy, headings, buttons, metadata,
+accessibility labels and design files, including at the start of a sentence.
+Keep code identifiers unchanged.

@@ -1,0 +1,20 @@
+.footer { position: relative; background: #fff; }
+.details { position: relative; z-index: 2; background: #fff; border-radius: 0 0 32px 32px; padding: 28px 4vw 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+.details > a { font-family: var(--font-bricolage),sans-serif; font-size: clamp(28px,3vw,44px); letter-spacing: -.04em; }
+.details nav { display: flex; flex-wrap: wrap; gap: 0; }
+.details nav a { padding: 13px 18px; border: 1px solid #dedede; margin-left: -1px; border-radius: 18px; font-size: 13px; }
+.details > span { width: 100%; font-size: 12px; color: #706778; }
+.reveal { --height: 65svh; height: var(--height); clip-path: inset(0); margin-top: -32px; background: var(--yaven-purple); }
+.track { height: calc(100svh + var(--height)); position: relative; top: -100svh; }
+.name { position: sticky; top: calc(100svh - var(--height)); height: var(--height); display: grid; place-items: center; background: var(--yaven-purple); overflow: hidden; }
+.name a { font-family: var(--font-bricolage),sans-serif; font-size: clamp(130px,31vw,600px); font-weight: 500; letter-spacing: -.09em; line-height: 1; color: #191919; padding-right: .08em; }
+.footer a:focus-visible { outline: 3px solid #267fe5; outline-offset: 4px; }
+.contactRow { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px 32px; padding: 16px 4vw 24px; background: #080808; color: #fff; font-family: var(--font-satoshi),sans-serif; }
+.contactRow > a { font-size: clamp(18px,1.6vw,23px); letter-spacing: -.025em; }
+.contactRow nav { display: flex; flex-wrap: wrap; gap: 24px; }
+.contactRow a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; }
+.contactRow nav a { font-size: 14px; }
+@media(hover:hover) and (pointer:fine) { .contactRow a:hover { color: var(--yaven-purple); } }
+@media(max-width:600px) { .contactRow { flex-direction: column; align-items: flex-start; padding: 16px 24px 24px; gap: 4px; } .contactRow nav { gap: 24px; } }
+@media (max-width:700px) { .reveal { --height: 40svh; } .details { padding-inline: 24px; } .details nav a { padding-inline: 12px; } }
+@media (prefers-reduced-motion:reduce) { .reveal { height: auto; clip-path: none; } .track { height: auto; top: auto; } .name { position: relative; height: 45svh; top: auto; } }

@@ -1,0 +1,2 @@
+.mark { position: relative; display: inline-block; flex-shrink: 0; width: 32px; aspect-ratio: 198 / 360; overflow: hidden; }
+.mark .image { position: absolute; width: 204.5455%; max-width: none; height: auto; left: -63.1313%; top: -33.8889%; }

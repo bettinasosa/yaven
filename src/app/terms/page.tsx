@@ -7,8 +7,8 @@ import {
 } from "@/components/legal-page"
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Yaven",
-  description: "The terms that govern your use of Yaven.",
+  title: "Terms of Service | yaven",
+  description: "The terms that govern your use of yaven.",
   alternates: { canonical: "/terms" }
 }
 
@@ -16,15 +16,15 @@ export default function TermsPage() {
   return (
     <LegalPage title="Terms of Service" lastUpdated="8 June 2026">
       <LegalP>
-        These terms govern your use of Yaven, a macOS menu-bar assistant. By
-        downloading, installing, or using Yaven, you agree to these terms. If you do
-        not agree, do not use Yaven.
+        These terms govern your use of yaven, a macOS menu-bar assistant. By
+        downloading, installing, or using yaven, you agree to these terms. If you do
+        not agree, do not use yaven.
       </LegalP>
 
-      <LegalH2>What Yaven does</LegalH2>
+      <LegalH2>What yaven does</LegalH2>
       <LegalP>
-        Yaven pulls messages and tasks that need your attention into one place, drafts
-        responses using AI, and can act on your connected accounts. Yaven is
+        yaven pulls messages and tasks that need your attention into one place, drafts
+        responses using AI, and can act on your connected accounts. yaven is
         approval-first: it does not send, delete, or change anything outside your Mac
         on its own. Outward-facing actions happen only after you explicitly approve
         them.
@@ -32,16 +32,16 @@ export default function TermsPage() {
 
       <LegalH2>Your account and connected services</LegalH2>
       <LegalP>
-        You are responsible for the accounts you connect to Yaven (such as Gmail or
+        You are responsible for the accounts you connect to yaven (such as Gmail or
         Google Calendar) and for keeping your device secure. By connecting a service,
-        you authorize Yaven to access and act on it on your behalf, within the scopes
+        you authorize yaven to access and act on it on your behalf, within the scopes
         you grant and the actions you approve. You must have the right to connect each
         account and to use it in this way, and you must comply with the terms of those
         third-party services. You can disconnect a service at any time.
       </LegalP>
 
       <LegalH2>Acceptable use</LegalH2>
-      <LegalP>You agree not to use Yaven to:</LegalP>
+      <LegalP>You agree not to use yaven to:</LegalP>
       <LegalList
         items={[
           "Break the law or infringe anyone's rights.",
@@ -53,9 +53,9 @@ export default function TermsPage() {
 
       <LegalH2>AI-generated content</LegalH2>
       <LegalP>
-        Yaven uses AI to generate drafts and answers. AI output can be inaccurate or
-        inappropriate. You are responsible for reviewing anything Yaven drafts before
-        you approve sending or acting on it. Yaven shows you what it will do and waits
+        yaven uses AI to generate drafts and answers. AI output can be inaccurate or
+        inappropriate. You are responsible for reviewing anything yaven drafts before
+        you approve sending or acting on it. yaven shows you what it will do and waits
         for your approval precisely so you stay in control; the decision to send or act
         is always yours.
       </LegalP>
@@ -66,40 +66,40 @@ export default function TermsPage() {
         <a href="/privacy" style={{ color: "var(--ink)" }}>
           Privacy Policy
         </a>{" "}
-        explains how we handle your data. Yaven is local-first: your content stays on
+        explains how we handle your data. yaven is local-first: your content stays on
         your Mac, and is sent to our AI and integration providers only to fulfill the
         requests and actions you make.
       </LegalP>
 
       <LegalH2>Updates and availability</LegalH2>
       <LegalP>
-        Yaven updates itself over time to add features and fix issues. We may change,
-        suspend, or discontinue parts of the service. We aim to keep Yaven available
+        yaven updates itself over time to add features and fix issues. We may change,
+        suspend, or discontinue parts of the service. We aim to keep yaven available
         and reliable but do not guarantee uninterrupted or error-free operation.
       </LegalP>
 
       <LegalH2>Disclaimers</LegalH2>
       <LegalP>
-        Yaven is provided &quot;as is&quot; and &quot;as available,&quot; without
+        yaven is provided &quot;as is&quot; and &quot;as available,&quot; without
         warranties of any kind, whether express or implied, to the maximum extent
-        permitted by law. We do not warrant that Yaven will meet your requirements, be
+        permitted by law. We do not warrant that yaven will meet your requirements, be
         error-free, or that AI output will be accurate or suitable for any particular
         purpose.
       </LegalP>
 
       <LegalH2>Limitation of liability</LegalH2>
       <LegalP>
-        To the maximum extent permitted by law, Yaven and its operators will not be
+        To the maximum extent permitted by law, yaven and its operators will not be
         liable for any indirect, incidental, special, consequential, or exemplary
         damages, or for any loss of data, profits, or goodwill, arising from your use
-        of Yaven. Nothing in these terms excludes liability that cannot be excluded
+        of yaven. Nothing in these terms excludes liability that cannot be excluded
         under applicable law.
       </LegalP>
 
       <LegalH2>Termination</LegalH2>
       <LegalP>
-        You may stop using Yaven and delete it at any time. We may suspend or end your
-        access if you breach these terms. You can erase the data Yaven holds on your
+        You may stop using yaven and delete it at any time. We may suspend or end your
+        access if you breach these terms. You can erase the data yaven holds on your
         Mac via Settings → Delete all data, and revoke account access through your
         connected provider.
       </LegalP>

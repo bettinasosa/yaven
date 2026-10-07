@@ -37,9 +37,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.yaven.ai"),
-  title: "Yaven | Less admin. More flow.",
+  title: "yaven | AI agents for independent agencies and studios",
   description:
-    "The boring half of your day, handled. Yaven automates the admin, drafts the emails, and keeps you in the loop, so you can focus on the work only you can do.",
+    "yaven is a local-first AI chief of staff for macOS. It connects your messages, meetings, notes, and files, then surfaces priorities and drafts the follow-up.",
   openGraph: {
     images: ["/yaven-og.png"]
   },

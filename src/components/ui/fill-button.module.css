@@ -1,0 +1,18 @@
+.fill { position: relative; isolation: isolate; overflow: hidden; transition: color 220ms ease, transform 180ms ease, box-shadow 220ms ease; }
+.fill::before { content: ""; position: absolute; inset: -70% -10%; z-index: -1; border-radius: 50%; background: var(--button-fill, #267fe5); transform: translateY(105%); transition: transform 450ms cubic-bezier(.23, 1, .32, 1); pointer-events: none; }
+.fill > span { position: relative; z-index: 1; }
+.icon { display: inline-flex; align-items: center; transition: transform 250ms ease; }
+.fill:active { transform: scale(.98); }
+.fill.fill:focus-visible { color: #fff; outline: 2px solid #267fe5; outline-offset: 4px; }
+.fill:focus-visible::before { transform: translateY(0); }
+.primary.primary { display: inline-flex; align-items: center; justify-content: space-between; gap: 40px; min-width: 350px; min-height: 86px; padding: 24px 32px; border: 0; border-radius: 999px; background: var(--yaven-purple); color: #191919; font-family: var(--font-satoshi), sans-serif; font-size: 24px; letter-spacing: -.035em; text-decoration: none; cursor: pointer; }
+.primary.primary:focus-visible { background: var(--yaven-purple); color: #fff; }
+.primary.primary:disabled { opacity: .6; cursor: wait; }
+@media (max-width: 600px) { .primary.primary { min-width: 280px; min-height: 70px; font-size: 20px; padding: 20px 27px; } }
+@media (hover: hover) and (pointer: fine) {
+  .fill.fill:not(:disabled):hover { color: #fff; }
+  .fill:not(:disabled):hover::before { transform: translateY(0); }
+  .fill:not(:disabled):hover .icon { transform: translate(3px, -3px); }
+  .primary.primary:hover { background: var(--yaven-purple); }
+}
+@media (prefers-reduced-motion: reduce) { .fill, .fill::before, .icon { transition: none; } .fill:active, .fill:hover .icon { transform: none; } }

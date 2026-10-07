@@ -517,7 +517,7 @@
   justify-content: center;
 }
 
-/* Cream variant for use on the blue Meet Yaven background */
+/* Cream variant for use on the blue Meet yaven background */
 .triage-underline.u-cream {
   background-image: linear-gradient(var(--cream), var(--cream));
 }
@@ -563,10 +563,11 @@
   --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.05);
 
   /* 4-colour palette */
+  --yaven-purple: #ebc1ff;
   --white: #ffffff;
   --primary: #267fe5;
   --secondary: #df4f3e;
-  --accent: #ebc1ff;
+  --accent: var(--yaven-purple);
   --cream: #f5f1e4; /* light         */
   --dark: #07348b;
 
@@ -803,7 +804,7 @@
       box-shadow 0.18s ease;
   }
 
-  /* Blue "Get Yaven" CTA */
+  /* Blue "Get yaven" CTA */
   .btn-press {
     background: #267fe5;
     color: #fff;
@@ -976,3 +977,7 @@ video::-webkit-media-controls {
     display: none !important;
   }
 }
+
+/* Lenis owns interpolation; native smooth scrolling must not compete with it. */
+html.lenis { scroll-behavior: auto; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

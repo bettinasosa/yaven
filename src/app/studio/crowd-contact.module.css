@@ -1,0 +1,5 @@
+.section { align-content: center; }
+.intro { display: grid; gap: 26px; }
+.section .button { width: min(100%,440px); min-width: 0; min-height: 200px; justify-self: center; gap: 24px; padding: 32px; border-radius: 999px; background: var(--yaven-purple); color: #191919; font-size: clamp(30px,2.8vw,40px); }
+.section :disabled { opacity: .6; cursor: wait; }
+@media(max-width:800px) { .section .button { justify-self: start; min-height: 132px; padding: 26px; gap: 18px; font-size: clamp(26px,6vw,36px); } }
