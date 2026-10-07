@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SmoothScroll } from "@/components/smooth-scroll"
 import { UtmCapture } from "@/components/utm-capture"
 import { crowdHero } from "./studio/_shared/crowd-copy"
+import { WebAnalytics } from "@/components/web-analytics"
 import "./globals.css"
 
 const spaceMono = Space_Mono({
@@ -62,6 +63,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <SmoothScroll>{children}</SmoothScroll>
         <UtmCapture />
+        <WebAnalytics />
         <Analytics />
       </body>
     </html>

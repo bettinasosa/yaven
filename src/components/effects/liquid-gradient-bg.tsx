@@ -99,8 +99,10 @@ const VERTEX = `varying vec2 vUv; void main() { gl_Position = projectionMatrix *
 const FRAGMENT = `
   uniform float uTime, uSpeed, uIntensity, uGrainIntensity, uGradientSize, uColor1Weight, uColor2Weight;
   uniform vec2 uResolution;
+  uniform float uAspect;
   uniform vec3 uColor1, uColor2, uColor3, uColor4, uColor5, uColor6, uBase;
   uniform sampler2D uTouchTexture;
+  uniform vec4 uClicks[6]; // xy = origin (uv), z = start time, w = active
   varying vec2 vUv;
 
   float grain(vec2 uv, float t) {
@@ -155,6 +157,24 @@ const FRAGMENT = `
     float dist = length(uv - center);
     float ripple = sin(dist * 20.0 - uTime * 3.0) * 0.04 * touchTex.b;
     uv += vec2(ripple);
+
+    // Click shockwaves — each click sends an expanding ring that shoves the
+    // blobs radially outward from the click point, so the gradient itself
+    // ripples (no overlay, it's the same displacement the cursor trail uses).
+    for (int i = 0; i < 6; i++) {
+      float strength = uClicks[i].w;
+      float age = uTime - uClicks[i].z;
+      vec2 d = uv - uClicks[i].xy;
+      d.x *= uAspect;
+      float dc = length(d);
+      float front = dc - age * 0.6;                     // ring grows at 0.6/s
+      float decay = clamp(1.0 - age / 2.2, 0.0, 1.0);   // fades over 2.2s
+      float wave = sin(front * 26.0) * exp(-front * front * 55.0) * decay * decay;
+      vec2 dir = dc > 0.0001 ? d / dc : vec2(0.0);
+      dir.x /= uAspect;
+      uv += dir * wave * 0.055 * strength;
+    }
+
     vec3 color = getGradientColor(uv, uTime);
     color += grain(uv, uTime) * uGrainIntensity;
     color = clamp(color, uBase * 0.9, uBase * 1.35);
@@ -180,6 +200,39 @@ class GradientApp {
   mesh: THREE.Mesh | null = null
   animationId: number | null = null
   container: HTMLElement
+  clicks: THREE.Vector4[]
+  clickIdx = 0
+  _onMove: (x: number, y: number) => void = () => {}
+
+  onMouseMove = (e: MouseEvent) => this._onMove(e.clientX, e.clientY)
+  onTouchMove = (e: TouchEvent) => {
+    if (e.touches[0]) this._onMove(e.touches[0].clientX, e.touches[0].clientY)
+  }
+  onPointerDown = (e: PointerEvent) => {
+    // Click ripple is a desktop pointer flourish — skip touch taps.
+    if (e.pointerType === "touch") return
+    this.clicks[this.clickIdx].set(
+      e.clientX / window.innerWidth,
+      1 - e.clientY / window.innerHeight,
+      this.uniforms.uTime.value as number,
+      1
+    )
+    this.clickIdx = (this.clickIdx + 1) % this.clicks.length
+  }
+  onResize = () => {
+    const w = window.innerWidth
+    const h = window.innerHeight
+    this.camera.aspect = w / h
+    this.camera.updateProjectionMatrix()
+    this.renderer.setSize(w, h)
+    const vs = this.getViewSize()
+    if (this.mesh) {
+      this.mesh.geometry.dispose()
+      this.mesh.geometry = new THREE.PlaneGeometry(vs.width, vs.height, 1, 1)
+    }
+    ;(this.uniforms.uResolution.value as THREE.Vector2).set(w, h)
+    ;(this.uniforms.uAspect.value as number) = w / h
+  }
 
   constructor(container: HTMLElement) {
     this.container = container
@@ -208,6 +261,10 @@ class GradientApp {
 
     this.clock = new THREE.Clock()
     this.touchTexture = new TouchTexture()
+    this.clicks = Array.from(
+      { length: 6 },
+      () => new THREE.Vector4(0, 0, -100, 0)
+    )
 
     this.uniforms = {
       uTime: { value: 0 },
@@ -217,6 +274,8 @@ class GradientApp {
           container.clientHeight
         )
       },
+      uAspect: { value: container.clientWidth / container.clientHeight },
+      uClicks: { value: this.clicks },
       uColor1: { value: hexToVec3("#267FE5") }, // primary blue
       uColor2: { value: hexToVec3("#267FE5") }, // primary blue
       uColor3: { value: hexToVec3("#4da3f0") }, // brighter sky blue
@@ -258,39 +317,20 @@ class GradientApp {
     this.mesh = new THREE.Mesh(geometry, material)
     this.scene.add(this.mesh)
 
-    // Mouse/touch tracking — listen on the parent section so content doesn't block events
-    const root = this.container.parentElement ?? this.container
-    const c = this.container
+    // The gradient is now a full-viewport fixed background, so cursor and
+    // click tracking listen on the window and map straight to viewport coords.
     const onMove = (x: number, y: number) => {
-      this.touchTexture.addTouch({ x: x / c.clientWidth, y: 1 - y / c.clientHeight })
+      this.touchTexture.addTouch({
+        x: x / window.innerWidth,
+        y: 1 - y / window.innerHeight
+      })
     }
-    root.addEventListener("mousemove", (e) => {
-      const rect = c.getBoundingClientRect()
-      onMove(e.clientX - rect.left, e.clientY - rect.top)
-    })
-    root.addEventListener("touchmove", (e) => {
-      const rect = c.getBoundingClientRect()
-      onMove(
-        e.touches[0].clientX - rect.left,
-        e.touches[0].clientY - rect.top
-      )
-    })
+    window.addEventListener("mousemove", this.onMouseMove)
+    window.addEventListener("touchmove", this.onTouchMove, { passive: true })
+    window.addEventListener("pointerdown", this.onPointerDown)
+    this._onMove = onMove
 
-    const onResize = () => {
-      this.camera.aspect = c.clientWidth / c.clientHeight
-      this.camera.updateProjectionMatrix()
-      this.renderer.setSize(c.clientWidth, c.clientHeight)
-      const vs = this.getViewSize()
-      if (this.mesh) {
-        this.mesh.geometry.dispose()
-        this.mesh.geometry = new THREE.PlaneGeometry(vs.width, vs.height, 1, 1)
-      }
-      ;(this.uniforms.uResolution.value as THREE.Vector2).set(
-        c.clientWidth,
-        c.clientHeight
-      )
-    }
-    window.addEventListener("resize", onResize)
+    window.addEventListener("resize", this.onResize)
 
     this.tick()
   }
@@ -305,6 +345,10 @@ class GradientApp {
 
   cleanup() {
     if (this.animationId) cancelAnimationFrame(this.animationId)
+    window.removeEventListener("mousemove", this.onMouseMove)
+    window.removeEventListener("touchmove", this.onTouchMove)
+    window.removeEventListener("pointerdown", this.onPointerDown)
+    window.removeEventListener("resize", this.onResize)
     this.renderer.dispose()
     if (
       this.container &&
@@ -333,8 +377,9 @@ export function LiquidGradientBg() {
   return (
     <div
       ref={containerRef}
+      aria-hidden="true"
       style={{
-        position: "absolute",
+        position: "fixed",
         inset: 0,
         zIndex: 0,
         pointerEvents: "none"

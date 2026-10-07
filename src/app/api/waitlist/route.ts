@@ -1,5 +1,6 @@
 import { isValidEmail } from "@/lib/blueprint/validation"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
+import { sendWelcomeEmail } from "@/lib/welcome-email"
 
 function generateRefCode(email: string): string {
   const prefix = email.split("@")[0].slice(0, 5).toLowerCase().replace(/[^a-z]/g, "")
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Valid email is required" }, { status: 400 })
   }
 
+  const supabase = getSupabase()
   const emailStr = String(payload.email).trim().toLowerCase()
   const refCode = generateRefCode(emailStr)
 
@@ -89,6 +91,16 @@ export async function POST(request: Request) {
     console.error("[waitlist] insert failed:", insertError)
     return Response.json({ error: "Failed to save" }, { status: 500 })
   }
+
+  // The "you're in" note. Not awaited, for the same reason the webhook below
+  // is not: the signup has already succeeded and must not be held up, or
+  // failed, by an email provider having a bad minute.
+  void sendWelcomeEmail({
+    email: emailStr,
+    name: str(payload.name),
+    position,
+    refCode
+  })
 
   // Also fire the Google Sheet webhook as a backup (non-blocking)
   const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL

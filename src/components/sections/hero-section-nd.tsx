@@ -5,15 +5,7 @@ import Image from "next/image"
 import { gsap } from "gsap"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { bookDemoHref } from "@/lib/contact"
-import dynamic from "next/dynamic"
-
-const LiquidGradientBg = dynamic(
-  () =>
-    import("@/components/effects/liquid-gradient-bg").then(
-      m => m.LiquidGradientBg
-    ),
-  { ssr: false }
-)
+import { useCopy } from "@/content/copy-context"
 
 function YavenMark({ height }: { height: number }) {
   return (
@@ -149,6 +141,7 @@ function AppsWord() {
 // ── Variant B — liquid gradient, right-aligned content ───────────────────────
 
 function HeroVariantB() {
+  const copy = useCopy()
   const sectionRef = useRef<HTMLElement>(null)
   const logoRef = useRef<HTMLDivElement>(null)
   const bookCallRef = useRef<HTMLAnchorElement>(null)
@@ -194,10 +187,9 @@ function HeroVariantB() {
     <section
       ref={sectionRef}
       data-hero
-      className="relative min-h-screen overflow-hidden flex bg-[var(--primary)] z-50"
+      className="relative min-h-screen overflow-hidden flex z-[1]"
     >
-      {/* Liquid gradient background */}
-      <LiquidGradientBg />
+      {/* Background is the site-wide living gradient (fixed, in the layout). */}
 
       {/* Nav — logo top left, book a call top right */}
       <div className="absolute top-[clamp(28px,4vw,48px)] left-[clamp(28px,4vw,48px)] right-[clamp(28px,4vw,48px)] z-10 flex items-center justify-between">
@@ -227,34 +219,20 @@ function HeroVariantB() {
           </span>
 
           <p className="font-[var(--font-dm-sans),sans-serif] text-[clamp(28px,6vw,42px)] md:text-[clamp(20px,3vw,42px)] font-medium text-white leading-[1.1] tracking-[-0.02em] m-0 opacity-92 mt-[clamp(28px,5vh,80px)] md:mt-[clamp(50px,8vh,100px)] mb-[clamp(2px,1vh,12px)]">
-            Less admin.
+            {copy.hero.tagline[0]}
             <br />
-            More flow.
+            {copy.hero.tagline[1]}
           </p>
 
           <p className="font-[var(--font-dm-sans),sans-serif] text-[var(--fs-body)] font-normal text-white/70 leading-[1.5] mt-0 mr-0 mb-[clamp(24px,4vh,40px)] ml-0">
-            The AI assistant that lives in your menu bar,
-            <br />
-            handling the admin that eats your day
-            <br />
-            across all your <AppsWord />.
+            {copy.hero.sub({ apps: () => <AppsWord /> })}
           </p>
 
           <div ref={ctaRef}>
-            <BlueprintPanel />
+            <BlueprintPanel placement="hero_cta" />
           </div>
         </div>
       </div>
-
-      {/* Bottom blend — fades the liquid gradient into solid primary so
-          there's no hard line between hero and the next section */}
-      <div
-        aria-hidden="true"
-        className="absolute bottom-0 left-0 right-0 h-[clamp(120px,20vh,240px)] pointer-events-none z-[6]"
-        style={{
-          background: "linear-gradient(to bottom, transparent 0%, #267FE5 100%)"
-        }}
-      />
     </section>
   )
 }
