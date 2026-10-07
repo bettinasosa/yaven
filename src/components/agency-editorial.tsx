@@ -7,14 +7,14 @@ export function AgencyEditorial({ title, intro, children, artwork }: { title: st
   return <main id="editorial-content" className={styles.page}>
     <a className={styles.skip} href="#editorial-body">Skip to content</a>
     <nav className={styles.nav} aria-label="Main navigation">
-      <Link href="/studio/alt/crowd" className={styles.logo} aria-label="yaven agency page">yaven</Link>
-      <div><Link href="/about">About us</Link><Link href="/manifesto">Manifesto</Link><Link href="/studio/alt/crowd">Back to yaven <span aria-hidden="true">↗</span></Link></div>
+      <Link href="/" className={styles.logo} aria-label="yaven home">yaven</Link>
+      <div><Link href="/about">About us</Link><Link href="/manifesto">Manifesto</Link><Link href="/">Back to yaven <span aria-hidden="true">↗</span></Link></div>
     </nav>
     {artwork && <div className={styles.artwork}>{artwork}</div>}
     <header className={styles.hero}><h1>{title}</h1><p>{intro}</p></header>
     <article id="editorial-body" className={styles.body}>{children}</article>
     <div className={styles.closing}><AgencyApplicationButton className={styles.cta} /></div>
-    <footer className={styles.footer}><Link href="/studio/alt/crowd" className={styles.logo}>yaven</Link><div><Link href="/about">About us</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:support@yaven.ai">Talk to us ↗</a></div></footer>
+    <footer className={styles.footer}><Link href="/" className={styles.logo}>yaven</Link><div><Link href="/about">About us</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:support@yaven.ai">Talk to us ↗</a></div></footer>
   </main>
 }
 

@@ -4,6 +4,7 @@ import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/next"
 import { SmoothScroll } from "@/components/smooth-scroll"
 import { UtmCapture } from "@/components/utm-capture"
+import { crowdHero } from "./studio/_shared/crowd-copy"
 import "./globals.css"
 
 const spaceMono = Space_Mono({
@@ -38,8 +39,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.yaven.ai"),
   title: "yaven | AI agents for independent agencies and studios",
-  description:
-    "yaven is a local-first AI chief of staff for macOS. It connects your messages, meetings, notes, and files, then surfaces priorities and drafts the follow-up.",
+  description: crowdHero.body,
   openGraph: {
     images: ["/yaven-og.png"]
   },

@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Skiper39 from "@/components/ui/skiper39"
+import { fillButtonClass } from "@/components/ui/fill-button"
 import { CrowdHeroActions } from "./crowd-hero-actions"
 import { YavenMark } from "./_shared/yaven-mark"
 import styles from "./crowd-hero.module.css"
@@ -42,7 +43,11 @@ export function CrowdHero() {
     <Skiper39 className={styles.scene} canvasClassName={styles.canvas}>
       <nav className={styles.nav} aria-label="Main navigation">
         <Link href="/" aria-label="yaven home" data-nav-mark><YavenMark className={styles.logo} /></Link>
-        <div className={styles.navLinks}><Link href="/about">About us</Link><CrowdHeroActions navigation /></div>
+        <div className={styles.navLinks}>
+          <Link className={`${fillButtonClass} ${styles.about}`} href="/about"><span>About us</span></Link>
+          <Link className={`${fillButtonClass} ${styles.manifesto}`} href="/manifesto"><span>Manifesto</span></Link>
+          <CrowdHeroActions navigation />
+        </div>
       </nav>
       <div className={styles.copy}>
         <div className={styles.wordmark} aria-hidden="true">{"yaven".split("").map(letter => <span key={letter} data-crowd-letter>{letter}</span>)}</div>

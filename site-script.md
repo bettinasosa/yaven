@@ -1,7 +1,7 @@
 # yaven — landing page copy reference
 
-Approved agency copy supplied: 2026-10-06. Applied to `/studio/alt/crowd`,
-`/manifesto` and `/about`. The Crowd page now follows this order: hero,
+Approved agency copy supplied: 2026-10-06. Applied to the homepage `/`,
+`/manifesto` and `/about`; `/studio/alt/crowd` remains a preview. The homepage follows this order: hero,
 four growth cards, personal assistant and shared agents, closing
 graphic and manifesto link, Questions, agency application and waitlist.
 
@@ -9,7 +9,11 @@ The implementation source of truth is
 `src/app/studio/_shared/crowd-copy.ts`, with the long-form copy in
 `src/app/manifesto/page.tsx` and `src/app/about/page.tsx`.
 
-The earlier script below remains a reference for the other existing variants;
+The previous landing is preserved in `archive/old-landing/page.tsx.txt`,
+outside the app and without a public route. Privacy and Terms reuse the new
+site's typography, navigation and footer; their legal wording is unchanged.
+
+The earlier script below remains a reference for the archived variants;
 it is not the approved copy for the Crowd redesign.
 
 ---
