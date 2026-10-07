@@ -52,7 +52,7 @@ export function CrowdHero() {
       <div className={styles.copy}>
         <div className={styles.wordmark} aria-hidden="true">{"yaven".split("").map(letter => <span key={letter} data-crowd-letter>{letter}</span>)}</div>
         <div className={styles.message} data-crowd-copy>
-        <h1 id="studio-heading">AI agents for running<br /> and growing your agency.</h1>
+        <h1 id="studio-heading">AI agents for running and growing<br /> your marketing or creative business.</h1>
         <CrowdHeroActions />
         </div>
       </div>

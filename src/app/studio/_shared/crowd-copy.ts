@@ -1,6 +1,6 @@
 /** Approved agency copy. Functional UI labels sit alongside their examples. */
 export const crowdHero = {
-  headline: "AI agents for running and growing your agency.",
+  headline: "AI agents for running and growing your marketing or creative business.",
   body: "yaven is built for independent agencies and studios. It finds opportunities, keeps up with your clients and gets work done across your business.",
   cta: "See yaven in action",
 } as const
@@ -8,7 +8,7 @@ export const crowdHero = {
 export const agencyExamples = [
   {
     category: "Grow your agency", name: "Find new clients", heading: "Find new clients",
-    body: "yaven watches for companies which fit your agency and the right moment to reach out: a new marketing lead, a funding round, a product launch. It researches each one and drafts outreach in your voice.",
+    body: "yaven finds potential clients that fit your business and spots the right moment to reach out: a new marketing lead, a funding round or a product launch. It researches each company and drafts outreach in your voice.",
     status: "Introduction ready",
     scene: "A startup on your target list hires a new CMO. yaven finds the closest work in your portfolio and drafts an introduction.",
     work: [
@@ -75,7 +75,7 @@ export const sharedAgents = {
 export const crowdQuestions = [
   { question: "Who is yaven for?", answer: "Independent marketing, branding, design and creative agencies, from solo studios to larger teams. Consultants and in-house teams who work like an agency are welcome too." },
   { question: "How is yaven different from ChatGPT or Claude?", answer: "Chat tools answer the questions you ask. yaven knows your clients and their markets, and brings you opportunities with the work already prepared. It's a proactive assistant built for running and growing an independent agency." },
-  { question: "Does yaven do our creative work?", answer: "No. Ideas, taste and creative production stay with your team. yaven handles the research, admin, new business and follow-up which pull you away from creative and strategic work." },
+  { question: "Does yaven do our creative work?", answer: "No. Design, creative production, taste and judgment stay with you and your team. yaven can help you explore ideas, think through strategy and bring research or context from past projects into a brief. It supports your thinking; it doesn't make the creative decisions." },
   { question: "What does yaven connect to?", answer: "yaven connects to 20+ tools, including several email inboxes, calendars, Notion, Google Workspace, Granola, WhatsApp, Telegram and CRMs. You decide what yaven sees." },
   { question: "What happens to our data?", answer: "In yaven, your personal context is stored locally on your Mac, and you can open and edit it any time. We don't train models on your business or client data.", link: { href: "/privacy", label: "Read our privacy policy" } },
   { question: "Does anything go to a client without our approval?", answer: "No. yaven prepares the work, and your team decides what goes out." },

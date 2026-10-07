@@ -3,7 +3,7 @@ import { CrowdPage } from "./studio/crowd-page"
 import { crowdHero } from "./studio/_shared/crowd-copy"
 
 export const metadata: Metadata = {
-  title: "yaven | AI agents for running and growing your agency",
+  title: `yaven | ${crowdHero.headline.replace(/\.$/, "")}`,
   description: crowdHero.body,
   alternates: { canonical: "/" },
 }
