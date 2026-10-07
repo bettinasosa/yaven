@@ -5,9 +5,19 @@ import { useEffect, useRef } from "react"
 // Original animation using the Open Peeps illustration sheet.
 const spriteColumns = 15
 const spriteRows = 7
-const sample = (index: number, salt: number) => {
-  const value = Math.sin(index * 17.31 + salt * 43.17) * 43758.5453
-  return value - Math.floor(value)
+const randomBetween = (min: number, max: number) => min + Math.random() * (max - min)
+const walkClock = (time: number) => time + 11.7 * (1 - Math.exp(-time / 2.6))
+
+type Walker = {
+  born: number
+  direction: number
+  speed: number
+  size: number
+  depth: number
+  rhythm: number
+  phase: number
+  bounce: number
+  sprite: number
 }
 
 export function CrowdWalk({ className }: { className: string }) {
@@ -28,7 +38,25 @@ export function CrowdWalk({ className }: { className: string }) {
     let disposed = false
     let frame = 0
     let elapsed = 0
+    let crowdTime = 0
     let previousTime = 0
+    let seeded = false
+    let people: Walker[] = []
+    let illustrations: number[] = []
+    const nextArrivals = [0, 0]
+
+    function nextIllustration() {
+      if (!illustrations.length) {
+        illustrations = Array.from({ length: spriteColumns * spriteRows }, (_, index) => index)
+        for (let index = illustrations.length - 1; index > 0; index--) {
+          const swap = Math.floor(Math.random() * (index + 1))
+          const selected = illustrations[swap]
+          illustrations[swap] = illustrations[index]
+          illustrations[index] = selected
+        }
+      }
+      return illustrations.pop()!
+    }
 
     function draw() {
       if (!loaded || !width || !height) return
@@ -37,45 +65,51 @@ export function CrowdWalk({ className }: { className: string }) {
       const personWidth = width < 600 ? 96 : 128
       const cellWidth = image.naturalWidth / spriteColumns
       const cellHeight = image.naturalHeight / spriteRows
-      const personHeight = personWidth * cellHeight / cellWidth
       const speed = Math.max(32, width / 32)
-      const spacing = personWidth * 1.2
-      const interval = spacing / speed
-      const crossingTime = (width + personWidth) / (speed * .82)
-      // A shared clock starts fast and gently settles. Arrivals follow the
-      // same clock, so the entrance never leaves the edges without new people.
-      const sceneTime = reduced.matches ? crossingTime + interval
-        : elapsed + 11.7 * (1 - Math.exp(-elapsed / 2.6))
+      const interval = personWidth * .3 / speed
+      if (!seeded) {
+        nextArrivals[0] = randomBetween(0, interval * .3)
+        nextArrivals[1] = randomBetween(0, interval * .3)
+        seeded = true
+      }
+      // Reduced motion gets a filled, static crowd without an entrance.
+      if (reduced.matches) crowdTime = Math.max(crowdTime, (width + personWidth * 1.18) / (speed * .72))
 
-      // Three rows give the crowd depth; draw the nearest people last.
-      for (let row = 0; row < 3; row++) {
-        for (const direction of [1, -1]) {
-          // Each lane keeps sending new people from its edge, with staggered
-          // arrivals and an individual walking speed for every person.
-          const delay = (row / 3 + (direction < 0 ? .17 : 0)) * interval
-          const newest = Math.floor((sceneTime - delay) / interval)
-          const oldest = Math.max(0, Math.ceil((sceneTime - delay - crossingTime) / interval))
-          for (let arrival = oldest; arrival <= newest; arrival++) {
-            const index = arrival * 6 + row * 2 + (direction < 0 ? 1 : 0)
-            const personSpeed = speed * (.82 + sample(index, 1) * .36)
-            const progress = (sceneTime - delay - arrival * interval) * personSpeed
-            if (progress > width + personWidth) continue
-            const x = direction === 1 ? progress - personWidth : width - progress
-            const bottom = height + 34 - (2 - row) * 26 - sample(index, 3) * 16
-            const bounce = reduced.matches ? 0 : Math.sin(elapsed * (6 + sample(index, 5) * 3) + index) * 3
-            const sprite = (index * 37 + 11) % (spriteColumns * spriteRows)
-            context!.save()
-            context!.translate(x + (direction < 0 ? personWidth : 0), bottom - personHeight + bounce)
-            context!.scale(direction, 1)
-            context!.drawImage(image, (sprite % spriteColumns) * cellWidth, Math.floor(sprite / spriteColumns) * cellHeight, cellWidth, cellHeight, 0, 0, personWidth, personHeight)
-            context!.restore()
-          }
+      // Each side has its own irregular arrival schedule. Sample each person's
+      // appearance once, so their size, position and pace stay stable as they walk.
+      for (let side = 0; side < 2; side++) {
+        while (nextArrivals[side] <= crowdTime) {
+          people.push({
+            born: nextArrivals[side], direction: side === 0 ? 1 : -1,
+            speed: randomBetween(.72, 1.32), size: randomBetween(.76, 1.18),
+            depth: Math.random(), rhythm: randomBetween(5, 9),
+            phase: randomBetween(0, Math.PI * 2), bounce: randomBetween(2, 4),
+            sprite: nextIllustration(),
+          })
+          nextArrivals[side] += interval * randomBetween(.55, 1.45)
         }
+      }
+      people = people.filter(person => (crowdTime - person.born) * speed * person.speed <= width + personWidth * person.size)
+      people.sort((a, b) => b.depth - a.depth)
+      for (const person of people) {
+        const drawWidth = personWidth * person.size
+        const drawHeight = drawWidth * cellHeight / cellWidth
+        const progress = (crowdTime - person.born) * speed * person.speed
+        const x = person.direction === 1 ? progress - drawWidth : width - progress
+        const bottom = height + 48 - person.depth * 40
+        const bounce = reduced.matches ? 0 : Math.sin(elapsed * person.rhythm + person.phase) * person.bounce
+        context!.save()
+        context!.translate(x + (person.direction < 0 ? drawWidth : 0), bottom - drawHeight + bounce)
+        context!.scale(person.direction, 1)
+        context!.drawImage(image, (person.sprite % spriteColumns) * cellWidth, Math.floor(person.sprite / spriteColumns) * cellHeight, cellWidth, cellHeight, 0, 0, drawWidth, drawHeight)
+        context!.restore()
       }
     }
 
     function tick(time: number) {
+      const previousElapsed = elapsed
       elapsed += previousTime ? Math.min((time - previousTime) / 1000, .05) : 0
+      crowdTime += walkClock(elapsed) - walkClock(previousElapsed)
       previousTime = time
       draw()
       frame = requestAnimationFrame(tick)
