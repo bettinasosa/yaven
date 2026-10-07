@@ -577,7 +577,7 @@
   --red: #df4f3e;
 
   --font-helvetica: var(--font-dm-sans), sans-serif;
-  --background: #f5f1e4;
+  --background: #ffffff;
   --foreground: #07348b;
   --card: #f5f1e4;
   --card-foreground: #07348b;
@@ -651,15 +651,13 @@
   }
   body {
     @apply text-foreground font-medium;
-    /* Transparent so the html blue shows through at overscroll edges.
-       Kept in CSS (not inline styles) to avoid React 19 hydration
-       mismatches on body/html style attributes. */
-    background-color: transparent;
+    /* Match the page surface, including uncovered and overscroll edges. */
+    background-color: var(--background);
     overflow-x: clip;
   }
   html {
     @apply font-sans;
-    background-color: var(--primary);
+    background-color: var(--background);
     scroll-behavior: smooth;
     /* Clip here too — otherwise body's clip propagates to the viewport
        (acting as `hidden`, which is still programmatically scrollable) and
