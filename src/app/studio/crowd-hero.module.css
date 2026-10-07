@@ -8,10 +8,10 @@
 .navLinks > a { min-height: 44px; }
 .nav .logo { width: 28px; }
 .copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 72%; padding: 70px 24px 0; text-align: center; pointer-events: none; }
-.wordmark { font-family: var(--font-bricolage), sans-serif; font-size: clamp(120px, min(26vw, 26svh), 360px); line-height: 1.05; font-weight: 500; letter-spacing: -.09em; padding: 0 .07em .05em 0; margin-bottom: -.22em; overflow: hidden; }
+.wordmark { font-family: var(--font-bricolage), sans-serif; font-size: clamp(120px, min(26vw, 26svh), 360px); line-height: 1.05; font-weight: 500; letter-spacing: -.09em; padding: 0 .07em .05em 0; margin-bottom: -.08em; overflow: hidden; }
 .wordmark span { display: inline-block; }
 .message { display: flex; flex-direction: column; align-items: center; }
-.copy h1 { margin: 28px 0 16px; font-family: var(--font-satoshi), sans-serif; font-size: clamp(24px, min(2.5vw, 4svh), 38px); line-height: 1.15; font-weight: 500; letter-spacing: -.045em; }
+.copy h1 { margin: 28px 0 30px; font-family: var(--font-satoshi), sans-serif; font-size: clamp(24px, min(2.5vw, 4svh), 38px); line-height: 1.15; font-weight: 500; letter-spacing: -.045em; }
 .description { max-width: 52ch; margin: 0 0 24px; font-family: var(--font-satoshi),sans-serif; font-size: clamp(15px,1.2vw,18px); line-height: 1.4; color: #555; text-wrap: pretty; }
 .copy .cta { pointer-events: auto; }
 .canvas { position: absolute; bottom: 0; left: 0; width: 100%; height: min(44svh, 380px); pointer-events: none; }
