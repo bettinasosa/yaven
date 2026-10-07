@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Skiper39 from "@/components/ui/skiper39"
+import { CrowdWalk } from "./crowd-walk"
 import { fillButtonClass } from "@/components/ui/fill-button"
 import { CrowdHeroActions } from "./crowd-hero-actions"
 import { YavenMark } from "./_shared/yaven-mark"
@@ -23,7 +23,6 @@ export function CrowdHero() {
         const arrival = gsap.timeline({ defaults: { ease: "power3.out" } })
         arrival.from("[data-crowd-letter]", { yPercent: 110, rotation: 7, duration: .9, stagger: .055 })
           .from("[data-crowd-copy]", { opacity: 0, y: 16, duration: .55 }, .35)
-          .from("[data-crowd-people] canvas", { y: 85, opacity: 0, duration: 1.1 }, .15)
           .from("[data-nav-mark]", { opacity: 0, y: -8, duration: .6 }, .1)
         gsap.to("[data-crowd-people]", {
           y: -36, scale: .965, ease: "none",
@@ -40,7 +39,8 @@ export function CrowdHero() {
   }, [])
   return <section ref={root} id="studio-content" className={styles.hero} aria-labelledby="studio-heading">
     <div className={styles.lift} data-crowd-people>
-    <Skiper39 className={styles.scene} canvasClassName={styles.canvas}>
+    <div className={styles.scene}>
+      <CrowdWalk className={styles.canvas} />
       <nav className={styles.nav} aria-label="Main navigation">
         <Link href="/" aria-label="yaven home" data-nav-mark><YavenMark className={styles.logo} /></Link>
         <div className={styles.navLinks}>
@@ -56,7 +56,7 @@ export function CrowdHero() {
         <CrowdHeroActions />
         </div>
       </div>
-    </Skiper39>
+    </div>
     </div>
   </section>
 }

@@ -17,7 +17,7 @@ export function NameFooter({ backToTopHref = "#studio-content" }: { backToTopHre
       <nav aria-label="Social media">{socials.map(social => <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer">{social.label}<span aria-hidden="true">↗</span></a>)}</nav>
       <a href="mailto:support@yaven.ai">support@yaven.ai</a>
       </div>
-      <span>© {new Date().getFullYear()} yaven · Illustrations by <a href="https://www.openpeeps.com/">Open Peeps</a> · Crowd animation adapted from <a href="https://skiper-ui.com/">Skiper UI</a></span>
+      <span>© {new Date().getFullYear()} yaven · Illustrations by <a href="https://www.openpeeps.com/">Open Peeps</a></span>
     </div>
     <div className={styles.reveal}><div className={styles.track}><div className={styles.name}><CrowdFooterArtwork /></div></div></div>
   </footer>

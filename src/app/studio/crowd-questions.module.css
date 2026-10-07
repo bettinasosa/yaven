@@ -11,6 +11,7 @@
 .section :is(summary,a):focus-visible { outline: 2px solid #267fe5; outline-offset: 4px; }
 @media (hover:hover) and (pointer:fine) { .list summary:hover { color: #267fe5; } }
 @media (max-width:1050px) { .section { gap: 40px; } }
+@media (max-width:800px) { .section h2 { position: static; top: auto; } }
 @media (max-width:700px) { .section { grid-template-columns: 1fr; padding: 65px 24px; gap: 35px; } .section h2 { position: relative; top: auto;  } .list summary { font-size: 18px; } .list p { font-size: 16px; padding-right: 0; } }
 @media (prefers-reduced-motion:reduce) { .list summary > span { transition: none; } }
 

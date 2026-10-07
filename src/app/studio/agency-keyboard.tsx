@@ -60,7 +60,7 @@ export function AgencyKeyboard({ children }: { children: ReactNode }) {
       </div>
     </div>
     <div className={styles.output}>
-      {open ? <dialog ref={dialog} id={`${id}-dialog`} className={styles.askPanel} data-lenis-prevent aria-labelledby={`${id}-title`} onCancel={event => { event.preventDefault(); close() }}>
+      {open ? <dialog ref={dialog} id={`${id}-dialog`} className={styles.askPanel} data-lenis-prevent aria-labelledby={`${id}-title`} onCancel={event => { event.preventDefault(); close() }} onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); close() } }}>
         <GlassCard borderRadius="30px" className={styles.glassBody} style={{
           background: "linear-gradient(155deg,#ffffffed 0%,#f2f5fbe8 52%,#eaeef9e3 100%)",
           backdropFilter: "blur(44px) saturate(1.55)", WebkitBackdropFilter: "blur(44px) saturate(1.55)",
