@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import { YavenMark } from "@/app/studio/_shared/yaven-mark"
 import { CrowdHeroActions } from "@/app/studio/crowd-hero-actions"
 import { NameFooter } from "@/app/studio/flow-b/name-footer"
-import { fillButtonClass } from "./ui/fill-button"
+import textLink from "./ui/text-link.module.css"
 import styles from "./legal-page.module.css"
 
 /** The agency site's visual language, with a quiet, readable legal document. */
@@ -13,8 +13,8 @@ export function LegalPage({ title, lastUpdated, children }: { title: string; las
     <header className={styles.navigation}>
       <Link href="/" aria-label="yaven home"><YavenMark className={styles.logo} /></Link>
       <nav className={styles.links} aria-label="Main navigation">
-        <Link className={fillButtonClass} href="/about"><span>About us</span></Link>
-        <Link className={fillButtonClass} href="/manifesto"><span>Manifesto</span></Link>
+        <Link className={textLink.link} href="/about"><span className={textLink.label}>About us</span></Link>
+        <Link className={textLink.link} href="/manifesto"><span className={textLink.label}>Manifesto</span></Link>
         <CrowdHeroActions navigation />
       </nav>
     </header>

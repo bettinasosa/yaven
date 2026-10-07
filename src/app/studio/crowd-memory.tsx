@@ -5,6 +5,7 @@ import { useId, useRef, useState } from "react"
 import { ArrowUpRight, Check, LockKeyhole, Pencil } from "lucide-react"
 import shared from "./crowd-supporting.module.css"
 import styles from "./crowd-memory.module.css"
+import textLink from "@/components/ui/text-link.module.css"
 
 const exampleMemory = "For the Juicy project, send a short written summary before each review. Keep Fridays free of meetings."
 
@@ -24,7 +25,7 @@ export function CrowdMemory() {
     <div className={styles.copy}>
       <h2 className={shared.heading} id="crowd-memory-heading">You can see what yaven knows.<span>And decide what it shares.</span></h2>
       <p className={shared.body}>Your personal context stays on your Mac. Inspect and edit its memory, choose what agents can access, and approve what goes to clients.</p>
-      <Link className={shared.link} href="/privacy">Read our privacy policy<ArrowUpRight size={18} aria-hidden="true" /></Link>
+      <Link className={`${shared.link} ${textLink.link}`} href="/privacy"><span className={textLink.label}>Read our privacy policy</span><ArrowUpRight size={18} aria-hidden="true" /></Link>
     </div>
     <div className={styles.preview}>
       <div className={styles.window}>

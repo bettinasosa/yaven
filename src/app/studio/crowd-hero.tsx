@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { CrowdWalk } from "./crowd-walk"
-import { fillButtonClass } from "@/components/ui/fill-button"
+import textLink from "@/components/ui/text-link.module.css"
 import { CrowdHeroActions } from "./crowd-hero-actions"
 import { YavenMark } from "./_shared/yaven-mark"
 import styles from "./crowd-hero.module.css"
@@ -44,9 +44,9 @@ export function CrowdHero() {
       <nav className={styles.nav} aria-label="Main navigation">
         <Link href="/" aria-label="yaven home" data-nav-mark><YavenMark className={styles.logo} /></Link>
         <div className={styles.navLinks}>
-          <Link className={`${fillButtonClass} ${styles.about}`} href="/about"><span>About us</span></Link>
-          <Link className={`${fillButtonClass} ${styles.manifesto}`} href="/manifesto"><span>Manifesto</span></Link>
-          <CrowdHeroActions navigation />
+          <Link className={textLink.link} href="/about"><span className={textLink.label}>About us</span></Link>
+          <Link className={textLink.link} href="/manifesto"><span className={textLink.label}>Manifesto</span></Link>
+          <span className={styles.talkSpace} aria-hidden="true" />
         </div>
       </nav>
       <div className={styles.copy}>

@@ -15,9 +15,11 @@
 .paragraph { margin: 0 0 18px; text-wrap: pretty; }
 .list { display: grid; gap: 12px; margin: 0 0 24px; padding-left: 24px; list-style: disc; }
 .prose strong { color: var(--ink); font-weight: 500; }
-.prose a { text-decoration: underline; text-decoration-color: var(--yaven-purple); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.prose a { text-decoration: underline; text-decoration-color: #bebbc4; text-underline-offset: 4px; background-image: linear-gradient(currentColor,currentColor); background-repeat: no-repeat; background-position: left bottom; background-size: 0% 1px; padding-bottom: 3px; transition: background-size 220ms ease; }
+.prose a:focus-visible { background-size: 100% 1px; }
 .skip { position: fixed; top: -100px; left: 20px; z-index: 20; padding: 12px 18px; border-radius: 12px; background: var(--yaven-purple); color: var(--ink); }
 .skip:focus { top: 16px; }
-@media (hover:hover) and (pointer:fine) { .prose a:hover { text-decoration-color: var(--primary-blue); } }
+@media (hover:hover) and (pointer:fine) { .prose a:hover { background-size: 100% 1px; } }
+@media (prefers-reduced-motion:reduce) { .prose a { transition: none; } }
 @media (max-width:600px) { .navigation { padding: 23px 24px; gap: 12px; } .links { gap: 0; font-size: 13px; } .links > a { padding-inline: 10px; } .heading { gap: 20px; } .prose { font-size: 16px; } .sectionHeading { margin-top: 40px; } }
 @media (max-width:360px) { .navigation { padding-inline: 16px; } .links { font-size: 12px; } .links > a { padding-inline: 8px; } }

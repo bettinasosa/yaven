@@ -3,8 +3,7 @@
 .grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(40px,7vw,104px); align-items: center; }
 .heading { font-family: var(--font-bricolage),sans-serif; font-size: clamp(40px,4.5vw,64px); font-weight: 500; line-height: 1.06; letter-spacing: -.05em; text-wrap: pretty; }
 .body { max-width: 42ch; font-size: clamp(17px,1.4vw,20px); line-height: 1.6; color: #60616a; text-wrap: pretty; }
-.link { display: inline-flex; width: fit-content; align-items: center; gap: 20px; min-height: 48px; font-size: 16px; text-decoration: underline; text-underline-offset: 6px; text-decoration-color: #bebbc4; transition: color 160ms ease; }
+.link { display: inline-flex; width: fit-content; align-items: center; gap: 20px; min-height: 48px; font-size: 16px; }
 .section :is(button,a,textarea,summary):focus-visible { outline: 2px solid #267fe5; outline-offset: 5px; }
-@media(hover:hover) and (pointer:fine) { .link:hover { color: #267fe5; } }
 @media(max-width:800px) { .grid { grid-template-columns: 1fr; gap: 44px; } .section { padding: 64px 24px; } .heading { max-width: 20ch; } }
 @media(prefers-reduced-motion:reduce) { .link { transition: none; } }

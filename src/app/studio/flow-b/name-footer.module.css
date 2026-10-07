@@ -16,7 +16,6 @@
 .contactRow nav { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 24px; }
 .contactRow a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; }
 .contactRow nav a { font-size: 14px; }
-@media(hover:hover) and (pointer:fine) { .contactRow a:hover { color: #267fe5; } }
 @media(max-width:600px) { .contactRow { width: 100%; gap: 4px; } .contactRow > a { justify-content: flex-end; } .contactRow nav { gap: 24px; } }
 @media (max-width:700px) { .reveal { --height: 40svh; } .details { padding-inline: 24px; } .details > nav a { padding-inline: 12px; } }
 @media (prefers-reduced-motion:reduce) { .reveal { height: auto; clip-path: none; } .track { height: auto; top: auto; } .name { position: relative; height: 45svh; top: auto; } }

@@ -1,4 +1,5 @@
 import { CrowdHero } from "./crowd-hero"
+import { CrowdHeroActions } from "./crowd-hero-actions"
 import { CrowdCases } from "./crowd-cases"
 import { CrowdKeyboard } from "./crowd-journey"
 import { CrowdMemory } from "./crowd-memory"
@@ -13,13 +14,14 @@ import styles from "./crowd-page.module.css"
 export function CrowdPage() {
   return <main className={styles.page}>
     <a href="#studio-content" className={styles.skip}>Skip to content</a>
+    <CrowdHeroActions navigation persistent />
     <CrowdHero />
     <CrowdCases />
     <FlowChapter hold={.5}><CrowdKeyboard /></FlowChapter>
     <FlowChapter hold={.12}><CrowdMemory /></FlowChapter>
     <FlowChapter hold={.12}><CrowdStatement /></FlowChapter>
     <CrowdQuestions />
-    <CrowdContact />
+    <FlowChapter hold={.6}><CrowdContact /></FlowChapter>
     <NameFooter />
   </main>
 }

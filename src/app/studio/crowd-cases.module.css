@@ -1,9 +1,9 @@
-.track { background: #fff; color: #191919; font-family: var(--font-satoshi), sans-serif; }
+.track { --case-stack-tail: 52px; background: #fff; color: #191919; font-family: var(--font-satoshi), sans-serif; }
 .section { min-height: 100svh; padding: 24px 32px; display: flex; flex-direction: column; justify-content: center; gap: clamp(62px,9svh,100px); overflow: clip; }
 .head { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 18px; }
 .head h2 { font-family: var(--font-bricolage), sans-serif; font-size: clamp(40px, min(4vw, 6svh), 58px); font-weight: 500; line-height: 1.02; letter-spacing: -.06em; }
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 60%) minmax(0, 1fr); gap: 28px; align-items: center; width: 100%; max-width: 1660px; margin: 0 auto; position: relative; }
-.copy { grid-column: 1; grid-row: 1; align-self: center; padding-bottom: 52px; }
+.copy { grid-column: 1; grid-row: 1; align-self: center; padding-bottom: var(--case-stack-tail); }
 .copy[aria-hidden="true"] { visibility: hidden; pointer-events: none; }
 .copy[data-side="right"] { grid-column: 3; }
 .copy h3 { font-family: var(--font-bricolage), sans-serif; font-size: clamp(22px, 1.85vw, 29px); font-weight: 500; line-height: 1.08; letter-spacing: -.045em; text-wrap: balance; max-width: 17ch; }
@@ -29,7 +29,9 @@
 @media (min-width: 960px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
   .track { height: 460svh; }
   .section { position: sticky; top: 0; height: 100svh; }
-  .head { position: absolute; inset-inline: 32px; top: 32px; }
+  /* Center the visible front card, not the extra space for cards underneath. */
+  .layout { transform: translateY(calc(var(--case-stack-tail) / 2)); }
+  .head { position: absolute; inset-inline: 32px; top: clamp(56px, 8svh, 80px); }
 }
 @media (max-width: 1190px) {
   .section { padding-left: 24px; padding-right: 24px; gap: 64px; }

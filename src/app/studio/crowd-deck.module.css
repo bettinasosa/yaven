@@ -3,7 +3,7 @@
 .content { position: relative; z-index: 1; height: 100%; display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; padding: 32px; }
 .card[aria-hidden="true"] .content { visibility: hidden; }
 .showcase { height: min(61svh, 520px); min-height: 440px; }
-.showcase .card { bottom: 52px; border-radius: 56px; box-shadow: 0 24px 35px -32px #19191950; }
+.showcase .card { bottom: var(--case-stack-tail, 52px); border-radius: 56px; box-shadow: 0 24px 35px -32px #19191950; }
 .showcase .card::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .025; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); }
 .showcase .content { padding: 20px 28px; }
 .showcase .card[aria-hidden="true"] .content { visibility: visible; }

@@ -1,0 +1,16 @@
+.label, .inline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0% 1px;
+  padding-bottom: 3px;
+  transition: background-size 220ms ease;
+}
+.inline { text-decoration: underline; text-decoration-color: #bebbc4; text-underline-offset: 4px; }
+.link:focus-visible .label, .inline:focus-visible { background-size: 100% 1px; }
+@media (hover: hover) and (pointer: fine) {
+  .link:hover .label, .inline:hover { background-size: 100% 1px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .label, .inline { transition: none; }
+}

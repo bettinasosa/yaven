@@ -17,7 +17,6 @@
 .page a:focus-visible { outline: 2px solid #267fe5; outline-offset: 4px; }
 .skip { position: fixed; z-index: 20; left: 20px; top: -100px; background: #191919; color: #fff; padding: 12px 18px; border-radius: 12px; }
 .skip:focus { top: 16px; }
-@media (hover:hover) and (pointer:fine) { .nav a:hover, .footer a:hover { color: #267fe5; } }
 @media (max-width:900px) { .hero { gap: 45px; } .hero p { font-size: 18px; } }
 @media (max-width:700px) { .nav { padding-block: 24px; align-items: start; } .nav > div { gap: 15px; flex-wrap: wrap; justify-content: flex-end; max-width: 220px; font-size: 13px; } .hero { grid-template-columns: 1fr; padding-block: 55px 50px; gap: 30px; } .hero h1 { font-size: clamp(52px,13vw,78px); max-width: 14ch; } .hero p { font-size: 18px; } .section { padding-block: 30px 40px; } .section h2 { font-size: 32px; } .section p { font-size: 17px; line-height: 1.6; } .closing { margin-block: 15px 60px; } .footer { align-items: start; } .footer > div { justify-content: flex-end; gap: 18px; } }
 
