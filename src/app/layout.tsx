@@ -3,8 +3,8 @@ import { Space_Mono, Bricolage_Grotesque } from "next/font/google"
 import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/next"
 import { SmoothScroll } from "@/components/smooth-scroll"
-import { GradientBackdrop } from "@/components/effects/gradient-backdrop"
 import { UtmCapture } from "@/components/utm-capture"
+import { crowdHero } from "./studio/_shared/crowd-copy"
 import { WebAnalytics } from "@/components/web-analytics"
 import "./globals.css"
 
@@ -39,9 +39,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.yaven.ai"),
-  title: "Yaven | Less admin. More flow.",
-  description:
-    "The boring half of your day, handled. Yaven automates the admin, drafts the emails, and keeps you in the loop, so you can focus on the work only you can do.",
+  title: "yaven | AI agents for independent agencies and studios",
+  description: crowdHero.body,
   openGraph: {
     images: ["/yaven-og.png"]
   },
@@ -62,10 +61,7 @@ export default function RootLayout({
       className={`${spaceMono.variable} ${bricolage.variable} ${satoshi.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col">
-        <GradientBackdrop />
-        <div className="relative z-[1] flex flex-1 flex-col">
-          <SmoothScroll>{children}</SmoothScroll>
-        </div>
+        <SmoothScroll>{children}</SmoothScroll>
         <UtmCapture />
         <WebAnalytics />
         <Analytics />

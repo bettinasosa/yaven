@@ -11,6 +11,7 @@ import { FaqSection } from "@/components/sections/faq-section"
 import { FooterSection } from "@/components/sections/footer-section"
 import { BlueprintPanel } from "@/components/blueprint/blueprint-panel"
 import { useIsMobile } from "@/components/effects/use-is-mobile"
+import { GradientBackdrop } from "@/components/effects/gradient-backdrop"
 import { SiteCopyProvider } from "@/content/copy-context"
 import type { VariantId } from "@/content/variants"
 
@@ -194,66 +195,69 @@ export function HomeShell({ variant = "home" }: { variant?: VariantId }) {
 
   return (
     <SiteCopyProvider variant={variant}>
-      <StickyGetYaven />
-      <HeroSectionND />
-      <CardWrap z={2} behindBg="transparent">
-        <MeetYavenSection />
-      </CardWrap>
-      <CardWrap z={3} behindBg="var(--primary)">
-        <div data-cream>
-          <TriageSection />
-          <ProposalsCrmSection />
-        </div>
-      </CardWrap>
-      <CardWrap z={4} behindBg="var(--cream)">
-        <div
-          data-hide-getyaven
-          style={{
-            position: "relative",
-            zIndex: 5,
-            background: "var(--primary)",
-            paddingTop: isMobile ? "40px" : "80px",
-            marginTop: "-2px"
-          }}
-        >
-          <FaqSection />
-        </div>
-      </CardWrap>
-
-      {/* ── Footer ── */}
-      {/* Mobile: the stacked footer is taller than both FOOTER_H and the
-          viewport, so the sticky-reveal trick clips the wordmark and can't
-          pin correctly. Render it in normal flow instead. */}
-      {isMobile ? (
-        <FooterSection />
-      ) : (
-        <div
-          className="relative"
-          style={{
-            height: FOOTER_H,
-            clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)",
-            zIndex: 1
-          }}
-        >
+      <GradientBackdrop />
+      <div className="relative z-[1] flex flex-1 flex-col">
+        <StickyGetYaven />
+        <HeroSectionND />
+        <CardWrap z={2} behindBg="transparent">
+          <MeetYavenSection />
+        </CardWrap>
+        <CardWrap z={3} behindBg="var(--primary)">
+          <div data-cream>
+            <TriageSection />
+            <ProposalsCrmSection />
+          </div>
+        </CardWrap>
+        <CardWrap z={4} behindBg="var(--cream)">
           <div
+            data-hide-getyaven
             style={{
               position: "relative",
-              height: `calc(100vh + ${FOOTER_H}px)`,
-              top: "-100vh"
+              zIndex: 5,
+              background: "var(--primary)",
+              paddingTop: isMobile ? "40px" : "80px",
+              marginTop: "-2px"
+            }}
+          >
+            <FaqSection />
+          </div>
+        </CardWrap>
+
+        {/* ── Footer ── */}
+        {/* Mobile: the stacked footer is taller than both FOOTER_H and the
+            viewport, so the sticky-reveal trick clips the wordmark and can't
+            pin correctly. Render it in normal flow instead. */}
+        {isMobile ? (
+          <FooterSection />
+        ) : (
+          <div
+            className="relative"
+            style={{
+              height: FOOTER_H,
+              clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)",
+              zIndex: 1
             }}
           >
             <div
               style={{
-                height: FOOTER_H,
-                position: "sticky",
-                top: `calc(100vh - ${FOOTER_H}px)`
+                position: "relative",
+                height: `calc(100vh + ${FOOTER_H}px)`,
+                top: "-100vh"
               }}
             >
-              <FooterSection />
+              <div
+                style={{
+                  height: FOOTER_H,
+                  position: "sticky",
+                  top: `calc(100vh - ${FOOTER_H}px)`
+                }}
+              >
+                <FooterSection />
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </SiteCopyProvider>
   )
 }

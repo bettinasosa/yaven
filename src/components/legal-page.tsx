@@ -1,142 +1,42 @@
 import Link from "next/link"
-import { FooterSection } from "@/components/sections/footer-section"
+import type { ReactNode } from "react"
+import { YavenMark } from "@/app/studio/_shared/yaven-mark"
+import { CrowdHeroActions } from "@/app/studio/crowd-hero-actions"
+import { NameFooter } from "@/app/studio/flow-b/name-footer"
+import textLink from "./ui/text-link.module.css"
+import styles from "./legal-page.module.css"
 
-/**
- * Shared shell for the Privacy Policy and Terms of Service pages. Clean, readable
- * typography on a light surface (legal copy should be high-contrast), with the brand
- * ink-blue for headings and links and the site footer underneath for consistency.
- */
-export function LegalPage({
-  title,
-  lastUpdated,
-  children
-}: {
-  title: string
-  lastUpdated: string
-  children: React.ReactNode
-}) {
-  return (
-    <main className="flex min-h-screen flex-col text-[#1a1a1a]">
-      <div className="mx-auto w-full max-w-[820px] flex-1 px-4 py-16 sm:px-6 sm:py-24">
-        {/* Frosted panel keeps the dense legal copy high-contrast while the
-            site's living gradient glows through the margins behind it. */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.82)",
-            backdropFilter: "blur(14px)",
-            WebkitBackdropFilter: "blur(14px)",
-            borderRadius: "28px",
-            padding: "clamp(28px, 5vw, 64px)",
-            boxShadow: "0 24px 70px rgba(10,14,26,0.22)"
-          }}
-        >
-        {/* Back to home */}
-        <Link
-          href="/"
-          className="u-hover-underline inline-block"
-          style={{
-            fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "12px",
-            letterSpacing: "0.04em",
-            color: "var(--ink)",
-            opacity: 0.7,
-            textDecoration: "none",
-            marginBottom: "48px"
-          }}
-        >
-          ← Yaven
-        </Link>
-
-        <h1
-          style={{
-            fontFamily: "var(--font-instrument-serif)",
-            fontSize: "clamp(40px, 8vw, 64px)",
-            color: "var(--ink)",
-            letterSpacing: "-0.03em",
-            lineHeight: 1,
-            marginBottom: "16px"
-          }}
-        >
-          {title}
-        </h1>
-
-        <p
-          style={{
-            fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "12px",
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-            color: "#6b6b6b",
-            marginBottom: "56px"
-          }}
-        >
-          Last updated: {lastUpdated}
-        </p>
-
-        <div className="legal-prose">{children}</div>
-        </div>
-      </div>
-
-      <FooterSection />
-    </main>
-  )
+/** The agency site's visual language, with a quiet, readable legal document. */
+export function LegalPage({ title, lastUpdated, children }: { title: string; lastUpdated: string; children: ReactNode }) {
+  return <main className={styles.page}>
+    <a className={styles.skip} href="#legal-content">Skip to content</a>
+    <header className={styles.navigation}>
+      <Link href="/" aria-label="yaven home"><YavenMark className={styles.logo} /></Link>
+      <nav className={styles.links} aria-label="Main navigation">
+        <Link className={textLink.link} href="/about"><span className={textLink.label}>About us</span></Link>
+        <Link className={textLink.link} href="/manifesto"><span className={textLink.label}>Manifesto</span></Link>
+        <CrowdHeroActions navigation />
+      </nav>
+    </header>
+    <div id="legal-content" className={styles.document}>
+      <header className={styles.heading}>
+        <h1>{title}</h1>
+        <p>Last updated: {lastUpdated}</p>
+      </header>
+      <article className={styles.prose} aria-label={title}>{children}</article>
+    </div>
+    <NameFooter backToTopHref="#legal-content" />
+  </main>
 }
 
-/** Section heading inside a legal page. */
-export function LegalH2({ children }: { children: React.ReactNode }) {
-  return (
-    <h2
-      style={{
-        fontFamily: "var(--font-instrument-serif)",
-        fontSize: "26px",
-        color: "var(--ink)",
-        letterSpacing: "-0.01em",
-        marginTop: "44px",
-        marginBottom: "14px"
-      }}
-    >
-      {children}
-    </h2>
-  )
+export function LegalH2({ children }: { children: ReactNode }) {
+  return <h2 className={styles.sectionHeading}>{children}</h2>
 }
 
-/** Body paragraph. */
-export function LegalP({ children }: { children: React.ReactNode }) {
-  return (
-    <p
-      style={{
-        fontSize: "16px",
-        lineHeight: 1.7,
-        color: "#2a2a2a",
-        marginBottom: "16px"
-      }}
-    >
-      {children}
-    </p>
-  )
+export function LegalP({ children }: { children: ReactNode }) {
+  return <p className={styles.paragraph}>{children}</p>
 }
 
-/** Bulleted list. */
-export function LegalList({ items }: { items: React.ReactNode[] }) {
-  return (
-    <ul
-      style={{
-        listStyle: "disc",
-        paddingLeft: "22px",
-        marginBottom: "16px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "10px"
-      }}
-    >
-      {items.map((item, i) => (
-        <li
-          key={i}
-          style={{ fontSize: "16px", lineHeight: 1.6, color: "#2a2a2a" }}
-        >
-          {item}
-        </li>
-      ))}
-    </ul>
-  )
+export function LegalList({ items }: { items: ReactNode[] }) {
+  return <ul className={styles.list}>{items.map((item, index) => <li key={index}>{item}</li>)}</ul>
 }

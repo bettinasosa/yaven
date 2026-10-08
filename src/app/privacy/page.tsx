@@ -7,9 +7,9 @@ import {
 } from "@/components/legal-page"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Yaven",
+  title: "Privacy Policy | yaven",
   description:
-    "How Yaven handles your data. Yaven is local-first: your emails, messages, and drafts stay on your Mac.",
+    "How yaven handles your data. yaven is local-first: your emails, messages, and drafts stay on your Mac.",
   alternates: { canonical: "/privacy" }
 }
 
@@ -17,24 +17,24 @@ export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy Policy" lastUpdated="19 August 2026">
       <LegalP>
-        Yaven is a macOS menu-bar assistant that helps you triage and reply to
+        yaven is a macOS menu-bar assistant that helps you triage and reply to
         messages, drafts in your voice, and acts on your connected accounts only
-        when you approve. This policy explains what data Yaven processes and why.
-        It covers both the Yaven app and this website, yaven.ai.
+        when you approve. This policy explains what data yaven processes and why.
+        It covers both the yaven app and this website, yaven.ai.
       </LegalP>
 
       <LegalH2>Our approach in one line</LegalH2>
       <LegalP>
-        Yaven is local-first. Your emails, messages, drafts, and the profile it
+        yaven is local-first. Your emails, messages, drafts, and the profile it
         builds about you are stored on your own Mac. We do not upload them to our
         servers or sync them to a cloud.
       </LegalP>
 
       <LegalH2>What data we process, and why</LegalH2>
       <LegalP>
-        <strong>1. Content you ask Yaven to act on</strong> — emails, messages,
-        calendar events, and what is on your screen at the moment you press a Yaven
-        shortcut. This is stored locally on your Mac. When you ask Yaven to draft a
+        <strong>1. Content you ask yaven to act on</strong> — emails, messages,
+        calendar events, and what is on your screen at the moment you press a yaven
+        shortcut. This is stored locally on your Mac. When you ask yaven to draft a
         reply or answer a question, the relevant text and/or a single screenshot is
         sent for that one request to our AI provider (Anthropic) to generate the
         response, and to the relevant service through our integration provider
@@ -59,7 +59,7 @@ export default function PrivacyPage() {
         nothing; it only logs errors transiently for debugging.
       </LegalP>
 
-      <LegalH2>The Yaven website</LegalH2>
+      <LegalH2>The yaven website</LegalH2>
       <LegalP>
         <strong>Joining the waitlist.</strong> When you submit the form on this site
         we store your email address, and — if you fill them in — your name, your
@@ -67,7 +67,7 @@ export default function PrivacyPage() {
         campaign tags (utm_*) on the link you followed, the domain that referred
         you, the page you landed on, and, if you came through a referral link, the
         code that sent you. We use this to invite you when access opens, to work out
-        which channels bring people who actually want Yaven, and to credit whoever
+        which channels bring people who actually want yaven, and to credit whoever
         referred you. Your address is not sold, and we do not send a newsletter.
         This data is held in our database (Supabase) and mirrored to a private
         spreadsheet as a backup.
@@ -99,9 +99,9 @@ export default function PrivacyPage() {
         putting you on the list.
       </LegalP>
 
-      <LegalH2>How Yaven uses Google user data</LegalH2>
+      <LegalH2>How yaven uses Google user data</LegalH2>
       <LegalP>
-        Yaven&apos;s use of information received from Google APIs adheres to the{" "}
+        yaven&apos;s use of information received from Google APIs adheres to the{" "}
         <a
           href="https://developers.google.com/terms/api-services-user-data-policy"
           target="_blank"
@@ -111,7 +111,7 @@ export default function PrivacyPage() {
           Google API Services User Data Policy
         </a>
         , including the Limited Use requirements. When you connect a Google account,
-        Yaven requests only the scopes needed to read and triage your mail, draft and
+        yaven requests only the scopes needed to read and triage your mail, draft and
         send replies you approve, and show your calendar. Specifically:
       </LegalP>
       <LegalList
@@ -138,7 +138,7 @@ export default function PrivacyPage() {
         providers, listed below) or with your consent.
       </LegalP>
 
-      <LegalH2>Permissions Yaven asks macOS for</LegalH2>
+      <LegalH2>Permissions yaven asks macOS for</LegalH2>
       <LegalList
         items={[
           <>
@@ -147,7 +147,7 @@ export default function PrivacyPage() {
           </>,
           <>
             <strong>Screen Recording</strong> — so the draft and ask features can see
-            what is on screen at the moment you press the shortcut. Yaven does not
+            what is on screen at the moment you press the shortcut. yaven does not
             watch or record your screen in the background.
           </>,
           <>
@@ -200,7 +200,7 @@ export default function PrivacyPage() {
       <LegalH2>How long we keep data</LegalH2>
       <LegalP>
         Content and the context profile are stored on your Mac for as long as you keep
-        Yaven installed; removing the app removes the local data. Analytics events, if
+        yaven installed; removing the app removes the local data. Analytics events, if
         enabled, are retained by PostHog for the period set in our analytics
         configuration. Relay logs are transient. Waitlist details are kept until you
         ask us to remove them, or until we close the waitlist and have finished
@@ -210,8 +210,8 @@ export default function PrivacyPage() {
       <LegalH2>Your choices and rights</LegalH2>
       <LegalP>
         Because most of your data lives on your own device, you can delete it
-        directly: Settings → Delete all data erases everything Yaven stored on your
-        Mac and signs you out. To revoke Yaven&apos;s access to your Google account at
+        directly: Settings → Delete all data erases everything yaven stored on your
+        Mac and signs you out. To revoke yaven&apos;s access to your Google account at
         any time, visit your{" "}
         <a
           href="https://myaccount.google.com/permissions"
@@ -229,7 +229,7 @@ export default function PrivacyPage() {
       </LegalP>
 
       <LegalH2>Children</LegalH2>
-      <LegalP>Yaven is not intended for anyone under 16.</LegalP>
+      <LegalP>yaven is not intended for anyone under 16.</LegalP>
 
       <LegalH2>Changes</LegalH2>
       <LegalP>

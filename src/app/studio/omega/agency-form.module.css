@@ -1,0 +1,26 @@
+.form { width: 100%; }
+.form fieldset { display: grid; gap: 18px; border: 0; padding: 0; margin: 0; min-width: 0; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form label { display: grid; gap: 9px; min-width: 0; font-size: 14px; line-height: 1.35; }
+.form input, .form select, .form textarea { width: 100%; min-width: 0; min-height: 48px; padding: 12px 20px; border: 1px solid #b9b5bd; border-radius: 999px; background: #fff; color: #111; font: inherit; font-size: 16px; line-height: 1.4; }
+.form input:not([type="radio"]) { font-size: 16px; line-height: 1.4; }
+.form select { appearance: none; padding-right: 52px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 20px center; background-size: 16px; }
+.form textarea { resize: vertical; min-height: 96px; border-radius: 24px; }
+.form :is(input,select,textarea):focus-visible { outline: 2px solid #267fe5; outline-offset: 3px; }
+.form .signupType { gap: 0; }
+.signupType legend { margin-bottom: 9px; font-size: 14px; line-height: 1.35; }
+.typeOptions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 5px; border: 1px solid #b9b5bd; border-radius: 999px; }
+.typeOptions label { position: relative; cursor: pointer; }
+.typeOptions input { position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; border: 0; opacity: 0; }
+.typeOptions span { display: grid; place-items: center; min-height: 42px; padding: 10px 16px; border-radius: 999px; font-size: 16px; }
+.typeOptions input:checked + span { background: var(--yaven-purple); }
+.typeOptions input:focus-visible + span { outline: 2px solid #267fe5; outline-offset: 2px; }
+.form .submit { width: 100%; min-width: 0; min-height: 70px; padding: 18px 25px; border: 0; border-radius: 999px; background: var(--yaven-purple); color: #111; font-family: var(--font-satoshi),sans-serif; font-size: 26px; cursor: pointer; }
+.form fieldset:disabled { opacity: .6; }
+.form fieldset:disabled .submit { cursor: wait; }
+.error { margin-top: 18px; font-size: 14px; line-height: 1.5; }
+.error a, .success a { text-decoration: underline; text-underline-offset: 4px; }
+.success { display: grid; gap: 20px; padding: 32px 0; }
+.success h3 { font-size: 36px; line-height: 1.1; }
+.success p { font-size: 18px; line-height: 1.5; }
+@media(max-width:480px) { .row { grid-template-columns: 1fr; gap: 18px; } .form .submit { font-size: 23px; } }

@@ -1,0 +1,8 @@
+.chapter { position: relative; min-height: 100svh; }
+.panel { position: relative; min-height: 100svh; }
+.chapter[data-hold="true"] { min-height: calc(100svh + var(--chapter-hold, 16svh)); }
+.chapter[data-hold="true"] > .panel { position: sticky; top: 0; }
+@media (max-width: 959px), (max-height: 639px), (prefers-reduced-motion: reduce) {
+  .chapter[data-hold="true"] { min-height: 100svh; }
+  .chapter[data-hold="true"] > .panel { position: relative; }
+}

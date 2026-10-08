@@ -517,7 +517,7 @@
   justify-content: center;
 }
 
-/* Cream variant for use on the blue Meet Yaven background */
+/* Cream variant for use on the blue Meet yaven background */
 .triage-underline.u-cream {
   background-image: linear-gradient(var(--cream), var(--cream));
 }
@@ -563,10 +563,11 @@
   --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.05);
 
   /* 4-colour palette */
+  --yaven-purple: #ebc1ff;
   --white: #ffffff;
   --primary: #267fe5;
   --secondary: #df4f3e;
-  --accent: #ebc1ff;
+  --accent: var(--yaven-purple);
   --cream: #f5f1e4; /* light         */
   --dark: #07348b;
 
@@ -576,7 +577,7 @@
   --red: #df4f3e;
 
   --font-helvetica: var(--font-dm-sans), sans-serif;
-  --background: #f5f1e4;
+  --background: #ffffff;
   --foreground: #07348b;
   --card: #f5f1e4;
   --card-foreground: #07348b;
@@ -650,15 +651,13 @@
   }
   body {
     @apply text-foreground font-medium;
-    /* Transparent so the html blue shows through at overscroll edges.
-       Kept in CSS (not inline styles) to avoid React 19 hydration
-       mismatches on body/html style attributes. */
-    background-color: transparent;
+    /* Match the page surface, including uncovered and overscroll edges. */
+    background-color: var(--background);
     overflow-x: clip;
   }
   html {
     @apply font-sans;
-    background-color: var(--primary);
+    background-color: var(--background);
     scroll-behavior: smooth;
     /* Clip here too — otherwise body's clip propagates to the viewport
        (acting as `hidden`, which is still programmatically scrollable) and
@@ -803,7 +802,7 @@
       box-shadow 0.18s ease;
   }
 
-  /* Blue "Get Yaven" CTA */
+  /* Blue "Get yaven" CTA */
   .btn-press {
     background: #267fe5;
     color: #fff;
@@ -976,3 +975,7 @@ video::-webkit-media-controls {
     display: none !important;
   }
 }
+
+/* Lenis owns interpolation; native smooth scrolling must not compete with it. */
+html.lenis { scroll-behavior: auto; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

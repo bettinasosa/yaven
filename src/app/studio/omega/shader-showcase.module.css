@@ -1,0 +1,6 @@
+.brandPanel { min-height: 100svh; position: relative; display: grid; place-items: center; background: #b2c9e9; color: #263d8b; overflow: hidden; }
+.shader { position: absolute; inset: 0; background: #b4c5eb; }
+.sequenceLayer { position: absolute; inset: 0; animation: artwork-crossfade 350ms ease both; }
+.panelWord { position: relative; z-index: 1; width: 98%; color: #191919; font-family: var(--font-bricolage),sans-serif; font-weight: 600; font-size: clamp(100px,35vw,620px); line-height: 1; letter-spacing: -.085em; text-align: center; padding: 0 .04em 24px 0; transition: color 350ms ease; font-variant-ligatures: none; white-space: nowrap; }
+@keyframes artwork-crossfade { from { opacity: 0; } to { opacity: 1; } }
+@media(prefers-reduced-motion:reduce) { .sequenceLayer { animation: none; } .panelWord { transition: none; } }

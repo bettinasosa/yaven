@@ -1,0 +1,10 @@
+.page { --paper: #fff; --ink: #141412; --acid: var(--yaven-purple); background: var(--paper); color: var(--ink); font-family: var(--font-satoshi), sans-serif; overflow: clip; }
+.page *, .page *::before, .page *::after { box-sizing: border-box; }
+.page h1, .page h2, .page h3, .page p { margin: 0; }
+.page a { color: inherit; text-decoration: none; }
+.page a:focus-visible, .page button:focus-visible, .page input:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; }
+.page button, .page input { font: inherit; }
+.page, .page a, .page button { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='30'><path d='M3 2 L3 23 L8.5 17.8 L12.3 26 L16 24.3 L12.2 16.3 L20 16.3 Z' fill='%23141412' stroke='%23fff' stroke-width='1.6' stroke-linejoin='round'/></svg>") 3 2, auto; }
+.skip { position: fixed; top: -100px; left: 20px; z-index: 20; padding: 12px; background: white; }
+.skip:focus { top: 12px; }
+@media (prefers-reduced-motion: reduce) { .page *, .page *::before, .page *::after { transition: none !important; } }

@@ -1,42 +1,63 @@
-# yaven — landing page script (current copy)
+# yaven — landing page copy reference
 
-Last synced with codebase: 2026-06-15
+Approved agency copy supplied: 2026-10-06. Applied to the homepage `/`,
+`/manifesto` and `/about`; `/studio/alt/crowd` remains a preview. The homepage follows this order: hero,
+four growth cards, personal assistant and shared agents, closing
+graphic and manifesto link, Questions, agency application and waitlist.
+
+The implementation source of truth is
+`src/app/studio/_shared/crowd-copy.ts`, with the long-form copy in
+`src/app/manifesto/page.tsx` and `src/app/about/page.tsx`.
+
+The previous landing is preserved in `archive/old-landing/page.tsx.txt`,
+outside the app and without a public route. Privacy and Terms reuse the new
+site's typography, navigation and footer; their legal wording is unchanged.
+
+The earlier script below remains a reference for the archived variants;
+it is not the approved copy for the Crowd redesign.
 
 ---
 
 ## Hero
 
+**Design rule:** Never use decorative tags, badges, eyebrows, kickers, or
+tagline strips above or below the hero, or at the top or bottom of other
+sections. Apply this to every audience version. Lead with the headline,
+supporting copy, and actions.
+
 **Copy**
 
-> **Yaven**
+> **yaven**
 >
-> Less admin.
-> More flow.
+> Your business can be bigger than your team.
 >
-> A personal assistant that triages
-> your inbox, drafts in your voice, and proactively
-> handles the admin that doesn't need you.
+> yaven helps independent studios and agencies find their next project and bring in
+> the right people to deliver it. AI agents keep track of client conversations,
+> follow-ups, and ongoing work.
 >
-> CTA: **Get Yaven** (opens waitlist/beta signup panel)
+> CTA: **Get early access** (opens the signup form)
+>
+> Signup: Tell us a little about your business. We’ll get in touch to see how yaven could help.
+
 
 **Nav**
 
-> Top left: Yaven logo mark
+> Top left: yaven logo mark
 > Top right: "Book a call" link (Calendly)
 
 ---
 
-## Meet Yaven (scroll-pinned section)
+## Meet yaven (scroll-pinned section)
 
 **Copy**
 
-> **Meet Yaven.**
+> **Meet yaven.**
 >
 > A menu bar assistant that lives on your Mac.
 >
 > It connects to your [Gmail] email, [Google Calendar] calendar, [HubSpot] CRM, [Notion] docs and more, collating everything important in one place. The intro, the contract, the unpaid invoice, none of it gets buried.
 >
-> Use [⌥ D] to draft any reply, anywhere, in your voice. [⌥ A] answers anything on your screen. Yaven learns how much to let you review, and how much you want it to handle automatically, as you use it.
+> Use [⌥ D] to draft any reply, anywhere, in your voice. [⌥ A] answers anything on your screen. yaven learns how much to let you review, and how much you want it to handle automatically, as you use it.
 >
 > Local-first. Your emails, drafts, and context stay on your machine. Nothing is uploaded to our servers or synced to a cloud.
 >
@@ -49,7 +70,7 @@ Draft card (LinkedIn DM):
 > Lola H. — Recruiter, Founding Designer role
 > "Hi Bettina! Your work is stunning, we're hiring a founding designer. Open to a quick chat?"
 > You type: "politely decline, warm"
-> [⌥ D] triggers Yaven draft:
+> [⌥ D] triggers yaven draft:
 > "Thanks so much for reaching out, Lola! I'm really flattered. I'm not looking to go in-house right now, but I'd love to stay connected. If anything changes on my end I'll definitely reach out."
 
 Ask card (contract document):
@@ -59,7 +80,7 @@ Ask card (contract document):
 > 4.2 Payment due within **sixty (60)** days of invoice date.
 > "Ask about this document"
 > [⌥ A] triggers question: "I thought this was 30 days? Why did it change?"
-> Yaven answer: "Since your last [Granola] call with Pablo on May 12, his team updated the payment window from 30 to 60 days. He mentioned cash-flow timing on their end. The rest of the scope is unchanged from your v2 redline."
+> yaven answer: "Since your last [Granola] call with Pablo on May 12, his team updated the payment window from 30 to 60 days. He mentioned cash-flow timing on their end. The rest of the scope is unchanged from your v2 redline."
 
 ---
 
@@ -67,19 +88,19 @@ Ask card (contract document):
 
 **Header**
 
-> **Yaven knows what matters...**
+> **yaven knows what matters...**
 
 **Body**
 
-> One queue instead of ten different apps. Yaven pulls everything into a single notification centre that only demands your attention when something actually needs you, so you can stay focused.
+> One queue instead of ten different apps. yaven pulls everything into a single notification centre that only demands your attention when something actually needs you, so you can stay focused.
 >
-> Important threads never get buried. Yaven tracks every conversation, drafts replies in your voice, and preps you before every meeting with the context you need.
+> Important threads never get buried. yaven tracks every conversation, drafts replies in your voice, and preps you before every meeting with the context you need.
 
 **Triage cards (stacking on scroll)**
 
 Card 1 — Needs you now (blue):
 
-> Things only you can handle. Yaven knows what is and isn't urgent.
+> Things only you can handle. yaven knows what is and isn't urgent.
 >
 > - "Can we move Thursday's call?" — Client
 > - "Intro: Fatimah <> you" — Warm lead
@@ -116,13 +137,13 @@ Tjalling card:
 > Tjalling — via Gmail
 > "Following up on our conversation at Config. Do you have availability this week for a call?"
 
-Yaven response card:
+yaven response card:
 
 > "Tjalling met you at Config '26. He works with a mutual, Oliver Normand. I drafted a reply with your calendar link."
 
 Text:
 
-> **Yaven knows who you know**
+> **yaven knows who you know**
 >
 > It remembers everyone you've met and what you talked about. It spots the old client whose project is coming around again, the intro you said you'd make, the person worth a hello before they forget you, then drafts your messages and proposals proactively.
 
@@ -130,7 +151,7 @@ Text:
 
 > **Call ended, proposal ready**
 >
-> Yaven pulls notes, context, and pricing from your past work and drafts a ready-to-send proposal before you close the call.
+> yaven pulls notes, context, and pricing from your past work and drafts a ready-to-send proposal before you close the call.
 
 **Slide 3 — Conference follow-up (badge card)**
 
@@ -140,7 +161,7 @@ Badge card:
 > Spoke at: Design Expo '26
 > Mutual: Asker K.
 > Talked about: Brand optimisation
-> Status: "Needs follow-up" (red) -> "Follow-up drafted with Yaven" (green)
+> Status: "Needs follow-up" (red) -> "Follow-up drafted with yaven" (green)
 
 Text:
 
@@ -150,7 +171,7 @@ Text:
 
 **CRM card (glass card)**
 
-> Otto's Bakehouse — "1 of 100 Yaven sourced"
+> Otto's Bakehouse — "1 of 100 yaven sourced"
 >
 > - Matched: Fits your ideal client
 > - Outreach: Intro drafted in your voice
@@ -178,10 +199,10 @@ Text:
 > Right now it intelligently prioritises your inbox so the most critical messages are always at the top of your desk, drafts replies in your voice from any app on your Mac, and preps you before every meeting. The more you use it, the more handling on its own. Currently in beta.
 >
 > **How is this different from ChatGPT or Claude?**
-> A chat box waits for you to drive it: you write the prompt, paste the context, copy the answer back. Yaven already read the thread, knows the client, and queued the reply before you opened it. You approve, it learns. The more you use it, the less you have to touch.
+> A chat box waits for you to drive it: you write the prompt, paste the context, copy the answer back. yaven already read the thread, knows the client, and queued the reply before you opened it. You approve, it learns. The more you use it, the less you have to touch.
 >
 > **Where does my data go?**
-> Yaven is local-first. Your emails, drafts, and the profile it builds stay on your Mac, not on our servers, not synced to a cloud. When you ask it to draft or answer, only the relevant text is sent to your existing model provider for that single request. Nothing is stored afterward. Yaven never sends, files, or changes anything without your explicit approval.
+> yaven is local-first. Your emails, drafts, and the profile it builds stay on your Mac, not on our servers, not synced to a cloud. When you ask it to draft or answer, only the relevant text is sent to your existing model provider for that single request. Nothing is stored afterward. yaven never sends, files, or changes anything without your explicit approval.
 >
 > **I handle client data under NDA. Can I trust this?**
 > That's exactly why it's local-first. Your files and context never leave your machine unless you trigger a draft. When you do, only the relevant snippet goes to your existing model provider for that one request, nothing is retained. You control every action, every send.
@@ -190,10 +211,10 @@ Text:
 > Gmail, Google Calendar, Apple Calendar, iMessage, Telegram, Granola, Spotify, your files and docs. Many more integrations are coming through the beta.
 >
 > **Is it Mac only?**
-> Yes, for now. Yaven is built native for macOS. Windows is on the roadmap.
+> Yes, for now. yaven is built native for macOS. Windows is on the roadmap.
 >
 > **When do I get access?**
-> Yaven is in beta. We onboard a small group every week, personally. Join the waitlist and we'll reach out.
+> yaven is in beta. We onboard a small group every week, personally. Join the waitlist and we'll reach out.
 
 ---
 
@@ -208,4 +229,10 @@ Text:
 
 **Bottom**
 
-> Giant "Yaven" wordmark + Yaven logo + "© 2026 Yaven"
+> Giant "yaven" wordmark + yaven logo + "© 2026 yaven"
+
+## Brand spelling
+
+Always write **yaven** in lowercase in visible copy, headings, buttons, metadata,
+accessibility labels and design files, including at the start of a sentence.
+Keep code identifiers unchanged.

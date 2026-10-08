@@ -1,0 +1,35 @@
+.demo { width: min(100%, 1020px); display: grid; justify-items: center; gap: 12px; position: relative; }
+.keyboard { width: 100%; padding: 12px; margin-block: 4px; border-radius: 22px; background: linear-gradient(140deg, #f1f2f4, #c9cacf 65%, #e7e8eb); border: 1px solid #c7c8cc; box-shadow: inset 0 1px 1px #fff, 0 4px 0 #adb0b5, 0 22px 30px -22px #15162165; }
+.letterKeys { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)) minmax(0,1.4fr); gap: clamp(5px,1vw,13px); }
+.key { position: relative; display: block; min-width: 0; min-height: 44px; aspect-ratio: 1.07; padding: 0; border: 0; border-radius: 10px; background: #b7b8bd; box-shadow: 0 2px 1px #64666a70, 0 4px 5px #44464e25; transition: transform 140ms cubic-bezier(.23, 1, .32, 1), box-shadow 140ms cubic-bezier(.23, 1, .32, 1); }
+.face { position: absolute; inset: 0 0 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12%; border-radius: 9px; background: linear-gradient(150deg,#fff,#f2f2f4); color: #38383b; box-shadow: inset 0 1px 1px #fff, inset 0 -1px 1px #d4d4d9; font-family: var(--font-satoshi), sans-serif; font-weight: 400; line-height: 1; letter-spacing: -.055em; }
+.letterKey { cursor: default; }
+.letterKey .face { text-transform: uppercase; font-size: clamp(16px,2.2vw,28px); letter-spacing: 0; }
+.launch { cursor: pointer; aspect-ratio: auto; }
+.launch .face { background: var(--yaven-purple); color: #191919; font-size: clamp(21px,3.4vw,44px); align-items: flex-start; justify-content: space-between; white-space: nowrap; }
+.keyLabel { color: #191919; font-size: clamp(8px,1vw,12px); font-weight: 400; letter-spacing: .015em; }
+.launch:active, .launch[aria-expanded="true"] { transform: translateY(2px); box-shadow: 0 1px 1px #64666a50; }
+.launch:focus-visible { outline: 3px solid #267fe5; outline-offset: 7px; }
+.output { width: min(100%, 660px); min-height: 44px; }
+.hint { text-align: center; padding-top: 12px; font-size: 15px; color: #605d56; }
+.askPanel { position: fixed; inset: 50% auto auto 50%; transform: translate(-50%,-50%); margin: 0; width: min(640px,calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; padding: 0; border: 1px solid #fffffff2; border-radius: 30px; color: #22202b; background: transparent; box-shadow: 0 0 0 1px #bac5d42e, 0 20px 65px -25px #283b6152, 0 5px 16px -7px #283b6124; }
+.askPanel::backdrop { background: transparent; }
+.askPanel :is(button, textarea):focus-visible { outline: 2px solid #2546e8; outline-offset: 3px; }
+.glassBody { padding: clamp(22px,3vw,30px); color: #242b38; }
+.promptHead { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 14px; }
+.promptHead h2 { font-family: var(--font-bricolage),sans-serif; font-size: 25px; font-weight: 500; letter-spacing: -.045em; line-height: 1.15; }
+.promptHead button { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; padding: 0; border: 1px solid #fffffff0; border-radius: 50%; background: linear-gradient(145deg,#ffffffc9,#e7ecf580); color: #354054; font-size: 28px; cursor: pointer; box-shadow: inset 0 1px 1px #fff, 0 5px 14px -10px #24314940; transition: transform 160ms ease,background 160ms ease; }
+.promptHead button:active { transform: scale(.96); }
+@media (hover: hover) and (pointer: fine) { .key:hover { transform: translateY(2px); box-shadow: 0 1px 1px #64666a50; } }
+@media (max-width:600px) {
+  .keyboard { display: flex; justify-content: center; padding: 0; margin: 0; border: 0; background: none; box-shadow: none; }
+  .letterKeys { display: flex; }
+  .letterKey { display: none; }
+  .launch { width: 144px; aspect-ratio: 1.15; margin-block: 8px; border-radius: 18px; }
+  .launch .face { inset: 0 0 4px; padding: 20px; border-radius: 16px; font-size: 34px; }
+  .keyLabel { font-size: 13px; }
+}
+@media (max-width:480px) { .askPanel { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); border-radius: 28px; } .glassBody { padding: 20px; } }
+@media (prefers-reduced-motion:reduce) { .key, .promptHead button { transition: none; } .key:hover, .launch:active, .launch[aria-expanded="true"], .promptHead button:active { transform: none; } }
+@media (prefers-reduced-transparency:reduce) { .glassBody { background: #f3f5f8 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; } }
+@supports not (backdrop-filter:blur(1px)) { .glassBody { background: #f3f5f8 !important; } }

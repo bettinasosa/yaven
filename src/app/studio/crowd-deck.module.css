@@ -1,0 +1,23 @@
+.deck { position: relative; width: 100%; height: min(54svh, 500px); min-height: 390px; isolation: isolate; }
+.card { position: absolute; inset: 0 0 40px; border-radius: 48px; background: var(--yaven-purple); overflow: hidden; transform: translateY(calc(var(--depth) * 18px)) scale(calc(1 - var(--depth) * .045)); transform-origin: center bottom; box-shadow: 0 24px 50px -36px #19191965; }
+.content { position: relative; z-index: 1; height: 100%; display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; padding: 32px; }
+.card[aria-hidden="true"] .content { visibility: hidden; }
+.showcase { height: min(61svh, 520px); min-height: 440px; }
+.showcase .card { bottom: var(--case-stack-tail, 52px); border-radius: 56px; box-shadow: 0 24px 35px -32px #19191950; }
+.showcase .card::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .025; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); }
+.showcase .content { padding: 20px 28px; }
+.showcase .card[aria-hidden="true"] .content { visibility: visible; }
+@media (max-width: 700px) {
+  .deck { height: 440px; min-height: 0; }
+  .card { border-radius: 32px; }
+  .content { padding: 24px; }
+  .showcase { height: 460px; min-height: 0; }
+  .showcase .card { border-radius: 32px; }
+  .showcase .content { padding: 16px 20px; }
+}
+@media (max-width: 360px) {
+  .showcase { height: 510px; }
+  .showcase .content { padding: 16px; }
+}
+
+.showcase .card::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(135deg,#ffffff1a,transparent 60%); }

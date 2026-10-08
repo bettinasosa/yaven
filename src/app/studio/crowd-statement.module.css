@@ -1,0 +1,12 @@
+.section { position: relative; align-content: center; padding-block: 172px; overflow: clip; }
+.intro,.copy { position: relative; z-index: 1; }
+.copy { display: grid; gap: 28px; }
+.lane { container-type: inline-size; position: absolute; left: 0; right: 0; bottom: 0; height: 142px; overflow: hidden; pointer-events: none; }
+.walker { position: absolute; bottom: -20px; left: 0; width: 96px; height: 130px; transform: translateX(var(--rest)); animation: wander var(--duration) linear var(--delay) infinite; animation-direction: var(--direction); animation-play-state: paused; }
+.figure { display: block; width: 100%; height: 100%; transform: scaleX(var(--facing)); }
+.sprite { display: block; width: 100%; height: 100%; background-image: url("/artwork/open-peeps-crowd.png"); background-size: 1500% 700%; background-repeat: no-repeat; background-position: var(--sprite) 0; transform-origin: 50% 100%; animation: step var(--step) ease-in-out infinite alternate; animation-play-state: paused; }
+.section[data-walking="true"] :is(.walker,.sprite) { animation-play-state: running; }
+@keyframes wander { from { transform: translate3d(-140px,0,0); } to { transform: translate3d(calc(100cqw + 140px),0,0); } }
+@keyframes step { from { transform: translateY(0) rotate(-.7deg); } to { transform: translateY(-4px) rotate(.7deg); } }
+@media(max-width:800px) { .section { padding-block: 140px; } .lane { height: 106px; } .walker { bottom: -16px; width: 74px; height: 100px; } .walker:last-child { display: none; } }
+@media(prefers-reduced-motion:reduce) { .walker,.sprite { animation: none; } .walker { transform: translateX(var(--rest)); } }

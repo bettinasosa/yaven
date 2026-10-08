@@ -250,7 +250,7 @@ export function FooterSection() {
             lineHeight: 0.82
           }}
         >
-          Yaven
+          yaven
         </span>
 
         <div
@@ -265,7 +265,7 @@ export function FooterSection() {
         >
           <Image
             src="/yaven-logo.webp"
-            alt="Yaven"
+            alt="yaven"
             width={16}
             height={28}
             style={{ display: "block", width: "auto", height: "14px", opacity: 0.6 }}
@@ -281,7 +281,7 @@ export function FooterSection() {
               margin: 0
             }}
           >
-            © 2026 Yaven
+            © 2026 yaven
           </p>
         </div>
       </div>
