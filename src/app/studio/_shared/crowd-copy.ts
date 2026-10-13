@@ -1,7 +1,7 @@
 /** Approved agency copy. Functional UI labels sit alongside their examples. */
 export const crowdHero = {
-  headline: "AI agents for running and growing your marketing or creative business.",
-  body: "yaven is built for independent agencies and studios. It finds opportunities, keeps up with your clients and gets work done across your business.",
+  headline: "Your business deserves its own private AI.",
+  body: "Built for marketing and creative businesses to find new clients, grow existing accounts and keep projects moving.",
   cta: "See yaven in action",
 } as const
 
@@ -18,7 +18,7 @@ export const agencyExamples = [
     ],
   },
   {
-    category: "Grow your agency", name: "Win inbound leads", heading: "Win the leads which come to you",
+    category: "Grow your agency", name: "Win inbound leads", heading: "Win the leads that come to you",
     body: "When a brief, inquiry or RFP lands, yaven checks whether it fits your agency, researches the company and drafts a reply with your most relevant work.",
     status: "Reply ready",
     scene: "A skincare brand sends an inquiry at 9pm. By morning, yaven has researched the brand, matched it to your closest beauty work and drafted a reply.",

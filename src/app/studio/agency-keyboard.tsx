@@ -7,10 +7,22 @@ import styles from "./agency-keyboard.module.css"
 /** The Option shortcut opens the agency's personal and shared assistant preview. */
 export function AgencyKeyboard({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false)
+  const [inView, setInView] = useState(false)
+  const [hasTried, setHasTried] = useState(false)
   const root = useRef<HTMLDivElement>(null)
   const shortcut = useRef<HTMLButtonElement>(null)
   const dialog = useRef<HTMLDialogElement>(null)
   const id = useId()
+
+  useEffect(() => {
+    const key = shortcut.current
+    if (!key) return
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting && entry.intersectionRatio >= 0.8)
+    }, { threshold: [0, 0.8] })
+    observer.observe(key)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -31,6 +43,7 @@ export function AgencyKeyboard({ children }: { children: ReactNode }) {
       const editing = event.target instanceof HTMLElement && !!event.target.closest("input, textarea, [contenteditable=true]")
       if (!launch || editing || !bounds || bounds.bottom <= 0 || bounds.top >= window.innerHeight) return
       event.preventDefault()
+      setHasTried(true)
       setOpen(true)
     }
     function clear() { optionOnly = false }
@@ -54,9 +67,14 @@ export function AgencyKeyboard({ children }: { children: ReactNode }) {
     <div className={styles.keyboard} role="group" aria-label="yaven shortcut keyboard">
       <div className={styles.letterKeys}>
         {"yaven".split("").map(letter => <span key={letter} className={`${styles.key} ${styles.letterKey}`} aria-hidden="true"><span className={styles.face}>{letter}</span></span>)}
-        <button ref={shortcut} type="button" className={`${styles.key} ${styles.launch}`} aria-expanded={open} aria-controls={`${id}-dialog`} aria-keyshortcuts="Alt" aria-label="Open Ask yaven with Option" onClick={() => setOpen(true)}>
-          <span className={styles.face}>⌥<span className={styles.keyLabel}>ask anything</span></span>
-        </button>
+        <div className={styles.launchSlot}>
+          {!hasTried && <svg className={styles.tryArrow} data-visible={inView} viewBox="0 0 80 60" fill="none" aria-hidden="true">
+            <path className={styles.arrowLine} pathLength="1" d="M9 9C28 1 66 5 62 24C60 37 40 38 33 51M24 40L32 52L45 45" />
+          </svg>}
+          <button ref={shortcut} type="button" className={`${styles.key} ${styles.launch}`} data-attention={inView && !hasTried} aria-expanded={open} aria-controls={`${id}-dialog`} aria-keyshortcuts="Alt" aria-label="Open Ask yaven with Option" onClick={() => { setHasTried(true); setOpen(true) }}>
+            <span className={styles.face}>⌥<span className={styles.keyLabel}>ask anything</span></span>
+          </button>
+        </div>
       </div>
     </div>
     <div className={styles.output}>

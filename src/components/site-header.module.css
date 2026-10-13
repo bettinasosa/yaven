@@ -1,0 +1,16 @@
+.header { position: absolute; z-index: 12; top: 0; inset-inline: 0; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 4px; min-height: 100px; padding: 28px clamp(24px,4vw,64px); background: rgb(255 255 255 / .96); color: #191919; font-family: var(--font-satoshi),sans-serif; font-size: 15px; }
+.contact { width: 130px; height: 44px; }
+.brand { display: inline-flex; align-items: center; gap: 8px; width: fit-content; min-height: 44px; color: inherit; text-decoration: none; }
+.brand .mark { width: 18px; }
+.name { font-family: var(--font-bricolage),sans-serif; font-size: 28px; font-weight: 500; line-height: 1; letter-spacing: -.075em; }
+.links { display: flex; align-items: center; gap: 4px; }
+.links > a { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 18px; border-radius: 999px; color: inherit; text-decoration: none; white-space: nowrap; }
+.links a[aria-current="page"] > span { background-size: 100% 1px; }
+.header :is(a,button):focus-visible { outline: 2px solid var(--primary-blue); outline-offset: 5px; }
+@media(max-width:600px) {
+  .header { grid-template-columns: 1fr auto; padding: 18px 24px 10px; font-size: 13px; }
+  .contact { grid-column: 2; grid-row: 1; width: 99px; }
+  .links { grid-column: 1 / -1; grid-row: 2; justify-content: center; gap: 0; }
+  .links > a { padding-inline: 10px; }
+}
+@media(max-width:360px) { .header { padding-inline: 16px; } }

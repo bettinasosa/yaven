@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Space_Mono, Bricolage_Grotesque } from "next/font/google"
 import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/next"
+import { SiteHeader } from "@/components/site-header"
 import { SmoothScroll } from "@/components/smooth-scroll"
 import { UtmCapture } from "@/components/utm-capture"
 import { crowdHero } from "./studio/_shared/crowd-copy"
@@ -61,7 +62,7 @@ export default function RootLayout({
       className={`${spaceMono.variable} ${bricolage.variable} ${satoshi.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col">
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll><SiteHeader />{children}</SmoothScroll>
         <UtmCapture />
         <WebAnalytics />
         <Analytics />

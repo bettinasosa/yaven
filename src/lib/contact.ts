@@ -1,13 +1,13 @@
 // "Book a demo" opens the user's mail client with a pre-filled draft to support.
 const DEMO_SUBJECT = "Demo request"
-const DEMO_BODY = `Hi Yaven team,
+const DEMO_BODY = `Hi yaven team,
 
-I'd like to book a demo of Yaven.
+I'd like to book a demo of yaven.
 
 A little about me:
 - Name:
 - Company / role:
-- What I'm hoping Yaven can help with:
+- What I'm hoping yaven can help with:
 
 Thanks!`
 

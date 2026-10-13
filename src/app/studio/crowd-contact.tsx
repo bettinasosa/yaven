@@ -12,7 +12,7 @@ export function CrowdContact() {
   const [applicationOpen, setApplicationOpen] = useState(false)
   const scrollTo = useSmoothScrollTo()
   useEffect(() => {
-    // The native hash jump can happen before the sticky chapters finish measuring.
+    // Align direct links after fonts finish settling the page layout.
     const hash = window.location.hash
     if (hash !== "#early-access") return
     let cancelled = false

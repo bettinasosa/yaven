@@ -15,7 +15,7 @@ const ScrollContext = createContext<RefObject<Lenis | null> | null>(null)
 export function useSmoothScrollTo() {
   const instance = useContext(ScrollContext)
   return useCallback((top: number, immediate = false) => {
-    if (instance?.current) instance.current.scrollTo(top, { duration: 1.15, immediate })
+    if (instance?.current) instance.current.scrollTo(top, { lerp: 0, duration: .85, immediate })
     else window.scrollTo({ top, behavior: "instant" })
   }, [instance])
 }
@@ -30,7 +30,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     // scrolling and is itself motion the user has asked us not to add.
     if (reduceMotion) return
 
-    const lenis = new Lenis({ lerp: 0.1, anchors: true })
+    // A shorter settling tail keeps wheel input smooth without feeling resisted.
+    const lenis = new Lenis({ lerp: 0.16, anchors: true })
     instance.current = lenis
 
     // Sync ScrollTrigger with every Lenis scroll tick

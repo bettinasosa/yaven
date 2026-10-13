@@ -7,10 +7,6 @@ import textLink from "./ui/text-link.module.css"
 export function AgencyEditorial({ title, intro, children, artwork }: { title: string; intro: string; children: ReactNode; artwork?: ReactNode }) {
   return <main id="editorial-content" className={styles.page}>
     <a className={styles.skip} href="#editorial-body">Skip to content</a>
-    <nav className={styles.nav} aria-label="Main navigation">
-      <Link href="/" className={styles.logo} aria-label="yaven home">yaven</Link>
-      <div><Link className={textLink.inline} href="/about">About us</Link><Link className={textLink.inline} href="/manifesto">Manifesto</Link><Link className={textLink.inline} href="/">Back to yaven <span aria-hidden="true">↗</span></Link></div>
-    </nav>
     {artwork && <div className={styles.artwork}>{artwork}</div>}
     <header className={styles.hero}><h1>{title}</h1><p>{intro}</p></header>
     <article id="editorial-body" className={styles.body}>{children}</article>
