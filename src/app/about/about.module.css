@@ -1,0 +1,12 @@
+.opening { padding-bottom: 50px; }
+.opening p { margin: 0 0 22px; font-size: 19px; line-height: 1.65; color: #555; text-wrap: pretty; }
+.opening p:last-child { margin-bottom: 0; }
+.name { margin-top: 52px; padding-top: 32px; border-top: 1px solid #dedede; font-family: var(--font-bricolage), sans-serif; font-size: clamp(32px,4vw,48px); font-weight: 500; line-height: 1.1; letter-spacing: -.04em; }
+.name:first-of-type { padding-top: 0; border-top: 0; }
+.name + .role { margin-top: 12px; font-size: 16px; }
+.subheading { margin-top: 40px; font-family: var(--font-bricolage), sans-serif; font-size: 24px; font-weight: 500; line-height: 1.2; letter-spacing: -.025em; }
+.careers { --button-fill: var(--yaven-purple); --button-fill-text: #191919; display: inline-flex; align-items: center; min-height: 52px; padding: 16px 24px; border: 1px solid #dedede; border-radius: 999px; text-decoration: none; }
+@media (max-width:700px) {
+  .opening { padding-bottom: 40px; }
+  .opening p { font-size: 17px; line-height: 1.6; }
+}

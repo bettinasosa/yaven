@@ -1,0 +1,11 @@
+.opening { padding-bottom: 50px; }
+.opening p { margin: 0 0 22px; font-size: 19px; line-height: 1.65; color: #555; text-wrap: pretty; }
+.opening p:last-child { margin-bottom: 0; }
+.opening strong { color: #191919; font-weight: 500; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.actions a { --button-fill: var(--primary-blue); display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 16px 24px; border: 1px solid #dedede; border-radius: 999px; font-size: 17px; text-decoration: none; }
+.actions a:first-child { --button-fill: var(--yaven-purple); --button-fill-text: #191919; background: var(--yaven-purple); border-color: transparent; }
+@media (max-width:700px) {
+  .opening { padding-bottom: 40px; }
+  .opening p { font-size: 17px; line-height: 1.6; }
+}

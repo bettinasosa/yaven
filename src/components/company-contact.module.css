@@ -1,0 +1,2 @@
+.contact { display: grid; gap: 8px; font-family: var(--font-satoshi), sans-serif; font-size: 14px; font-style: normal; line-height: 1.6; color: #555; }
+.contact a { display: inline-flex; align-items: center; min-height: 44px; width: fit-content; color: inherit; }
