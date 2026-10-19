@@ -4,27 +4,32 @@ import { useState, type FormEvent } from "react"
 import { getAttribution } from "@/lib/attribution"
 import { FillButton } from "@/components/ui/fill-button"
 import { agencyInquiryPayload } from "./agency-inquiry"
+import { storedReferral, useSignupTracking } from "./signup-tracking"
 import styles from "./agency-form.module.css"
 
 export function AgencyForm({ initialEmail = "", signupSource = "omega_agency_inquiry" }: { initialEmail?: string; signupSource?: string }) {
   const [signupType, setSignupType] = useState<"individual" | "team">("individual")
   const isTeam = signupType === "team"
   const [status, setStatus] = useState<"idle" | "saving" | "success" | "existing" | "error">("idle")
+  const tracking = useSignupTracking(signupSource)
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (status === "saving") return
     const payload = agencyInquiryPayload(new FormData(event.currentTarget))
     setStatus("saving")
+    tracking.submitted()
+    const referredBy = storedReferral()
     try {
       const response = await fetch("/api/waitlist", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...getAttribution(), ...payload, signup_source: signupSource }),
+        body: JSON.stringify({ ...getAttribution(), ...payload, signup_source: signupSource, ...(referredBy && { referredBy }) }),
       })
-      if (!response.ok) throw new Error("Unable to save")
+      if (!response.ok) { tracking.failed(response.status >= 500 ? "server" : "rejected"); setStatus("error"); return }
       const result = await response.json()
-      if (!result.success) throw new Error("Unable to save")
+      if (!result.success) { tracking.failed("rejected"); setStatus("error"); return }
+      tracking.succeeded(result.existing === true)
       setStatus(result.existing ? "existing" : "success")
-    } catch { setStatus("error") }
+    } catch { tracking.failed("network"); setStatus("error") }
   }
   if (status === "success" || status === "existing") return <div className={styles.success} role="status">
     <h3>{status === "success" ? "Thanks. Let’s talk." : "You’re already on our list."}</h3>
@@ -41,7 +46,7 @@ export function AgencyForm({ initialEmail = "", signupSource = "omega_agency_inq
         </div>
       </fieldset>
       <div className={styles.row}>
-        <label>Your email<input name="email" type="email" autoComplete="email" required maxLength={254} defaultValue={initialEmail} placeholder="you@example.com" /></label>
+        <label>Your email<input name="email" type="email" autoComplete="email" required maxLength={254} defaultValue={initialEmail} placeholder="you@example.com" onFocus={tracking.emailFocused} /></label>
         {isTeam ? <label>Agency / team name<input key="agency" name="agency" autoComplete="organization" required maxLength={160} placeholder="Your team" /></label> : <label>Your name<input key="name" name="name" autoComplete="name" required maxLength={160} placeholder="Your name" /></label>}
       </div>
       {isTeam && <div className={styles.row}>
