@@ -1,7 +1,7 @@
 /** Approved agency copy. Functional UI labels sit alongside their examples. */
 export const crowdHero = {
-  headline: "Your business deserves its own private AI.",
-  body: "Built for marketing and creative businesses to find new clients, grow existing accounts and keep projects moving.",
+  headline: "AI for the business of creative work.",
+  body: "Private AI built for marketing and creative businesses to find new clients, grow existing accounts and keep projects moving.",
   cta: "See yaven in action",
 } as const
 

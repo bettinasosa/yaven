@@ -28,7 +28,7 @@
 .hint { text-align: center; padding-top: 12px; font-size: 15px; color: #605d56; }
 .askPanel { position: fixed; inset: 50% auto auto 50%; transform: translate(-50%,-50%); margin: 0; width: min(640px,calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; padding: 0; border: 1px solid #fffffff2; border-radius: 30px; color: #22202b; background: transparent; box-shadow: 0 0 0 1px #bac5d42e, 0 20px 65px -25px #283b6152, 0 5px 16px -7px #283b6124; }
 .askPanel::backdrop { background: transparent; }
-.askPanel :is(button, textarea):focus-visible { outline: 2px solid #2546e8; outline-offset: 3px; }
+.askPanel :is(button, textarea):focus-visible { outline: 2px solid #267fe5; outline-offset: 3px; }
 .glassBody { padding: clamp(22px,3vw,30px); color: #242b38; }
 .promptHead { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 14px; }
 .promptHead h2 { font-family: var(--font-bricolage),sans-serif; font-size: 25px; font-weight: 500; letter-spacing: -.045em; line-height: 1.15; }

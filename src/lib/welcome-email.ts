@@ -40,7 +40,7 @@ export function renderWelcomeEmail(input: WelcomeEmailInput): { subject: string;
 <html><body style="margin:0;padding:0;background:#f5f1e4;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f1e4;padding:32px 16px;">
     <tr><td align="center">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;padding:32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#07348b;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;padding:32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#141412;">
         <tr><td style="font-size:20px;font-weight:600;padding-bottom:16px;">You're in.</td></tr>
         <tr><td style="font-size:15px;line-height:1.55;padding-bottom:14px;">${hello}</td></tr>
         <tr><td style="font-size:15px;line-height:1.55;padding-bottom:14px;">

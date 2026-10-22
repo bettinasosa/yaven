@@ -399,7 +399,7 @@
   background-size: 100% 3.5px;
 }
 .betts-link:hover {
-  border-color: #9B5DE5 !important;
+  border-color: var(--yaven-purple) !important;
   cursor: pointer;
 }
 .triage-underline-lg {
@@ -557,7 +557,7 @@
   --fs-body-sm:  clamp(13px, 1.3vw, 15px);    /* Supporting text, descriptions */
 
   /* ── Design tokens ──────────────────────── */
-  --ink: #07348b;
+  --ink: #141412;
   --bd: 1px solid rgba(0, 0, 0, 0.1);
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.05);
@@ -566,23 +566,21 @@
   --yaven-purple: #ebc1ff;
   --white: #ffffff;
   --primary: #267fe5;
-  --secondary: #df4f3e;
-  --accent: var(--yaven-purple);
   --cream: #f5f1e4; /* light         */
-  --dark: #07348b;
+  --dark: #141412;
 
   /* Aliases kept for backwards compat */
   --primary-blue: #267fe5;
-  --dark-blue: #07348b;
+  --dark-blue: #141412; /* legacy name, now near-black ink */
   --red: #df4f3e;
 
   --font-helvetica: var(--font-dm-sans), sans-serif;
   --background: #ffffff;
-  --foreground: #07348b;
+  --foreground: #141412;
   --card: #f5f1e4;
-  --card-foreground: #07348b;
+  --card-foreground: #141412;
   --popover: #f5f1e4;
-  --popover-foreground: #07348b;
+  --popover-foreground: #141412;
   --primary: #267fe5;
   --primary-foreground: #f5f1e4;
   --secondary: oklch(0.97 0 0);
@@ -888,6 +886,9 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    body::after {
+      animation: none;
+    }
     .testimonial-marquee-track {
       animation: none;
       transform: translateX(0);

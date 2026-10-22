@@ -51,7 +51,7 @@ export function FontDevPanel() {
         borderRadius: 9999,
         border: "1px solid rgba(0,0,0,0.2)",
         background: "#fff",
-        color: "#07348B",
+        color: "#141412",
         fontSize: 12,
         fontFamily: "monospace",
         boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
