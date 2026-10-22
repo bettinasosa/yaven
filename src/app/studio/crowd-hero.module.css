@@ -4,7 +4,7 @@
 .copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(24px,3svh,32px); height: 82%; padding: 70px 24px 0; text-align: center; pointer-events: none; }
 .message { display: flex; flex-direction: column; align-items: center; gap: 16px; }
 .headline { max-width: 18ch; margin: 0; font-family: var(--font-bricolage), sans-serif; font-size: clamp(56px, min(7.2vw, 10svh), 100px); line-height: 1.08; font-weight: 500; letter-spacing: -.045em; text-wrap: balance; }
-.description { max-width: 42ch; margin: 0; font-family: var(--font-satoshi),sans-serif; font-size: clamp(18px,1.5vw,21px); line-height: 1.45; color: #4d4d4d; text-wrap: pretty; }
+.description { max-width: 64ch; margin: 0; font-family: var(--font-satoshi),sans-serif; font-size: clamp(18px,1.5vw,21px); line-height: 1.45; color: #4d4d4d; text-wrap: balance; }
 .copy .cta { pointer-events: auto; }
 .canvas { position: absolute; bottom: 0; left: 0; width: 100%; height: min(44svh, 380px); pointer-events: none; }
 .hero :is(a, button):focus-visible { outline: 2px solid #171717; outline-offset: 5px; }
