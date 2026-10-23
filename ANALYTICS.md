@@ -73,32 +73,11 @@ but they will report zero until something renders them.
 
 ## Comparing the audience landing pages
 
-`/fractional-cmo`, `/boutique-agency` and `/influencer-marketing` are the same
-page as `/` with different words. Their copy lives in `src/content/`; see
-`src/content/types.ts` for the shape.
-
-No analytics code was needed for them. `path` arrives verbatim on
-`web_page_viewed`, and `landing_page` is a super property taken from the first
-path of the session, so it rides on `web_signup_succeeded` too. Group by
-`landing_page` and the pages separate themselves.
-
-Three things to get right when reading it:
-
-- **Count people, not events.** `web_page_viewed` fires again on every
-  client-side route change, so raw event counts flatter whichever page visitors
-  navigate away from and back to. The dashboard tiles use
-  `count(distinct person_id)`.
-- **Views mostly measure distribution.** Which page got the most views is a
-  report on how hard each link was pushed. The number that compares the pages
-  is conversion rate, and at current traffic that needs a few hundred visitors
-  per page before it means anything.
-- **Split the two failure modes.** `web_signup_form_seen` by `landing_page`
-  separates "the page didn't hold them" from "they saw the form and left
-  anyway". Those need opposite fixes.
-
-`landing_page` is first-touch per session, so someone who opens `/` and then
-navigates to a variant is recorded against `/`. These links are pasted directly
-rather than linked from the home page, so it rarely bites.
+Retired in October 2026. The audience pages (`/coaches`, `/fractionals`,
+`/influencer-marketing`, `/marketing-agency`, `/outreach`) now redirect
+permanently to `/` with their query string intact (see `next.config.ts`), so
+old campaign links still attribute. Historical events keep their original
+`landing_page` values.
 
 Supabase stores `landing_page` per signup too, so the audience is visible there
 without touching PostHog.
