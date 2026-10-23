@@ -79,7 +79,7 @@ export const crowdQuestions = [
   { question: "What does yaven connect to?", answer: "yaven connects to 20+ tools, including several email inboxes, calendars, Notion, Google Workspace, Granola, WhatsApp, Telegram and CRMs. You decide what yaven sees." },
   { question: "What happens to our data?", answer: "In yaven, your personal context is stored locally on your Mac, and you can open and edit it any time. We don't train models on your business or client data.", link: { href: "/privacy", label: "Read our privacy policy" } },
   { question: "Does anything go to a client without our approval?", answer: "No. yaven prepares the work, and your team decides what goes out." },
-  { question: "Do we need Macs?", answer: "Yes. yaven runs on Mac and sits in the notch at the top of your screen." },
+  { question: "Do we need Macs?", answer: "Yes. yaven runs on Mac. It sits in the notch at the top of your screen, shows up next to your cursor when you need it, and has its own desktop app." },
   { question: "How do we get started?", answer: "Tell us about your agency. We set yaven up with you or your team and improve it with you on real work." },
   { question: "What does it cost?", answer: "It depends on the size of your team and where you start. We'll walk you through it in our first conversation." },
   { question: "Can I join the waitlist instead?", answer: "Yes. If you work solo or want to try yaven on your own first, join the waitlist and we'll invite you as places open.", link: { href: "#waitlist", label: "Join the waitlist" } },

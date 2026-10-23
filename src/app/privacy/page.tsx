@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" lastUpdated="19 August 2026">
+    <LegalPage title="Privacy Policy" lastUpdated="6 October 2026">
       <LegalP>
-        yaven is a macOS menu-bar assistant that helps you triage and reply to
+        yaven is a macOS assistant that helps you triage and reply to
         messages, drafts in your voice, and acts on your connected accounts only
         when you approve. This policy explains what data yaven processes and why.
         It covers both the yaven app and this website, yaven.ai.
@@ -66,9 +66,11 @@ export default function PrivacyPage() {
         role, and whether you use a Mac. We also store how you arrived: the
         campaign tags (utm_*) on the link you followed, the domain that referred
         you, the page you landed on, and, if you came through a referral link, the
-        code that sent you. We use this to invite you when access opens, to work out
-        which channels bring people who actually want yaven, and to credit whoever
-        referred you. Your address is not sold, and we do not send a newsletter.
+        code that sent you. We use this to invite you when access opens, to email
+        you product updates when a new version of yaven ships, to work out which
+        channels bring people who actually want yaven, and to credit whoever
+        referred you. Every update email has an unsubscribe link, and unsubscribing
+        does not lose you your place on the waitlist. Your address is not sold.
         This data is held in our database (Supabase) and mirrored to a private
         spreadsheet as a backup.
       </LegalP>
@@ -243,7 +245,7 @@ export default function PrivacyPage() {
         <a href="mailto:support@yaven.ai" style={{ color: "var(--ink)" }}>
           support@yaven.ai
         </a>
-        .
+        , or write to yaven, 169 Madison Ave STE 31950, New York, NY 10016.
       </LegalP>
     </LegalPage>
   )

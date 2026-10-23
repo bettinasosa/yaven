@@ -16,7 +16,7 @@ export default function TermsPage() {
   return (
     <LegalPage title="Terms of Service" lastUpdated="8 June 2026">
       <LegalP>
-        These terms govern your use of yaven, a macOS menu-bar assistant. By
+        These terms govern your use of yaven, a macOS assistant. By
         downloading, installing, or using yaven, you agree to these terms. If you do
         not agree, do not use yaven.
       </LegalP>
